@@ -1,8 +1,9 @@
 <?php
-@session_start();
+/*@session_start();
 @include_once(dirname(__FILE__)."/includes/database.php");
-@include_once(dirname(__FILE__)."/includes/distanceCalc.class.php");
-$link = dbConnect();
+@include_once(dirname(__FILE__)."/includes/distanceCalc.class.php");*/
+@include_once(dirname(__FILE__)."/includes/bootstrap.php");
+//$link = dbConnect();
 
 
 if($_GET['autosave']){
@@ -182,15 +183,6 @@ input[type="text"]{
 }
 </style>
 <script>
-function ownerDetails(owner, owner_id){
-	var iframe = $("#contactiframe");
-
-	$(iframe).contents().find("body").html("");
-	
-	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
-	jQuery("#contactdialog").dialog("open");
-}
-
 var dateFormat = function () {
 	var	token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
 		timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
@@ -338,6 +330,9 @@ $(function(){
 
 	jQuery( "#shipdetails" ).dialog( { width: '90%', height: jQuery(window).height()*0.9 });
 	jQuery( "#shipdetails" ).dialog("close");	
+	
+	jQuery( "#contactdialog" ).dialog( { width: 900, height: 460 });
+	jQuery("#contactdialog").dialog("close");	
 
 
 	//ballast
@@ -783,6 +778,15 @@ function showShipDetails(imo){
 			}
 		}
 	});	
+}
+
+function ownerDetails(owner, owner_id){
+	var iframe = $("#contactiframe");
+
+	$(iframe).contents().find("body").html("");
+	
+	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
+	jQuery("#contactdialog").dialog("open");
 }
 
 function addCommas(nStr)
@@ -1790,6 +1794,9 @@ jQuery(function(){
 <div id="shipdetails" title="SHIP DETAILS" style='display:none; padding-bottom:10px'>
 	<div id='shipdetails_in' ></div>
 </div>
+<div id="contactdialog" title="CONTACT"  style='display:none'>
+	<iframe id='contactiframe' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
 <table width="696"  border="1">
   <tr>
     <td width="258"><strong>VESSEL SELECT<br />
@@ -2199,11 +2206,13 @@ jQuery(function(){
       </tr>
       <tr height="18">
         <td height="18" colspan="2" class="label"><strong>Used DW (MT)</strong></td>
-        <td class='calculated number' id='d25'></td>
+        <!--<td class='calculated number' id='d25'></td>-->
+		<td class='calculated number' id='d26'></td>
       </tr>
       <tr height="18">
         <td height="18" colspan="2" class="label"><strong>DWCC (MT)</strong></td>
-        <td class='calculated number' id='d26'></td>
+        <!--<td class='calculated number' id='d26'></td>-->
+		<td class='calculated number' id='d25'></td>
 
       </tr>
 </table>

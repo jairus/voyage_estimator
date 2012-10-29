@@ -1565,7 +1565,7 @@ function canalTotal(){
 	ctug1 = uNum(getValue(jQuery("#ctug1")));
 	cline1 = uNum(getValue(jQuery("#cline1")));
 	cmisc1 = uNum(getValue(jQuery("#cmisc1")));
-	ctotal1 = ctoll1 + cbook1 + ctug1 + cmisc1;
+	ctotal1 = ctoll1 + cbook1 + ctug1 + cline1 + cmisc1;
 	setValue(jQuery("#ctotal1"), fNum(ctotal1))
 	 
 	ctoll2 = uNum(getValue(jQuery("#ctoll2")));
@@ -1573,7 +1573,7 @@ function canalTotal(){
 	ctug2 = uNum(getValue(jQuery("#ctug2")));
 	cline2 = uNum(getValue(jQuery("#cline2")));
 	cmisc2 = uNum(getValue(jQuery("#cmisc2")));
-	ctotal2 = ctoll2 + cbook2 + ctug2 + cmisc2;
+	ctotal2 = ctoll2 + cbook2 + ctug2 + cline2 + cmisc2;
 	setValue(jQuery("#ctotal2"), fNum(ctotal2))
 	
 	d74 = ctotal1 + ctotal2;
@@ -2206,13 +2206,11 @@ jQuery(function(){
       </tr>
       <tr height="18">
         <td height="18" colspan="2" class="label"><strong>Used DW (MT)</strong></td>
-        <!--<td class='calculated number' id='d25'></td>-->
-		<td class='calculated number' id='d26'></td>
+        <td class='calculated number' id='d25'></td>
       </tr>
       <tr height="18">
         <td height="18" colspan="2" class="label"><strong>DWCC (MT)</strong></td>
-        <!--<td class='calculated number' id='d26'></td>-->
-		<td class='calculated number' id='d25'></td>
+        <td class='calculated number' id='d26'></td>
 
       </tr>
 </table>
@@ -2258,6 +2256,7 @@ jQuery(function(){
 			<option value='Manchester Ship Canal' >Manchester Ship Canal</option>
 			<option value='Welland Canal' >Welland Canal</option>
 			<option value='Saint Lawrence Seaway' >Saint Lawrence Seaway</option>
+			<option value='Suez Canal' >Suez Canal</option>
 		</select></td>
 	  </tr>
 	  <tr height="17">
@@ -2324,7 +2323,7 @@ jQuery(function(){
 	    <td></td>
 	    <td class="label">Miscellaneous ($)</td>
 	    <td class='empty'><input type='text' id='cmisc1' class='number'  /></td>
-	    <td class='empty'><input type='text' id='cmisc1' class='number' /></td>
+	    <td class='empty'><input type='text' id='cmisc2' class='number' /></td>
 	  </tr>
 	  <tr height="18">
 	    <td height="18" class="label">Dues ($)</td>

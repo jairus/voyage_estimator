@@ -142,24 +142,25 @@ th{
 	font-weight:bold;
 }
 *{
-	font-size:11px;
+	font-size:10px;
 	font-family:Verdana, Arial, Helvetica, sans-serif
 }
 table{
 	border-collapse: collapse;
 }
 .input{
-	background:#FEFEFE;
+	/*background:#FEFEFE;*/
 }
 .calculated{
-	background:#bbd4de;
-	text-align: center;
+	/*background:#e9e9e9;*/
+	/*text-align: center;*/
 }
 .empty{
-	background:#BBB57B;
+	/*background:#BBB57B;*/
 }
 .label{
 	background:#e9e9e9;
+	font-weight:bold;
 }
 .bold{
 	font-weight:bold;
@@ -169,9 +170,9 @@ input[type="text"]{
 	border: 0px;
 	background:yellow;
 	*/
-	height:100%;
-	width:90%;
-	text-align:center;
+	/*height:100%;
+	width:90%;*/
+	/*text-align:center;*/
 }
 
 .number{
@@ -186,7 +187,7 @@ input[type="text"]{
 }
 
 .input_1{
-	font-size:11px;
+	font-size:10px;
 	padding:3px;
 	border:1px solid #ced8e9;
 }
@@ -743,8 +744,17 @@ $(function(){
 			imo = pcs[0];
 			imo = jQuery.trim(imo);
 			gimo = imo;
-			jQuery("#shipdetailshref").html("<a style='cursor:pointer;' onclick='showShipDetails()'><u>VIEW VESSEL DETAILS</u></a>");
+			jQuery("#shipdetailshref").html("<a style='cursor:pointer;' onclick='showShipDetails()'><u>Click here for full specs</u></a>");
 			setValue(jQuery("#d18"), fNum(dwts[imo]));
+			jQuery("#ship_imo").each(function(){
+				setValue(jQuery(this), fNum(imo));
+			});
+			jQuery("#ship_summer_dwt").each(function(){
+				setValue(jQuery(this), fNum(dwts[imo]));
+			});
+			jQuery("#ship_speed").each(function(){
+				setValue(jQuery(this), fNum(speeds[imo]));
+			});
 			jQuery(".g31").each(function(){
 				setValue(jQuery(this), fNum(speeds[imo]));
 			});
@@ -1738,7 +1748,7 @@ jQuery(function(){
 		setValue(jQuery(this), fnum);
 		w = jQuery(this).val().length * 8;
 		if(w > jQuery(this).parent().width()){
-			jQuery(this).width(w);
+			//jQuery(this).width(w);
 		}
 		
 		
@@ -1747,7 +1757,7 @@ jQuery(function(){
 	jQuery('.general').blur(function(){
 		w = jQuery(this).val().length * 8;
 		if(w > jQuery(this).parent().width()){
-			jQuery(this).width(w);
+			//jQuery(this).width(w);
 		}
 		thread();
 		
@@ -1806,553 +1816,510 @@ jQuery(function(){
 <div id="contactdialog" title="CONTACT"  style='display:none'>
 	<iframe id='contactiframe' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
+
+<div style="max-width:1300px; height:auto; margin:0 auto;">
 <table width="1300" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="b7cfe9">
-    <td class="text_1" colspan="8"><div style="padding:5px;"><b>Vessel Name / IMO </b> &nbsp; <input type="text" id="ship" class="input_1" style="width:250px;" /> &nbsp; <span id='shipdetailshref'></span></div></td>
+    <td class="text_1" colspan="8"><div style="padding:10px;"><b>Vessel Name / IMO </b> &nbsp; <input type="text" id="ship" class="input_1" style="max-width:250px;" /> &nbsp; <span id='shipdetailshref'></span></div></td>
   </tr>
   <tr bgcolor="d4e4f1">
-    <td width="110" valign="top"><div style="padding:5px;"><b>IMO</b></div></td>
-    <td width="160" valign="top"><div style="padding:5px;">9118795</div></td>
-    <td width="55" valign="top"><div style="padding:5px;"><b>LOA</b></div></td>
-    <td width="250" valign="top"><div style="padding:5px;">100.72 m</div></td>
-    <td width="135" valign="top"><div style="padding:5px;"><b>Grain</b></div></td>
-    <td width="160" valign="top"><div style="padding:5px;">14442</div></td>
-    <td width="110" valign="top"><div style="padding:5px;"><b>Class Notation</b></div></td>
-    <td width="320" valign="top"><div style="padding:5px;">(+)A1, BULK CARRIER, (E), (+)AMS, (+)ACCU, SH SERVICE RESTRICTION: UNRESTRICTED SERVICE</div></td>
+    <td width="110" valign="top"><div style="padding:10px;"><b>IMO</b></div></td>
+    <td width="160" valign="top"><div style="padding:10px;" id="ship_imo">9118795</div></td>
+    <td width="55" valign="top"><div style="padding:10px;"><b>LOA</b></div></td>
+    <td width="250" valign="top"><div style="padding:10px;" id="ship_loa">100.72 m</div></td>
+    <td width="140" valign="top"><div style="padding:10px;"><b>Grain</b></div></td>
+    <td width="160" valign="top"><div style="padding:10px;" id="ship_grain">14442</div></td>
+    <td width="120" valign="top"><div style="padding:10px;"><b>Class Notation</b></div></td>
+    <td width="305" valign="top"><div style="padding:10px;" id="ship_class_notation">(+)A1, BULK CARRIER, (E), (+)AMS, (+)ACCU, SH SERVICE RESTRICTION: UNRESTRICTED SERVICE</div></td>
+  </tr>
+  <tr bgcolor="e1f2ff">
+    <td valign="top"><div style="padding:10px;"><b>Summer DWT</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_summer_dwt">8142 tons</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Draft</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_draft">7.93 m</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Grabs</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_grabs">&nbsp;</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Bulkheads</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_bulkheads">4</div></td>
   </tr>
   <tr bgcolor="d4e4f1">
-    <td valign="top"><div style="padding:5px;"><b>Summer DWT</b></div></td>
-    <td valign="top"><div style="padding:5px;">8142 tons</div></td>
-    <td valign="top"><div style="padding:5px;"><b>Draft</b></div></td>
-    <td valign="top"><div style="padding:5px;">7.93 m</div></td>
-    <td valign="top"><div style="padding:5px;"><b>Grabs</b></div></td>
-    <td valign="top"><div style="padding:5px;">&nbsp;</div></td>
-    <td valign="top"><div style="padding:5px;"><b>Bulkheads</b></div></td>
-    <td valign="top"><div style="padding:5px;">4</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Gross Tonnage</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_gross_tonnage">6364 tons</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Speed</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_speed">12.60 kn</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Cargo Handling</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_cargo_handling">Gearless</div></td>
+    <td valign="top"><div style="padding:10px;">&nbsp;</div></td>
+    <td valign="top"><div style="padding:10px;">&nbsp;</div></td>
+  </tr>
+  <tr bgcolor="e1f2ff">
+    <td valign="top"><div style="padding:10px;"><b>Built Year</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_built_year">1995</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Breadth</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_breadth">18.60 m</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Decks Number</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_decks_number">2</div></td>
+    <td valign="top"><div style="padding:10px;">&nbsp;</div></td>
+    <td valign="top"><div style="padding:10px;">&nbsp;</div></td>
   </tr>
   <tr bgcolor="d4e4f1">
-    <td valign="top"><div style="padding:5px;"><b>Gross Tonnage</b></div></td>
-    <td valign="top"><div style="padding:5px;">6364 tons</div></td>
-    <td valign="top"><div style="padding:5px;"><b>Speed</b></div></td>
-    <td valign="top"><div style="padding:5px;">12.60 kn</div></td>
-    <td valign="top"><div style="padding:5px;"><b>Cargo Handling</b></div></td>
-    <td valign="top"><div style="padding:5px;">Gearless</div></td>
-    <td valign="top"><div style="padding:5px;">&nbsp;</div></td>
-    <td valign="top"><div style="padding:5px;">&nbsp;</div></td>
-  </tr>
-  <tr bgcolor="d4e4f1">
-    <td valign="top"><div style="padding:5px;"><b>Built Year</b></div></td>
-    <td valign="top"><div style="padding:5px;">1995</div></td>
-    <td valign="top"><div style="padding:5px;"><b>Breadth</b></div></td>
-    <td valign="top"><div style="padding:5px;">18.60 m</div></td>
-    <td valign="top"><div style="padding:5px;"><b>Decks Number</b></div></td>
-    <td valign="top"><div style="padding:5px;">2</div></td>
-    <td valign="top"><div style="padding:5px;">&nbsp;</div></td>
-    <td valign="top"><div style="padding:5px;">&nbsp;</div></td>
-  </tr>
-  <tr bgcolor="d4e4f1">
-    <td valign="top"><div style="padding:5px;"><b>Flag</b></div></td>
-    <td valign="top"><div style="padding:5px;">&nbsp;</div></td>
-    <td valign="top"><div style="padding:5px;"><b>Cranes</b></div></td>
-    <td valign="top"><div style="padding:5px;">1DERRICK X 30 t , 2 X 25 t</div></td>
-    <td valign="top"><div style="padding:5px;"><b>Lifting Equipment</b></div></td>
-    <td valign="top"><div style="padding:5px;">&nbsp;</div></td>
-    <td valign="top"><div style="padding:5px;">&nbsp;</div></td>
-    <td valign="top"><div style="padding:5px;">&nbsp;</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Flag</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_flag">&nbsp;</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Cranes</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_cranes">1DERRICK X 30 t , 2 X 25 t</div></td>
+    <td valign="top"><div style="padding:10px;"><b>Lifting Equipment</b></div></td>
+    <td valign="top"><div style="padding:10px;" id="ship_lifting_equipment">&nbsp;</div></td>
+    <td valign="top"><div style="padding:10px;">&nbsp;</div></td>
+    <td valign="top"><div style="padding:10px;">&nbsp;</div></td>
   </tr>
 </table>
+<div style="border-bottom:1px dotted #ccc;">&nbsp;</div>
 <div>&nbsp;</div>
+
 <div style='display:none'>
-<table cellspacing="0" cellpadding="0">
-  <col width="14" />
-  <col width="125" />
-  <col width="159" />
-  <col width="138" />
-  <tr height="18">
-    <td width="138" height="18" class="bold">QUICK INPUT</td>
-    <td width="182"></td>
-    <td width="201" class="bold">QUICK RESULT</td>
-    <td width="156"></td>
-  </tr>
-  <tr height="17">
-    <td height="17" class="label">Port Extra Days</td>
-    <td width="182" class="input" dir="ltr">
-    <input type='text' class="general" id='c3' /></td>
-    <td rowspan="3" class="label"><strong>Voyage Duration</strong></td>
-    <td rowspan="3" class="calculated number" id='e3'>&nbsp;</td>
-  </tr>
-  <tr height="17">
-    <td height="17" class="label">Sea Extra    Days</td>
-    <td width="182" class="input" dir="ltr">
-    <input type='text' class="general" id='c4' /></td>
-  </tr>
-  <tr height="17">
-    <td height="17" class="label">Sea Canal    Days</td>
-    <td width="182" class="input" dir="ltr">
-    <input type='text' class="general" id='c5' /></td>
-  </tr>
-  <tr height="17">
-    <td height="17" class="label">Canal Cost    ($)</td>
-    <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c6' /></td>
-    <td rowspan="7" class="label"><strong>Voyage Cost ($)</strong></td>
-    <td rowspan="7" class="calculated number" id='e6'>&nbsp;</td>
-  </tr>
-  <tr height="18">
-    <td height="18" class="label">Add. Insurance    ($)</td>
-    <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c7' /></td>
-  </tr>
-  <tr height="17">
-    <td height="17" class="label">ILOHC ($)</td>
-    <td width="182" class="input" dir="ltr"><input type='text' class="number"  id='c8'/></td>
-  </tr>
-  <tr height="18">
-    <td height="18" class="label">ILOW ($)</td>
-    <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c9' /></td>
-  </tr>
-  <tr height="17">
-    <td height="17" class="label">CVE ($)</td>
-    <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c10' /></td>
-  </tr>
-  <tr height="17">
-    <td height="17" class="label">Ballast Bonus    ($)</td>
-    <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c11' /></td>
-  </tr>
-  <tr height="17">
-    <td height="17" class="label">Miscellaneous    ($)</td>
-    <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c12' /></td>
-  </tr>
-  <tr height="17">
-    <td height="17" class="label">Freight Rate    ($/MT)</td>
-    <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c13' /></td>
-    <td class="label"><strong>TCE ($/day)</strong></td>
-    <td width="156" class="calculated number" dir="ltr" id='e13'>&nbsp;</td>
-  </tr>
-  <tr height="18">
-    <td height="18" class="label">TCE ($/day)</td>
-    <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c14' /></td>
-    <td class="label"><strong>Freight Rate ($/MT)</strong></td>
-    <td width="156" class="calculated number" dir="ltr" id='e14'>&nbsp;</td>
-  </tr>
-</table>
-<br />
-<br />
+    <table cellspacing="0" cellpadding="0">
+      <col width="14" />
+      <col width="125" />
+      <col width="159" />
+      <col width="138" />
+      <tr height="18">
+        <td width="138" height="18" class="bold">QUICK INPUT</td>
+        <td width="182"></td>
+        <td width="201" class="bold">QUICK RESULT</td>
+        <td width="156"></td>
+      </tr>
+      <tr height="17">
+        <td height="17" class="label">Port Extra Days</td>
+        <td width="182" class="input" dir="ltr">
+        <input type='text' class="general" id='c3' /></td>
+        <td rowspan="3" class="label"><strong>Voyage Duration</strong></td>
+        <td rowspan="3" class="calculated number" id='e3'>&nbsp;</td>
+      </tr>
+      <tr height="17">
+        <td height="17" class="label">Sea Extra    Days</td>
+        <td width="182" class="input" dir="ltr">
+        <input type='text' class="general" id='c4' /></td>
+      </tr>
+      <tr height="17">
+        <td height="17" class="label">Sea Canal    Days</td>
+        <td width="182" class="input" dir="ltr">
+        <input type='text' class="general" id='c5' /></td>
+      </tr>
+      <tr height="17">
+        <td height="17" class="label">Canal Cost    ($)</td>
+        <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c6' /></td>
+        <td rowspan="7" class="label"><strong>Voyage Cost ($)</strong></td>
+        <td rowspan="7" class="calculated number" id='e6'>&nbsp;</td>
+      </tr>
+      <tr height="18">
+        <td height="18" class="label">Add. Insurance    ($)</td>
+        <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c7' /></td>
+      </tr>
+      <tr height="17">
+        <td height="17" class="label">ILOHC ($)</td>
+        <td width="182" class="input" dir="ltr"><input type='text' class="number"  id='c8'/></td>
+      </tr>
+      <tr height="18">
+        <td height="18" class="label">ILOW ($)</td>
+        <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c9' /></td>
+      </tr>
+      <tr height="17">
+        <td height="17" class="label">CVE ($)</td>
+        <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c10' /></td>
+      </tr>
+      <tr height="17">
+        <td height="17" class="label">Ballast Bonus    ($)</td>
+        <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c11' /></td>
+      </tr>
+      <tr height="17">
+        <td height="17" class="label">Miscellaneous    ($)</td>
+        <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c12' /></td>
+      </tr>
+      <tr height="17">
+        <td height="17" class="label">Freight Rate    ($/MT)</td>
+        <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c13' /></td>
+        <td class="label"><strong>TCE ($/day)</strong></td>
+        <td width="156" class="calculated number" dir="ltr" id='e13'>&nbsp;</td>
+      </tr>
+      <tr height="18">
+        <td height="18" class="label">TCE ($/day)</td>
+        <td width="182" class="input" dir="ltr"><input type='text' class="number" id='c14' /></td>
+        <td class="label"><strong>Freight Rate ($/MT)</strong></td>
+        <td width="156" class="calculated number" dir="ltr" id='e14'>&nbsp;</td>
+      </tr>
+    </table>
+    <div style="border-bottom:1px dotted #ccc;">&nbsp;</div>
+    <div>&nbsp;</div>
 </div>
 
 <table width="1300" border="0" cellspacing="0" cellpadding="0">
-  <col width="164" />
-  <col width="125" />
-  <col width="159" />
-  <col width="138" />
-  <col width="159" />
-  <col width="126" />
-  <col width="193" />
-  <col width="119" />
-  <col width="105" />
-  <col width="83" />
-  <col width="180" />
-  <col width="119" />
-  <col width="90" />
-  <col width="70" />
-  <col width="63" />
-  <col width="71" />
-  <col width="62" />
-  <col width="72" />
-  <col width="95" />
-  <tr height="21" bgcolor="b7cfe9">
-    <td width="164" class="text_1"><div style="padding:5px;"><b>Voyage Legs</b></div></td>
-    <td width="125"></td>
-    <td width="159"></td>
-    <td width="138"></td>
-    <td width="159"></td>
-    <td width="126"></td>
-    <td width="193"></td>
-    <td width="119"></td>
-    <td width="105"></td>
-    <td width="83"></td>
-    <td width="180"></td>
-    <td width="209" colspan="2" class="text_1"><div style="padding:5px;"><b>*Option    to Load &amp; Bunker concurrently</b></div></td>
-    <td width="204" colspan="3" class="text_1"><div style="padding:5px;"><b>PORT DAYS</b></div></td>
-    <td width="229" colspan="3" class="text_1"><div style="padding:5px;"><b>SEA DAYS</b></div></td>
+  <tr bgcolor="b7cfe9">
+    <td width="120" class="text_1"><div style="padding:10px;"><b>Voyage Legs</b></div></td>
+    <td width="200"></td>
+    <td width="190"></td>
+    <td width="200"></td>
+    <td width="190"></td>
+    <td width="100"></td>
+    <td width="300"></td>
   </tr>
-  <tr height="20">
-    <td height="20" class="label"><strong>TYPE</strong></td>
-    <td class="label"><strong>LOAD PORT</strong></td>
-    <td class="label"><strong>DATE</strong></td>
-    <td class="label"><strong>DESTINATION PORT</strong></td>
-    <td class="label"><strong>DATE</strong></td>
-    <td class="label"><strong>SPEED (knts)</strong></td>
-    <td class="label"><strong>DISTANCE (miles)</strong></td>
-    <td class="label"><strong>CARGO</strong></td>
-    <td class="label">SF</td>
-    <td class="label"><strong>QUANTITY (MT)</strong></td>
-    <td class="label"><strong>VOLUME (M3)</strong></td>
-    <td class="label"><strong>L/D RATE (MT/day)</strong></td>
-    <td class="label"><strong>WORKING DAYS</strong></td>
-    <td class="label">L/D</td>
-    <td class="label"><strong>TURN TIME</strong></td>
-    <td class="label"><strong>IDLE/EXTRA DAYS</strong></td>
-    <td class="label"><strong>SEA </strong></td>
-    <td class="label"><strong>CANAL DAYS</strong></td>
-    <td class="label"><strong>WEATHER/EXTRA DAYS</strong></td>
+  <tr>
+    <td class="text_1 label"><div style="padding:10px;"><i><strong>Type</strong></i></div></td>
+    <td class="text_1 label"><div style="padding:10px;"><i><strong>Load Port</strong></i></div></td>
+    <td class="text_1 label"><div style="padding:10px;"><i><strong>Date</strong></i></div></td>
+    <td class="text_1 label"><div style="padding:10px;"><i><strong>Destination Port</strong></i></div></td>
+    <td class="text_1 label"><div style="padding:10px;"><i><strong>Date</strong></i></div></td>
+    <td class="text_1 label"><div style="padding:10px;"><i><strong>Speed (knts)</strong></i></div></td>
+    <td class="text_1 label"><div style="padding:10px;"><i><strong>Distance (miles)</strong></i></div></td>
   </tr>
-  <tr height="17" id='ballast1'>
-    <td height="17" class='general b31'><strong>Ballast</strong></td>
-    <td class='input'><input type='text' class='general c31' />
-    </td>
-    <td class="input"><input type='text' class='general d31' /></td>
-    <td class='input'><input type='text' class='general e31' />
-    </td>
-    <td class='calculated general f31'></td>
-    <td class='input'><input type='text' class='number g31' /></td>
-    <td class="calculated number h31" ></td>
-    <td class='number i31'></td>
-    <td class='number j31'></td>	
-    <td class='number k31'></td>
-    <td class='number l31'></td>
-    <td class='number m31'></td>
-    <td class='number n31'></td>
-    <td class="number o31"></td>
-    <td class='number p31'></td>
-    <td class='number q31'></td>
-    <td class="calculated number r31" ></td>
-    <td class='empty'><input type='text' class='number s31' /></td>
-    <td class='empty'><input type='text' class='number t31' /></td>
+  <tr id='ballast1' bgcolor="d4e4f1">
+    <td class='general b31' style="padding:10px;"><strong>Ballast</strong></td>
+    <td class='input'><div style="padding:10px;"><input type='text' class='input_1 general c31' style="max-width:190px;" /></div></td>
+    <td class="input"><div style="padding:10px;"><input type='text' class='input_1 general d31' style="max-width:170px;" /></div></td>
+    <td class='input'><div style="padding:10px;"><input type='text' class='input_1 general e31' style="max-width:190px;" /></div></td>
+    <td class='calculated general f31' style="padding:10px;"></td>
+    <td class='input'><div style="padding:10px;"><input type='text' class='input_1 number g31' style="max-width:90px;" /></div></td>
+    <td class="calculated number h31" style="padding:10px;"></td>
   </tr>
-  <tr height="17" id='loading1'>
-    <td height="17" class='general b32'><strong>Loading</strong></td>
-    <td class='general c32'></td>
-    <td class='general d32'></td>
-    <td class='general e32'></td>
-    <td class="calculated f32"></td>
-    <td class='number g32'></td>
-    <td class="number h32"></td>
-    <td class='input'><input type='text' class='general i32' /></td>
-    <td class='number j32' ></td>
-    <td class='input'><input type='text' class='number k32' /></td>
-    <td class='calculated number l32'></td>
-    <td class='input'><input type='text'  class='number m32'  /></td>
-    <td class='input'>
-	<select class='general n32' >
-	<option value='SHINC'>SHINC</option>
-	<option value='SATSHINC or SSHINC'>SATSHINC or SSHINC</option>
-	<option value='SHEX'>SHEX</option>
-	<option value='SA/SHEX or SATPMSHEX'>SA/SHEX or SATPMSHEX</option>
-	<option value='SATSHEX or SSHEX'>SATSHEX or SSHEX</option>
-	<option value='SHEXEIU or SHEXEIUBE or SHEXUU'>SHEXEIU or SHEXEIUBE or SHEXUU</option>
-	<option value='FHINC'>FHINC</option>
-	<option value='FHEX'>FHEX</option>
-	</select>
+  <tr id='loading1' bgcolor="e1f2ff">
+    <td class='general b32' style="padding:10px;"><strong>Loading</strong></td>
+    <td class='general c32' style="padding:10px;"></td>
+    <td class='general d32' style="padding:10px;"></td>
+    <td class='general e32' style="padding:10px;"></td>
+    <td class="calculated f32" style="padding:10px;"></td>
+    <td class='number g32' style="padding:10px;"></td>
+    <td class="number h32" style="padding:10px;"></td>
+  </tr>
+  <tr id='bunkerstop1' bgcolor="d4e4f1">
+    <td class='general b33' style="padding:10px;"><strong>Bunker Stop</strong></td>
+    <td class='input general c33' style="padding:10px;"></td>
+    <td class='general d33' style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 general e33' style="max-width:190px;" /></td>
+    <td class="calculated f33" style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number g33' style="max-width:90px;" /></td>
+    <td class="calculated h33" style="padding:10px;"></td>
+  </tr>
+  <tr id='laden1' bgcolor="e1f2ff">
+    <td class='general b34' style="padding:10px;"><strong>Laden</strong></td>
+    <td class='input general c34' style="padding:10px;"></td>
+    <td class='general d34' style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 general e34' style="max-width:190px;" /></td>
+    <td class="calculated f34" style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number g34' style="max-width:90px;" /></td>
+    <td class="calculated number h34" style="padding:10px;"></td>
+  </tr>
+  <tr id='discharging1' bgcolor="d4e4f1">
+    <td class='general b35' style="padding:10px;"><strong>Discharging</strong></td>
+    <td class='input general c35' style="padding:10px;"></td>
+    <td class='general d35' style="padding:10px;"></td>
+    <td class='general e35' style="padding:10px;"></td>
+    <td class="calculated f35" style="padding:10px;"></td>
+    <td class='number g35' style="padding:10px;"></td>
+    <td class="number h35" style="padding:10px;"></td>
+  </tr>
+</table>
+<table width="1300" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="b7cfe9">
+  	<td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td class="text_1" colspan="2"><div style="padding:10px;"><b>* Option to Load &amp; Bunker concurrently</b></div></td>
+    <td class="text_1" colspan="3"><div style="padding:10px;"><b>Port Days</b></div></td>
+    <td class="text_1" colspan="3"><div style="padding:10px;"><b>Sea Days</b></div></td>
+  </tr>
+  <tr>
+  	<td width="120" class="text_1 label"><div style="padding:10px;"><i><strong>Type</strong></i></div></td>
+    <td width="200" class="text_1 label"><div style="padding:10px;"><i><strong>Cargo</strong></i></div></td>
+    <td width="50" class="text_1 label"><div style="padding:10px;"><i><strong>SF</strong></i></div></td>
+    <td width="80" class="text_1 label"><div style="padding:10px;"><i><strong>Quantity (MT)</strong></i></div></td>
+    <td width="80" class="text_1 label"><div style="padding:10px;"><i><strong>Volume (M3)</strong></i></div></td>
+    <td width="80" class="text_1 label"><div style="padding:10px;"><i><strong>L/D Rate (MT/day)</strong></i></div></td>
+    <td width="160" class="text_1 label"><div style="padding:10px;"><i><strong>Working Days</strong></i></div></td>
+    <td width="100" class="text_1 label"><div style="padding:10px;"><i><strong>L/D</strong></i></div></td>
+    <td width="80" class="text_1 label"><div style="padding:10px;"><i><strong>Turn Time</strong></i></div></td>
+    <td width="80" class="text_1 label"><div style="padding:10px;"><i><strong>Idle/Extra Days Sea</strong></i></div></td>
+    <td width="50" class="text_1 label"><div style="padding:10px;"><i><strong>&nbsp;</strong></i></div></td>
+    <td width="110" class="text_1 label"><div style="padding:10px;"><i><strong>Canal Days</strong></i></div></td>
+    <td width="110" class="text_1 label"><div style="padding:10px;"><i><strong>Weather/Extra Days</strong></i></div></td>
+  </tr>
+  <tr id='ballast1' bgcolor="d4e4f1">
+    <td class='general b31' style="padding:10px;"><strong>Ballast</strong></td>
+    <td class='number i31' style="padding:10px;"></td>
+    <td class='number j31' style="padding:10px;"></td>	
+    <td class='number k31' style="padding:10px;"></td>
+    <td class='number l31' style="padding:10px;"></td>
+    <td class='number m31' style="padding:10px;"></td>
+    <td class='number n31' style="padding:10px;"></td>
+    <td class="number o31" style="padding:10px;"></td>
+    <td class='number p31' style="padding:10px;"></td>
+    <td class='number q31' style="padding:10px;"></td>
+    <td class="calculated number r31" style="padding:10px;"></td>
+    <td class='empty' style="padding:10px;"><input type='text' class='input_1 number s31' style="max-width:80px;" /></td>
+    <td class='empty' style="padding:10px;"><input type='text' class='input_1 number t31' style="max-width:80px;" /></td>
+  </tr>
+  <tr id='loading1' bgcolor="e1f2ff">
+    <td class='general b32' style="padding:10px;"><strong>Loading</strong></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 general i32' style="max-width:190px;" /></td>
+    <td class='number j32' style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number k32' style="max-width:70px;" /></td>
+    <td class='calculated number l32' style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number m32' style="max-width:70px;" /></td>
+    <td class='input' style="padding:10px;">
+        <select class='input_1 general n32' style="max-width:130px;">
+            <option value='SHINC'>SHINC</option>
+            <option value='SATSHINC or SSHINC'>SATSHINC or SSHINC</option>
+            <option value='SHEX'>SHEX</option>
+            <option value='SA/SHEX or SATPMSHEX'>SA/SHEX or SATPMSHEX</option>
+            <option value='SATSHEX or SSHEX'>SATSHEX or SSHEX</option>
+            <option value='SHEXEIU or SHEXEIUBE or SHEXUU'>SHEXEIU or SHEXEIUBE or SHEXUU</option>
+            <option value='FHINC'>FHINC</option>
+            <option value='FHEX'>FHEX</option>
+        </select>
 	</td>
-    <td class="calculated number o32"></td>
-    <td class='input'><input type='text' class='number p32' /></td>
-    <td class='input'><input type='text' class='number q32' /></td>
-    <td class="number r32"></td>
-    <td class='empty'><input type='text' class='number s32'  /></td>
-    <td class='empty'><input type='text' class='number t32' /></td>
+    <td class="calculated number o32" style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number p32' style="max-width:70px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number q32' style="max-width:70px;" /></td>
+    <td class="number r32" style="padding:10px;"></td>
+    <td class='empty' style="padding:10px;"><input type='text' class='input_1 number s32' style="max-width:80px;" /></td>
+    <td class='empty' style="padding:10px;"><input type='text' class='input_1 number t32' style="max-width:80px;" /></td>
   </tr>
-  <tr height="17" id='bunkerstop1'>
-    <td height="17" class='general b33'><strong>Bunker Stop</strong></td>
-    <td class='input general c33'></td>
-    <td class='general d33'></td>
-    <td class='input'><input type='text' class='general e33' /></td>
-    <td class="calculated f33"></td>
-    <td class='input'><input type='text' class='number g33' /></td>
-    <td class="calculated h33"></td>
-    <td class='number i33'></td>
-    <td class='number j33'></td>
-    <td class='number k33'></td>
-    <td class='input'><input type='text'  class='number l33'  /></td>
-    <td class='input'><input type='text'  class='number m33'  /></td>
-    <td class='input'><select class='general n33' >
-	<option value='SHINC'>SHINC</option>
-	<option value='SATSHINC or SSHINC'>SATSHINC or SSHINC</option>
-	<option value='SHEX'>SHEX</option>
-	<option value='SA/SHEX or SATPMSHEX'>SA/SHEX or SATPMSHEX</option>
-	<option value='SATSHEX or SSHEX'>SATSHEX or SSHEX</option>
-	<option value='SHEXEIU or SHEXEIUBE or SHEXUU'>SHEXEIU or SHEXEIUBE or SHEXUU</option>
-	<option value='FHINC'>FHINC</option>
-	<option value='FHEX'>FHEX</option>
-	</select></td>
-    <td class="calculated o33"></td>
-    <td class='input'><input type='text' class='number p33' /></td>
-    <td class='input'><input type='text'  class='number q33'  /></td>
-    <td class="calculated number r33"></td>
-    <td class='empty'><input type='text'  class='number s33' /></td>
-    <td class='empty'><input type='text'  class='number t33' /></td>
+  <tr id='bunkerstop1' bgcolor="d4e4f1">
+    <td class='general b33' style="padding:10px;"><strong>Bunker Stop</strong></td>
+    <td class='number i33' style="padding:10px;"></td>
+    <td class='number j33' style="padding:10px;"></td>
+    <td class='number k33' style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number l33' style="max-width:70px;"  /></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number m33' style="max-width:70px;" /></td>
+    <td class='input' style="padding:10px;">
+        <select class='input_1 general n33' style="max-width:130px;">
+            <option value='SHINC'>SHINC</option>
+            <option value='SATSHINC or SSHINC'>SATSHINC or SSHINC</option>
+            <option value='SHEX'>SHEX</option>
+            <option value='SA/SHEX or SATPMSHEX'>SA/SHEX or SATPMSHEX</option>
+            <option value='SATSHEX or SSHEX'>SATSHEX or SSHEX</option>
+            <option value='SHEXEIU or SHEXEIUBE or SHEXUU'>SHEXEIU or SHEXEIUBE or SHEXUU</option>
+            <option value='FHINC'>FHINC</option>
+            <option value='FHEX'>FHEX</option>
+        </select>
+    </td>
+    <td class="calculated o33" style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number p33' style="max-width:70px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text'  class='input_1 number q33' style="max-width:70px;"  /></td>
+    <td class="calculated number r33" style="padding:10px;"></td>
+    <td class='empty' style="padding:10px;"><input type='text'  class='input_1 number s33' style="max-width:80px;" /></td>
+    <td class='empty' style="padding:10px;"><input type='text'  class='input_1 number t33' style="max-width:80px;" /></td>
   </tr>
-  <tr height="17" id='laden1'>
-    <td height="17" class='general b34'><strong>Laden</strong></td>
-    <td class='input general c34'></td>
-    <td class='general d34'></td>
-    <td class='input'><input type='text' class='general e34' /></td>
-    <td class="calculated f34"></td>
-    <td class='input'><input type='text' class='number g34' /></td>
-    <td class="calculated number h34"></td>
-    <td class='number i34'></td>
-    <td class='number j34'></td>
-    <td class='number k34'></td>
-    <td class='number l34'></td>
-    <td class='number m34'></td>
-    <td class='number n34'></td>
-    <td class="number o34"></td>
-    <td class='number p34'></td>
-    <td class='number q34'></td>
-    <td class="calculated number r34"></td>
-    <td class='empty'><input type='text' class='number s34' /></td>
-    <td class='empty'><input type='text' class='number t34' /></td>
+  <tr id='laden1' bgcolor="e1f2ff">
+    <td class='general b34' style="padding:10px;"><strong>Laden</strong></td>
+    <td class='number i34' style="padding:10px;"></td>
+    <td class='number j34' style="padding:10px;"></td>
+    <td class='number k34' style="padding:10px;"></td>
+    <td class='number l34' style="padding:10px;"></td>
+    <td class='number m34' style="padding:10px;"></td>
+    <td class='number n34' style="padding:10px;"></td>
+    <td class="number o34" style="padding:10px;"></td>
+    <td class='number p34' style="padding:10px;"></td>
+    <td class='number q34' style="padding:10px;"></td>
+    <td class="calculated number r34" style="padding:10px;"></td>
+    <td class='empty' style="padding:10px;"><input type='text' class='input_1 number s34' style="max-width:80px;" /></td>
+    <td class='empty' style="padding:10px;"><input type='text' class='input_1 number t34' style="max-width:80px;" /></td>
   </tr>
-  <tr height="18" id='discharging1'>
-    <td height="18" class='general b35'><strong>Discharging</strong></td>
-    <td class='input general c35'></td>
-    <td class='general d35'></td>
-    <td class='general e35'></td>
-    <td class="calculated f35"></td>
-    <td class='number g35'></td>
-    <td class="number h35"></td>
-    <td class='input'><input type='text' class='general i35' /></td>
-    <td class='number j35'></td>
-    <td class='input'><input type='text' class='number k35' /></td>
-    <td class='calculated number l35'></td>
-    <td class='input'><input type='text'  class='number m35'  /></td>
-    <td class='input'><select class='general n35' >
-	<option value='SHINC'>SHINC</option>
-	<option value='SATSHINC or SSHINC'>SATSHINC or SSHINC</option>
-	<option value='SHEX'>SHEX</option>
-	<option value='SA/SHEX or SATPMSHEX'>SA/SHEX or SATPMSHEX</option>
-	<option value='SATSHEX or SSHEX'>SATSHEX or SSHEX</option>
-	<option value='SHEXEIU or SHEXEIUBE or SHEXUU'>SHEXEIU or SHEXEIUBE or SHEXUU</option>
-	<option value='FHINC'>FHINC</option>
-	<option value='FHEX'>FHEX</option>
-	</select></td>
-    <td class="calculated number o35"></td>
-    <td class='input'><input type='text' class='number p35' /></td>
-    <td class='input'><input type='text'  class='number q35' /></td>
-    <td class="number r35"></td>
-    <td class='empty'><input type='text' class='number s35' /></td>
-    <td class='empty'><input type='text'  class='number t35' /></td>
+  <tr id='discharging1' bgcolor="d4e4f1">
+    <td class='general b35' style="padding:10px;"><strong>Discharging</strong></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 general i35' style="max-width:190px;" /></td>
+    <td class='number j35' style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number k35' style="max-width:70px;" /></td>
+    <td class='calculated number l35' style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text'  class='input_1 number m35' style="max-width:70px;" /></td>
+    <td class='input' style="padding:10px;">
+        <select class='input_1 general n35' style="max-width:130px;">
+            <option value='SHINC'>SHINC</option>
+            <option value='SATSHINC or SSHINC'>SATSHINC or SSHINC</option>
+            <option value='SHEX'>SHEX</option>
+            <option value='SA/SHEX or SATPMSHEX'>SA/SHEX or SATPMSHEX</option>
+            <option value='SATSHEX or SSHEX'>SATSHEX or SSHEX</option>
+            <option value='SHEXEIU or SHEXEIUBE or SHEXUU'>SHEXEIU or SHEXEIUBE or SHEXUU</option>
+            <option value='FHINC'>FHINC</option>
+            <option value='FHEX'>FHEX</option>
+        </select>
+    </td>
+    <td class="calculated number o35" style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number p35' style="max-width:70px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text'  class='input_1 number q35' style="max-width:70px;" /></td>
+    <td class="number r35" style="padding:10px;"></td>
+    <td class='empty' style="padding:10px;"><input type='text' class='input_1 number s35' style="max-width:80px;" /></td>
+    <td class='empty' style="padding:10px;"><input type='text'  class='input_1 number t35' style="max-width:80px;" /></td>
   </tr>
-  <tr height="21">
-    <td height="21" colspan="13" class="label"><strong>PORT/SEA DAYS</strong></td>
-    <td colspan="3" class="calculated" id='o36'></td>
-    <td colspan="3" class="calculated" id='r36'></td>
+  <tr>
+    <td colspan="7" class="label" style="padding:10px;"><strong>PORT/SEA DAYS</strong></td>
+    <td colspan="3" class="label calculated" id='o36' style="padding:10px;"></td>
+    <td colspan="3" class="label calculated" id='r36' style="padding:10px;"></td>
   </tr>
-  <tr height="21">
-    <td height="21" colspan="13" class="label"><strong>TOTAL VOYAGE DAYS</strong></td>
-    <td colspan="6" class="calculated" id='o37'></td>
+  <tr>
+    <td colspan="7" class="label" style="padding:10px;"><strong>TOTAL VOYAGE DAYS</strong></td>
+    <td colspan="6" class="label calculated" id='o37' style="padding:10px;"></td>
   </tr>
 </table>
-<br ><br>
+<div style="border-bottom:1px dotted #ccc;">&nbsp;</div>
+<div>&nbsp;</div>
 
-
-<table cellspacing="0" cellpadding="0">
-  <col width="164" />
-  <col width="125" />
-  <col width="159" />
-  <col width="138" />
-  <col width="159" />
-  <col width="126" />
-  <col width="193" />
-  <col width="119" />
-  <tr height="17">
-    <td width="164" height="53" rowspan="3" class="bold">BUNKER</td>
-    <td width="125" class="label">FO Type</td>
-    <td colspan="3" width="456"></td>
-    <td width="126" class="label">DO Type</td>
-    <td colspan="2" width="312"></td>
+<table width="1300" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="b7cfe9">
+  	<td class="text_1" colspan="8"><div style="padding:10px;"><b>Bunker</b></div></td>
   </tr>
-  <tr height="18">
-    <td height="18" class="label">FO Price ($)</td>
-    <td colspan="3" class="input"><input type='text'  id='d42' class='number' /></td>
-    <td class="label">DO Price ($)</td>
-    <td colspan="2" class="input"><input type='text'  id='h42' class='number' /></td>
+  <tr bgcolor="d4e4f1">
+    <td width="200" style="padding:10px;"><b>FO Type</b></td>
+    <td width="450" colspan="3" style="padding:10px;"></td>
+    <td width="200" style="padding:10px;"><b>DO Type</b></td>
+    <td width="450" colspan="3" style="padding:10px;"></td>
   </tr>
-  <tr height="18">
-    <td height="18" class="label">FO/Ballast</td>
-    <td class="label">FO/Laden</td>
-    <td class="label">FO/Port</td>
-    <td class="label">FO/Reserve</td>
-    <td class="label">DO/Sea</td>
-    <td class="label">DO/Port</td>
-    <td class="label">DO/Reserve</td>
+  <tr bgcolor="e1f2ff">
+    <td style="padding:10px;"><b>FO Price ($)</b></td>
+    <td colspan="3" class="input" style="padding:10px;"><input type='text'  id='d42' class='input_1 number' style="max-width:150px;" /></td>
+    <td style="padding:10px;"><b>DO Price ($)</b></td>
+    <td colspan="3" class="input" style="padding:10px;"><input type='text'  id='h42' class='input_1 number' style="max-width:150px;" /></td>
   </tr>
-  <tr height="17">
-    <td height="17" class="label">Consumption    (MT/day)</td>
-    <td class='input'><input type='text'  id='c44' class='number' /></td>
-    <td class='input'><input type='text'  id='d44' class='number' /></td>
-    <td class='input'><input type='text'  id='e44' class='number' /></td>
-    <td class='input number' id='f44'></td>
-    <td class='input'><input type='text'  id='g44' class='number' /></td>
-    <td class='input'><input type='text'  id='h44' class='number' /></td>
-    <td class='general' id='i44'></td>
+  <tr>
+    <td class="text_1 label" style="padding:10px;"><b><i>FO/Ballast</i></b></td>
+    <td class="text_1 label" style="padding:10px;"><b><i>FO/Laden</i></b></td>
+    <td class="text_1 label" style="padding:10px;"><b><i>FO/Port</i></b></td>
+    <td class="text_1 label" style="padding:10px;"><b><i>FO/Reserve</i></b></td>
+    <td class="text_1 label" style="padding:10px;"><b><i>DO/Sea</i></b></td>
+    <td class="text_1 label" style="padding:10px;"><b><i>DO/Port</i></b></td>
+    <td class="text_1 label" style="padding:10px;" colspan="2"><b><i>DO/Reserve</i></b></td>
   </tr>
-  <tr height="17">
-    <td height="17" class="label"><strong>Total Consumption (MT)</strong></td>
-    <td class="calculated" id='c45'></td>
-    <td class="calculated" id='d45' ></td>
-    <td class="calculated" id='e45'></td>
-    <td class='input'><input type='text'  id='f45' class='number' /></td>
-    <td class="calculated" id='g45'></td>
-    <td class="calculated" id='h45'></td>
-    <td class='input'><input type='text'  id='i45' class='number' /></td>
+  <tr bgcolor="d4e4f1">
+    <td style="padding:10px;"><b>Consumption (MT/day)</b></td>
+    <td class='input' style="padding:10px;"><input type='text'  id='c44' class='input_1 number' style="max-width:100px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text'  id='d44' class='input_1 number' style="max-width:100px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text'  id='e44' class='input_1 number' style="max-width:100px;" /></td>
+    <td class='input number' id='f44' style="padding:10px;"></td>
+    <td class='input' style="padding:10px;"><input type='text'  id='g44' class='input_1 number' style="max-width:100px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text'  id='h44' class='input_1 number' style="max-width:100px;" /></td>
+    <td class='general' id='i44' style="padding:10px;"></td>
   </tr>
-  <tr height="18">
-    <td height="18" class="label"><strong>Expense ($)</strong></td>
-    <td class="calculated" id='c46'></td>
-    <td class="calculated" id='d46'></td>
-    <td class="calculated" id='e46'></td>
-    <td class="calculated" id='f46'></td>
-    <td class="calculated" id='g46'></td>
-    <td class="calculated" id='h46'></td>
-    <td class="calculated"  id='i46'></td>
+  <tr>
+    <td class="label" style="padding:10px;"><strong>Total Consumption (MT)</strong></td>
+    <td class="label calculated" id='c45' style="padding:10px;"></td>
+    <td class="label calculated" id='d45' style="padding:10px;"></td>
+    <td class="label calculated" id='e45' style="padding:10px;"></td>
+    <td class='label input' style="padding:10px;"><input type='text' id='f45' class='input_1 number' style="max-width:100px;" /></td>
+    <td class="label calculated" id='g45' style="padding:10px;"></td>
+    <td class="label calculated" id='h45' style="padding:10px;"></td>
+    <td class='label input' style="padding:10px;"><input type='text' id='i45' class='input_1 number' style="max-width:100px;" /></td>
   </tr>
-  <tr height="21">
-    <td height="21" class="label"><strong>Total ($)</strong></td>
-    <td colspan="4" class="calculated" id='c47'></td>
-    <td colspan="3" class="calculated" id='g47'></td>
+  <tr>
+    <td class="label" style="padding:10px;"><strong>Expense ($)</strong></td>
+    <td class="label calculated" id='c46' style="padding:10px;"></td>
+    <td class="label calculated" id='d46' style="padding:10px;"></td>
+    <td class="label calculated" id='e46' style="padding:10px;"></td>
+    <td class="label calculated" id='f46' style="padding:10px;"></td>
+    <td class="label calculated" id='g46' style="padding:10px;"></td>
+    <td class="label calculated" id='h46' style="padding:10px;"></td>
+    <td class="label calculated" id='i46' style="padding:10px;"></td>
+  </tr>
+  <tr>
+    <td class="label" style="padding:10px;"><strong>Total ($)</strong></td>
+    <td colspan="4" class="label calculated" id='c47' style="padding:10px;"></td>
+    <td colspan="4" class="label calculated" id='g47' style="padding:10px;"></td>
   </tr>
 </table>
-<br />
-<br />
+<div style="border-bottom:1px dotted #ccc;">&nbsp;</div>
+<div>&nbsp;</div>
 
-<table cellspacing="0" cellpadding="0">
-      <col width="164" />
-      <col width="125" />
-      <col width="140" />
-      <col width="140" />
-      <tr height="18">
-        <td height="18" colspan="3" class="bold">DWCC</td>
+<div style="float:left; width:1300px; height:auto;">
+    <div style="float:left; width:640px; height:auto; padding-right:10px;">
+    <table width="640" border="0" cellspacing="0" cellpadding="0">
+      <tr bgcolor="b7cfe9">
+        <td class="text_1" colspan="8"><div style="padding:10px;"><b>DWCC</b></div></td>
       </tr>
-	  <tr height="18">
-        <td height="18" colspan="2" class="label"><strong>DW (MT)</strong></td>
-        <td width="155" class='calculated number' id='d18'></td>
-        <td width="140" class='label'><strong>Calculated Amount Reference</strong></td>
+      <tr bgcolor="d4e4f1">
+        <td colspan="2" style="padding:10px;"><strong>DW (MT)</strong></td>
+        <td width="155" class='calculated number' id='d18' style="padding:10px;"></td>
+        <td width="180" style="padding:10px;"><strong>Calculated Amount Reference</strong></td>
       </tr>
-      <tr height="17">
-        <td width="144" height="34" rowspan="2" class="label">Consumption (MT)</td>
-        <td width="151" class="label">FO</td>
-        <td class='input'><input type='text' class='number' id='d19'/></td>
-        <td class='calculated general' id='d19b'></td>
+      <tr bgcolor="e1f2ff">
+        <td width="200" height="34" rowspan="2" style="padding:10px;"><b>Consumption (MT)</b></td>
+        <td width="30" style="padding:10px;"><b>FO</b></td>
+        <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='d19' style="max-width:100px;" /></td>
+        <td class='calculated general' id='d19b' style="padding:10px;"></td>
       </tr>
-      <tr height="17">
-        <td height="17" class="label">DO</td>
-        <td class='input'><input type='text' class='number'  id='d20' /></td>
-        <td class='calculated general' id='d20b'></td>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><b>DO</b></td>
+        <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='d20' style="max-width:100px;" /></td>
+        <td class='calculated general' id='d20b' style="padding:10px;"></td>
       </tr>
-      <tr height="17">
-        <td height="34" rowspan="2" class="label">Reserve (MT)</td>
-        <td class="label">FO</td>
-        <td class='input'><input type='text' class='number'  id='d21'/></td>
-        <td class='calculated general' id='d21b'></td>
+      <tr bgcolor="e1f2ff">
+        <td rowspan="2" style="padding:10px;"><b>Reserve (MT)</b></td>
+        <td style="padding:10px;"><b>FO</b></td>
+        <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='d21' style="max-width:100px;" /></td>
+        <td class='calculated general' id='d21b' style="padding:10px;"></td>
       </tr>
-      <tr height="17">
-        <td height="17" class="label">DO</td>
-        <td class='input'><input type='text' class='number'  id='d22'/></td>
-        <td class='calculated general' id='d22b'></td>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><b>DO</b></td>
+        <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='d22' style="max-width:100px;" /></td>
+        <td class='calculated general' id='d22b' style="padding:10px;"></td>
       </tr>
-      <tr height="17">
-        <td height="17" colspan="2" class="label">FW (MT)</td>
-        <td class='input'><input type='text' class='number'  id='d23' /></td>
-        <td class='calculated general' id='d23b'></td>
+      <tr bgcolor="e1f2ff">
+        <td height="17" colspan="2" style="padding:10px;"><b>FW (MT)</b></td>
+        <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='d23' style="max-width:100px;" /></td>
+        <td class='calculated general' id='d23b' style="padding:10px;"></td>
       </tr>
-      <tr height="18">
-        <td height="18" colspan="2" class="label">Constant (MT)</td>
-        <td class='input'><input type='text' class='number'  id='d24'/></td>
-        <td class='calculated general' id='d24b'></td>
+      <tr bgcolor="d4e4f1">
+        <td height="18" colspan="2" style="padding:10px;"><b>Constant (MT)</b></td>
+        <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='d24' style="max-width:100px;" /></td>
+        <td class='calculated general' id='d24b' style="padding:10px;"></td>
       </tr>
-      <tr height="18">
-        <td height="18" colspan="2" class="label"><strong>Used DW (MT)</strong></td>
-        <td class='calculated number' id='d25'></td>
+      <tr>
+        <td colspan="2" class="label" style="padding:10px;"><strong>Used DW (MT)</strong></td>
+        <td colspan="2" class='label calculated number' id='d25' style="padding:10px;"></td>
       </tr>
-      <tr height="18">
-        <td height="18" colspan="2" class="label"><strong>DWCC (MT)</strong></td>
-        <td class='calculated number' id='d26'></td>
-
+      <tr>
+        <td colspan="2" class="label" style="padding:10px;"><strong>DWCC (MT)</strong></td>
+        <td colspan="2" class='label calculated number' id='d26' style="padding:10px;"></td>
       </tr>
-</table>
-<br><br>
-
-
-	<table cellspacing="0" cellpadding="0">
-	  <col width="164" />
-	  <col width="125" />
-	  <col width="159" />
-	  <col width="138" />
-	  <col width="159" />
-	  <col width="126" />
-	  <col width="193" />
-	  <tr height="18">
-	    <td width="164" height="18" align="center" class="bold">PORT</td>
-	    <td width="125">&nbsp;</td>
-	    <td width="159"></td>
-	    <td width="138"></td>
-	    <td width="138"></td>
-	    <td width="159" class="bold">Canal</td>
-	    <td width="126">&nbsp;</td>
-	    <td width="193"></td>
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class="label">Laytime (hrs)</td>
-	    <td class='input'><input type='text' id='c51' class='number'  /></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td class="label">Canal</td>
-	    <td></td>
-	    <td>		
-		<select id='canal'>
-			<option value='White Sea - Baltic Canal' >White Sea - Baltic Canal</option>
-			<option value='Rhine - Main- Danube Canal' >Rhine - Main- Danube Canal</option>
-			<option value='Volga - Don Canal' >Volga - Don Canal</option>
-			<option value='Kiel Canal' >Kiel Canal</option>
-			<option value='Houston Ship Channel' >Houston Ship Channel</option>
-			<option value='Alphonse Xlll Canal' >Alphonse Xlll Canal</option>
-			<option value='Panama Canal' >Panama Canal</option>
-			<option value='Danube Black - Sea Canal' >Danube Black - Sea Canal</option>
-			<option value='Manchester Ship Canal' >Manchester Ship Canal</option>
-			<option value='Welland Canal' >Welland Canal</option>
-			<option value='Saint Lawrence Seaway' >Saint Lawrence Seaway</option>
-			<option value='Suez Canal' >Suez Canal</option>
-		</select></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Dem ($/day)</td>
-	    <td class='input'><input type='text' id='c52' class='number'  /></td>
-	    <td>pro rated</td>
-	    <td></td>
-	    <td></td>
-	    <td class="label">Tolls ($)</td>
-	    <td class='empty'><input type='text' id='ctoll1' class='number' /></td>
-	    <td class='empty'><input type='text' id='ctoll2' class='number' /></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Term</td>
-	    <td><select id='term'>
-			<option value='DHDLTSBENDS' >DHDLTSBENDS</option>
-			<option value='DHDATSBENDS' >DHDATSBENDS</option>
-			<option value='DHDWTSBENDS' >DHDWTSBENDS</option>
-		</select>
+    </table>
+    <div style="border-bottom:1px dotted #ccc;">&nbsp;</div>
+	<div>&nbsp;</div>
+    <table width="640" border="0" cellspacing="0" cellpadding="0">
+      <tr bgcolor="b7cfe9">
+        <td class="text_1" colspan="5"><div style="padding:10px;"><b>Port</b></div></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td width="160" style="padding:10px;"><strong>Laytime (hrs)</strong></td>
+	    <td width="160" class='input' style="padding:10px;"><input type='text' id='c51' class='input_1 number' style="max-width:100px;" /></td>
+	    <td width="160" style="padding:10px;"></td>
+	    <td width="160" style="padding:10px;"></td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td style="padding:10px;"><strong>Dem ($/day)</strong></td>
+	    <td class='input' style="padding:10px;"><input type='text' id='c52' class='input_1 number' style="max-width:100px;" /></td>
+	    <td style="padding:10px;"><strong>pro rated</strong></td>
+	    <td style="padding:10px;"></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><strong>Term</strong></td>
+    	<td style="padding:10px;">
+            <select id='term' class="input_1" style="max-width:100px;">
+                <option value='DHDLTSBENDS' >DHDLTSBENDS</option>
+                <option value='DHDATSBENDS' >DHDATSBENDS</option>
+                <option value='DHDWTSBENDS' >DHDWTSBENDS</option>
+            </select>
 		</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td class="label">Booking Fee ($)</td>
-	    <td class='empty'><input type='text' id='cbook1' class='number' /></td>
-	    <td class='empty'><input type='text' id='cbook2' class='number' /></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label"><strong>Des ($/day)</strong></td>
-	    <td class="calculated" id='c54'>&nbsp;</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td class="label">Tugs ($)</td>
-	    <td class='empty'><input type='text' id='ctug1' class='number'  /></td>
-	    <td class='empty'><input type='text' id='ctug2' class='number' /></td>
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class="label">Liner Terms</td>
-	    <td>
-		<select id='linerterms'>
+	    <td style="padding:10px;"></td>
+	    <td style="padding:10px;"></td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td style="padding:10px;"><strong>Des ($/day)</strong></td>
+	    <td class="calculated" id='c54' style="padding:10px;">&nbsp;</td>
+	    <td style="padding:10px;"></td>
+	    <td style="padding:10px;"></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><strong>Liner Terms</strong></td>
+	    <td style="padding:10px;">
+		<select id='linerterms' class="input_1" style="max-width:100px;">
 			<option value='FILO' >FILO</option>
 			<option value='FILTD' >FILTD</option>
 			<option value='FIOLS' >FIOLS</option>
@@ -2363,322 +2330,250 @@ jQuery(function(){
 			<option value='BTBT' >BTBT</option>
 		</select>
 		</td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td class="label">Line Handlers ($)</td>
-	    <td class='empty'><input type='text' id='cline1' class='number' /></td>
-	    <td class='empty'><input type='text' id='cline2' class='number' /></td>
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class="label">Port</td>
-	    <td class='port1' id='port1'>Port 1 </td>
-	    <td class='port2' id='port2'>Port 2</td>
-	    <td class='port3' id='port3'>Port 3 </td>
-	    <td></td>
-	    <td class="label">Miscellaneous ($)</td>
-	    <td class='empty'><input type='text' id='cmisc1' class='number'  /></td>
-	    <td class='empty'><input type='text' id='cmisc2' class='number' /></td>
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class="label">Dues ($)</td>
-	    <td class='input port1'><input type='text' class='number dues' /></td>
-	    <td class='input port2'><input type='text' class='number dues' /></td>
-	    <td class='input port3'><input type='text' class='number dues' /></td>
-	    <td></td>
-	    <td class="label"><strong>Total ($)</strong></td>
-	    <td class="calculated" id='ctotal1'></td>
-	    <td class="calculated" id='ctotal2'></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Pilotage ($)</td>
-	    <td class='input port1'><input type='text' class='number pilotage' /></td>
-	    <td class='input port2'><input type='text' class='number pilotage' /></td>
-	    <td class='input port3'><input type='text' class='number pilotage' /></td
-	    ><td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Tugs ($)</td>
-	    <td class='input port1'><input type='text' class='number tugs' /></td>
-	    <td class='input port2'><input type='text' class='number tugs' /></td>
-	    <td class='input port3'><input type='text' class='number tugs' /></td
-	    ><td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Bunker    Adjustment ($)</td>
-	    <td class='input port1'><input type='text' class='number bunkeradjustment' /></td>
-	    <td class='input port2'><input type='text' class='number bunkeradjustment' /></td>
-	    <td class='input port3'><input type='text' class='number bunkeradjustment' /></td
-	    ><td></td>
+	    <td style="padding:10px;"></td>
+	    <td style="padding:10px;"></td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td style="padding:10px;"><strong>Port</strong></td>
+	    <td class='port1' id='port1' style="padding:10px;"><strong>Port 1</strong></td>
+	    <td class='port2' id='port2' style="padding:10px;"><strong>Port 2</strong></td>
+	    <td class='port3' id='port3' style="padding:10px;"><strong>Port 3 </strong></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><strong>Dues ($)</strong></td>
+	    <td class='input port1' style="padding:10px;"><input type='text' class='input_1 number dues' style="max-width:100px;" /></td>
+	    <td class='input port2' style="padding:10px;"><input type='text' class='input_1 number dues' style="max-width:100px;" /></td>
+	    <td class='input port3' style="padding:10px;"><input type='text' class='input_1 number dues' style="max-width:100px;" /></td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td style="padding:10px;"><strong>Pilotage ($)</strong></td>
+	    <td class='input port1' style="padding:10px;"><input type='text' class='input_1 number pilotage' style="max-width:100px;" /></td>
+	    <td class='input port2' style="padding:10px;"><input type='text' class='input_1 number pilotage' style="max-width:100px;" /></td>
+	    <td class='input port3' style="padding:10px;"><input type='text' class='input_1 number pilotage' style="max-width:100px;" /></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><strong>Tugs ($)</strong></td>
+	    <td class='input port1' style="padding:10px;"><input type='text' class='input_1 number tugs' style="max-width:100px;" /></td>
+	    <td class='input port2' style="padding:10px;"><input type='text' class='input_1 number tugs' style="max-width:100px;" /></td>
+	    <td class='input port3' style="padding:10px;"><input type='text' class='input_1 number tugs' style="max-width:100px;" /></td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td style="padding:10px;"><strong>Bunker Adjustment ($)</strong></td>
+	    <td class='input port1' style="padding:10px;"><input type='text' class='input_1 number bunkeradjustment' style="max-width:100px;" /></td>
+	    <td class='input port2' style="padding:10px;"><input type='text' class='input_1 number bunkeradjustment' style="max-width:100px;" /></td>
+	    <td class='input port3' style="padding:10px;"><input type='text' class='input_1 number bunkeradjustment' style="max-width:100px;" /></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><strong>Mooring ($)</strong></td>
+	    <td class='input port1' style="padding:10px;"><input type='text' class='input_1 number mooring' style="max-width:100px;" /></td>
+	    <td class='input port2' style="padding:10px;"><input type='text' class='input_1 number mooring' style="max-width:100px;" /></td>
+	    <td class='input port3' style="padding:10px;"><input type='text' class='input_1 number mooring' style="max-width:100px;" /></td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td style="padding:10px;"><strong>Dockage ($)</strong></td>
+	    <td class='input port1' style="padding:10px;"><input type='text' class='input_1 number dockage' style="max-width:100px;" /></td>
+	    <td class='input port2' style="padding:10px;"><input type='text' class='input_1 number dockage' style="max-width:100px;" /></td>
+	    <td class='input port3' style="padding:10px;"><input type='text' class='input_1 number dockage' style="max-width:100px;" /></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><strong>Load/Discharge ($)</strong></td>
+	    <td class='input port1' style="padding:10px;"><input type='text' class='input_1 number loaddischarge' style="max-width:100px;" /></td>
+	    <td class='input port2' style="padding:10px;"><input type='text' class='input_1 number loaddischarge' style="max-width:100px;" /></td>
+	    <td class='input port3' style="padding:10px;"><input type='text' class='input_1 number loaddischarge' style="max-width:100px;" /></td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td style="padding:10px;"><strong>Agency Fee ($)</strong></td>
+	    <td class='input port1' style="padding:10px;"><input type='text' class='input_1 number agencyfee' style="max-width:100px;" /></td>
+	    <td class='input port2' style="padding:10px;"><input type='text' class='input_1 number agencyfee' style="max-width:100px;" /></td>
+	    <td class='input port3' style="padding:10px;"><input type='text' class='input_1 number agencyfee' style="max-width:100px;" /></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><strong>Miscellaneous ($)</strong></td>
+	    <td class='input port1' style="padding:10px;"><input type='text' class='input_1 number miscellaneous' style="max-width:100px;" /></td>
+	    <td class='input port2' style="padding:10px;"><input type='text' class='input_1 number miscellaneous' style="max-width:100px;" /></td>
+	    <td class='input port3' style="padding:10px;"><input type='text' class='input_1 number miscellaneous' style="max-width:100px;" /></td>
+      </tr>
+      <tr>
+        <td class="label" style="padding:10px;"><strong>Demurrage ($)</strong></td>
+	    <td colspan="3" class="label calculated" id='c66' style="padding:10px;"><strong>0.00</strong></td>
+      </tr>
+      <tr>
+        <td class="label" style="padding:10px;"><strong>Despatch ($)</strong></td>
+	    <td colspan="3" class="label calculated" id='c67' style="padding:10px;"><strong>48,849.31</strong></td>
+      </tr>
+      <tr>
+        <td class="label" style="padding:10px;"><strong>Total ($)</strong></td>
+	    <td colspan="3" class="label calculated" id='c68' style="padding:10px;"></td>
+      </tr>
+    </table>
+    </div>
+    <div style="float:left; width:640px; height:auto; padding-left:10px;">
+    <div style="float:left; width:640px; height:auto; padding-right:10px;">
+    <table width="640" border="0" cellspacing="0" cellpadding="0">
+      <tr bgcolor="b7cfe9">
+        <td class="text_1" colspan="8"><div style="padding:10px;"><b>Canal</b></div></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td width="140" style="padding:10px;"><b>Canal</b></td>
+        <td width="250" style="padding:10px;">&nbsp;</td>
+        <td width="250" style="padding:10px;">		
+            <select id='canal' class="input_1" style="max-width:200px;">
+                <option value='White Sea - Baltic Canal' >White Sea - Baltic Canal</option>
+                <option value='Rhine - Main- Danube Canal' >Rhine - Main- Danube Canal</option>
+                <option value='Volga - Don Canal' >Volga - Don Canal</option>
+                <option value='Kiel Canal' >Kiel Canal</option>
+                <option value='Houston Ship Channel' >Houston Ship Channel</option>
+                <option value='Alphonse Xlll Canal' >Alphonse Xlll Canal</option>
+                <option value='Panama Canal' >Panama Canal</option>
+                <option value='Danube Black - Sea Canal' >Danube Black - Sea Canal</option>
+                <option value='Manchester Ship Canal' >Manchester Ship Canal</option>
+                <option value='Welland Canal' >Welland Canal</option>
+                <option value='Saint Lawrence Seaway' >Saint Lawrence Seaway</option>
+                <option value='Suez Canal' >Suez Canal</option>
+            </select>
+        </td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td style="padding:10px;"><b>Booking Fee ($)</b></td>
+        <td class='empty' style="padding:10px;"><input type='text' id='cbook1' class='input_1 number' style="max-width:200px;" /></td>
+        <td class='empty' style="padding:10px;"><input type='text' id='cbook2' class='input_1 number' style="max-width:200px;" /></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><b>Tugs ($)</b></td>
+        <td class='empty' style="padding:10px;"><input type='text' id='ctug1' class='input_1 number' style="max-width:200px;" /></td>
+        <td class='empty' style="padding:10px;"><input type='text' id='ctug2' class='input_1 number' style="max-width:200px;" /></td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td style="padding:10px;"><b>Line Handlers ($)</b></td>
+        <td class='empty' style="padding:10px;"><input type='text' id='cline1' class='input_1 number' style="max-width:200px;" /></td>
+        <td class='empty' style="padding:10px;"><input type='text' id='cline2' class='input_1 number' style="max-width:200px;" /></td>
+      </tr>
+      <tr bgcolor="d4e4f1">
+        <td style="padding:10px;"><b>Miscellaneous ($)</b></td>
+        <td class='empty' style="padding:10px;"><input type='text' id='cmisc1' class='input_1 number' style="max-width:200px;" /></td>
+        <td class='empty' style="padding:10px;"><input type='text' id='cmisc2' class='input_1 number' style="max-width:200px;" /></td>
+      </tr>
+      <tr bgcolor="e1f2ff">
+        <td class="label" style="padding:10px;"><strong>Total ($)</strong></td>
+        <td class="label calculated" id='ctotal1' style="padding:10px;"></td>
+        <td class="label calculated" id='ctotal2' style="padding:10px;"></td>
+      </tr>
+    </table>
+    <div style="border-bottom:1px dotted #ccc;">&nbsp;</div>
+	<div>&nbsp;</div>
+    <table width="640" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+      	<td height="810" bgcolor="#000000"><iframe src='map/ve.php' width='640' height='810' frameborder="0"></iframe></td>
+      </tr>
+    </table>
+    </div>
+</div>
+<div style="float:left; width:100%; height:auto; border-bottom:1px dotted #ccc;">&nbsp;</div>
+<div style="float:left; width:100%; height:auto;">&nbsp;</div>
 
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Mooring ($)</td>
-	    <td class='input port1'><input type='text' class='number mooring' /></td>
-	    <td class='input port2'><input type='text' class='number mooring' /></td>
-	    <td class='input port3'><input type='text' class='number mooring' /></td
-	    ><td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Dockage ($)</td>
-	    <td class='input port1'><input type='text' class='number dockage' /></td>
-	    <td class='input port2'><input type='text' class='number dockage' /></td>
-	    <td class='input port3'><input type='text' class='number dockage' /></td
-	    ><td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Load/Discharge    ($)</td>
-	    <td class='input port1'><input type='text' class='number loaddischarge' /></td>
-	    <td class='input port2'><input type='text' class='number loaddischarge' /></td>
-	    <td class='input port3'><input type='text' class='number loaddischarge' /></td
-	    ><td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Agency Fee    ($)</td>
-	    <td class='input port1'><input type='text' class='number agencyfee' /></td>
-	    <td class='input port2'><input type='text' class='number agencyfee' /></td>
-	    <td class='input port3'><input type='text' class='number agencyfee' /></td
-	    ><td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label">Miscellaneous    ($)</td>
-	    <td class='input port1'><input type='text' class='number miscellaneous' /></td>
-	    <td class='input port2'><input type='text' class='number miscellaneous' /></td>
-	    <td class='input port3'><input type='text' class='number miscellaneous' /></td
-	    ><td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="17">
-	    <td height="17" class="label"><strong>Demurrage ($)</strong></td>
-	    <td colspan="2" class="calculated" id='c66'><strong>0.00</strong></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class="label"><strong>Despatch ($)</strong></td>
-	    <td colspan="2" class="calculated" id='c67'><strong>48,849.31</strong></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class="label"><strong>Total ($)</strong></td>
-	    <td colspan="2" class="calculated" id='c68'></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	</table>
-	<br />
-	<br />
-	<table cellspacing="0" cellpadding="0">
-	  <col width="164" />
-	  <col width="125" />
-	  <col width="159" />
-	  <col width="138" />
-	  <col width="159" />
-	  <col width="126" />
-	  <col width="193" />
-	  <col width="119" />
-	  <col width="105" />
-	  <col width="83" />
-	  <col width="180" />
-	  <col width="119" />
-	  <tr height="21">
-	    <td width="164" height="21" class="bold">VOYAGE DISBURSMENTS</td>
-	    <td width="125">&nbsp;</td>
-	    <td width="159">&nbsp;</td>
-	    <td width="138">&nbsp;</td>
-	    <td width="159" class="bold">Voyage</td>
-	    <td width="126">&nbsp;</td>
-	    <td width="193">&nbsp;</td>
-	    <td width="119"></td>
-	    <td width="105"></td>
-	    <!--
-		<td width="83" class="bold">Operating</td>
-	    <td width="299" colspan="2" class="bold">Capital</td>
-	  	-->
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class="label"><strong>Bunker ($)</strong></td>
-	    <td class="label"><strong>Port ($)</strong></td>
-	    <td class="label"><strong>Canal($)</strong></td>
-	    <td class="label">Add. Insurance ($)</td>
-	    <td class="label">ILOHC</td>
-	    <td class="label">ILOW</td>
-	    <td class="label">CVE</td>
-	    <td class="label">Ballast Bonus</td>
-	    <td class="label">Miscellaneous</td>
-	    <!--
-		<td class="label">Running Cost ($/day)</td>
-	    <td class="label">Loan Repayment / Charter Hire ($/mth)</td>
-	    <td class="label">Interest Exp ($/yr)</td>
-	  	-->
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class="calculated" id='b74'></td>
-	    <td class="calculated" id='c74'><strong>161,150.69</strong></td>
-	    <td class="calculated" id='d74'><strong>150,000.00</strong></td>
-	    <td class='input'><input type='text' class='number' id='e74'  /></td>
-	    <td class='input'><input type='text' class='number' id='f74' /></td>
-	    <td class='input'><input type='text' class='number' id='g74' /></td>
-	    <td class='input'><input type='text' class='number' id='h74' /></td>
-	    <td class='input'><input type='text' class='number' id='i74' /></td>
-	    <td class='input'><input type='text' class='number' id='j74' /></td>
-	    <!--
-		<td class='input'><input type='text'  /></td>
-	    <td class='input'><input type='text'  /></td>
-	    <td class='input'><input type='text'  /></td>
-	  `-->
-	  </tr>
-	  <tr height="21">
-	    <td height="21" colspan="9" class="calculated" id='b75'></td>
-	    <!--
-		<td class="calculated" id='k75'><strong>202,893.32</strong></td>
-	    <td colspan="2" class="calculated" id='l75'><strong>2,067,625.00</strong></td>
-	  	-->
-	  </tr>
-	</table>
-	<br />
-	<br />
-	<table cellspacing="0" cellpadding="0">
-	  <col width="164" />
-	  <col width="125" />
-	  <col width="159" />
-	  <col width="138" />
-	  <col width="159" />
-	  <col width="126" />
-	  <col width="193" />
-	  <col width="119" />
-	  <tr height="21">
-	    <td width="164" height="21" class="bold">RESULT    1</td>
-	    <td width="125"></td>
-	    <td width="159"></td>
-	    <td width="138"></td>
-	    <td width="159"></td>
-	    <td width="126"></td>
-	    <td width="193"></td>
-	    <td width="119"></td>
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class="label">Freight Rate ($/MT)</td>
-	    <td class="label">Gross Freight ($)</td>
-	    <td class="label">Brok. Comm ($)</td>
-	    <td class="label">Add. Comm ($)</td>
-	    <td class="label">Gross Income ($)</td>
-	    <td class="label">TCE ($/day)</td>
-	    <!--
-		<td class="label">BE TCE ($/day)</td>
-	    <td class="label">Market TCE ($/day)</td>
-	 	-->
-	  </tr>
-	  <tr height="18">
-	    <td height="18" class='empty'><input type='text' class='number' id='b80' /></td>
-	    <td class="calculated" id='c80'></td>
-	    <td><input type='text' class='number' id='d80' /></td>
-	    <td><input type='text' class='number' id='e80' /></td>
-	    <td class="calculated" id='f80'></td>
-	    <td align="right" class="calculated" id='g80'></td>
-	    <!--
-		<td class="calculated" id='h80'></td>
-	    <td class='empty'><input type='text' class='number' id='i80' /></td>
-	 	-->
-	  </tr>
-	  <tr height="18">
-	    <td height="18"></td>
-	    <td></td>
-	    <td colspan="2" class="calculated" id='d81'></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	</table>
-	<br />
-	<br />
-	<table cellspacing="0" cellpadding="0">
-	  <col width="164" />
-	  <col width="125" />
-	  <col width="159" />
-	  <col width="138" />
-	  <col width="159" />
-	  <col width="126" />
-	  <col width="193" />
-	  <col width="119" />
-	  <tr height="21">
-	    <td width="164" height="21" class="bold">RESULT    2</td>
-	    <td width="125"></td>
-	    <td width="159"></td>
-	    <td width="138"></td>
-	    <td width="159"></td>
-	    <td width="126"></td>
-	    <td width="193"></td>
-	    <td width="119"></td>
-	  </tr>
-	  <tr height="21">
-	    <td height="21" class="label">Freight Rate ($/MT)</td>
-	    <td class="label">Gross Freight ($)</td>
-	    <td class="label">Brok. Comm ($)</td>
-	    <td class="label">Add. Comm ($)</td>
-	    <td class="label">Gross Income ($)</td>
-	    <td class="label">TCE ($/day)</td>
-	    <!--
-		<td class="label">BE TCE ($/day)</td>
-	    <td class="label">Market TCE ($/day)</td>
-	 	-->
-	  </tr>
-	  <tr height="21">
-	    <td height="21" class="calculated" id='b85'></td>
-	    <td class="calculated"  id='c85'></td>
-	    <td><input type='text' class='number' id='d85'/></td>
-	    <td><input type='text' class='number' id='e85'/></td>
-	    <td class="calculated"  id='f85'></td>
-	    <td class='empty'><input type='text' class='number' id='g85'/></td>
-	    <!--
-		<td class="calculated"  id='h85'>55,953.50</td>
-	    <td class='empty'><input type='text'  /></td>
-	 	-->
-	  </tr>
-	  <tr height="21">
-	    <td height="21"></td>
-	    <td></td>
-	    <td colspan="2" class="calculated"  id='d86'></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	    <td></td>
-	  </tr>
-	</table>
+<table width="1300" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="b7cfe9">
+    <td width="148" class="text_1"><div style="padding:10px;"><b>Voyage Disbursments</b></div></td>
+    <td width="144"></td>
+    <td width="144"></td>
+    <td width="144"></td>
+    <td width="144" class="text_1"><div style="padding:10px;"><b>Voyage</b></div></td>
+    <td width="144"></td>
+    <td width="144"></td>
+    <td width="144"></td>
+    <td width="144"></td>
+  </tr>
+  <tr bgcolor="d4e4f1">
+    <td class="label" style="padding:10px;"><strong>Bunker ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Port ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Canal($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Add. Insurance ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>ILOHC</strong></td>
+    <td class="label" style="padding:10px;"><strong>ILOW</strong></td>
+    <td class="label" style="padding:10px;"><strong>CVE</strong></td>
+    <td class="label" style="padding:10px;"><strong>Ballast Bonus</strong></td>
+    <td class="label" style="padding:10px;"><strong>Miscellaneous</strong></td>
+  </tr>
+  <tr bgcolor="e1f2ff">
+    <td class="calculated" id='b74' style="padding:10px;"></td>
+    <td class="calculated" id='c74' style="padding:10px;"><strong>161,150.69</strong></td>
+    <td class="calculated" id='d74' style="padding:10px;"><strong>150,000.00</strong></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='e74' style="max-width:100px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='f74' style="max-width:100px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='g74' style="max-width:100px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='h74' style="max-width:100px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='i74' style="max-width:100px;" /></td>
+    <td class='input' style="padding:10px;"><input type='text' class='input_1 number' id='j74' style="max-width:100px;" /></td>
+  </tr>
+  <tr>
+  	<td colspan="9" class="label calculated" id='b75' style="padding:10px;"></td>
+  </tr>
+</table>
+<div style="float:left; width:100%; height:auto; border-bottom:1px dotted #ccc;">&nbsp;</div>
+<div style="float:left; width:100%; height:auto;">&nbsp;</div>
 
+<table width="1300" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="b7cfe9">
+  	<td width="216" class="text_1"><div style="padding:10px;"><b>Result 1</b></div></td>
+    <td width="216"></td>
+    <td width="216"></td>
+    <td width="216"></td>
+    <td width="216"></td>
+    <td width="220"></td>
+  </tr>
+  <tr bgcolor="d4e4f1">
+    <td class="label" style="padding:10px;"><strong>Freight Rate ($/MT)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Gross Freight ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Brok. Comm ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Add. Comm ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Gross Income ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>TCE ($/day)</strong></td>
+  </tr>
+  <tr bgcolor="e1f2ff">
+    <td class='empty' style="padding:10px;"><input type='text' class='input_1 number' id='b80' style="max-width:200px;" /></td>
+    <td class="calculated" id='c80' style="padding:10px;"></td>
+    <td style="padding:10px;"><input type='text' class='input_1 number' id='d80' style="max-width:200px;" /></td>
+    <td style="padding:10px;"><input type='text' class='input_1 number' id='e80' style="max-width:200px;" /></td>
+    <td class="calculated" id='f80' style="padding:10px;"></td>
+    <td class="calculated" id='g80' style="padding:10px;"></td>
+  </tr>
+  <tr>
+    <td colspan="6" class="label calculated" id='d81' style="padding:10px;"></td>
+  </tr>
+</table>
+<div style="float:left; width:100%; height:auto; border-bottom:1px dotted #ccc;">&nbsp;</div>
+<div style="float:left; width:100%; height:auto;">&nbsp;</div>
+
+<table width="1300" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="b7cfe9">
+  	<td width="216" class="text_1"><div style="padding:10px;"><b>Result 2</b></div></td>
+    <td width="216"></td>
+    <td width="216"></td>
+    <td width="216"></td>
+    <td width="216"></td>
+    <td width="220"></td>
+  </tr>
+  <tr bgcolor="d4e4f1">
+    <td style="padding:10px;"><strong>Freight Rate ($/MT)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Gross Freight ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Brok. Comm ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Add. Comm ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>Gross Income ($)</strong></td>
+    <td class="label" style="padding:10px;"><strong>TCE ($/day)</strong></td>
+  </tr>
+  <tr bgcolor="e1f2ff">
+    <td class="calculated" id='b85' style="padding:10px;"></td>
+    <td class="calculated"  id='c85' style="padding:10px;"></td>
+    <td style="padding:10px;"><input type='text' class='input_1 number' id='d85' style="max-width:200px;" /></td>
+    <td style="padding:10px;"><input type='text' class='input_1 number' id='e85' style="max-width:200px;" /></td>
+    <td class="calculated"  id='f85' style="padding:10px;"></td>
+    <td class='empty' style="padding:10px;"><input type='text' class='input_1 number' id='g85' style="max-width:200px;" /></td>
+  </tr>
+  <tr>
+    <td colspan="6" class="label calculated"  id='d86' style="padding:10px;"></td>
+  </tr>
+</table>
+<div>&nbsp;</div>
+</div>
 </body>
 </html>

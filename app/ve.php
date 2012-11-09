@@ -89,7 +89,7 @@ if($_GET['search']){
 		$ship['fuel_type'] = getValue($r2[0]['data'], 'FUEL_TYPE');
 		$ship['manager_owner'] = getValue($r2[0]['data'], 'MANAGER_OWNER');
 		$ship['manager_owner_email'] = getValue($r2[0]['data'], 'MANAGER_OWNER_EMAIL');
-		$ship['class_society'] = getValue($r2[0]['data'], 'CLASS_SOCIETY');
+		$ship['class_society'] = htmlentities(getValue($r2[0]['data'], 'CLASS_SOCIETY'));
 
 		$ships[] = $ship;
 	}
@@ -289,6 +289,24 @@ body {
 	font-size: 10px;
 	background-color: #dddddd;
 }*/
+
+.content_link{
+	padding:10px 15px;
+	background-color:#f5f5f5;
+	color:#333;
+	cursor:pointer;
+}
+
+.content_link_selected{
+	padding:10px 15px;
+	background-color:#a6a6a6;
+	color:#fff;
+	cursor:pointer;
+}
+
+.clickable{
+	cursor:pointer;
+}
 </style>
 
 <script>
@@ -637,53 +655,26 @@ $(function(){
 
 
 	$(".c31").autocomplete({
-
-		
-
 		//define callback to format results
-
 		source: function(req, add){
-
-			
-
 			//pass request to server
-
 			$.getJSON("ve.php?port=1", req, function(data) {
-
-				
-
 				//create array for response objects
-
 				var suggestions = [];
 
-				
-
 				//process response
-
-				$.each(data, function(i, val){								
-
+				$.each(data, function(i, val){		
 					suggestions.push(val.name);
-
 				});
 
-				
-
 				//pass array to callback
-
 				add(suggestions);
-
 			});
-
 		},
 
-		
-
 		//define select handler
-
 		select: function(e, ui) {
-
 			str = ui.item.value;
-
 			idx = jQuery(this).parent().parent().attr('id');
 
 			setValue(jQuery("#"+idx+" .c31"), str);
@@ -691,11 +682,7 @@ $(function(){
 			ballastCalc(true);
 
 			calculateDates();
-
 		},
-
-
-
 	});
 
 
@@ -1347,9 +1334,6 @@ $(function(){
 
 
 	$("#ship").autocomplete({
-
-		
-
 		//define callback to format results
 
 		source: function(req, add){
@@ -1605,22 +1589,13 @@ function showShipDetails(imo){
 
 
 function ownerDetails(owner, owner_id){
-
 	var iframe = $("#contactiframe");
-
-
 
 	$(iframe).contents().find("body").html("");
 
-	
-
 	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
-
 	jQuery("#contactdialog").dialog("open");
-
 }
-
-
 
 function addCommas(nStr)
 
@@ -3620,7 +3595,40 @@ jQuery(function(){
 });
 
 
-
+function displayContent(content){
+	jQuery('#voyage_estimator_id').hide();
+	jQuery('#distance_tables_id').hide();
+	jQuery('#ports_intelligence_id').hide();
+	jQuery('#piracy_notices_id').hide();
+	jQuery('#bunker_pricing_id').hide();
+	jQuery('#weather_id').hide();
+	
+	jQuery('#voyage_estimator_id_link').removeClass('content_link_selected');
+	jQuery('#distance_tables_id_link').removeClass('content_link_selected');
+	jQuery('#ports_intelligence_id_link').removeClass('content_link_selected');
+	jQuery('#piracy_notices_id_link').removeClass('content_link_selected');
+	jQuery('#bunker_pricing_id_link').removeClass('content_link_selected');
+	jQuery('#weather_id_link').removeClass('content_link_selected');
+	
+	jQuery('#voyage_estimator_id_link').addClass('content_link');
+	jQuery('#' + content + '_link').addClass('content_link_selected');
+	
+	if(content=='piracy_notices_id'){
+		iframe = document.getElementById('map_iframe');
+  		iframe.src = 'map/index4.php';
+	}else if(content=='weather_id'){
+		iframe = document.getElementById('map_iframew');
+  		iframe.src = 'http://map.openseamap.org/map/weather.php';
+	}else{
+		iframe1 = document.getElementById('map_iframe');
+  		iframe1.src = '';
+		
+		iframe2 = document.getElementById('map_iframew');
+  		iframe2.src = '';
+	}
+	
+	jQuery('#' + content).show();
+}
 </script>
 
 </head>
@@ -3635,7 +3643,55 @@ jQuery(function(){
 	<iframe id='contactiframe' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
 
+<div id="mapdialogpiracyalert" title="PIRACY ALERT" style='display:none'>
+	<iframe id='mapiframepiracyalert' name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
+
+<div id="bunkerpricedialog" title="BUNKER PRICE HISTORY"  style='display:none'>
+	<div id='bunkerpricecontent'></div>
+</div>
+
+<script>
+function getBunkerPriceHistory(port_code){
+	jQuery('#pleasewait2').show();
+	
+	jQuery.ajax({
+		type: 'GET',
+		url: "bunkerpricehistory.php?port_code="+port_code,
+		data:  "",
+
+		success: function(data) {
+			jQuery('#pleasewait2').hide();
+			
+			jQuery('#bunkerpricecontent').html(data);
+			jQuery( "#bunkerpricedialog" ).dialog("open"); 
+		}
+	});
+}
+
+jQuery( "#mapdialogpiracyalert" ).dialog( { width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#mapdialogpiracyalert").dialog("close");
+
+jQuery( "#bunkerpricedialog" ).dialog( { width: 700, height: 600 });
+jQuery( "#bunkerpricedialog" ).dialog("close");
+</script>
+
 <div style="max-width:1300px; height:auto; margin:0 auto;">
+	<div>&nbsp;</div>
+    <div>
+        <a onclick="displayContent('voyage_estimator_id');" id='voyage_estimator_id_link' class="content_link_selected">Voyage Estimator</a> &nbsp;&nbsp; 
+        <a onclick="displayContent('distance_tables_id');" id='distance_tables_id_link' class="content_link">Distance Tables</a> &nbsp;&nbsp; 
+        <a onclick="displayContent('ports_intelligence_id');" id='ports_intelligence_id_link' class="content_link">Ports Intelligence</a> &nbsp;&nbsp; 
+        <a onclick="displayContent('piracy_notices_id');" id='piracy_notices_id_link' class="content_link">Piracy Notices</a> &nbsp;&nbsp; 
+        <a onclick="displayContent('bunker_pricing_id');" id='bunker_pricing_id_link' class="content_link">Bunker Pricing</a> &nbsp;&nbsp; 
+        <a onclick="displayContent('weather_id');" id='weather_id_link' class="content_link">Weather</a>
+    </div>
+    <div>&nbsp;</div>
+    <div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+	<div>&nbsp;</div>
+</div>
+
+<div id="voyage_estimator_id" style="max-width:1300px; height:auto; margin:0 auto;">
     <table width="1300" border="0" cellspacing="0" cellpadding="0">
       <tr bgcolor="cddee5">
         <td class="text_1"><div style="padding:2px; color: #E9E9E9;"><b>VESSEL NAME / IMO #</b> &nbsp; <input type="text" id="ship" class="input_1" style="max-width:250px;" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div></td>
@@ -5035,8 +5091,348 @@ jQuery(function(){
       </tr>
     
     </table>
-    
     <div>&nbsp;</div>
+</div>
+
+<div id="distance_tables_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">DISTANCE TABLES</div>
+
+<div id="ports_intelligence_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
+	<!--PORT INTELLIGENCE-->
+    <div id="mapdialogportintelligence" title="MAP" style='display:none;'>
+        <iframe id="mapiframeportintelligence" name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+    </div>
+    
+    <script>
+    jQuery("#mapdialogportintelligence" ).dialog( { width: '100%', height: jQuery(window).height()*0.9 });
+    jQuery("#mapdialogportintelligence").dialog("close");
+    
+    function showMapPI(){
+        jQuery('#pleasewait_portintelligence').show();
+
+        jQuery.ajax({
+            type: 'GET',
+            url: "search_ajax_portintelligence.php",
+            data:  jQuery("#portintelligence_form").serialize(),
+
+            success: function(data) {
+                jQuery("#mapiframeportintelligence")[0].src='map/index11.php';
+                jQuery("#mapdialogportintelligence").dialog("open");
+                
+                jQuery('#pleasewait_portintelligence').hide();
+            }
+        });
+    }
+    
+    function portIntelligenceSubmit(){
+        jQuery('#portintelligenceresults').hide();
+    
+        jQuery('#pleasewait_portintelligence').show();
+        
+        jQuery("#voyage_estimator_id").attr("disabled", true);
+		jQuery("#distance_tables_id").attr("disabled", true);
+		jQuery("#ports_intelligence_id").attr("disabled", true);
+		jQuery("#piracy_notices_id").attr("disabled", true);
+		jQuery("#bunker_pricing_id").attr("disabled", true);
+		jQuery("#weather_id").attr("disabled", true);
+    
+        jQuery("#btn_search_portintelligence_id").val("SEARCHING...");
+        jQuery("#btn_search_portintelligence_id")[0].disabled = true;
+        
+        jQuery('#btn_cancelsearch_portintelligence_id').show();
+    
+        jQuery.ajax({
+            type: 'GET',
+            url: "search_ajax_portintelligence.php",
+            data:  jQuery("#portintelligence_form").serialize(),
+    
+            success: function(data) {
+                jQuery("#portintelligence_tab_wrapperonly").html(data);
+                jQuery('#portintelligenceresults').fadeIn(200);
+    
+                jQuery("#btn_search_portintelligence_id").val("SEARCH");	
+                jQuery("#btn_search_portintelligence_id")[0].disabled = false;
+                
+                jQuery('#pleasewait_portintelligence').hide();
+                
+                jQuery("#voyage_estimator_id").attr("disabled", false);
+                jQuery("#distance_tables_id").attr("disabled", false);
+                jQuery("#ports_intelligence_id").attr("disabled", false);
+                jQuery("#piracy_notices_id").attr("disabled", false);
+                jQuery("#bunker_pricing_id").attr("disabled", false);
+                jQuery("#weather_id").attr("disabled", false);
+                
+                jQuery('#btn_cancelsearch_portintelligence_id').hide();
+            }
+        });
+    }
+    </script>
+    <form id='portintelligence_form' onsubmit="portIntelligenceSubmit(); return false;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style='margin-bottom:5px;'>
+      <tr>
+        <td><div style="padding:20px;">PORT NAME: <input id='portname_id' type="text" name="portname" class="text" style='width:200px;' /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>OR</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COUNTRY NAME: <input id='countryname_id' type="text" name="countryname" class="text" style='width:200px;' /></div></td>
+      </tr>
+      <tr>
+        <td style="padding:30px 0px;" align="center" colspan="2"><input class='cancelbutton' type="button" id='btn_cancelsearch_portintelligence_id' name="btn_cancelsearch_portintelligence" value="CANCEL SEARCH"  style='cursor:pointer; display:none;'  /> &nbsp;&nbsp;&nbsp; <input class='searchbutton' type="button" id='btn_search_portintelligence_id' name="btn_search_portintelligence" value="SEARCH" style='cursor:pointer;' onclick='portIntelligenceSubmit();'  /></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+            <div id='pleasewait_portintelligence' style='display:none; text-align:center'>
+                <center>
+                <table>
+                    <tr>
+                        <td style='text-align:center'><img src='images/searching.gif' ></td>
+                    </tr>
+                </table>
+                </center>
+            </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+        	<div style="padding:20px;">
+                <div id='portintelligenceresults'>
+                    <div id='portintelligence_tab_wrapperonly'></div>
+                </div>
+            </div>
+        </td>
+      </tr>
+    </table>
+    </form>
+    
+    <script type="text/javascript">
+    jQuery("#portname_id").focus().autocomplete(wpi_ports);
+    jQuery("#portname_id").setOptions({
+        scrollHeight: 180
+    });
+    
+    jQuery("#countryname_id").focus().autocomplete(wpi_countries);
+    jQuery("#countryname_id").setOptions({
+        scrollHeight: 180
+    });
+    
+    $("#btn_cancelsearch_portintelligence_id").click(function(){
+        jQuery("#btn_cancelsearch_portintelligence_id").val("CANCELING SEARCH...");
+        jQuery("#btn_search_portintelligence_id").hide();
+        location.reload();
+    });
+    </script>
+    <!--END OF PORT INTELLIGENCE-->
+</div>
+
+<div id="piracy_notices_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
+	<!--PIRACY ALERTS-->
+	<script>
+    function openMapPiracyAlert(date, lat, long, text){
+        jQuery("#mapiframepiracyalert")[0].src='map/index3.php?date='+date+'&lat='+lat+'&long='+long+'&text='+text;
+        jQuery("#mapdialogpiracyalert").dialog("open");
+    }
+    </script>
+    
+    <table width="100%" border="0" cellpadding="2" cellspacing="2" style='margin-bottom:5px;'>
+        <tr style="padding-bottom:10px;">
+            <td width="100%" align="center" colspan="3"><div style='padding:20px;'><a onclick='showMapPA();' class='clickable'>view larger map</a></div></td>
+        </tr>
+        <tr style='background:#999;'>
+            <th width="100%" align="center" colspan="3"><div style='padding:20px;'><iframe src='' id="map_iframe" width='990' height='500'></iframe></div></th>
+        </tr>
+        <tr style='background:#999;'>
+            <th width="150" align="left"><div style='padding:20px;'>DATE</div></th>
+            <th width="150" align="left"><div style='padding:20px;'>TIME</div></th>
+            <th><div style='padding:20px;'>ALERT</div></th>
+        </tr>
+        
+        <?php
+        $sql = "SELECT * FROM _sbis_piracy_alerts ORDER BY dateadded DESC LIMIT 0,10";
+        $data = dbQuery($sql);
+        $t = count($data);
+    
+        for($i1=0; $i1<$t; $i1++){
+            if($data[$i1]['alert']!=$data[$i1-1]['alert']){
+                $lines = explode("<ALERT>", $data[$i1]['alert']);
+                
+                if($lines){
+                    $i = 1;
+                    foreach($lines as $line){
+                        if(getValue($lines[$i], 'TEXT')!=""){
+                            echo "<tr style='background:#e5e5e5;'>
+                                <td align='left'><div style='padding:20px;'>".date("M d, Y", strtotime(getValue($lines[$i], 'DATE')))."</div></td>
+                                <td align='left'><div style='padding:20px;'>".date("G:i:s", strtotime(getValue($lines[$i], 'DATE')))." UTC</div></td>
+                                <td align='left'><div style='padding:20px;'><a onclick='openMapPiracyAlert(\"".date("M d, Y G:i:s", strtotime(getValue($lines[$i], 'DATE')))." UTC\", \"".getValue($lines[$i], 'LATITUDE')."\", \"".getValue($lines[$i], 'LONGITUDE')."\", \"".addslashes(getValue($lines[$i], 'TEXT'))."\")' class='clickable'>".getValue($lines[$i], 'TEXT')."</a></div></td>
+                            </tr>";
+                        }
+                        
+                        $i++;
+                    }
+                }
+            }
+        }
+        ?>
+        
+        <div id="mapdialog2" title="MAP" style='display:none;'>
+            <iframe id="mapiframe2" name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+        </div>
+        
+        <script type="text/javascript">
+        jQuery("#mapdialog2" ).dialog( { width: '100%', height: jQuery(window).height()*0.9 });
+        jQuery("#mapdialog2").dialog("close");
+        
+        function showMapPA(){
+            jQuery("#mapiframe2")[0].src='map/index4.php';
+            jQuery("#mapdialog2").dialog("open");
+        }
+        </script>
+        
+    </table>
+    <!--END OF PIRACY ALERTS-->
+</div>
+
+<div id="bunker_pricing_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
+	<div id="mapdialogbunkerprice" title="BUNKER PRICE" style='display:none'>
+        <iframe id='mapiframebunkerprice' name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+    </div>
+	
+	<!--BUNKER PRICE-->
+	<script>
+    jQuery("#mapdialogbunkerprice" ).dialog( { width: '100%', height: jQuery(window).height()*0.9 });
+    jQuery("#mapdialogbunkerprice").dialog("close");
+    
+    function showMapBP(){
+        jQuery('#pleasewait_bunkerprice').show();
+
+        jQuery.ajax({
+            type: 'GET',
+            url: "search_ajax_bunkerprice.php",
+            data:  jQuery("#bunkerprice_form").serialize(),
+
+            success: function(data) {
+                jQuery("#mapiframebunkerprice")[0].src='map/index12.php';
+                jQuery("#mapdialogbunkerprice").dialog("open");
+                
+                jQuery('#pleasewait_bunkerprice').hide();
+            }
+        });
+    }
+    
+    function bunkerPriceSubmit(){
+        jQuery('#bunkerpriceresults').hide();
+    
+        jQuery('#pleasewait_bunkerprice').show();
+        
+        jQuery("#voyage_estimator_id").attr("disabled", true);
+		jQuery("#distance_tables_id").attr("disabled", true);
+		jQuery("#ports_intelligence_id").attr("disabled", true);
+		jQuery("#piracy_notices_id").attr("disabled", true);
+		jQuery("#bunker_pricing_id").attr("disabled", true);
+		jQuery("#weather_id").attr("disabled", true);
+    
+        jQuery("#btn_search_bunkerprice_id").val("SEARCHING...");
+        jQuery("#btn_search_bunkerprice_id")[0].disabled = true;
+        
+        jQuery('#btn_cancelsearch_bunkerprice_id').show();
+    
+        jQuery.ajax({
+            type: 'GET',
+            url: "search_ajax_bunkerprice.php",
+            data:  jQuery("#bunkerprice_form").serialize(),
+    
+            success: function(data) {
+                jQuery("#bunkerprice_tab_wrapperonly").html(data);
+                jQuery('#bunkerpriceresults').fadeIn(200);
+    
+                jQuery("#btn_search_bunkerprice_id").val("SEARCH");	
+                jQuery("#btn_search_bunkerprice_id")[0].disabled = false;
+                
+                jQuery('#pleasewait_bunkerprice').hide();
+                
+                jQuery("#voyage_estimator_id").attr("disabled", false);
+                jQuery("#distance_tables_id").attr("disabled", false);
+                jQuery("#ports_intelligence_id").attr("disabled", false);
+                jQuery("#piracy_notices_id").attr("disabled", false);
+                jQuery("#bunker_pricing_id").attr("disabled", false);
+                jQuery("#weather_id").attr("disabled", false);
+                
+                jQuery('#btn_cancelsearch_bunkerprice_id').hide();
+            }
+        });
+    }
+    </script>
+    <form id='bunkerprice_form' onsubmit="bunkerPriceSubmit(); return false;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style='margin-bottom:5px;'>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><div style="padding:20px;">PORT NAME: <input id='bunkerportname_id' type="text" name="bunkerportname" class="text" style='width:200px;' /></div></td>
+      </tr>
+      <tr>
+        <td style="padding:30px 0px;" align="center" colspan="2"><input class='cancelbutton' type="button" id='btn_cancelsearch_bunkerprice_id' name="btn_cancelsearch_bunkerprice" value="CANCEL SEARCH"  style='cursor:pointer; display:none;'  /> &nbsp;&nbsp;&nbsp; <input class='searchbutton' type="button" id='btn_search_bunkerprice_id' name="btn_search_bunkerprice" value="SEARCH" style='cursor:pointer;' onclick='bunkerPriceSubmit();'  /></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+            <div id='pleasewait_bunkerprice' style='display:none; text-align:center'>
+                <center>
+                <table>
+                    <tr>
+                        <td style='text-align:center'><img src='images/searching.gif' ></td>
+                    </tr>
+                </table>
+                </center>
+            </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+        	<div style="padding:20px;">
+                <div id='bunkerpriceresults'>
+                    <div id='bunkerprice_tab_wrapperonly'></div>
+                </div>
+            </div>
+        </td>
+      </tr>
+    </table>
+    </form>
+    
+    <script type="text/javascript">
+    jQuery("#bunkerportname_id").focus().autocomplete(ports);
+    jQuery("#bunkerportname_id").setOptions({
+        scrollHeight: 180
+    });
+    
+    $("#btn_cancelsearch_bunkerprice_id").click(function(){
+        jQuery("#btn_cancelsearch_bunkerprice_id").val("CANCELING SEARCH...");
+        jQuery("#btn_search_bunkerprice_id").hide();
+        location.reload();
+    });
+    </script>
+    <!--END OF BUNKER PRICE-->
+</div>
+
+<div id="weather_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
+	<!--WEATHER-->
+    <table width="100%" border="0" cellpadding="2" cellspacing="2" style='margin-bottom:5px;'>
+        <tr style="padding-bottom:10px;">
+            <td width="100%" align="center" colspan="3"><div style='padding:20px;'><a onclick='showMapW();' class='clickable'>view larger map</a></div></td>
+        </tr>
+        <tr style='background:#999;'>
+            <th width="100%" align="center" colspan="3"><div style='padding:20px;'><iframe src='' id="map_iframew" width='990' height='500'></iframe></div></th>
+        </tr>
+        
+        <div id="mapdialog2w" title="MAP" style='display:none;'>
+            <iframe id="mapiframe2w" name='mapnamew' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+        </div>
+        
+        <script type="text/javascript">
+        jQuery("#mapdialog2w" ).dialog( { width: '100%', height: jQuery(window).height()*0.9 });
+        jQuery("#mapdialog2w").dialog("close");
+        
+        function showMapW(){
+            jQuery("#mapiframe2w")[0].src='http://map.openseamap.org/map/weather.php';
+            jQuery("#mapdialog2w").dialog("open");
+        }
+        </script>
+        
+    </table>
+    <!--END OF WEATHER-->
 </div>
 </body>
 </html>

@@ -82,8 +82,8 @@ if($r[0]){
 			$imo = trim($string['LRIMOShipNo']);
 			$callsign = trim($string['CallSign']);
 			$mmsi = trim($string['MMSI']);
-			$name = trim($string['ShipName']);
-			$vessel_type = trim($string['ShipType']);
+			$name = strtoupper(trim($string['ShipName']));
+			$vessel_type = strtoupper(trim($string['ShipType']));
 			$speed = trim($string['Speed']);
 			//END OF SHIP DATA
 			
@@ -96,21 +96,18 @@ if($r[0]){
 			$MovementID = trim($string['MovementID']);
 			$Draught = trim($string['Draught']);
 			$Length = trim($string['Length']);
-			$Destination = trim($string['Destination']);
-			$ETA = trim($string['ETA']);
+			$Destination = strtoupper(trim($string['Destination']));
+			$ETA = date('Y-m-d H:i:s', strtotime(trim($string['ETA'])));
 			$MoveStatus = trim($string['MoveStatus']);
 			//END OF SHIP LOCATION
 			
-			$shippos = '
-<MMSI>'.$mmsi.'</MMSI>
+$shippos = '<MMSI>'.$mmsi.'</MMSI>
 <Latitude>'.$Latitude.'</Latitude>
 <Longitude>'.$Longitude.'</Longitude>
 <TrueHeading>'.$Heading.'</TrueHeading>
-<Second>'.date('s').'</Second>
-';
+<Second>'.date('s').'</Second>';
 				
-				$shipstat = '
-<MMSI>'.$mmsi.'</MMSI>
+$shipstat = '<MMSI>'.$mmsi.'</MMSI>
 <IMO>'.$imo.'</IMO>
 <CallSign>'.$callsign.'</CallSign>
 <Name>'.$name.'</Name>
@@ -121,13 +118,12 @@ if($r[0]){
 <minute>'.date('m').'</minute>
 <ETA>'.$ETA.'</ETA>
 <draught>'.$Draught.'</draught>
-<Destination>'.$Destination.'</Destination>
-';
+<Destination>'.$Destination.'</Destination>';
 			
-			$sql = "SELECT xvas_imo FROM `_xvas_siitech_cache` WHERE `xvas_imo`='".mysql_escape_string($imo)."'";
-			$r = dbQuery($sql);
-			
-			if($r['xvas_imo']){
+			$sql2 = "SELECT `xvas_imo` FROM `_xvas_siitech_cache` WHERE `xvas_imo`='".mysql_escape_string($imo)."' ORDER BY `xvas_imo` LIMIT 0,1";
+			$rx = dbQuery($sql2, $link);
+
+			if($rx[0]['xvas_imo']){
 				logStr("Updating #".($i+1)." - ".$name." - ".$imo." ... ");
 				
 				$lrfairplay_update = "UPDATE _xvas_siitech_cache
@@ -142,6 +138,7 @@ if($r[0]){
 									siitech_longitude = '".mysql_escape_string($Longitude)."', 
 									siitech_shippos_data = '".mysql_escape_string(addslashes($shippos))."', 
 									siitech_shipstat_data = '".mysql_escape_string(addslashes($shipstat))."', 
+									siitech_database = 'FP', 
 									dateupdated = NOW()
 								WHERE xvas_imo = '".$imo."'";
 					dbQuery($lrfairplay_update);
@@ -163,6 +160,7 @@ if($r[0]){
 						siitech_longitude, 
 						siitech_shippos_data, 
 						siitech_shipstat_data, 
+						siitech_database, 
 						dateadded,
 						dateupdated
 					) VALUES (
@@ -178,6 +176,7 @@ if($r[0]){
 						'".mysql_escape_string($Longitude)."',
 						'".mysql_escape_string(addslashes($shippos))."',
 						'".mysql_escape_string(addslashes($shipstat))."',
+						'FP',
 						NOW(), 
 						NOW()
 					)";

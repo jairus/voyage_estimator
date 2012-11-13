@@ -3597,14 +3597,18 @@ jQuery(function(){
 
 function displayContent(content){
 	jQuery('#voyage_estimator_id').hide();
-	jQuery('#distance_tables_id').hide();
+	jQuery('#fleet_positions_id').hide();
+	jQuery('#ships_coming_into_ports_id').hide();
+	jQuery('#live_ship_position_id').hide();
 	jQuery('#ports_intelligence_id').hide();
 	jQuery('#piracy_notices_id').hide();
 	jQuery('#bunker_pricing_id').hide();
 	jQuery('#weather_id').hide();
 	
 	jQuery('#voyage_estimator_id_link').removeClass('content_link_selected');
-	jQuery('#distance_tables_id_link').removeClass('content_link_selected');
+	jQuery('#fleet_positions_id_link').removeClass('content_link_selected');
+	jQuery('#ships_coming_into_ports_id_link').removeClass('content_link_selected');
+	jQuery('#live_ship_position_id_link').removeClass('content_link_selected');
 	jQuery('#ports_intelligence_id_link').removeClass('content_link_selected');
 	jQuery('#piracy_notices_id_link').removeClass('content_link_selected');
 	jQuery('#bunker_pricing_id_link').removeClass('content_link_selected');
@@ -3680,7 +3684,9 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
 	<div>&nbsp;</div>
     <div>
         <a onclick="displayContent('voyage_estimator_id');" id='voyage_estimator_id_link' class="content_link_selected">Voyage Estimator</a> &nbsp;&nbsp; 
-        <a onclick="displayContent('distance_tables_id');" id='distance_tables_id_link' class="content_link">Distance Tables</a> &nbsp;&nbsp; 
+        <a onclick="displayContent('fleet_positions_id');" id='fleet_positions_id_link' class="content_link">Fleet Positions</a> &nbsp;&nbsp; 
+        <a onclick="displayContent('ships_coming_into_ports_id');" id='ships_coming_into_ports_id_link' class="content_link">Ships Coming Into Ports</a> &nbsp;&nbsp; 
+        <a onclick="displayContent('live_ship_position_id');" id='live_ship_position_id_link' class="content_link">Live Ship Position</a> &nbsp;&nbsp; 
         <a onclick="displayContent('ports_intelligence_id');" id='ports_intelligence_id_link' class="content_link">Ports Intelligence</a> &nbsp;&nbsp; 
         <a onclick="displayContent('piracy_notices_id');" id='piracy_notices_id_link' class="content_link">Piracy Notices</a> &nbsp;&nbsp; 
         <a onclick="displayContent('bunker_pricing_id');" id='bunker_pricing_id_link' class="content_link">Bunker Pricing</a> &nbsp;&nbsp; 
@@ -5094,7 +5100,484 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
     <div>&nbsp;</div>
 </div>
 
-<div id="distance_tables_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">DISTANCE TABLES</div>
+<div id="fleet_positions_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
+	<!--FLEET POSITIONS-->
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style='margin-bottom:5px;'>
+        <tr>
+            <td>
+                <script>
+                function fleetPositions(){
+                    jQuery("#fleetpositionsdetails").hide();
+                    jQuery('#fleetpositionsresults').hide();
+
+                    jQuery('#pleasewait4').show();
+
+                    jQuery("#sbutton3").val("SEARCHING...");
+                    jQuery("#sbutton3")[0].disabled = true;
+                    
+                    jQuery("#voyage_estimator_id").attr("disabled", true);
+					jQuery("#fleet_positions_id").attr("disabled", true);
+					jQuery("#ships_coming_into_ports_id").attr("disabled", true);
+					jQuery("#live_ship_position_id").attr("disabled", true);
+					jQuery("#ports_intelligence_id").attr("disabled", true);
+					jQuery("#piracy_notices_id").attr("disabled", true);
+					jQuery("#bunker_pricing_id").attr("disabled", true);
+					jQuery("#weather_id").attr("disabled", true);
+                    
+                    jQuery('#cancelsearch3').show();
+
+                    jQuery.ajax({
+                        type: 'GET',
+                        url: "search_ajax3.php",
+                        data:  jQuery("#fleetpositions").serialize(),
+
+                        success: function(data) {
+                            jQuery("#fleetpositions_records_tab_wrapperonly").html(data);
+                            jQuery('#fleetpositionsresults').fadeIn(200);
+
+                            jQuery("#sbutton3").val("SEARCH");	
+                            jQuery("#sbutton3")[0].disabled = false;
+                            
+                            jQuery('#pleasewait4').hide();
+
+                            jQuery("#voyage_estimator_id").attr("disabled", false);
+							jQuery("#fleet_positions_id").attr("disabled", false);
+							jQuery("#ships_coming_into_ports_id").attr("disabled", false);
+							jQuery("#live_ship_position_id").attr("disabled", false);
+							jQuery("#ports_intelligence_id").attr("disabled", false);
+							jQuery("#piracy_notices_id").attr("disabled", false);
+							jQuery("#bunker_pricing_id").attr("disabled", false);
+							jQuery("#weather_id").attr("disabled", false);
+                            
+                            jQuery('#cancelsearch3').hide();
+                        }
+                    });
+                }
+                </script>
+
+                <form id='fleetpositions' onsubmit="fleetPositions(); return false;">
+                <center>
+                <table>
+                    <tr>
+                        <td><div style="padding:2px;">MANAGER / MANAGER OWNER</div></td>
+                        <td><div style="padding:2px;"><input type='text' name='operator' class='text' style='width:200px'></div></td>
+                        <td><div style="padding:2px;">SHIP NAME, IMO, MMSI, CALLSIGN</div></td>
+                        <td><div style="padding:2px;"><input type='text' name='ship' class='text' style='width:200px'></div></td>
+                    </tr>
+                    <tr>
+                        <td colspan='4' style="text-align:center;"><div style="padding:2px;"><input class='cancelbutton' type="button" id='cancelsearch3' name="cancelsearch3" value="CANCEL SEARCH"  style='cursor:pointer; display:none;'  /> &nbsp;&nbsp;&nbsp; <input class='searchbutton' type="button" id='sbutton3' name="search" value="SEARCH" style='cursor:pointer;' onclick='fleetPositions();'  /></div></td>
+                    </tr>
+                </table>
+                </center>
+                </form>
+            </td>
+        </tr>
+        
+        <script>
+        $("#cancelsearch3").click(function(){
+            jQuery("#cancelsearch3").val("CANCELING SEARCH...");
+            jQuery("#sbutton3").hide();
+            location.reload();
+        });
+        </script>
+        
+        <tr>
+            <td>
+                <div id='pleasewait4' style='display:none; text-align:center'>
+                    <center>
+                    <table>
+                        <tr>
+                            <td style='text-align:center'><img src='images/searching.gif' ></td>
+                        </tr>
+                    </table>
+                    </center>
+                </div>
+            </td>
+        </tr>
+    </table>
+    
+    <div id="mapdialogfleet" title="MAP" style='display:none;'>
+        <iframe id="mapiframefleet" name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+    </div>
+    
+    <script type="text/javascript">
+    jQuery("#mapdialogfleet" ).dialog( { width: '100%', height: jQuery(window).height()*0.9 });
+    jQuery("#mapdialogfleet").dialog("close");
+    
+    function showMapFP(){
+        jQuery('#pleasewait4').show();
+
+        jQuery.ajax({
+            type: 'GET',
+            url: "search_ajax3.php",
+            data:  jQuery("#fleetpositions").serialize(),
+
+            success: function(data) {
+                jQuery("#mapiframefleet")[0].src='map/index2.php';
+                jQuery("#mapdialogfleet").dialog("open");
+                
+                jQuery('#pleasewait4').hide();
+            }
+        });
+    }
+    </script>
+    
+    <div id='fleetpositionsresults'>
+        <div id='fleetpositions_records_tab_wrapperonly'></div>
+    </div>
+    <!--END OF FLEET POSITIONS-->
+</div>
+
+<div id="ships_coming_into_ports_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
+	<!--SHIPS COMING INTO PORTS-->
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style='margin-bottom:5px;'>
+        <tr>
+            <td>
+                <script>
+                function shipsComingIntoPorts(){
+                    jQuery("#shipscomingintoportsdetails").hide();
+                    jQuery('#shipscomingintoportsresults').hide();
+
+                    jQuery('#pleasewait5').show();
+
+                    jQuery("#sbutton5").val("SEARCHING...");
+                    jQuery("#sbutton5")[0].disabled = true;
+                    
+                    jQuery("#voyage_estimator_id").attr("disabled", true);
+					jQuery("#fleet_positions_id").attr("disabled", true);
+					jQuery("#ships_coming_into_ports_id").attr("disabled", true);
+					jQuery("#live_ship_position_id").attr("disabled", true);
+					jQuery("#ports_intelligence_id").attr("disabled", true);
+					jQuery("#piracy_notices_id").attr("disabled", true);
+					jQuery("#bunker_pricing_id").attr("disabled", true);
+					jQuery("#weather_id").attr("disabled", true);
+                    
+                    jQuery('#cancelsearch5').show();
+
+                    jQuery.ajax({
+                        type: 'GET',
+                        url: "search_ajax4.php",
+                        data:  jQuery("#shipscomingintoports").serialize(),
+
+                        success: function(data) {
+                            jQuery("#shipscomingintoports_records_tab_wrapperonly").html(data);
+                            jQuery('#shipscomingintoportsresults').fadeIn(200);
+
+                            jQuery("#sbutton5").val("SEARCH");	
+                            jQuery("#sbutton5")[0].disabled = false;
+                            
+                            jQuery('#pleasewait5').hide();
+
+                            jQuery("#voyage_estimator_id").attr("disabled", false);
+							jQuery("#fleet_positions_id").attr("disabled", false);
+							jQuery("#ships_coming_into_ports_id").attr("disabled", false);
+							jQuery("#live_ship_position_id").attr("disabled", false);
+							jQuery("#ports_intelligence_id").attr("disabled", false);
+							jQuery("#piracy_notices_id").attr("disabled", false);
+							jQuery("#bunker_pricing_id").attr("disabled", false);
+							jQuery("#weather_id").attr("disabled", false);
+                            
+                            jQuery('#cancelsearch5').hide();
+                        }
+                    });
+                }
+                </script>
+
+                <form id='shipscomingintoports' onsubmit="shipsComingIntoPorts(); return false;">
+                <center>
+                <table>
+                    <tr>
+                        <td><b>PORT NAME</b></td>
+                        <td width="5">&nbsp;</td>
+                        <td>
+                            <input type='text' id="suggest3" name='port_name' class='text' style='width:200px; padding:3px;'>
+                            <script type="text/javascript">
+                            jQuery("#suggest3").focus().autocomplete(ports);
+                            jQuery("#suggest3").setOptions({
+                                scrollHeight: 180
+                            });
+                            </script>
+                        </td>
+                        <td width="10">&nbsp;</td>
+                        <td><b>DATE FROM</b></td>
+                        <td width="5">&nbsp;</td>
+                        <td>
+                            <input type="text" name="date_from" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="text" style="width:90px; padding:3px;" />
+                
+                            <b>TO</b>
+                
+                            <input type="text" name="date_to" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="text" style="width:90px; padding:3px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><b>SHIP TYPE</b></td>
+                        <td width="5">&nbsp;</td>
+                        <td>
+                            <select name="p_vessel_type[]" multiple="multiple" size="16" id='p_vessel_type_id' style="width:200px;">
+                                <optgroup label="BULK CARRIER">
+                                    <option value="ORE CARRIER">ORE CARRIER</option>
+                                    <option value="WOOD CHIPS CARRIER">WOOD CHIPS CARRIER</option>
+                                </optgroup>
+                                <optgroup label="CARGO">
+                                    <option value="BARGE CARRIER">BARGE CARRIER</option>
+                                    <option value="CARGO/PASSENGER SHIP">CARGO/PASSENGER SHIP</option>
+                                    <option value="HEAVY LOAD CARRIER">HEAVY LOAD CARRIER</option>
+                                    <option value="LIVESTOCK CARRIER">LIVESTOCK CARRIER</option>
+                                    <option value="MOTOR HOPPER">MOTOR HOPPER</option>
+                                    <option value="NUCLEAR FUEL CARRIER">NUCLEAR FUEL CARRIER</option>
+                                    <option value="SLUDGE CARRIER">SLUDGE CARRIER</option>
+                                </optgroup>
+                                <optgroup label="CEMENT CARRIER">
+                                    <option value="CEMENT CARRIER">CEMENT CARRIER</option>
+                                </optgroup>
+                                <optgroup label="OBO CARRIER">
+                                    <option value="OBO CARRIER">OBO CARRIER</option>
+                                </optgroup>
+                                <optgroup label="RO-RO CARGO">
+                                    <option value="RO-RO/CONTAINER CARRIER">RO-RO/CONTAINER CARRIER</option>
+                                    <option value="RO-RO/PASSENGER SHIP">RO-RO/PASSENGER SHIP</option>
+                                </optgroup>
+                            </select>
+                        </td>
+                        <td width="10">&nbsp;</td>
+                        <td><b>&nbsp;</b></td>
+                        <td width="5">&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding-top:15px;"><input class='cancelbutton' type="button" id='cancelsearch5' name="cancelsearch5" value="CANCEL SEARCH"  style='cursor:pointer; display:none;'  /> &nbsp;&nbsp;&nbsp; <input class='searchbutton' type="button" id='sbutton5' name="search" value="SEARCH" style='cursor:pointer;' onclick='shipsComingIntoPorts();'  /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">&nbsp;</td>
+                    </tr>
+                </table>
+                </center>
+                </form>
+            </td>
+        </tr>
+        
+        <script>
+        $("#cancelsearch5").click(function(){
+            jQuery("#cancelsearch5").val("CANCELING SEARCH...");
+            jQuery("#sbutton5").hide();
+            location.reload();
+        });
+        </script>
+        
+        <tr>
+            <td>
+                <div id='pleasewait5' style='display:none; text-align:center'>
+                    <center>
+                    <table>
+                        <tr>
+                            <td style='text-align:center'><img src='images/searching.gif' ></td>
+                        </tr>
+                    </table>
+                    </center>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div id='shipscomingintoportsresults'>
+        <div id='shipscomingintoports_records_tab_wrapperonly'></div>
+    </div>
+    <!--END OF SHIPS COMING INTO PORTS-->
+</div>
+
+<div id="live_ship_position_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
+	<!--LIVE SHIP POSITION-->
+	<script>
+    function viewLiveShipPosition(){
+        jQuery('#liveshippositionresults').hide();
+
+        jQuery('#pleasewait2').show();
+        
+        jQuery("#voyage_estimator_id").attr("disabled", true);
+		jQuery("#fleet_positions_id").attr("disabled", true);
+		jQuery("#ships_coming_into_ports_id").attr("disabled", true);
+		jQuery("#live_ship_position_id").attr("disabled", true);
+		jQuery("#ports_intelligence_id").attr("disabled", true);
+		jQuery("#piracy_notices_id").attr("disabled", true);
+		jQuery("#bunker_pricing_id").attr("disabled", true);
+		jQuery("#weather_id").attr("disabled", true);
+
+        jQuery.ajax({
+            type: 'GET',
+            url: "search_ajax7.php",
+            data:  jQuery("#live_ship_position").serialize(),
+
+            success: function(data) {
+                jQuery("#liveshipposition_records_tab_wrapperonly").html(data);
+                jQuery('#liveshippositionresults').fadeIn(200);
+                
+                jQuery('#pleasewait2').hide();
+
+                jQuery("#voyage_estimator_id").attr("disabled", false);
+				jQuery("#fleet_positions_id").attr("disabled", false);
+				jQuery("#ships_coming_into_ports_id").attr("disabled", false);
+				jQuery("#live_ship_position_id").attr("disabled", false);
+				jQuery("#ports_intelligence_id").attr("disabled", false);
+				jQuery("#piracy_notices_id").attr("disabled", false);
+				jQuery("#bunker_pricing_id").attr("disabled", false);
+				jQuery("#weather_id").attr("disabled", false);
+            }
+        });
+    }
+    
+    function toggleCategories(){
+        if(document.getElementById('live_ship_positions_categories').style.display == "none"){
+            document.getElementById('paramicon1').src = "images/down.png";
+            document.getElementById('live_ship_positions_categories').style.display = "block";
+        }else{
+            document.getElementById('paramicon1').src = "images/up.png";
+            document.getElementById('live_ship_positions_categories').style.display = "none";
+        }
+    }
+    </script>
+    
+    <form id='live_ship_position' onsubmit="viewLiveShipPosition(); return false;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style='margin-bottom:5px;'>
+        <tr>
+            <td>
+                <center>
+                <table>
+                    <tr>
+                        <td>
+                            <div style='padding:5px;'>
+                                <table width="990">
+                                    <tr>
+                                        <td width="80"><h2><a style="cursor:pointer;" onclick="toggleCategories();">CATEGORIES</a></h2></td>
+                                        <td><a style="cursor:pointer;" onclick="toggleCategories();"><img src='images/up.png' width="15" height="15" id='paramicon1' /></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">&nbsp;</td>
+                                    </tr>
+                                </table>
+                                <table id="live_ship_positions_categories" width="990">
+                                    <tr>
+                                        <td colspan="8">
+                                            <table width="990">
+                                                <tr>
+                                                    <td colspan="18" style="padding-top:10px;">&nbsp;</td>
+                                                </tr>
+                                                <tr style="padding-top:25px; font-family:Arial, Helvetica, sans-serif; font-size:10px;">
+                                                    <td valign="top"><div style='padding:5px; text-align:right;'>&laquo; 90 DAYS</div></td>
+                                                    <td valign="top"><div style='padding:2px 5px 5px 0px;'><input type="checkbox" id="pos_daterange_id" name="pos_daterange[]" onclick="viewLiveShipPosition();" value="bd90" /></div></td>
+                                                    <td valign="top"><div style='padding:5px; text-align:right;'>&laquo; 60 DAYS</div></td>
+                                                    <td valign="top"><div style='padding:2px 5px 5px 0px;'><input type="checkbox" id="pos_daterange_id" name="pos_daterange[]" onclick="viewLiveShipPosition();" value="bd60" /></div></td>
+                                                    <td valign="top"><div style='padding:5px; text-align:right;'>&laquo; 30 DAYS</div></td>
+                                                    <td valign="top"><div style='padding:2px 5px 5px 0px;'><input type="checkbox" id="pos_daterange_id" name="pos_daterange[]" onclick="viewLiveShipPosition();" value="bd30" /></div></td>
+                                                    <td valign="top"><div style='padding:5px; color:#F00; text-align:right;'>TODAY &raquo;</div></td>
+                                                    <td valign="top"><div style='padding:2px 5px 5px 0px;'><input type="checkbox" id="pos_daterange_id" name="pos_daterange[]" onclick="viewLiveShipPosition();" value="t" /></div></td>
+                                                    <td valign="top"><div style='padding:5px; text-align:right;'>1 DAY &raquo;</div></td>
+                                                    <td valign="top"><div style='padding:2px 5px 5px 0px;'><input type="checkbox" id="pos_daterange_id" name="pos_daterange[]" onclick="viewLiveShipPosition();" value="fd1" /></div></td>
+                                                    <td valign="top"><div style='padding:5px; text-align:right;'>7 DAYS &raquo;</div></td>
+                                                    <td valign="top"><div style='padding:2px 5px 5px 0px;'><input type="checkbox" id="pos_daterange_id" name="pos_daterange[]" onclick="viewLiveShipPosition();" value="fd7" /></div></td>
+                                                    <td valign="top"><div style='padding:5px; text-align:right;'>30 DAYS &raquo;</div></td>
+                                                    <td valign="top"><div style='padding:2px 5px 5px 0px;'><input type="checkbox" id="pos_daterange_id" name="pos_daterange[]" onclick="viewLiveShipPosition();" value="fd30" /></div></td>
+                                                    <td valign="top"><div style='padding:5px; text-align:right;'>60 DAYS &raquo;</div></td>
+                                                    <td valign="top"><div style='padding:2px 5px 5px 0px;'><input type="checkbox" id="pos_daterange_id" name="pos_daterange[]" onclick="viewLiveShipPosition();" value="fd60" /></div></td>
+                                                    <td valign="top"><div style='padding:5px; text-align:right;'>90 DAYS &raquo;</div></td>
+                                                    <td valign="top"><div style='padding:2px 5px 5px 0px;'><input type="checkbox" id="pos_daterange_id" name="pos_daterange[]" onclick="viewLiveShipPosition();" value="fd90" /></div></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="18" style="padding-top:10px;">&nbsp;</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="ORE CARRIER" /></div></td>
+                                        <td valign="top" width="228"><div style='padding:5px;'>ORE CARRIER</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="WOOD CHIPS CARRIER" /></div></td>
+                                        <td valign="top" width="227"><div style='padding:5px;'>WOOD CHIPS CARRIER</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="BARGE CARRIER" /></div></td>
+                                        <td valign="top" width="227"><div style='padding:5px;'>BARGE CARRIER</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="CARGO/PASSENGER SHIP" /></div></td>
+                                        <td valign="top" width="228"><div style='padding:5px;'>CARGO/PASSENGER SHIP</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="HEAVY LOAD CARRIER" /></div></td>
+                                        <td valign="top" width="228"><div style='padding:5px;'>HEAVY LOAD CARRIER</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="LIVESTOCK CARRIER" /></div></td>
+                                        <td valign="top" width="227"><div style='padding:5px;'>LIVESTOCK CARRIER</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="MOTOR HOPPER" /></div></td>
+                                        <td valign="top" width="227"><div style='padding:5px;'>MOTOR HOPPER</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="NUCLEAR FUEL CARRIER" /></div></td>
+                                        <td valign="top" width="228"><div style='padding:5px;'>NUCLEAR FUEL CARRIER</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="SLUDGE CARRIER" /></div></td>
+                                        <td valign="top" width="228"><div style='padding:5px;'>SLUDGE CARRIER</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="CEMENT CARRIER" /></div></td>
+                                        <td valign="top" width="227"><div style='padding:5px;'>CEMENT CARRIER</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="OBO CARRIER" /></div></td>
+                                        <td valign="top" width="227"><div style='padding:5px;'>OBO CARRIER</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="RO-RO/CONTAINER CARRIER" /></div></td>
+                                        <td valign="top" width="228"><div style='padding:5px;'>RO-RO/CONTAINER CARRIER</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'><input type="checkbox" id="pos_vessel_type_id" name="pos_vessel_type[]" onclick="viewLiveShipPosition();" value="RO-RO/PASSENGER SHIP" /></div></td>
+                                        <td valign="top" width="228"><div style='padding:5px;'>RO-RO/PASSENGER SHIP</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'>&nbsp;</div></td>
+                                        <td valign="top" width="227"><div style='padding:5px;'>&nbsp;</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'>&nbsp;</div></td>
+                                        <td valign="top" width="227"><div style='padding:5px;'>&nbsp;</div></td>
+                                        <td valign="top" width="20"><div style='padding:5px 0px 5px 5px;'>&nbsp;</div></td>
+                                        <td valign="top" width="228"><div style='padding:5px;'>&nbsp;</div></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <div id="mapdialog1" title="MAP" style='display:none;'>
+                        <iframe id="mapiframe1" name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+                    </div>
+                    
+                    <script type="text/javascript">
+                    jQuery("#mapdialog1" ).dialog( { width: '100%', height: jQuery(window).height()*0.9 });
+                    jQuery("#mapdialog1").dialog("close");
+                    
+                    function showMap(){
+                        jQuery('#pleasewait2').show();
+    
+                        jQuery.ajax({
+                            type: 'GET',
+                            url: "search_ajax7.php",
+                            data:  jQuery("#live_ship_position").serialize(),
+    
+                            success: function(data) {
+                                jQuery("#mapiframe1")[0].src='map/index10_online.php';
+                                jQuery("#mapdialog1").dialog("open");
+                                
+                                jQuery('#pleasewait2').hide();
+                            }
+                        });
+                    }
+                    </script>
+                    
+                    <tr>
+                        <td style="padding-top:20px;">
+                            <div id='liveshippositionresults'>
+                                <div id='liveshipposition_records_tab_wrapperonly'></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                </center>
+            </td>
+        </tr>
+    </table>
+    </form>
+    <!--END OF LIVE SHIP POSITION-->
+</div>
 
 <div id="ports_intelligence_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
 	<!--PORT INTELLIGENCE-->
@@ -5129,7 +5612,9 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
         jQuery('#pleasewait_portintelligence').show();
         
         jQuery("#voyage_estimator_id").attr("disabled", true);
-		jQuery("#distance_tables_id").attr("disabled", true);
+		jQuery("#fleet_positions_id").attr("disabled", true);
+		jQuery("#ships_coming_into_ports_id").attr("disabled", true);
+		jQuery("#live_ship_position_id").attr("disabled", true);
 		jQuery("#ports_intelligence_id").attr("disabled", true);
 		jQuery("#piracy_notices_id").attr("disabled", true);
 		jQuery("#bunker_pricing_id").attr("disabled", true);
@@ -5155,7 +5640,9 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
                 jQuery('#pleasewait_portintelligence').hide();
                 
                 jQuery("#voyage_estimator_id").attr("disabled", false);
-                jQuery("#distance_tables_id").attr("disabled", false);
+                jQuery("#fleet_positions_id").attr("disabled", false);
+				jQuery("#ships_coming_into_ports_id").attr("disabled", false);
+				jQuery("#live_ship_position_id").attr("disabled", false);
                 jQuery("#ports_intelligence_id").attr("disabled", false);
                 jQuery("#piracy_notices_id").attr("disabled", false);
                 jQuery("#bunker_pricing_id").attr("disabled", false);
@@ -5169,10 +5656,10 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
     <form id='portintelligence_form' onsubmit="portIntelligenceSubmit(); return false;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style='margin-bottom:5px;'>
       <tr>
-        <td><div style="padding:20px;">PORT NAME: <input id='portname_id' type="text" name="portname" class="text" style='width:200px;' /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>OR</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COUNTRY NAME: <input id='countryname_id' type="text" name="countryname" class="text" style='width:200px;' /></div></td>
+        <td><div style="padding:2px;">PORT NAME: <input id='portname_id' type="text" name="portname" class="text" style='width:200px;' /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>OR</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COUNTRY NAME: <input id='countryname_id' type="text" name="countryname" class="text" style='width:200px;' /></div></td>
       </tr>
       <tr>
-        <td style="padding:30px 0px;" align="center" colspan="2"><input class='cancelbutton' type="button" id='btn_cancelsearch_portintelligence_id' name="btn_cancelsearch_portintelligence" value="CANCEL SEARCH"  style='cursor:pointer; display:none;'  /> &nbsp;&nbsp;&nbsp; <input class='searchbutton' type="button" id='btn_search_portintelligence_id' name="btn_search_portintelligence" value="SEARCH" style='cursor:pointer;' onclick='portIntelligenceSubmit();'  /></td>
+        <td style="padding:2px 0px;" align="center" colspan="2"><input class='cancelbutton' type="button" id='btn_cancelsearch_portintelligence_id' name="btn_cancelsearch_portintelligence" value="CANCEL SEARCH"  style='cursor:pointer; display:none;'  /> &nbsp;&nbsp;&nbsp; <input class='searchbutton' type="button" id='btn_search_portintelligence_id' name="btn_search_portintelligence" value="SEARCH" style='cursor:pointer;' onclick='portIntelligenceSubmit();'  /></td>
       </tr>
       <tr>
         <td colspan="2">
@@ -5189,7 +5676,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
       </tr>
       <tr>
         <td colspan="2">
-        	<div style="padding:20px;">
+        	<div style="padding:2px;">
                 <div id='portintelligenceresults'>
                     <div id='portintelligence_tab_wrapperonly'></div>
                 </div>
@@ -5319,7 +5806,9 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
         jQuery('#pleasewait_bunkerprice').show();
         
         jQuery("#voyage_estimator_id").attr("disabled", true);
-		jQuery("#distance_tables_id").attr("disabled", true);
+		jQuery("#fleet_positions_id").attr("disabled", true);
+		jQuery("#ships_coming_into_ports_id").attr("disabled", true);
+		jQuery("#live_ship_position_id").attr("disabled", true);
 		jQuery("#ports_intelligence_id").attr("disabled", true);
 		jQuery("#piracy_notices_id").attr("disabled", true);
 		jQuery("#bunker_pricing_id").attr("disabled", true);
@@ -5345,7 +5834,9 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
                 jQuery('#pleasewait_bunkerprice').hide();
                 
                 jQuery("#voyage_estimator_id").attr("disabled", false);
-                jQuery("#distance_tables_id").attr("disabled", false);
+                jQuery("#fleet_positions_id").attr("disabled", false);
+				jQuery("#ships_coming_into_ports_id").attr("disabled", false);
+				jQuery("#live_ship_position_id").attr("disabled", false);
                 jQuery("#ports_intelligence_id").attr("disabled", false);
                 jQuery("#piracy_notices_id").attr("disabled", false);
                 jQuery("#bunker_pricing_id").attr("disabled", false);
@@ -5362,10 +5853,10 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
         <td>&nbsp;</td>
       </tr>
       <tr>
-        <td><div style="padding:20px;">PORT NAME: <input id='bunkerportname_id' type="text" name="bunkerportname" class="text" style='width:200px;' /></div></td>
+        <td><div style="padding:2px;">PORT NAME: <input id='bunkerportname_id' type="text" name="bunkerportname" class="text" style='width:200px;' /></div></td>
       </tr>
       <tr>
-        <td style="padding:30px 0px;" align="center" colspan="2"><input class='cancelbutton' type="button" id='btn_cancelsearch_bunkerprice_id' name="btn_cancelsearch_bunkerprice" value="CANCEL SEARCH"  style='cursor:pointer; display:none;'  /> &nbsp;&nbsp;&nbsp; <input class='searchbutton' type="button" id='btn_search_bunkerprice_id' name="btn_search_bunkerprice" value="SEARCH" style='cursor:pointer;' onclick='bunkerPriceSubmit();'  /></td>
+        <td style="padding:2px 0px;" align="center" colspan="2"><input class='cancelbutton' type="button" id='btn_cancelsearch_bunkerprice_id' name="btn_cancelsearch_bunkerprice" value="CANCEL SEARCH"  style='cursor:pointer; display:none;'  /> &nbsp;&nbsp;&nbsp; <input class='searchbutton' type="button" id='btn_search_bunkerprice_id' name="btn_search_bunkerprice" value="SEARCH" style='cursor:pointer;' onclick='bunkerPriceSubmit();'  /></td>
       </tr>
       <tr>
         <td colspan="2">
@@ -5382,7 +5873,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
       </tr>
       <tr>
         <td colspan="2">
-        	<div style="padding:20px;">
+        	<div style="padding:2px;">
                 <div id='bunkerpriceresults'>
                     <div id='bunkerprice_tab_wrapperonly'></div>
                 </div>

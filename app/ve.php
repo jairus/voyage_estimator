@@ -1,20 +1,4 @@
 <?php
-/*@session_start();
-@include_once(dirname(__FILE__)."/includes/database.php");
-@include_once(dirname(__FILE__)."/includes/distanceCalc.class.php");
-
-$link = dbConnect();
-
-function getValue($data, $id){
-	$reg = "/<".$id.".*>(.*)<\/".$id.">/iUs";
-
-	$matches = array();
-
-	preg_match_all($reg, $data, $matches);
-
-	return $matches[1][0];
-}*/
-
 @include_once(dirname(__FILE__)."/includes/bootstrap.php");
 
 if($_GET['autosave']){
@@ -203,6 +187,17 @@ if($_GET['port']){
 <script src="js_ve/development-bundle/ui/jquery.ui.resizable.js"></script>
 <script src="js_ve/development-bundle/ui/jquery.ui.dialog.js"></script>
 <script src="js_ve/development-bundle/ui/jquery.ui.datepicker.js"></script>
+
+<!--<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/jquery.autocomplete.js'></script>
+<script type='text/javascript' src='js/ports.php'></script>
+<script type='text/javascript' src='js/wpi_ports.php'></script>
+<script type='text/javascript' src='js/wpi_countries.php'></script>
+<script type='text/javascript' src='js/wpi_regions.php'></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/jquery.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/lib/thickbox.css" />-->
 <title>CargoSpotter VOYAGE ESTIMATOR</title>
 <style>
 td{
@@ -291,14 +286,14 @@ body {
 }*/
 
 .content_link{
-	padding:10px 15px;
+	padding:10px 14px;
 	background-color:#f5f5f5;
 	color:#333;
 	cursor:pointer;
 }
 
 .content_link_selected{
-	padding:10px 15px;
+	padding:10px 14px;
 	background-color:#a6a6a6;
 	color:#fff;
 	cursor:pointer;
@@ -1419,7 +1414,7 @@ $(function(){
 
 			gimo = imo;
 
-			jQuery("#shipdetailshref").html("<a style='cursor:pointer;' onclick='showShipDetails()'><u>Click here for full specs</u></a>");
+			jQuery("#shipdetailshref").html("<a style='cursor:pointer;' onclick='showShipDetails2()'><u>Click here for full specs</u></a>");
 			setValue(jQuery("#d18"), fNum(dwts[imo]));
 			
 			//Zoi's Code
@@ -1544,49 +1539,47 @@ $(function(){
 
 });
 
-
-
-function showShipDetails(imo){
-
+function showShipDetails2(imo){
 	jQuery("#shipdetails").dialog("close")
-
 	jQuery('#pleasewait2').show();
 
-
-
 	jQuery.ajax({
-
 		type: 'POST',
-
 		url: "search_ajax.php?imo="+gimo+"&__ve=1",
-
 		data:  '',
 
-		
-
 		success: function(data) {
-
 			if(data.indexOf("<b>ERROR")!=0){
-
 				jQuery("#shipdetails_in").html(data);
-
 				jQuery("#shipdetails").dialog("open")
-
 				jQuery('#pleasewait2').hide();
-
 			}else{
-
 				alert(data)
-
 			}
-
 		}
-
 	});	
-
 }
 
+function showShipDetails(imo){
+	jQuery("#shipdetails").dialog("close")
+	jQuery('#pleasewait2').show();
 
+	jQuery.ajax({
+		type: 'POST',
+		url: "search_ajax.php?imo="+imo,
+		data:  '',
+		
+		success: function(data) {
+			if(data.indexOf("<b>ERROR")!=0){
+				jQuery("#shipdetails_in").html(data);
+				jQuery("#shipdetails").dialog("open")
+				jQuery('#pleasewait2').hide();
+			}else{
+				alert(data)
+			}
+		}
+	});	
+}
 
 function ownerDetails(owner, owner_id){
 	var iframe = $("#contactiframe");
@@ -3597,6 +3590,7 @@ jQuery(function(){
 
 function displayContent(content){
 	jQuery('#voyage_estimator_id').hide();
+	jQuery('#ship_search_register_id').hide();
 	jQuery('#fleet_positions_id').hide();
 	jQuery('#ships_coming_into_ports_id').hide();
 	jQuery('#live_ship_position_id').hide();
@@ -3606,6 +3600,7 @@ function displayContent(content){
 	jQuery('#weather_id').hide();
 	
 	jQuery('#voyage_estimator_id_link').removeClass('content_link_selected');
+	jQuery('#ship_search_register_id_link').removeClass('content_link_selected');
 	jQuery('#fleet_positions_id_link').removeClass('content_link_selected');
 	jQuery('#ships_coming_into_ports_id_link').removeClass('content_link_selected');
 	jQuery('#live_ship_position_id_link').removeClass('content_link_selected');
@@ -3643,6 +3638,10 @@ function displayContent(content){
 	<div id='shipdetails_in' ></div>
 </div>
 
+<div id="mapdialog" title="MAP - CLICK ON THE SHIP IMAGE BELOW TO SHOW DETAILS" style='display:none'>
+	<iframe id='mapiframe' name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
+
 <div id="contactdialog" title="CONTACT"  style='display:none'>
 	<iframe id='contactiframe' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
@@ -3655,7 +3654,63 @@ function displayContent(content){
 	<div id='bunkerpricecontent'></div>
 </div>
 
+<div id="messagedialog" title="MESSAGES"  style='display:none'>
+	<iframe id='messageiframe' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
+
 <script>
+function fetchMessages(){
+	pmessages = jQuery(".pmessages");
+
+	pmstr  = "";
+
+	for(i=0; i<pmessages.length; i++){
+		pmstr += pmessages[i].value+"|";
+	}
+
+	nmessages = jQuery(".nmessages");
+
+	nmstr  = "";
+
+	for(i=0; i<nmessages.length; i++){
+		nmstr += nmessages[i].value+"|";
+	}
+
+	mids = pmstr+nmstr;
+
+	jQuery.ajax({
+		type: 'POST',
+		url: "search_ajax.php?action=getmessages&task=fetchmessages",
+		data:  "mids="+mids,
+		dataType: "json",
+
+		success: function(data) {
+			for(x in data){
+				if(x.indexOf("useremail")==0&&data[x].user_email){
+					jQuery("#"+x).html(data[x].user_email);
+					
+					if(data[x].opened==false){
+						jQuery("#"+x).css({"color":"red"});
+					}else{
+						jQuery("#"+x).css({"color":"black"});
+					}
+				}else{
+					jQuery("#"+x).html(data[x].short);
+					jQuery("#"+x).parent().attr("title", data[x].long);
+					jQuery("#"+x).parent().attr("alt", data[x].long);
+					jQuery("#"+x).parent().attr("id", data[x].mid);
+
+					if(data[x].opened==false){
+						jQuery("#"+x).css({"color":"red"});
+					}else{
+						jQuery("#"+x).css({"color":"black"});
+					}
+				}
+			}
+		}
+	});	
+}
+
 function getBunkerPriceHistory(port_code){
 	jQuery('#pleasewait2').show();
 	
@@ -3673,6 +3728,25 @@ function getBunkerPriceHistory(port_code){
 	});
 }
 
+jQuery( "#messagedialog" ).dialog( { width: 920, height: 460,
+	close: function (event, ui){
+		fetchMessages();
+	}
+});
+jQuery( "#messagedialog" ).dialog("close");	 
+
+function openMessageDialog(mid, imo, type){
+	jQuery("#messageiframe")[0].src="search_ajax.php?action=getmessages&type="+type+"&mid="+mid+"&imo="+imo+"&t="+(new Date()).getTime();
+	jQuery( "#messagedialog" ).dialog( { width: '920', height: jQuery(window).height()*0.9 });
+	jQuery("#messagedialog").dialog("open");
+}
+
+jQuery( "#shipdetails" ).dialog( { width: '90%', height: jQuery(window).height()*0.9 });
+jQuery( "#shipdetails" ).dialog("close");	
+
+jQuery( "#mapdialog" ).dialog( { width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#mapdialog").dialog("close");
+
 jQuery( "#mapdialogpiracyalert" ).dialog( { width: '90%', height: jQuery(window).height()*0.9 });
 jQuery("#mapdialogpiracyalert").dialog("close");
 
@@ -3682,8 +3756,10 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
 
 <div style="max-width:1300px; height:auto; margin:0 auto;">
 	<div>&nbsp;</div>
-    <div>
+    <div style="float:left; width:70px; height:55px;"><img src="images/logo_ve.png" width="44" height="44" border="0" /></div>
+    <div style="float:left; width:1230px; height:40px; padding-top:15px;">
         <a onclick="displayContent('voyage_estimator_id');" id='voyage_estimator_id_link' class="content_link_selected">Voyage Estimator</a> &nbsp;&nbsp; 
+        <a onclick="displayContent('ship_search_register_id');" id='ship_search_register_id_link' class="content_link">Ship Search / Register</a> &nbsp;&nbsp; 
         <a onclick="displayContent('fleet_positions_id');" id='fleet_positions_id_link' class="content_link">Fleet Positions</a> &nbsp;&nbsp; 
         <a onclick="displayContent('ships_coming_into_ports_id');" id='ships_coming_into_ports_id_link' class="content_link">Ships Coming Into Ports</a> &nbsp;&nbsp; 
         <a onclick="displayContent('live_ship_position_id');" id='live_ship_position_id_link' class="content_link">Live Ship Position</a> &nbsp;&nbsp; 
@@ -3692,7 +3768,6 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
         <a onclick="displayContent('bunker_pricing_id');" id='bunker_pricing_id_link' class="content_link">Bunker Pricing</a> &nbsp;&nbsp; 
         <a onclick="displayContent('weather_id');" id='weather_id_link' class="content_link">Weather</a>
     </div>
-    <div>&nbsp;</div>
     <div style="border-bottom:3px dotted #fff;">&nbsp;</div>
 	<div>&nbsp;</div>
 </div>
@@ -5100,6 +5175,109 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
     <div>&nbsp;</div>
 </div>
 
+<div id="ship_search_register_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
+	<!--SHIP SEARCH ONLY-->
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style=' margin-bottom:5px;'>
+        <tr>
+            <td>
+                <script>
+                function shipSearchOnly(){
+                    jQuery("#shipdetails").hide();
+                    jQuery('#shipsearchonlyresults').hide();
+
+                    jQuery('#pleasewait3').show();
+
+                    jQuery("#sbutton2").val("SEARCHING...");
+                    jQuery("#sbutton2")[0].disabled = true;
+                    
+                    jQuery("#voyage_estimator_id").attr("disabled", true);
+					jQuery("#ship_search_register_id").attr("disabled", true);
+					jQuery("#fleet_positions_id").attr("disabled", true);
+					jQuery("#ships_coming_into_ports_id").attr("disabled", true);
+					jQuery("#live_ship_position_id").attr("disabled", true);
+					jQuery("#ports_intelligence_id").attr("disabled", true);
+					jQuery("#piracy_notices_id").attr("disabled", true);
+					jQuery("#bunker_pricing_id").attr("disabled", true);
+					jQuery("#weather_id").attr("disabled", true);
+                    
+                    jQuery('#cancelsearch2').show();
+
+                    jQuery.ajax({
+                        type: 'GET',
+                        url: "search_ajax2ve.php",
+                        data:  jQuery("#shipsearchonly").serialize(),
+
+                        success: function(data) {
+                            jQuery("#records_tab_wrapperonly").html(data);
+                            jQuery('#shipsearchonlyresults').fadeIn(200);
+
+                            jQuery("#sbutton2").val("SEARCH");	
+                            jQuery("#sbutton2")[0].disabled = false;
+                            
+                            jQuery('#pleasewait3').hide();
+
+                            jQuery("#voyage_estimator_id").attr("disabled", false);
+							jQuery("#ship_search_register_id").attr("disabled", false);
+							jQuery("#fleet_positions_id").attr("disabled", false);
+							jQuery("#ships_coming_into_ports_id").attr("disabled", false);
+							jQuery("#live_ship_position_id").attr("disabled", false);
+							jQuery("#ports_intelligence_id").attr("disabled", false);
+							jQuery("#piracy_notices_id").attr("disabled", false);
+							jQuery("#bunker_pricing_id").attr("disabled", false);
+							jQuery("#weather_id").attr("disabled", false);
+                            
+                            jQuery('#cancelsearch2').hide();
+                        }
+                    });
+                }
+                </script>
+
+                <form id='shipsearchonly' onsubmit="shipSearchOnly(); return false;">
+                <center>
+                <table>
+                    <tr>
+                        <td><div style="padding:2px;">SHIP NAME, IMO, MMSI, CALLSIGN</div></td>
+                        <td><div style="padding:2px;"><input type='text' name='ship' class='text' style='width:200px'></div></td>
+                        <td><div style="padding:2px;">MANAGER / MANAGER OWNER</div></td>
+                        <td><div style="padding:2px;"><input type='text' name='operator' class='text' style='width:200px'></div></td>
+                    </tr>
+                    <tr>
+                        <td colspan='4' style="text-align:center;"><div style="padding:2px;"><input class='cancelbutton' type="button" id='cancelsearch2' name="cancelsearch2" value="CANCEL SEARCH"  style='cursor:pointer; display:none;'  /> &nbsp;&nbsp;&nbsp; <input class='searchbutton' type="button" id='sbutton2' name="search" value="SEARCH" style='cursor:pointer;' onclick='shipSearchOnly();'  /></div></td>
+                    </tr>
+                </table>
+                </center>
+                </form>
+            </td>
+        </tr>
+        
+        <script>
+        $("#cancelsearch2").click(function(){
+            jQuery("#cancelsearch2").val("CANCELING SEARCH...");
+            jQuery("#sbutton2").hide();
+            location.reload();
+        });
+        </script>
+        
+        <tr>
+            <td>
+                <div id='pleasewait3' style='display:none; text-align:center'>
+                    <center>
+                    <table>
+                        <tr>
+                            <td style='text-align:center'><img src='images/searching.gif' ></td>
+                        </tr>
+                    </table>
+                    </center>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div id='shipsearchonlyresults'>
+        <div id='records_tab_wrapperonly'></div>
+    </div>
+    <!--END OF SHIP SEARCH ONLY-->
+</div>
+
 <div id="fleet_positions_id" style="max-width:1300px; height:auto; margin:0 auto; display:none;">
 	<!--FLEET POSITIONS-->
     <table width="100%" border="0" cellpadding="0" cellspacing="0" style='margin-bottom:5px;'>
@@ -5116,6 +5294,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
                     jQuery("#sbutton3")[0].disabled = true;
                     
                     jQuery("#voyage_estimator_id").attr("disabled", true);
+					jQuery("#ship_search_register_id").attr("disabled", true);
 					jQuery("#fleet_positions_id").attr("disabled", true);
 					jQuery("#ships_coming_into_ports_id").attr("disabled", true);
 					jQuery("#live_ship_position_id").attr("disabled", true);
@@ -5141,6 +5320,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
                             jQuery('#pleasewait4').hide();
 
                             jQuery("#voyage_estimator_id").attr("disabled", false);
+							jQuery("#ship_search_register_id").attr("disabled", false);
 							jQuery("#fleet_positions_id").attr("disabled", false);
 							jQuery("#ships_coming_into_ports_id").attr("disabled", false);
 							jQuery("#live_ship_position_id").attr("disabled", false);
@@ -5244,6 +5424,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
                     jQuery("#sbutton5")[0].disabled = true;
                     
                     jQuery("#voyage_estimator_id").attr("disabled", true);
+					jQuery("#ship_search_register_id").attr("disabled", true);
 					jQuery("#fleet_positions_id").attr("disabled", true);
 					jQuery("#ships_coming_into_ports_id").attr("disabled", true);
 					jQuery("#live_ship_position_id").attr("disabled", true);
@@ -5269,6 +5450,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
                             jQuery('#pleasewait5').hide();
 
                             jQuery("#voyage_estimator_id").attr("disabled", false);
+							jQuery("#ship_search_register_id").attr("disabled", false);
 							jQuery("#fleet_positions_id").attr("disabled", false);
 							jQuery("#ships_coming_into_ports_id").attr("disabled", false);
 							jQuery("#live_ship_position_id").attr("disabled", false);
@@ -5399,6 +5581,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
         jQuery('#pleasewait2').show();
         
         jQuery("#voyage_estimator_id").attr("disabled", true);
+		jQuery("#ship_search_register_id").attr("disabled", true);
 		jQuery("#fleet_positions_id").attr("disabled", true);
 		jQuery("#ships_coming_into_ports_id").attr("disabled", true);
 		jQuery("#live_ship_position_id").attr("disabled", true);
@@ -5419,6 +5602,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
                 jQuery('#pleasewait2').hide();
 
                 jQuery("#voyage_estimator_id").attr("disabled", false);
+				jQuery("#ship_search_register_id").attr("disabled", false);
 				jQuery("#fleet_positions_id").attr("disabled", false);
 				jQuery("#ships_coming_into_ports_id").attr("disabled", false);
 				jQuery("#live_ship_position_id").attr("disabled", false);
@@ -5612,6 +5796,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
         jQuery('#pleasewait_portintelligence').show();
         
         jQuery("#voyage_estimator_id").attr("disabled", true);
+		jQuery("#ship_search_register_id").attr("disabled", true);
 		jQuery("#fleet_positions_id").attr("disabled", true);
 		jQuery("#ships_coming_into_ports_id").attr("disabled", true);
 		jQuery("#live_ship_position_id").attr("disabled", true);
@@ -5640,6 +5825,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
                 jQuery('#pleasewait_portintelligence').hide();
                 
                 jQuery("#voyage_estimator_id").attr("disabled", false);
+				jQuery("#ship_search_register_id").attr("disabled", false);
                 jQuery("#fleet_positions_id").attr("disabled", false);
 				jQuery("#ships_coming_into_ports_id").attr("disabled", false);
 				jQuery("#live_ship_position_id").attr("disabled", false);
@@ -5806,6 +5992,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
         jQuery('#pleasewait_bunkerprice').show();
         
         jQuery("#voyage_estimator_id").attr("disabled", true);
+		jQuery("#ship_search_register_id").attr("disabled", true);
 		jQuery("#fleet_positions_id").attr("disabled", true);
 		jQuery("#ships_coming_into_ports_id").attr("disabled", true);
 		jQuery("#live_ship_position_id").attr("disabled", true);
@@ -5834,6 +6021,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
                 jQuery('#pleasewait_bunkerprice').hide();
                 
                 jQuery("#voyage_estimator_id").attr("disabled", false);
+				jQuery("#ship_search_register_id").attr("disabled", false);
                 jQuery("#fleet_positions_id").attr("disabled", false);
 				jQuery("#ships_coming_into_ports_id").attr("disabled", false);
 				jQuery("#live_ship_position_id").attr("disabled", false);

@@ -67,7 +67,7 @@ if($r[0]){
 	
 	logStr("About to parse file ... ");
 	
-	$filename = dirname(__FILE__)."/data/201211120122_AISData.xml";
+	$filename = dirname(__FILE__)."/data/201211140141_AISData.xml";
 	$string = simplexml_load_file($filename);
 	
 	$data = $string->AISData;
@@ -92,7 +92,7 @@ if($r[0]){
 			$Longitude = trim($string['Longitude']);
 			$AdditionalInfo = trim($string['AdditionalInfo']);
 			$Heading = trim($string['Heading']);
-			$MovementDateTime = trim($string['MovementDateTime']);
+			$MovementDateTime = date('Y-m-d H:i:s', strtotime(trim($string['MovementDateTime'])));
 			$MovementID = trim($string['MovementID']);
 			$Draught = trim($string['Draught']);
 			$Length = trim($string['Length']);
@@ -104,21 +104,33 @@ if($r[0]){
 $shippos = '<MMSI>'.$mmsi.'</MMSI>
 <Latitude>'.$Latitude.'</Latitude>
 <Longitude>'.$Longitude.'</Longitude>
+<SOG>0</SOG>
 <TrueHeading>'.$Heading.'</TrueHeading>
-<Second>'.date('s').'</Second>';
-				
+<COG>0</COG>
+<NavigationalStatus>0</NavigationalStatus>
+<Second>'.date('s').'</Second>
+<UTC>'.$ETA.'</UTC>
+<RecvTime>'.$MovementDateTime.'</RecvTime>
+<LocalRecvTime>'.$MovementDateTime.'</LocalRecvTime>';
+			
 $shipstat = '<MMSI>'.$mmsi.'</MMSI>
 <IMO>'.$imo.'</IMO>
 <CallSign>'.$callsign.'</CallSign>
 <Name>'.$name.'</Name>
 <ShipType>'.$vessel_type.'</ShipType>
+<to_bow>0</to_bow>
+<to_stern>'.$Length.'</to_stern>
+<to_port>0</to_port>
+<to_starboard>16</to_starboard>
 <month>'.date('m').'</month>
 <day>'.date('d').'</day>
 <hour>'.date('H').'</hour>
 <minute>'.date('m').'</minute>
 <ETA>'.$ETA.'</ETA>
 <draught>'.$Draught.'</draught>
-<Destination>'.$Destination.'</Destination>';
+<Destination>'.$Destination.'</Destination>
+<RecvTime>'.$MovementDateTime.'</RecvTime>
+<LocalRecvTime>'.$MovementDateTime.'</LocalRecvTime>';
 			
 			$sql2 = "SELECT `xvas_imo` FROM `_xvas_siitech_cache` WHERE `xvas_imo`='".mysql_escape_string($imo)."' ORDER BY `xvas_imo` LIMIT 0,1";
 			$rx = dbQuery($sql2, $link);
@@ -134,6 +146,7 @@ $shipstat = '<MMSI>'.$mmsi.'</MMSI>
 									xvas_speed = '".mysql_escape_string($speed)."', 
 									siitech_eta = '".mysql_escape_string($ETA)."', 
 									siitech_destination = '".mysql_escape_string($Destination)."', 
+									siitech_lastseen = '".mysql_escape_string($MovementDateTime)."', 
 									siitech_latitude = '".mysql_escape_string($Latitude)."', 
 									siitech_longitude = '".mysql_escape_string($Longitude)."', 
 									siitech_shippos_data = '".mysql_escape_string(addslashes($shippos))."', 
@@ -156,6 +169,7 @@ $shipstat = '<MMSI>'.$mmsi.'</MMSI>
 						xvas_speed, 
 						siitech_eta, 
 						siitech_destination, 
+						siitech_lastseen, 
 						siitech_latitude, 
 						siitech_longitude, 
 						siitech_shippos_data, 
@@ -172,6 +186,7 @@ $shipstat = '<MMSI>'.$mmsi.'</MMSI>
 						'".mysql_escape_string($speed)."',
 						'".mysql_escape_string($ETA)."',
 						'".mysql_escape_string($Destination)."',
+						'".mysql_escape_string($MovementDateTime)."',
 						'".mysql_escape_string($Latitude)."',
 						'".mysql_escape_string($Longitude)."',
 						'".mysql_escape_string(addslashes($shippos))."',

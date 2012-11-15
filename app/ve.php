@@ -74,6 +74,8 @@ if($_GET['search']){
 		$ship['manager_owner'] = getValue($r2[0]['data'], 'MANAGER_OWNER');
 		$ship['manager_owner_email'] = getValue($r2[0]['data'], 'MANAGER_OWNER_EMAIL');
 		$ship['class_society'] = htmlentities(getValue($r2[0]['data'], 'CLASS_SOCIETY'));
+		$ship['holds'] = htmlentities(getValue($r2[0]['data'], 'HOLDS'));
+		$ship['largest_hatch'] = htmlentities(getValue($r2[0]['data'], 'LARGEST_HATCH'));
 
 		$ships[] = $ship;
 	}
@@ -604,6 +606,8 @@ var fuel_types = [];
 var manager_owners = [];
 var manager_owner_emails = [];
 var class_societys = [];
+var holdss = [];
+var largest_hatchs = [];
 
 var sfs = [];
 
@@ -1383,6 +1387,8 @@ $(function(){
 					manager_owners[val.imo] = val.manager_owner;
 					manager_owner_emails[val.imo] = val.manager_owner_email;
 					class_societys[val.imo] = val.class_society;
+					holdss[val.imo] = val.holds;
+					largest_hatchs[val.imo] = val.largest_hatch;
 
 				});
 
@@ -1493,50 +1499,32 @@ $(function(){
 			jQuery("#ship_class_society").each(function(){
 				setValue(jQuery(this), class_societys[imo]);
 			});
+			jQuery("#ship_holds").each(function(){
+				setValue(jQuery(this), holdss[imo]);
+			});
+			jQuery("#ship_largest_hatch").each(function(){
+				setValue(jQuery(this), largest_hatchs[imo]);
+			});
 			//End of Zoi's Code
 
 			jQuery(".g31").each(function(){
-
 				setValue(jQuery(this), fNum(speeds[imo]));
-
 			});
 
 			jQuery(".g33").each(function(){
-
 				setValue(jQuery(this), fNum(speeds[imo]));
-
 			});
 
 			jQuery(".g34").each(function(){
-
 				setValue(jQuery(this), fNum(speeds[imo]));
-
 			});
-
-			thread();
-
-		},
-
-		
-
-		/*
-
-		//define select handlers
-
-		change: function() {
-
 			
-
-			//prevent 'to' field being updated and correct position
-
-			$("#to").val("").css("top", 2);
-
-		}
-
-		*/
-
+			iframeve = document.getElementById('map_iframeve');
+  			iframeve.src = "map/ve.php?imo="+imo;
+			
+			thread();
+		},
 	});
-
 });
 
 function showShipDetails2(imo){
@@ -3840,6 +3828,16 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
             <td valign="top"><div style="padding:2px;"><b>Flag</b></div></td>
             <td valign="top" style="padding:2px;" id="ship_flag"></td>
           </tr>
+          <tr bgcolor="f5f5f5">
+            <td valign="top"><div style="padding:2px;"><b>Holds</b></div></td>
+            <td valign="top" style="padding:2px;" id="ship_holds"></td>
+            <td valign="top"><div style="padding:2px;"><b>Largest Hatch</b></div></td>
+            <td valign="top" style="padding:2px;" id="ship_largest_hatch"></td>
+            <td valign="top"><div style="padding:2px;"><b>&nbsp;</b></div></td>
+            <td valign="top" style="padding:2px;"></td>
+            <td valign="top"><div style="padding:2px;"><b>&nbsp;</b></div></td>
+            <td valign="top" style="padding:2px;"></td>
+          </tr>
         </table>
     </div>
     <div style="border-bottom:3px dotted #fff;">&nbsp;</div>
@@ -4962,7 +4960,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
         
               <tr>
         
-                <td width="0" height="0" bgcolor="#000000"><iframe src='map/ve.php' width='640' height='460' frameborder="0"></iframe></td>
+                <td width="0" height="0" bgcolor="#000000"><iframe src='' id="map_iframeve" width='640' height='460' frameborder="0"></iframe></td>
         
               </tr>
         
@@ -5164,13 +5162,9 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
         <td class='empty' style="padding:2px;"><input type='text' class='input_1 number' id='g85' style="max-width:200px;" /></td>
     
       </tr>
-    
       <tr>
-    
         <td colspan="6" class="label calculated"  id='d86' style="padding:2px;"></td>
-    
       </tr>
-    
     </table>
     <div>&nbsp;</div>
 </div>

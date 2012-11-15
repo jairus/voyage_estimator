@@ -1,0 +1,38 @@
+/*MAIN*/
+*{
+	font-size:10px;
+	font-family:Verdana, Arial, Helvetica, sans-serif
+}
+
+body{
+	background-color:#dddddd;
+}
+
+#outer{
+	max-width:1300px;
+	height:auto;
+	margin:0 auto;
+}
+
+#site_content_1{
+	float:left;
+	max-width:1300px;
+	height:auto;
+}
+/*END OF MAIN*/
+
+/*CLASSES*/
+.content_link{
+	padding:7px 10px;
+	background-color:#f5f5f5;
+	color:#333;
+	cursor:pointer;
+}
+
+.content_link_selected{
+	padding:7px 10px;
+	background-color:#a6a6a6;
+	color:#fff;
+	cursor:pointer;
+}
+/*END OF CLASSES*/

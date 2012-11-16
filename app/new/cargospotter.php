@@ -1,6 +1,3 @@
-<?php
-@include_once(dirname(__FILE__)."/includes/bootstrap.php");
-?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -8,6 +5,7 @@
 <title>CargoSpotter</title>
 <link rel="stylesheet" href="css/style.css">
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	displayContent('voyage_estimator')
@@ -78,7 +76,7 @@ function displayContent(content){
 <center>
 <table width="100%" height="100%" id="pleasewait" style="display:none; position:fixed; top:0; left:0; z-index:100; background-image:url('images/overlay.png'); background-position:center; background-attachment:scroll; filter:alpha(opacity=90); opacity:0.9;">
     <tr>
-        <td style="text-align:center;"><img src="images/loading.gif" /></td>
+        <td align="center" valign="middle"><img src="images/loading.gif" /></td>
     </tr>
 </table>
 </center>

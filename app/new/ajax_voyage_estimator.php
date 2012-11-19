@@ -1184,7 +1184,7 @@ function showShipDetails(imo){
 
 	jQuery.ajax({
 		type: 'POST',
-		url: "ajax.php?imo="+gimo+"&__ve=1",
+		url: "ajax.php?imo="+gimo+"&voyage_estimator=1",
 		data:  '',
 
 		success: function(data) {

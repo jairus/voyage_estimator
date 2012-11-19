@@ -67,7 +67,7 @@ if($r[0]){
 	
 	logStr("About to parse file ... ");
 	
-	$filename = dirname(__FILE__)."/data/201211140141_AISData.xml";
+	$filename = dirname(__FILE__)."/data/201211190144_AISData.xml";
 	$string = simplexml_load_file($filename);
 	
 	$data = $string->AISData;

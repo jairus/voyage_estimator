@@ -1,4 +1,8 @@
 <!--LIVE SHIP POSITION-->
+<link rel="stylesheet" href="js/development-bundle/themes/base/jquery.ui.all.css">
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.core.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.dialog.js"></script>
 <script>
 function viewLiveShipPosition(){
     jQuery('#liveshippositionresults').hide();
@@ -7,7 +11,7 @@ function viewLiveShipPosition(){
 
     jQuery.ajax({
         type: 'GET',
-        url: "../search_ajax7.php",
+        url: "search_ajax7ve.php",
         data:  jQuery("#live_ship_position").serialize(),
 
         success: function(data) {
@@ -129,11 +133,11 @@ function toggleCategories(){
 
                     jQuery.ajax({
                         type: 'GET',
-                        url: "../search_ajax7.php",
+                        url: "search_ajax7ve.php",
                         data:  jQuery("#live_ship_position").serialize(),
 
                         success: function(data) {
-                            jQuery("#mapiframe1")[0].src='../map/index10_online.php';
+                            jQuery("#mapiframe1")[0].src='map/index10_online.php';
                             jQuery("#mapdialog1").dialog("open");
                             
                             jQuery('#pleasewait').hide();

@@ -1,12 +1,23 @@
 <!--PORT INTELLIGENCE-->
-<script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
-<script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
-<script type='text/javascript' src='../js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
-<script type='text/javascript' src='../js/jquery-autocomplete/jquery.autocomplete.js'></script>
-<script type='text/javascript' src='../js/wpi_ports.php'></script>
-<script type='text/javascript' src='../js/wpi_countries.php'></script>
-<link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/jquery.autocomplete.css" />
-<link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/lib/thickbox.css" />
+<style>
+body{
+	margin-top:10px;
+}
+</style>
+
+<link rel="stylesheet" href="js/development-bundle/themes/base/jquery.ui.all.css">
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.core.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.dialog.js"></script>
+
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/jquery.autocomplete.js'></script>
+<script type='text/javascript' src='js/wpi_ports.php'></script>
+<script type='text/javascript' src='js/wpi_countries.php'></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/jquery.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/lib/thickbox.css" />
 
 <div id="mapdialogportintelligence" title="MAP" style='display:none;'>
     <iframe id="mapiframeportintelligence" name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
@@ -21,11 +32,11 @@ function showMapPI(){
 
     jQuery.ajax({
         type: 'GET',
-        url: "../search_ajax_portintelligence.php",
+        url: "search_ajax5ve.php",
         data:  jQuery("#portintelligence_form").serialize(),
 
         success: function(data) {
-            jQuery("#mapiframeportintelligence")[0].src='../map/index11.php';
+            jQuery("#mapiframeportintelligence")[0].src='map/index11.php';
             jQuery("#mapdialogportintelligence").dialog("open");
             
             jQuery('#pleasewait').hide();
@@ -42,7 +53,7 @@ function portIntelligenceSubmit(){
 
     jQuery.ajax({
         type: 'GET',
-        url: "../search_ajax_portintelligence.php",
+        url: "search_ajax5ve.php",
         data:  jQuery("#portintelligence_form").serialize(),
 
         success: function(data) {
@@ -65,16 +76,11 @@ function portIntelligenceSubmit(){
   <tr>
     <td style="padding:2px 0px; border-bottom:none;" align="center"><input class='searchbutton' type="button" id='btn_search_portintelligence_id' name="btn_search_portintelligence" value="SEARCH" style='cursor:pointer;' onclick='portIntelligenceSubmit();'  /></td>
   </tr>
-  <tr>
-    <td>
-        <div style="padding:2px;">
-            <div id='portintelligenceresults'>
-                <div id='portintelligence_tab_wrapperonly'></div>
-            </div>
-        </div>
-    </td>
-  </tr>
 </table>
+
+<div id='portintelligenceresults'>
+    <div id='portintelligence_tab_wrapperonly'></div>
+</div>
 </center>
 </form>
 

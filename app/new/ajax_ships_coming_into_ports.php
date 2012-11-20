@@ -1,17 +1,58 @@
 <!--SHIPS COMING INTO PORTS-->
-<script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
-<script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
-<script type='text/javascript' src='../js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
-<script type='text/javascript' src='../js/jquery-autocomplete/jquery.autocomplete.js'></script>
-<script type='text/javascript' src='../js/ports.php'></script>
-<link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/jquery.autocomplete.css" />
-<link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/lib/thickbox.css" />
+<style>
+body{
+	margin-top:10px;
+}
+</style>
 
-<script type="text/javascript" src="../js/calendar/xc2_default.js"></script>
-<script type="text/javascript" src="../js/calendar/xc2_inpage.js"></script>
-<link type="text/css" rel="stylesheet" href="../js/calendar/xc2_default.css" />
+<link rel="stylesheet" href="js/development-bundle/themes/base/jquery.ui.all.css">
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.core.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.dialog.js"></script>
+
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/jquery.autocomplete.js'></script>
+<script type='text/javascript' src='js/ports.php'></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/jquery.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/lib/thickbox.css" />
+
+<script type="text/javascript" src="js/calendar/xc2_default.js"></script>
+<script type="text/javascript" src="js/calendar/xc2_inpage.js"></script>
+<link type="text/css" rel="stylesheet" href="js/calendar/xc2_default.css" />
 
 <script>
+function showShipDetails(imo){
+	jQuery("#shipdetails").dialog("close")
+	jQuery('#pleasewait').show();
+
+	jQuery.ajax({
+		type: 'POST',
+		url: "search_ajax.php?imo="+imo,
+		data:  '',
+
+		success: function(data) {
+			if(data.indexOf("<b>ERROR")!=0){
+				jQuery("#shipdetails_in").html(data);
+				jQuery("#shipdetails").dialog("open")
+				jQuery('#pleasewait').hide();
+			}else{
+				alert(data)
+			}
+		}
+	});	
+}
+
+function ownerDetails(owner, owner_id){
+	var iframe = $("#contactiframe");
+
+	$(iframe).contents().find("body").html("");
+
+	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
+	jQuery("#contactdialog").dialog("open");
+}
+
 function shipsComingIntoPorts(){
 	jQuery("#shipscomingintoportsdetails").hide();
 	jQuery('#shipscomingintoportsresults').hide();
@@ -22,7 +63,7 @@ function shipsComingIntoPorts(){
 
 	jQuery.ajax({
 		type: 'GET',
-		url: "../search_ajax4.php",
+		url: "search_ajax4ve.php",
 		data:  jQuery("#shipscomingintoports").serialize(),
 
 		success: function(data) {
@@ -35,7 +76,28 @@ function shipsComingIntoPorts(){
 		}
 	});
 }
+
+jQuery("#shipdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#shipdetails").dialog("close");
+
+jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
+jQuery("#contactdialog").dialog("close");
+
+jQuery( "#mapdialog" ).dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#mapdialog").dialog("close");
 </script>
+
+<div id="shipdetails" title="SHIP DETAILS" style='display:none;'>
+	<div id='shipdetails_in'></div>
+</div>
+
+<div id="contactdialog" title="CONTACT"  style='display:none'>
+	<iframe id='contactiframe' frameborder="0" height="100%" width="100%"></iframe>
+</div>
+
+<div id="mapdialog" title="MAP - CLICK ON THE SHIP IMAGE BELOW TO SHOW DETAILS" style='display:none'>
+	<iframe id='mapiframe' name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
 
 <form id='shipscomingintoports' onsubmit="shipsComingIntoPorts(); return false;">
 <table width="100%" border="0" cellpadding="0" cellspacing="0" style='margin-bottom:5px;'>

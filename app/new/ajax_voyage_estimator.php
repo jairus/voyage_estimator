@@ -468,10 +468,10 @@ var sfs = [];
 var gimo = "";
 
 $(function(){
-	jQuery("#shipdetails").dialog( { width: '90%', height: jQuery(window).height()*0.9 });
+	jQuery("#shipdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
 	jQuery("#shipdetails").dialog("close");
 	
-	jQuery("#contactdialog").dialog( { width: 900, height: 460 });
+	jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
 	jQuery("#contactdialog").dialog("close");	
 
 	//ballast
@@ -1184,7 +1184,7 @@ function showShipDetails(imo){
 
 	jQuery.ajax({
 		type: 'POST',
-		url: "ajax.php?imo="+gimo+"&voyage_estimator=1",
+		url: "search_ajax.php?imo="+gimo,
 		data:  '',
 
 		success: function(data) {
@@ -1204,7 +1204,7 @@ function ownerDetails(owner, owner_id){
 
 	$(iframe).contents().find("body").html("");
 
-	jQuery("#contactiframe")[0].src='ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
+	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
 	jQuery("#contactdialog").dialog("open");
 }
 

@@ -1,26 +1,412 @@
 <!--FAST SEARCH-->
-<script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
-<script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
-<script type='text/javascript' src='../js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
-<script type='text/javascript' src='../js/jquery-autocomplete/jquery.autocomplete.js'></script>
-<script type='text/javascript' src='../js/ports.php'></script>
-<link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/jquery.autocomplete.css" />
-<link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/lib/thickbox.css" />
+<?php
+include_once(dirname(__FILE__)."/includes/bootstrap.php");
 
-<script type="text/javascript" src="../js/calendar/xc2_default.js"></script>
-<script type="text/javascript" src="../js/calendar/xc2_inpage.js"></script>
-<link type="text/css" rel="stylesheet" href="../js/calendar/xc2_default.css" />
+global $user;
+
+$tab     = $tabsys->getTab("shipsearch", $_GET['tab']);
+$tabid   = $tab['id'];
+$tabdata = unserialize($tab['tabdata']);
+?>
+
+<style>
+body{
+	margin-top:10px;
+}
+
+td{
+	border-bottom:none;
+}
+
+.divclass_active{
+	float:left;
+	background-color: #FFFFFF;
+	color: #3ac3d3;
+	border: 2px solid #c9c9c9;
+	padding: 5px;
+}
+.divclass{
+	float:left;
+	background-color: #c9c9c9;
+	color: #666666;
+	border: 2px solid #c9c9c9;
+	padding: 5px;
+}
+</style>
+
+<link rel="stylesheet" href="js/development-bundle/themes/base/jquery.ui.all.css">
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.core.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.dialog.js"></script>
+
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/jquery.autocomplete.js'></script>
+<script type='text/javascript' src='js/ports.php'></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/jquery.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/lib/thickbox.css" />
+
+<script type="text/javascript" src="js/calendar/xc2_default.js"></script>
+<script type="text/javascript" src="js/calendar/xc2_inpage.js"></script>
+<link type="text/css" rel="stylesheet" href="js/calendar/xc2_default.css" />
+
+<script>
+function shipSearchx(){
+	jQuery.ajax({
+		type: 'GET',
+		url: "didyouknow.php?t="+(new Date()).getTime(),
+		data:  "",
+
+		success: function(data) {
+			jQuery('#didyouknowcontent').html(data);
+			jQuery( "#didyouknowdialog" ).dialog("open"); 
+		}
+	});
+
+	jQuery("#container-1").html("");
+
+	globalfetch = false;
+
+	jQuery("#shipdetails").dialog("close");
+	jQuery('#sresults').hide();
+	jQuery('#pleasewait').show();
+
+	jQuery("#sbutton").val("SEARCHING...");
+	jQuery("#sbutton")[0].disabled = true;
+	
+	jQuery('#cancelsearch').show();
+
+	jQuery.ajax({
+		type: 'GET',
+		url: "search_ajax.php",
+		data: jQuery("#searchform").serialize(),
+
+		success: function(data) {
+			jQuery("#sbutton")[0].disabled = false;
+			
+			jQuery('#cancelsearch').hide();
+
+			if(data.indexOf("<b>ERROR")!=0){
+				jQuery("#container-1").html(data);
+				jQuery("#searchtabdata").val(jQuery("#searchform").serialize());
+
+				try{
+					jTabs('#container-1');
+				}
+
+				catch(e){
+
+				}
+
+				jQuery('#sresults').show();
+				jQuery('#pleasewait').hide();
+
+				setTimeout("jQuery('#searchform').slideUp('slow')", 500);
+
+				toggleParams('up');
+
+				globalfetch = true;
+
+				fetchMessagesCron();
+				fetchMessages();
+			}else{
+				data = data.replace("<b>ERROR</b>:", "");
+
+				alert(data);
+
+				jQuery('#pleasewait').hide();
+			}
+
+			jQuery("#sbutton").val("SEARCH");
+		}
+	});
+}
+
+function changeCssClass(objDivID){
+	if(document.getElementById(objDivID).className=='divclass_active'){
+		document.getElementById(objDivID).className = 'divclass';
+	}else{
+		document.getElementById(objDivID).className = 'divclass_active';
+	}
+}
+
+function showShipDetails(imo){
+	jQuery("#shipdetails").dialog("close")
+	jQuery('#pleasewait').show();
+
+	jQuery.ajax({
+		type: 'POST',
+		url: "search_ajax.php?imo="+imo,
+		data:  '',
+
+		success: function(data) {
+			if(data.indexOf("<b>ERROR")!=0){
+				jQuery("#shipdetails_in").html(data);
+				jQuery("#shipdetails").dialog("open")
+				jQuery('#pleasewait').hide();
+			}else{
+				alert(data)
+			}
+		}
+	});	
+}
+
+function ownerDetails(owner, owner_id){
+	var iframe = $("#contactiframe");
+
+	$(iframe).contents().find("body").html("");
+
+	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
+	jQuery("#contactdialog").dialog("open");
+}
+
+function csvIt(report){
+	chk = jQuery("#positions input[type=checkbox]");
+	g = "";
+
+	for(i=0; i<chk.length; i++){
+		if(chk[i].checked&&chk[i].value){
+			g += "imo[]="+chk[i].value+"&";
+		}
+	}
+
+	if(g!=""){
+		self.location = "misc/csv.php?"+g+"report="+report;
+	}else{
+		alert("You must select ships to download. Check checkboxes to select.")
+	}
+
+}
+
+function mailIt(report){
+	chk = jQuery("#positions input[type=checkbox]");
+	g = "";
+
+	for(i=0; i<chk.length; i++){
+		if(chk[i].checked&&chk[i].value){
+			g += "imo[]="+chk[i].value+"&";
+		}
+
+	}
+
+	if(g!=""){
+		jQuery("#misciframe")[0].src="misc/email.php?"+g+"report="+report;
+		jQuery("#miscdialog").dialog("open");
+	}else{
+		alert("You must select ships to print. Check checkboxes to select.")
+	}
+}
+
+function printIt(report){
+	chk = jQuery("#positions input[type=checkbox]");
+	g = "";
+
+	for(i=0; i<chk.length; i++){
+		if(chk[i].checked&&chk[i].value){
+			g += "imo[]="+chk[i].value+"&";
+		}
+	}
+
+	if(g!=""){
+		jQuery("#misciframe")[0].src="misc/print.php?"+g+"report="+report;
+		jQuery("#miscdialog").dialog("open");
+	}else{
+		alert("You must select ships to print. Check checkboxes to select.")
+	}
+}
+
+function csvIt1(report){
+	chk = jQuery("#fixtures input[type=checkbox]");
+	g = "";
+
+	for(i=0; i<chk.length; i++){
+		if(chk[i].checked&&chk[i].value){
+			g += "imo[]="+chk[i].value+"&";
+		}
+	}
+
+	if(g!=""){
+		self.location = "misc/csv.php?"+g+"report="+report;
+	}else{
+		alert("You must select ships to download. Check checkboxes to select.")
+	}
+
+}
+
+function mailIt1(report){
+	chk = jQuery("#fixtures input[type=checkbox]");
+	g = "";
+
+	for(i=0; i<chk.length; i++){
+		if(chk[i].checked&&chk[i].value){
+			g += "imo[]="+chk[i].value+"&";
+		}
+
+	}
+
+	if(g!=""){
+		jQuery("#misciframe")[0].src="misc/email1.php?"+g+"report="+report;
+		jQuery("#miscdialog").dialog("open");
+	}else{
+		alert("You must select ships to print. Check checkboxes to select.")
+	}
+}
+
+function printIt1(report){
+	chk = jQuery("#fixtures input[type=checkbox]");
+	g = "";
+
+	for(i=0; i<chk.length; i++){
+		if(chk[i].checked&&chk[i].value){
+			g += "imo[]="+chk[i].value+"&";
+		}
+	}
+
+	if(g!=""){
+		jQuery("#misciframe")[0].src="misc/print1.php?"+g+"report="+report;
+		jQuery("#miscdialog").dialog("open");
+	}else{
+		alert("You must select ships to print. Check checkboxes to select.")
+	}
+}
+
+function checkAll(idx, obj){
+	if(obj.checked){
+		jQuery("#"+idx+" input[type=checkbox]").attr("checked", true)
+	}else{
+		jQuery("#"+idx+" input[type=checkbox]").attr("checked", false)
+	}
+}
+
+function oUpdate(id){
+	jQuery("#oUpdate"+id).attr("width", "100%");
+	jQuery("#oUpdate"+id).toggle();
+}
+
+function oUpdatev(id){
+	jQuery("#oUpdatev"+id).attr("width", "100%");
+	jQuery("#oUpdatev"+id).toggle();
+}
+
+function oUpdateo1(id){
+	jQuery("#oUpdateo1"+id).attr("width", "100%");
+	jQuery("#oUpdateo1"+id).toggle();
+}
+
+function oUpdateo2(id){
+	jQuery("#oUpdateo2"+id).attr("width", "100%");
+	jQuery("#oUpdateo2"+id).toggle();
+}
+
+function oUpdateo3(id){
+	jQuery("#oUpdateo3"+id).attr("width", "100%");
+	jQuery("#oUpdateo3"+id).toggle();
+}
+
+function oUpdater1(id){
+	jQuery("#oUpdater1"+id).attr("width", "100%");
+	jQuery("#oUpdater1"+id).toggle();
+}
+
+function oUpdater2(id){
+	jQuery("#oUpdater2"+id).attr("width", "100%");
+	jQuery("#oUpdater2"+id).toggle();
+}
+
+function showLearnDialog(learnwhat){
+	jQuery.ajax({
+	  type: 'GET',
+	  url: "learn.php?topic="+learnwhat+"&t="+(new Date()).getTime(),
+	  data:  "",
+
+	  success: function(data) {
+		jQuery('#learncontent').html(data);
+		jQuery( "#learndialog" ).dialog("open");
+	  }
+	});
+}
+
+function openZoneMap(zone){
+	jQuery("#zonemapiframe")[0].src='map/zone2.php?zone='+zone+"&t="+(new Date()).getTime();
+	jQuery( "#zonemapdialog" ).dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+	jQuery("#zonemapdialog").dialog("open");
+}
+
+function openOptMap(opt){
+	opt = opt.replace("_", ",")
+
+	jQuery("#zonemapiframe")[0].src='map/zone2.php?zone='+opt+"&t="+(new Date()).getTime();
+	jQuery( "#zonemapdialog" ).dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+	jQuery("#zonemapdialog").dialog("open");
+}
+
+jQuery( "#didyouknowdialog" ).dialog( { autoOpen: false, width: 700, height: 600 });
+jQuery( "#didyouknowdialog" ).dialog("close");
+
+jQuery( "#learndialog" ).dialog( { autoOpen: false, width: 600, height: 360 });
+jQuery( "#learndialog" ).dialog("close");	
+
+jQuery("#shipdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#shipdetails").dialog("close");
+
+jQuery( "#mapdialog" ).dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#mapdialog").dialog("close");
+
+jQuery( "#zonemapdialog" ).dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#zonemapdialog").dialog("close");
+
+jQuery( "#miscdialog" ).dialog( { autoOpen: false, width: 1100, height: 500 });
+jQuery( "#miscdialog" ).dialog("close");
+
+jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
+jQuery("#contactdialog").dialog("close");
+</script>
+
+<div id="shipdetails" title="SHIP DETAILS" style='display:none;'>
+	<div id='shipdetails_in'></div>
+</div>
+
+<div id="contactdialog" title="CONTACT"  style='display:none'>
+	<iframe id='contactiframe' frameborder="0" height="100%" width="100%"></iframe>
+</div>
+
+<div id="mapdialog" title="MAP - CLICK ON THE SHIP IMAGE BELOW TO SHOW DETAILS" style='display:none'>
+	<iframe id='mapiframe' name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
+
+<div id="didyouknowdialog" title=""  style='display:none'>
+	<div id='didyouknowcontent'></div>
+</div>
+
+<div id="learndialog" title=""  style='display:none'>
+	<div id='learncontent' style='font-size:11px;'></div>
+</div>
+
+<div id="zonemapdialog" title="ZONE MAP" style='display:none'>
+	<iframe id='zonemapiframe' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
+
+<div id="miscdialog" title=""  style='display:none'>
+	<iframe id='misciframe' frameborder='0' height="100%" width="1100px" style='border:0px; height:100%; width:1050px;'></iframe>
+</div>
+
+<center>
+<form id='mapformid' target='mapname' method="post">
+	<input type='hidden' name='details' id='detailsid' />
+</form>
 
 <form id='searchform'>
 <input type='hidden' name='dry' value='1' >
+<input type='hidden' name='tabid' value='<?php echo $tabid; ?>' >
 <table width="1000" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="top" width="400">
-            <table width="400" border="0" cellpadding="0" cellspacing="0">
+            <table width="400" border="0" cellpadding="3" cellspacing="3">
                 <tr>
                     <td valign="top" class="title">LOAD PORT</td>
                     <td valign="top">
-                        <input id='suggest1' type="text" name="load_port" value='<?php echo $tabdata['load_port']; ?>' class="text" style='width:200px;' />
+                        <input id='suggest1' type="text" name="load_port" value='<?php echo $tabdata['load_port']; ?>' class="input_1" style='width:200px;' />
                         <input type='hidden' name='zone2' value='<?php echo $tabdata['zone']; ?>' >
                         
                         <script type="text/javascript">
@@ -97,7 +483,7 @@
                         }else{
                             echo $tabdata['load_port_from'];
                         }
-                        ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="text" style="width:90px;" />
+                        ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
             
                         to 
             
@@ -107,13 +493,13 @@
                         }else{ 
                             echo $tabdata['load_port_to'];
                         }
-                        ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="text" style="width:90px;" />
+                        ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" class="title">HULL TYPE</td>
                     <td valign="top">
-                        <select name="hull_type" class="selection" id='hull_type_id' style="width:200px;">
+                        <select name="hull_type" class="input_1" id='hull_type_id' style="width:200px;">
                             <option selected="selected">SINGLE HULL</option>
                             <option>DOUBLE HULL</option>
                         </select>
@@ -126,7 +512,7 @@
                 <tr>
                     <td valign="top" class="title">CATEGORY <strong>DRY</strong></td>
                     <td valign="top" id='foovt'>
-                        <select name="vessel_type[]" multiple="multiple" size="16" id='vessel_type_id' style="width:200px;">
+                        <select name="vessel_type[]" multiple="multiple" size="16" id='vessel_type_id' class="input_1" style="width:200px;">
                             <optgroup label="BULK CARRIER">
                                 <option value="BULK CARRIER">BULK CARRIER</option>
                                 <option value="ORE CARRIER">ORE CARRIER</option>
@@ -193,11 +579,11 @@
             </table>
         </td>
         <td valign="top" width="600">
-            <table width="600" border="0" cellpadding="0" cellspacing="0">
+            <table width="600" border="0" cellpadding="3" cellspacing="3">
                 <tr>
                     <td valign="top" class="title">DWT RANGE</td>
                     <td valign="top">
-                        <select class="valid" name="dwt_range" id='dwt_range_id' onchange='showZones(jQuery("#suggest1").val(), this.value)'>
+                        <select class="input_1" name="dwt_range" id='dwt_range_id' onchange='showZones(jQuery("#suggest1").val(), this.value)'>
                             <option value="5|35">(5,000-35,000) Handysize</option>
                             <option value="40|50" selected="selected">(40,000-50,000) Handymax</option>
                             <option value="50|60">(50,000-60,000) Supramax</option>
@@ -324,17 +710,9 @@
     </tr>	
     <tr>
         <td style='padding-top:10px; text-align:center;' colspan='2' align="center" >
-            <input class='cancelbutton' type="button" name="cancelsearch" value="CANCEL SEARCH"  style='cursor:pointer; display:none;' id='cancelsearch'  />
-            &nbsp;&nbsp;&nbsp;
             <input class='searchbutton' type="button" name="search" value="SEARCH"  style='cursor:pointer' id='sbutton'  />
 
             <script>
-            $("#cancelsearch").click(function(){
-                jQuery("#cancelsearch").val("CANCELING SEARCH...");
-                jQuery("#sbutton").hide();
-                location.reload();
-            });
-            
             jQuery("#sbutton").click(
                 function(){
                     shipSearchx();
@@ -345,7 +723,7 @@
     </tr>
     <tr>
         <td colspan='2'>
-            <div id='pleasewait' style='display:none; text-align:center'>
+            <div id='pleasewait_fastsearch' style='display:none; text-align:center;'>
                 <center>
                 <table width="400" style="border:1px solid #06F;">
                     <tr>
@@ -391,4 +769,5 @@ if($tabdata['load_port']){
         <div id="container-1"></div>
     </div>
 </div>
+</center>
 <!--END OF FAST SEARCH-->

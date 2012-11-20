@@ -1,5 +1,46 @@
 <!--SHIP SEARCH ONLY-->
+<script type="text/javascript" src="js/jscript.js"></script>
+<link rel="stylesheet" href="js/development-bundle/themes/base/jquery.ui.all.css">
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.core.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="js/development-bundle/ui/jquery.ui.dialog.js"></script>
 <script>
+function openMessageDialog(mid, imo, type){
+	jQuery("#messageiframeshipsearchonly")[0].src="search_ajax.php?action=getmessages&type="+type+"&mid="+mid+"&imo="+imo+"&t="+(new Date()).getTime();
+	jQuery("#messagedialogshipsearchonly").dialog( { autoOpen: false, width: '920', height: jQuery(window).height()*0.9 });
+	jQuery("#messagedialogshipsearchonly").dialog("open");
+}
+
+function showShipDetails(imo){
+	jQuery("#shipdetails").dialog("close")
+	jQuery('#pleasewait').show();
+
+	jQuery.ajax({
+		type: 'POST',
+		url: "search_ajax.php?imo="+imo,
+		data:  '',
+
+		success: function(data) {
+			if(data.indexOf("<b>ERROR")!=0){
+				jQuery("#shipdetails_in").html(data);
+				jQuery("#shipdetails").dialog("open")
+				jQuery('#pleasewait').hide();
+			}else{
+				alert(data)
+			}
+		}
+	});	
+}
+
+function ownerDetails(owner, owner_id){
+	var iframe = $("#contactiframe");
+
+	$(iframe).contents().find("body").html("");
+
+	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
+	jQuery("#contactdialog").dialog("open");
+}
+
 function shipSearchOnly(){
 	jQuery("#shipdetails").hide();
 	jQuery('#shipsearchonlyresults').hide();
@@ -10,11 +51,11 @@ function shipSearchOnly(){
 
 	jQuery.ajax({
 		type: 'GET',
-		url: "../search_ajax2ve.php",
+		url: "search_ajax2ve.php",
 		data:  jQuery("#shipsearchonly").serialize(),
 
 		success: function(data) {
-			jQuery("#records_tab_wrapperonly").html(data);
+			jQuery("#records_tab_wrapperonly_shipsearchonly").html(data);
 			jQuery('#shipsearchonlyresults').fadeIn(200);
 
 			jQuery("#sbutton").val("SEARCH");
@@ -23,7 +64,32 @@ function shipSearchOnly(){
 		}
 	});
 }
+
+jQuery("#shipdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#shipdetails").dialog("close");
+
+jQuery( "#mapdialog" ).dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#mapdialog").dialog("close");
+
+jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
+jQuery("#contactdialog").dialog("close");
 </script>
+
+<div id="shipdetails" title="SHIP DETAILS" style='display:none;'>
+	<div id='shipdetails_in'></div>
+</div>
+
+<div id="contactdialog" title="CONTACT"  style='display:none'>
+	<iframe id='contactiframe' frameborder="0" height="100%" width="100%"></iframe>
+</div>
+
+<div id="mapdialog" title="MAP - CLICK ON THE SHIP IMAGE BELOW TO SHOW DETAILS" style='display:none'>
+	<iframe id='mapiframe' name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
+
+<div id="messagedialogshipsearchonly" title="MESSAGES"  style='display:none'>
+	<iframe id='messageiframeshipsearchonly' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
 
 <form id='shipsearchonly' onsubmit="shipSearchOnly(); return false;">
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -45,7 +111,7 @@ function shipSearchOnly(){
     </tr>
 </table>
 <div id='shipsearchonlyresults'>
-    <div id='records_tab_wrapperonly'></div>
+    <div id='records_tab_wrapperonly_shipsearchonly'></div>
 </div>
 </form>
 <!--END OF SHIP SEARCH ONLY-->

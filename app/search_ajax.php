@@ -239,9 +239,27 @@ function getPortId($name, $exact=false){
 		return false;
 	}
 
+	/*
 	$sql = "SELECT '".$name."' as `given`, `name`, `portid`, `latitude`, `longitude`, if( `name` = '".$name."', 1, 0 ) as `exact`, if( `name` like '%".$name."%' , 1, 0 ) as `soundslike`
 	FROM `_veson_ports`
 	WHERE if( `name` = '".$name."', 1, 0 )=1 or if( `name` like '%".$name."%' , 1, 0 )=1  order by if( `name` = '".$name."', 1, 0 )=1 desc limit 1";	
+	*/
+	$sql = "SELECT 
+		'".$name."' as `given`,
+		`name`, `portid`, 
+		`latitude`, 
+		`longitude`, 
+		if( `name` = '".$name."', 1, 0 ) as `exact`, 
+		if( `name` like '%".$name."%' , 1, 0 ) as `soundslike`
+	FROM `_veson_ports`
+	WHERE 
+		if( `name` = '".$name."', 1, 0 )=1 or 
+		if( `name` like '%".$name."%' , 1, 0 )=1  
+	order by 
+		if( `name` = '".$name."', 1, 0 )=1 desc 
+	limit 1";	
+	
+	
 	$r = dbQuery($sql, $link);
 	$r = $r[0];
 
@@ -1349,6 +1367,8 @@ if($_GET['action']=='noop'){
 	exit();
 }
 
+
+
 //load port and date range
 $load_port = strtoupper(trim($_GET['load_port']));
 $load_portx = getPortId($load_port, 1);
@@ -1367,6 +1387,8 @@ $lptts = convertDateToTs($_GET['load_port_to']);
 
 $lpff = date("M j, 'y", $lpfts);
 $lptf = date("M j, 'y", $lptts);
+
+
 
 if($_GET['action']=='getzones'){
 	$zones = get_zones($load_portlat, $load_portlong);
@@ -2319,6 +2341,8 @@ if(!$load_portid){
 	exit();
 }
 
+
+
 //save tab
 $tabid = $_GET['tabid'];
 
@@ -2329,110 +2353,121 @@ $tabsys->updateTab("shipsearch", $tabid, $tabdata, $_GET['load_port']."<div styl
 if(!$_GET['options']){
 	if($user['dry']==2 || $user['dry']==3 || $user['dry']==4 || $user['dry']==5 || $user['dry']==6){
 		$zone = "7";
-		
-		if(!is_array($_GET['vessel_type'])){
-			$vessel_type = trim(mysql_escape_string($_GET['vessel_type']));
-		}else{
-			$vessel_type = $_GET['vessel_type'];
-		}
-	}else{
+	}
+	else
+	{
 		$zone = $_GET['zone'];
-	
 		if($zone==""){
 			$zone = $_GET['zone2'];
 		}
-	
-		$prefs['avoidInshore'] = true;
-		$prefs['avoidRivers'] = true;
-		$prefs['deepWaterFactor'] = 1;
-		$prefs['minDepth'] = 0;
-		$prefs['minHeight'] = 0;	
-	
-		//get ship specifics
-		// match specs with HULL TYPE / CATEGORY / DWT RANGE
-		$hull_type = trim(mysql_escape_string($_GET['hull_type']));
-	
-		if(!is_array($_GET['vessel_type'])){
-			$vessel_type = trim(mysql_escape_string($_GET['vessel_type']));
-		}else{
-			$vessel_type = $_GET['vessel_type'];
-		}
-	
-		$dwt_type = "";
-	
-		if($_GET['dwt_range']){
-			$dwtr = trim($_GET['dwt_range']);
-	
-			if($_GET['dry']){
-				if($dwtr=="5|35"){
-					$dwt_low = 5000;
-					$dwt_high = 35000;
-					$dwt_type = "Handysize";
-				}else if($dwtr=="40|50"){
-					$dwt_low = 40000;
-					$dwt_high = 50000;	
-					$dwt_type = "Handymax";
-				}else if($dwtr=="50|60"){
-					$dwt_low = 50000;
-					$dwt_high = 60000;	
-					$dwt_type = "Supramax";
-				}else if($dwtr=="60|90"){
-					$dwt_low = 60000;
-					$dwt_high = 90000;	
-					$dwt_type = "Panamax";
-				}else if($dwtr=="90|120"){
-					$dwt_low = 90000;
-					$dwt_high = 120000;
-					$dwt_type = "Post Panamax";
-				}else if($dwtr=="120|350"){
-					$dwt_low = 120000;
-					$dwt_high = 350000;
-					$dwt_type = "Capesize";
-				}
-			}else{
-				if($dwtr=="0|3"){
-					$dwt_low = 500;
-					$dwt_high = 3000;
-					$dwt_type = "Others";
-				}else if($dwtr=="3|10"){
-					$dwt_low = 3001;
-					$dwt_high = 10000;	
-					$dwt_type = "Coastal";
-				}else if($dwtr=="10|19"){
-					$dwt_low = 10001;
-					$dwt_high = 19000;	
-					$dwt_type = "Small";
-				}else if($dwtr=="19|30"){
-					$dwt_low = 19001;
-					$dwt_high = 30000;	
-					$dwt_type = "Handy";
-				}else if($dwtr=="30|55"){
-					$dwt_low = 30001;
-					$dwt_high = 55000;
-					$dwt_type = "MR";
-				}else if($dwtr=="50|80"){
-					$dwt_low = 50001;
-					$dwt_high = 80000;	
-					$dwt_type = "Panamax / LR1";	
-				}else if($dwtr=="80|120"){
-					$dwt_low = 80001;
-					$dwt_high = 120000;
-					$dwt_type = "Aframax";
-				}else if($dwtr=="120|200"){
-					$dwt_low = 120001;
-					$dwt_high = 200000;
-					$dwt_type = "Suezmax";
-				}else if($dwtr=="200|350"){
-					$dwt_low = 200001;
-					$dwt_high = 350000;	
-					$dwt_type = "VLCC / VLOC";
-				}else if($dwtr=="350|550"){
-					$dwt_low = 350001;
-					$dwt_high = 550000;	
-					$dwt_type = "ULCC";
-				}
+	}
+	$prefs['avoidInshore'] = true;
+	$prefs['avoidRivers'] = true;
+	$prefs['deepWaterFactor'] = 1;
+	$prefs['minDepth'] = 0;
+	$prefs['minHeight'] = 0;	
+
+	//get ship specifics
+	// match specs with HULL TYPE / CATEGORY / DWT RANGE
+	$hull_type = trim(mysql_escape_string($_GET['hull_type']));
+
+	if(!is_array($_GET['vessel_type'])){
+		$vessel_type = trim(mysql_escape_string($_GET['vessel_type']));
+	}else{
+		$vessel_type = $_GET['vessel_type'];
+	}
+
+	$dwt_type = "";
+	if($_GET['dwt_low']&&$_GET['dwt_high']){
+		$dwt_low  = $_GET['dwt_low']*1;
+		$dwt_high  = $_GET['dwt_high']*1;
+		$dwt_type = "Others";
+	}
+	else if($_GET['dwt_range']){
+		$dwtr = trim($_GET['dwt_range']);
+
+		if($_GET['dry']){
+			if($dwtr=="5|35"){
+				$dwt_low = 5000;
+				$dwt_high = 35000;
+				$dwt_type = "Handysize";
+			}else if($dwtr=="40|50"){
+				$dwt_low = 40000;
+				$dwt_high = 50000;	
+				$dwt_type = "Handymax";
+			}else if($dwtr=="50|60"){
+				$dwt_low = 50000;
+				$dwt_high = 60000;	
+				$dwt_type = "Supramax";
+			}else if($dwtr=="60|90"){
+				$dwt_low = 60000;
+				$dwt_high = 90000;	
+				$dwt_type = "Panamax";
+			}else if($dwtr=="90|120"){
+				$dwt_low = 90000;
+				$dwt_high = 120000;
+				$dwt_type = "Post Panamax";
+			}else if($dwtr=="120|350"){
+				$dwt_low = 120000;
+				$dwt_high = 350000;
+				$dwt_type = "Capesize";
 			}
 		}
+		else{
+			if($dwtr=="0|3"){
+				$dwt_low = 500;
+				$dwt_high = 3000;
+				$dwt_type = "Others";
+			}else if($dwtr=="3|10"){
+				$dwt_low = 3001;
+				$dwt_high = 10000;	
+				$dwt_type = "Coastal";
+			}else if($dwtr=="10|19"){
+				$dwt_low = 10001;
+				$dwt_high = 19000;	
+				$dwt_type = "Small";
+			}else if($dwtr=="19|30"){
+				$dwt_low = 19001;
+				$dwt_high = 30000;	
+				$dwt_type = "Handy";
+			}else if($dwtr=="30|55"){
+				$dwt_low = 30001;
+				$dwt_high = 55000;
+				$dwt_type = "MR";
+			}else if($dwtr=="50|80"){
+				$dwt_low = 50001;
+				$dwt_high = 80000;	
+				$dwt_type = "Panamax / LR1";	
+			}else if($dwtr=="80|120"){
+				$dwt_low = 80001;
+				$dwt_high = 120000;
+				$dwt_type = "Aframax";
+			}else if($dwtr=="120|200"){
+				$dwt_low = 120001;
+				$dwt_high = 200000;
+				$dwt_type = "Suezmax";
+			}else if($dwtr=="200|350"){
+				$dwt_low = 200001;
+				$dwt_high = 350000;	
+				$dwt_type = "VLCC / VLOC";
+			}else if($dwtr=="350|550"){
+				$dwt_low = 350001;
+				$dwt_high = 550000;	
+				$dwt_type = "ULCC";
+			}
+		}
+		if($dwtr&&$dwt_low==""){
+			list($dwt_low, $dwt_high) = explode("|",$dwtr);
+			$dwt_low *= 1000;
+			$dwt_low += 1;
+			$dwt_high *= 1000;
+			$dwt_type = "Others";
+		}
+	}
+	else{
+		$dwt_low  = 50000;
+		$dwt_high  = 60000;
+		$dwt_type = "Others";
 	}
 }
 
@@ -2486,7 +2521,32 @@ if($user['dry']==2 || $user['dry']==3 || $user['dry']==4 || $user['dry']==5 || $
 			$sqlext3 .= " ) ";
 		}
 	}
-}else{
+	if($dwt_low){
+		$sqlext .= " `xvas_summer_dwt`>='".$dwt_low."'  and ";
+		$sqlext2 .= " `summer_dwt`>='".$dwt_low."'  and ";
+		$sqlext3 .= " ".$_xvas_parsed2.".summer_dwt>='".$dwt_low."'  and ";
+	}
+	
+	if($dwt_high){
+		$sqlext .= " `xvas_summer_dwt`<='".$dwt_high."' and "; 
+		$sqlext2 .= " `summer_dwt`<='".$dwt_high."' and "; 
+		$sqlext3 .= " ".$_xvas_parsed2.".summer_dwt<='".$dwt_high."' and "; 
+	}
+	
+	if($sqlext){
+		$sqlext = " and ( ".$sqlext." 1 )";
+	}
+	
+	if($sqlext2){
+		$sqlext2 = " and ( ".$sqlext2." 1 )";
+	}
+	
+	if($sqlext3){
+		$sqlext3 = " and ( ".$sqlext3." 1 )";
+	}
+}
+else
+{
 	if($hull_type=="DOUBLE HULL"){
 		$sqlext .= " (`xvas_hull_type`='DOUBLE HULL' or `xvas_hull_type`='DOUBLE BOTTOM' or `xvas_hull_type`='DOUBLE SIDED')  and ";
 	}else if($hull_type=="SINGLE HULL"){
@@ -2554,10 +2614,18 @@ if($user['dry']==2 || $user['dry']==3 || $user['dry']==4 || $user['dry']==5 || $
 
 global $adjusthours;
 
-$sql = "select *, (unix_timestamp(siitech_eta)+$adjusthours) as `siitech_eta_ts`,
+$sql = "select 
 
+`id`,
+`siitech_receivetime`,
+`siitech_destination`,
+`qc_color`,
+`siitech_eta`,
+`xvas_imo`,
+
+
+(unix_timestamp(siitech_eta)+$adjusthours) as `siitech_eta_ts`,
 (unix_timestamp(siitech_lastseen)+$adjusthours) as `siitech_lastseen_ts`, 
-
 (unix_timestamp(siitech_receivetime)+$adjusthours) as `siitech_receivetime_ts`
 
  from `_xvas_siitech_cache` where `qc_color`='green' ";
@@ -2566,7 +2634,14 @@ if($sqlext){
 	$sql .= " ".$sqlext;
 }
 
-$ships = dbQuery($sql, $link);
+$shipssql =  $sql."";
+
+//echo $shipssql;
+//exit();
+
+$logfile = dirname(__FILE__)."/includes/searchcache/logs/".date("Ymd")."_".microtime_float().".txt";
+$logfile = dirname(__FILE__)."/includes/searchcache/logs/log.txt";
+file_put_contents($logfile, "");
 
 if($user['dry']==1){
 	//network ships
@@ -2817,7 +2892,9 @@ if($user['dry']==1){
 
 if($sqlext2){ $sql2 .= " ".$sqlext2; }
 
-$t = count($ships);
+
+//exit();
+
 
 $shipsA1 = array();
 $shipsA2 = array();
@@ -2828,7 +2905,11 @@ if($_GET['sbroker']){
 	$shipsA5 = array();
 
 	//ships from brokers intelligence
+	file_put_contents($logfile, "retrieving ships from brokers intelligence ", FILE_APPEND);
 	$shipsA5 = dbQuery($sql2, $link);
+	$time_end = microtime_float();
+	$time = $time_end - $time_start;
+	file_put_contents($logfile, "($time)\n", FILE_APPEND);
 }
 
 $sql3 = "SELECT _blackbox_vessel.from_time, _blackbox_vessel.to_time, _blackbox_vessel.latest_received, _blackbox_vessel.location_name, _blackbox_vessel.location_lat, _blackbox_vessel.location_lng, _blackbox_vessel.vessel_name, _blackbox_vessel.from_address, ".$_xvas_parsed2.".imo, ".$_xvas_parsed2.".callsign, ".$_xvas_parsed2.".mmsi, ".$_xvas_parsed2.".vessel_type, ".$_xvas_parsed2.".summer_dwt, ".$_xvas_parsed2.".speed, _xvas_siitech_cache.siitech_eta, _xvas_siitech_cache.siitech_destination, _xvas_siitech_cache.siitech_lastseen, _xvas_siitech_cache.siitech_latitude, _xvas_siitech_cache.siitech_longitude, _xvas_siitech_cache.siitech_receivetime, _xvas_siitech_cache.siitech_shippos_data, _xvas_siitech_cache.siitech_shipstat_data FROM (`_blackbox_vessel` INNER JOIN `".$_xvas_parsed2."` ON _blackbox_vessel.vessel_name=".$_xvas_parsed2.".name) INNER JOIN _xvas_siitech_cache ON _blackbox_vessel.vessel_name=_xvas_siitech_cache.xvas_name WHERE 1 AND _blackbox_vessel.location_name='".strtoupper(trim($_GET['load_port']))."' AND _xvas_siitech_cache.satellite='0' ";
@@ -2837,13 +2918,24 @@ if($sqlext3){ $sql3 .= " ".$sqlext3; }
 
 if($_GET['semail']){
 	$shipsA8 = array();
+	
+	file_put_contents($logfile, "retrieving ships from email ", FILE_APPEND);
 	$shipsA8 = dbQuery($sql3, $link);
+	$time_end = microtime_float();
+	$time = $time_end - $time_start;
+	file_put_contents($logfile, "($time)\n", FILE_APPEND);
 }
 
 $imoin = array();
-
+file_put_contents($logfile, "retrieving ships from database ", FILE_APPEND);
+$ships = dbQuery($shipssql, $link);
+$time_end = microtime_float();
+$time = $time_end - $time_start;
+file_put_contents($logfile, "($time)\n", FILE_APPEND);
+$t = count($ships);
 //second phase of algorithm
 for($i=0; $i<$t; $i++){
+	
 	if(trim($ships[$i]['xvas_imo'])==""){
 		continue;
 	}
@@ -2852,19 +2944,14 @@ for($i=0; $i<$t; $i++){
 
 	if($ships[$i]['qc_color']!="red"){
 		$alerts = array();
-
 		$destport = strtoupper(trim($ships[$i]['siitech_destination']));
-
 		$destportx = $destport;
-
 		$destport = getPortId($destport);
-
 		$ships[$i]['destport'] = $destport;
-
 		$portid = $destport['portid'];
 		$percent = $destport['percent'];
 
-		if(trim($ships[$i]['siitech_destination'])&&$etadiff>=0){
+		if(1&&(trim($ships[$i]['siitech_destination'])&&$etadiff>=0)){
 			if($portid){
 				$percent = number_format($percent, 2);
 
@@ -2883,7 +2970,13 @@ for($i=0; $i<$t; $i++){
 				if(count($alerts)){
 					$ships[$i]['alerts'] = $alerts;
 				}
-
+				
+				$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
+				$shiptemp = dbQuery($sql, $link);
+				foreach($shiptemp as $ks=>$kv){
+					$ships[$i][$ks] = $kv;
+				}
+				
 				$shipsA1[] = $ships[$i];
 			}else if(strtotime($ships[$i]['siitech_receivetime'])>0){
 				$alerts[] = "Unknown port destination: $destportx";
@@ -2891,20 +2984,31 @@ for($i=0; $i<$t; $i++){
 				if(count($alerts)){
 					$ships[$i]['alerts'] = $alerts;
 				}
-
+				
+				$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
+				$shiptemp = dbQuery($sql, $link);
+				foreach($shiptemp as $ks=>$kv){
+					$ships[$i][$ks] = $kv;
+				}
 				$shipsA2[] = $ships[$i];
 			}
-		}else if(strtotime($ships[$i]['siitech_receivetime'])>0){
+		}
+		else if(1&&(strtotime($ships[$i]['siitech_receivetime'])>0)){
 			$alerts[] = "Reported ETA to AIS Destination Port (".$ships[$i]['siitech_destination'].") that was dated to arrive on ".date("M j, 'y G:i e",  $ships[$i]['siitech_eta_ts'])." has passed. The ship has not updated its AIS location as of ".date("M j, 'y G:i e",  time()).". The Last Seen AIS Location (Lat & Long) is now used to calculate the ETA to the Load Port you have selected for this Search.";
 
 			if(count($alerts)){
 				$ships[$i]['alerts'] = $alerts;
 			}
 			
+			$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
+			$shiptemp = dbQuery($sql, $link);
+			foreach($shiptemp as $ks=>$kv){
+				$ships[$i][$ks] = $kv;
+			}
 			$shipsA2[] = $ships[$i];
 		}
 
-		if($_GET['includebrokermessages']||1){
+		if(1&&($_GET['includebrokermessages']||1)){
 			//get message from network
 			$nmessage = getMessageByImo($ships[$i]['xvas_imo'], 'network');
 
@@ -2930,14 +3034,33 @@ for($i=0; $i<$t; $i++){
 				$ships[$i]['nmessage'] = $nmessage;				
 
 				if(($tsdiff)>=0){
+					$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
+					$shiptemp = dbQuery($sql, $link);
+					foreach($shiptemp as $ks=>$kv){
+						$ships[$i][$ks] = $kv;
+					}
 					$shipsA3[] = $ships[$i];
 				}else{
+					$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
+					$shiptemp = dbQuery($sql, $link);
+					foreach($shiptemp as $ks=>$kv){
+						$ships[$i][$ks] = $kv;
+					}
 					$shipsA4[] = $ships[$i];
 				}
 			}
 		}
 	}
+	if($i%1000==0&&$i!=0){
+		$time_end = microtime_float();
+		$time = $time_end - $time_start;
+		file_put_contents($logfile, "".($i+1)." - ".($i+1000)." of ".$t." ($time)\n", FILE_APPEND);
+	}
 }
+
+$time_end = microtime_float();
+$time = $time_end - $time_start;
+file_put_contents($logfile, "finished populating ship arrays ($time)\n", FILE_APPEND);
 
 //add message to t5
 $t5 = count($shipsA5);
@@ -2978,7 +3101,7 @@ $lpfts = convertDateToTs($_GET['load_port_from']);
 $lptts = convertDateToTs($_GET['load_port_to']);
 
 if($_GET['slimit']){
-	$dlimit = $_GET['slimit']; //display limir
+	$dlimit = $_GET['slimit']; //display limit
 }else{
 	$dlimit = 5000;
 }
@@ -3149,6 +3272,7 @@ if($t || $t2 || $t3 || $t4 || $t5 || $t8){
 	</script>
     
     <?php
+	
 	//LIMIT DISPLAY
 	if($dlimit<=$t){ $t = $dlimit; }
 	if($dlimit<=$t2){ $t2 = $dlimit; }

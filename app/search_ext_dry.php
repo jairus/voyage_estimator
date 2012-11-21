@@ -856,7 +856,7 @@ function changeCssClass(objDivID){
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td valign="top" class="title">LOAD PORT DATE RANGE</td>
+                                        <td valign="top" class="title">LAYCAN</td>
                                         <td valign="top">
                                             <input type="text" name="load_port_from" value="<?php
                                             if(!trim($tabdata['load_port_from'])){
@@ -883,7 +883,7 @@ function changeCssClass(objDivID){
                                             <select name="hull_type" class="selection" id='hull_type_id' style="width:200px;">
                                                 <option selected="selected">SINGLE HULL</option>
                                                 <option>DOUBLE HULL</option>
-                                            </select>
+                                        </select>
                                             
                                             <?php if($tabdata['hull_type']!=""){ ?>
                                                 <script>jQuery("#hull_type_id").val('<?php echo $tabdata['hull_type']; ?>');</script>
@@ -891,7 +891,7 @@ function changeCssClass(objDivID){
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td valign="top" class="title">CATEGORY <strong>DRY</strong></td>
+                                        <td valign="top" class="title"><strong>DRY VESSELS</strong></td>
                                         <td valign="top" id='foovt'>
                                             <select name="vessel_type[]" multiple="multiple" size="16" id='vessel_type_id' style="width:200px;">
                                                 <optgroup label="BULK CARRIER">
@@ -965,13 +965,13 @@ function changeCssClass(objDivID){
                                         <td valign="top" class="title">DWT RANGE</td>
                                         <td valign="top">
                                             <select class="valid" name="dwt_range" id='dwt_range_id' onchange='showZones(jQuery("#suggest1").val(), this.value)'>
-                                                <option value="5|35">(5,000-35,000) Handysize</option>
-                                                <option value="40|50" selected="selected">(40,000-50,000) Handymax</option>
-                                                <option value="50|60">(50,000-60,000) Supramax</option>
-                                                <option value="60|90">(60,000-90,000) Panamax</option>
-                                                <option value="90|120">(90,000-120,000) Post Panamax</option>
-                                                <option value="120|350">(120,000-350,000) Capesize</option>
-                                            </select>
+                                                <option value="0|9.99" selected="selected">(0-9,999) MINIBULK</option>
+                                                <option value="10|35">(10,000-35,000) HANDY</option>
+                                                <option value="35|60">(35,000-60,000) HANDYMAX</option>
+                                                <option value="60|75">(60,000-75,000) PANAMAX</option>
+                                                <option value="70|110">(70,000-110,000) POST PANAMAX</option>
+                                                <option value="110|350">(110,000-350,000) CAPESIZE</option>
+                                          </select>
                     
                                             <?php if($tabdata['dwt_range']!=""){ ?>
                                                 <script>jQuery("#dwt_range_id").val('<?php echo $tabdata['dwt_range']; ?>');</script>
@@ -979,7 +979,7 @@ function changeCssClass(objDivID){
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td valign="top" class="title">ZONE</td>
+                                        <td valign="top" class="title">REGION</td>
                                         <td valign="top">
                                             <div id='zones'></div>
                                             <div id='minimaps' style='padding-top:5px;'>
@@ -1013,7 +1013,7 @@ function changeCssClass(objDivID){
 								?>
                                 <select id="id_slimit" name="slimit" style='height:20px; width:70px; font-size:12px;' onchange='notAllowed(this.value);'>
                                     <option value="">ALL</option>
-                                    <option value="5" selected="selected">5</option>
+                                    <option value="15" selected="selected">15</option>
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="50">50</option>
@@ -1092,8 +1092,7 @@ function changeCssClass(objDivID){
                             <td style='padding-top:10px; text-align:center;' colspan='2' align="center" >
                                 <input class='cancelbutton' type="button" name="cancelsearch" value="CANCEL SEARCH"  style='cursor:pointer; display:none;' id='cancelsearch'  />
                                 &nbsp;&nbsp;&nbsp;
-                                <input class='searchbutton' type="button" name="search" value="SEARCH"  style='cursor:pointer' id='sbutton'  />
-                    
+                                <input class='searchbutton' type="button" name="sbutton" value="SEARCH"  style='cursor:pointer' id='sbutton'  />
                                 <script>
 								$("#cancelsearch").click(function(){
 									jQuery("#cancelsearch").val("CANCELING SEARCH...");

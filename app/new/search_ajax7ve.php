@@ -108,7 +108,7 @@ if($sqlext){
 		".$sqlext."";
 	
 	$sql .= " ORDER BY siitech.dateupdated DESC LIMIT 0,500";
-	
+
 	$xvas = dbQuery($sql);
 
 	$t = count($xvas);
@@ -148,7 +148,7 @@ if($sqlext){
 				<td><div style='padding:5px; text-align:center;'><a onclick='showMap();' class='clickable'>view larger map</a></td>
 			</tr>
 			<tr style='background:#e5e5e5;'>
-				<td><div style='padding:5px; text-align:center;'><iframe src='map/index10_online.php' width='990' height='700'></iframe></div></td>
+				<td><div style='padding:5px; text-align:center;'><iframe src='map/index10_online.php' width='990' height='700' frameborder='0'></iframe></div></td>
 			</tr>
 		</table>";
 	}else{

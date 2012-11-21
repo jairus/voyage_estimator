@@ -12,7 +12,7 @@ html, body, #mapdiv {
 	height:100%;
 	margin:0;
 	font-family:verdana;
-	font-size:11px;
+	font-size:10px;
 }
 </style>
 </head>
@@ -237,7 +237,7 @@ $xstring = "
 			if($ship['DESTINATION']==""){
 				$xstring .= "<td style='width:50%; background:#AAFFAA;' class='green'>
 					<div style='padding:5px;'>
-						<table style='font-family:verdana; font-size:11px;'>
+						<table style='font-family:verdana; font-size:10px;'>
 							<tr>
 								<td><b>Last Seen Date:</b></td>
 								<td width='185'><a class='clickable2' alt='".date("M j, 'y G:i e", str2time($ship['LASTSEEN_DATE']))."' title='".date("M j, 'y G:i e", str2time($ship['LASTSEEN_DATE']))."'>".substr(date("M j, 'y G:i e", str2time($ship['LASTSEEN_DATE'])), 0,12)."</a></td>
@@ -252,13 +252,13 @@ $xstring = "
 			}else{
 				$xstring .= "<td style='width:50%; background:#AAFFAA;' class='green'>
 					<div style='padding:5px;'>
-						<table style='font-family:verdana; font-size:11px;'>
+						<table style='font-family:verdana; font-size:10px;'>
 							<tr>
-								<td><b>Open Port:</b></td>
+								<td><b>DESTINATION:</b></td>
 								<td width='185'>".$ship['DESTINATION']."</td>
 							</tr>
 							<tr>
-								<td><b>Open Port ETA:</b></td>
+								<td><b>ETA:</b></td>
 								<td><a class='clickable2' alt='".date("M j, 'y G:i e", str2time($ship['SIITECH_ETA']))."' title='".date("M j, 'y G:i e", str2time($ship['SIITECH_ETA']))."'>".substr(date("M j, 'y G:i e", str2time($ship['SIITECH_ETA'])), 0,12)."</a></td>
 							</tr>
 						</table>
@@ -268,9 +268,9 @@ $xstring = "
 			
 			$xstring .= "<td style='width:50%; background:#FFFF99;' class='green'>
 				<div style='padding:5px;'>
-					<table style='font-family:verdana; font-size:11px;'>
+					<table style='font-family:verdana; font-size:10px;'>
 						<tr>
-							<td><b>Last Seen Date:</b></td>
+							<td><b>AIS LAST SEEN DATE:</b></td>
 							<td width='185'><a class='clickable2' alt='".date("M j, 'y G:i e", str2time($ship['LASTSEEN_DATE']))."' title='".date("M j, 'y G:i e", str2time($ship['LASTSEEN_DATE']))."'>".substr(date("M j, 'y G:i e", str2time($ship['LASTSEEN_DATE'])), 0,12)."</a></td>
 						</tr>
 						<tr>
@@ -287,7 +287,7 @@ $xstring = "
 					<tr>
 						<td valign='top' style='padding-right:10px;'><img src='../image.php?b=1&mx=250&p=".$imageb."'></td>
 						<td valign='top' class='green'>
-							<table border='0' cellspacing='0' cellpadding='0' style='font-family:verdana; font-size:11px;'>
+							<table border='0' cellspacing='0' cellpadding='0' style='font-family:verdana; font-size:10px;'>
 								<tr>
 									<td valign='top'><b>Name:</b></td>
 									<td valign='top'>".$ship['Ship Name']."</td>

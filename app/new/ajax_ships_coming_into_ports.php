@@ -142,11 +142,13 @@ jQuery("#mapdialog").dialog("close");
                     	<div style="padding:3px;">
                         <select name="p_vessel_type[]" multiple="multiple" size="16" id='p_vessel_type_id' style="width:200px;">
                             <optgroup label="BULK CARRIER">
+                                <option value="BULK CARRIER">BULK CARRIER</option>
                                 <option value="ORE CARRIER">ORE CARRIER</option>
                                 <option value="WOOD CHIPS CARRIER">WOOD CHIPS CARRIER</option>
                             </optgroup>
                             <optgroup label="CARGO">
                                 <option value="BARGE CARRIER">BARGE CARRIER</option>
+                                <option value="CARGO">CARGO</option>
                                 <option value="CARGO/PASSENGER SHIP">CARGO/PASSENGER SHIP</option>
                                 <option value="HEAVY LOAD CARRIER">HEAVY LOAD CARRIER</option>
                                 <option value="LIVESTOCK CARRIER">LIVESTOCK CARRIER</option>
@@ -161,6 +163,7 @@ jQuery("#mapdialog").dialog("close");
                                 <option value="OBO CARRIER">OBO CARRIER</option>
                             </optgroup>
                             <optgroup label="RO-RO CARGO">
+                                <option value="RO-RO CARGO">RO-RO CARGO</option>
                                 <option value="RO-RO/CONTAINER CARRIER">RO-RO/CONTAINER CARRIER</option>
                                 <option value="RO-RO/PASSENGER SHIP">RO-RO/PASSENGER SHIP</option>
                             </optgroup>

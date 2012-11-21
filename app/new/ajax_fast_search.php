@@ -104,7 +104,7 @@ function shipSearchx(){
 
 				setTimeout("jQuery('#searchform').slideUp('slow')", 500);
 
-				toggleParams('up');
+				//toggleParams('up');
 
 				globalfetch = true;
 

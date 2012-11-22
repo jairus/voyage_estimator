@@ -2628,13 +2628,16 @@ $sql = "select
 (unix_timestamp(siitech_lastseen)+$adjusthours) as `siitech_lastseen_ts`, 
 (unix_timestamp(siitech_receivetime)+$adjusthours) as `siitech_receivetime_ts`
 
- from `_xvas_siitech_cache` where `qc_color`='green' ";
+ from `_xvas_siitech_cache` where `qc_color`='green' or  `qc_color`='' ";
 
 if($sqlext){
 	$sql .= " ".$sqlext;
 }
 
 $shipssql =  $sql."";
+
+//SQL STATEMENT
+//die($shipssql);
 
 //echo $shipssql;
 //exit();
@@ -2643,7 +2646,7 @@ $logfile = dirname(__FILE__)."/includes/searchcache/logs/".date("Ymd")."_".micro
 $logfile = dirname(__FILE__)."/includes/searchcache/logs/log.txt";
 file_put_contents($logfile, "");
 
-if($user['dry']==1){
+/*if($user['dry']==1){
 	//network ships
 	$sql2 = "select * from `_xvas_parsed2_dry` where 1 ";
 
@@ -2890,7 +2893,7 @@ if($user['dry']==1){
 	)";
 }
 
-if($sqlext2){ $sql2 .= " ".$sqlext2; }
+if($sqlext2){ $sql2 .= " ".$sqlext2; }*/
 
 
 //exit();
@@ -2899,7 +2902,7 @@ if($sqlext2){ $sql2 .= " ".$sqlext2; }
 $shipsA1 = array();
 $shipsA2 = array();
 
-if($_GET['sbroker']){
+/*if($_GET['sbroker']){
 	$shipsA3 = array();
 	$shipsA4 = array();
 	$shipsA5 = array();
@@ -2910,9 +2913,9 @@ if($_GET['sbroker']){
 	$time_end = microtime_float();
 	$time = $time_end - $time_start;
 	file_put_contents($logfile, "($time)\n", FILE_APPEND);
-}
+}*/
 
-$sql3 = "SELECT _blackbox_vessel.from_time, _blackbox_vessel.to_time, _blackbox_vessel.latest_received, _blackbox_vessel.location_name, _blackbox_vessel.location_lat, _blackbox_vessel.location_lng, _blackbox_vessel.vessel_name, _blackbox_vessel.from_address, ".$_xvas_parsed2.".imo, ".$_xvas_parsed2.".callsign, ".$_xvas_parsed2.".mmsi, ".$_xvas_parsed2.".vessel_type, ".$_xvas_parsed2.".summer_dwt, ".$_xvas_parsed2.".speed, _xvas_siitech_cache.siitech_eta, _xvas_siitech_cache.siitech_destination, _xvas_siitech_cache.siitech_lastseen, _xvas_siitech_cache.siitech_latitude, _xvas_siitech_cache.siitech_longitude, _xvas_siitech_cache.siitech_receivetime, _xvas_siitech_cache.siitech_shippos_data, _xvas_siitech_cache.siitech_shipstat_data FROM (`_blackbox_vessel` INNER JOIN `".$_xvas_parsed2."` ON _blackbox_vessel.vessel_name=".$_xvas_parsed2.".name) INNER JOIN _xvas_siitech_cache ON _blackbox_vessel.vessel_name=_xvas_siitech_cache.xvas_name WHERE 1 AND _blackbox_vessel.location_name='".strtoupper(trim($_GET['load_port']))."' AND _xvas_siitech_cache.satellite='0' ";
+/*$sql3 = "SELECT _blackbox_vessel.from_time, _blackbox_vessel.to_time, _blackbox_vessel.latest_received, _blackbox_vessel.location_name, _blackbox_vessel.location_lat, _blackbox_vessel.location_lng, _blackbox_vessel.vessel_name, _blackbox_vessel.from_address, ".$_xvas_parsed2.".imo, ".$_xvas_parsed2.".callsign, ".$_xvas_parsed2.".mmsi, ".$_xvas_parsed2.".vessel_type, ".$_xvas_parsed2.".summer_dwt, ".$_xvas_parsed2.".speed, _xvas_siitech_cache.siitech_eta, _xvas_siitech_cache.siitech_destination, _xvas_siitech_cache.siitech_lastseen, _xvas_siitech_cache.siitech_latitude, _xvas_siitech_cache.siitech_longitude, _xvas_siitech_cache.siitech_receivetime, _xvas_siitech_cache.siitech_shippos_data, _xvas_siitech_cache.siitech_shipstat_data FROM (`_blackbox_vessel` INNER JOIN `".$_xvas_parsed2."` ON _blackbox_vessel.vessel_name=".$_xvas_parsed2.".name) INNER JOIN _xvas_siitech_cache ON _blackbox_vessel.vessel_name=_xvas_siitech_cache.xvas_name WHERE 1 AND _blackbox_vessel.location_name='".strtoupper(trim($_GET['load_port']))."' AND _xvas_siitech_cache.satellite='0' ";
 
 if($sqlext3){ $sql3 .= " ".$sqlext3; }
 
@@ -2924,7 +2927,7 @@ if($_GET['semail']){
 	$time_end = microtime_float();
 	$time = $time_end - $time_start;
 	file_put_contents($logfile, "($time)\n", FILE_APPEND);
-}
+}*/
 
 $imoin = array();
 file_put_contents($logfile, "retrieving ships from database ", FILE_APPEND);
@@ -2933,16 +2936,21 @@ $time_end = microtime_float();
 $time = $time_end - $time_start;
 file_put_contents($logfile, "($time)\n", FILE_APPEND);
 $t = count($ships);
+
 //second phase of algorithm
 for($i=0; $i<$t; $i++){
+//for($i=0; $i<10; $i++){
 	
 	if(trim($ships[$i]['xvas_imo'])==""){
 		continue;
 	}
+	
+	$shipsA1[] = $ships[$i];
+	$shipsA2[] = $ships[$i];
 
-	$etadiff = floorTs(strtotime($ships[$i]['siitech_eta']))-floorTs(time()); 
+	/*$etadiff = floorTs(strtotime($ships[$i]['siitech_eta']))-floorTs(time()); 
 
-	if($ships[$i]['qc_color']!="red"){
+	//if($ships[$i]['qc_color']!="red"){
 		$alerts = array();
 		$destport = strtoupper(trim($ships[$i]['siitech_destination']));
 		$destportx = $destport;
@@ -3049,8 +3057,8 @@ for($i=0; $i<$t; $i++){
 					$shipsA4[] = $ships[$i];
 				}
 			}
-		}
-	}
+		}*/
+	//}
 	if($i%1000==0&&$i!=0){
 		$time_end = microtime_float();
 		$time = $time_end - $time_start;

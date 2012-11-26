@@ -51,8 +51,8 @@ function displayContent(content){
 
 <div id="outer">
 	<div id="site_content_1" style="padding-bottom:20px;">
-        <div style="float:left; width:70px; height:55px;"><img src="images/logo_ve.png" width="44" height="44" border="0" /></div>
-        <div style="float:left; width:1230px; height:40px; padding-top:15px;">
+        <div style="float:left; width:70px; height:80px;"><!--<img src="images/logo_ve2.png" width="44" height="44" border="0" />-->&nbsp;</div>
+        <div style="float:left; width:1230px; height:40px; padding-top:40px;">
             <a onclick="displayContent('voyage_estimator');" id='voyage_estimator_id_link' class="content_link_selected">Voyage Estimator</a> &nbsp; 
             <a onclick="displayContent('fast_search');" id='fast_search_id_link' class="content_link">Fast Search</a> &nbsp; 
             <a onclick="displayContent('ship_search_register');" id='ship_search_register_id_link' class="content_link">Ship Search / Register</a> &nbsp; 

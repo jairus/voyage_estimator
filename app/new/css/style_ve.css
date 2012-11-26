@@ -6,6 +6,8 @@
 
 body{
 	background-color:#dddddd;
+	background-image:url(../images/logo_ve2.png);
+	background-repeat:no-repeat;
 }
 
 td{

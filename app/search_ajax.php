@@ -2638,8 +2638,6 @@ $shipssql =  $sql."";
 
 //SQL STATEMENT
 //die($shipssql);
-
-//echo $shipssql;
 //exit();
 
 $logfile = dirname(__FILE__)."/includes/searchcache/logs/".date("Ymd")."_".microtime_float().".txt";
@@ -2939,16 +2937,11 @@ $t = count($ships);
 
 //second phase of algorithm
 for($i=0; $i<$t; $i++){
-//for($i=0; $i<10; $i++){
-	
 	if(trim($ships[$i]['xvas_imo'])==""){
 		continue;
 	}
-	
-	$shipsA1[] = $ships[$i];
-	$shipsA2[] = $ships[$i];
 
-	/*$etadiff = floorTs(strtotime($ships[$i]['siitech_eta']))-floorTs(time()); 
+	$etadiff = floorTs(strtotime($ships[$i]['siitech_eta']))-floorTs(time()); 
 
 	//if($ships[$i]['qc_color']!="red"){
 		$alerts = array();
@@ -2981,7 +2974,7 @@ for($i=0; $i<$t; $i++){
 				
 				$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
 				$shiptemp = dbQuery($sql, $link);
-				foreach($shiptemp as $ks=>$kv){
+				foreach($shiptemp[0] as $ks=>$kv){
 					$ships[$i][$ks] = $kv;
 				}
 				
@@ -2995,7 +2988,7 @@ for($i=0; $i<$t; $i++){
 				
 				$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
 				$shiptemp = dbQuery($sql, $link);
-				foreach($shiptemp as $ks=>$kv){
+				foreach($shiptemp[0] as $ks=>$kv){
 					$ships[$i][$ks] = $kv;
 				}
 				$shipsA2[] = $ships[$i];
@@ -3010,13 +3003,13 @@ for($i=0; $i<$t; $i++){
 			
 			$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
 			$shiptemp = dbQuery($sql, $link);
-			foreach($shiptemp as $ks=>$kv){
+			foreach($shiptemp[0] as $ks=>$kv){
 				$ships[$i][$ks] = $kv;
 			}
 			$shipsA2[] = $ships[$i];
 		}
 
-		if(1&&($_GET['includebrokermessages']||1)){
+		/*if(1&&($_GET['includebrokermessages']||1)){
 			//get message from network
 			$nmessage = getMessageByImo($ships[$i]['xvas_imo'], 'network');
 
@@ -3044,14 +3037,14 @@ for($i=0; $i<$t; $i++){
 				if(($tsdiff)>=0){
 					$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
 					$shiptemp = dbQuery($sql, $link);
-					foreach($shiptemp as $ks=>$kv){
+					foreach($shiptemp[0] as $ks=>$kv){
 						$ships[$i][$ks] = $kv;
 					}
 					$shipsA3[] = $ships[$i];
 				}else{
 					$sql = "select * from `_xvas_siitech_cache` where `id`='".$ships[$i]['id']."'";
 					$shiptemp = dbQuery($sql, $link);
-					foreach($shiptemp as $ks=>$kv){
+					foreach($shiptemp[0] as $ks=>$kv){
 						$ships[$i][$ks] = $kv;
 					}
 					$shipsA4[] = $ships[$i];
@@ -3071,7 +3064,7 @@ $time = $time_end - $time_start;
 file_put_contents($logfile, "finished populating ship arrays ($time)\n", FILE_APPEND);
 
 //add message to t5
-$t5 = count($shipsA5);
+/*$t5 = count($shipsA5);
 
 for($i=0; $i<$t5; $i++){
 	$nmessage = getMessageByImo($shipsA5[$i]['imo'], 'network');
@@ -3097,7 +3090,7 @@ for($i=0; $i<$t5; $i++){
 		$shipsA5[$i]['destport2'] = $destport;
 		$shipsA5[$i]['nmessage'] = $nmessage;
 	}
-}
+}*/
 
 $lpf = $_GET['load_port_from'];
 $lpf = explode("/", $lpf);
@@ -3124,7 +3117,7 @@ if($_GET['sshore']){
 	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA2.php");
 }
 
-if($_GET['sbroker']){
+/*if($_GET['sbroker']){
 	//process shipsA3
 	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA3.php");
 
@@ -3138,14 +3131,18 @@ if($_GET['sbroker']){
 if($_GET['semail']){
 	//process shipsA8
 	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA8.php");
-}
+}*/
 
 $t = count($shipsA1print);
 $t2 = count($shipsA2print);	
-$t3 = count($shipsA3print);	
+/*$t3 = count($shipsA3print);	
 $t4 = count($shipsA4print);
 $t5 = count($shipsA5print);
-$t8 = count($shipsA8print);
+$t8 = count($shipsA8print);*/
+$t3 = 0;	
+$t4 = 0;
+$t5 = 0;
+$t8 = 0;
 
 if($t || $t2 || $t3 || $t4 || $t5 || $t8){
 ?>
@@ -3309,11 +3306,11 @@ if($t || $t2 || $t3 || $t4 || $t5 || $t8){
 	</div>
 
 	<div id="fragment-2">
-	<?php include_once(dirname(__FILE__)."/includes/shipsearch/positions.php"); ?>
+	<?php //include_once(dirname(__FILE__)."/includes/shipsearch/positions.php"); ?>
 	</div>
 
 	<div id="fragment-3">
-    <?php include_once(dirname(__FILE__)."/includes/shipsearch/schedule.php"); ?>
+    <?php //include_once(dirname(__FILE__)."/includes/shipsearch/schedule.php"); ?>
 	</div>
 
 	<?php

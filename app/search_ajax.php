@@ -2644,7 +2644,7 @@ $logfile = dirname(__FILE__)."/includes/searchcache/logs/".date("Ymd")."_".micro
 $logfile = dirname(__FILE__)."/includes/searchcache/logs/log.txt";
 file_put_contents($logfile, "");
 
-/*if($user['dry']==1){
+if($user['dry']==1){
 	//network ships
 	$sql2 = "select * from `_xvas_parsed2_dry` where 1 ";
 
@@ -2891,7 +2891,7 @@ file_put_contents($logfile, "");
 	)";
 }
 
-if($sqlext2){ $sql2 .= " ".$sqlext2; }*/
+if($sqlext2){ $sql2 .= " ".$sqlext2; }
 
 
 //exit();
@@ -2900,7 +2900,7 @@ if($sqlext2){ $sql2 .= " ".$sqlext2; }*/
 $shipsA1 = array();
 $shipsA2 = array();
 
-/*if($_GET['sbroker']){
+if($_GET['sbroker']){
 	$shipsA3 = array();
 	$shipsA4 = array();
 	$shipsA5 = array();
@@ -2911,9 +2911,9 @@ $shipsA2 = array();
 	$time_end = microtime_float();
 	$time = $time_end - $time_start;
 	file_put_contents($logfile, "($time)\n", FILE_APPEND);
-}*/
+}
 
-/*$sql3 = "SELECT _blackbox_vessel.from_time, _blackbox_vessel.to_time, _blackbox_vessel.latest_received, _blackbox_vessel.location_name, _blackbox_vessel.location_lat, _blackbox_vessel.location_lng, _blackbox_vessel.vessel_name, _blackbox_vessel.from_address, ".$_xvas_parsed2.".imo, ".$_xvas_parsed2.".callsign, ".$_xvas_parsed2.".mmsi, ".$_xvas_parsed2.".vessel_type, ".$_xvas_parsed2.".summer_dwt, ".$_xvas_parsed2.".speed, _xvas_siitech_cache.siitech_eta, _xvas_siitech_cache.siitech_destination, _xvas_siitech_cache.siitech_lastseen, _xvas_siitech_cache.siitech_latitude, _xvas_siitech_cache.siitech_longitude, _xvas_siitech_cache.siitech_receivetime, _xvas_siitech_cache.siitech_shippos_data, _xvas_siitech_cache.siitech_shipstat_data FROM (`_blackbox_vessel` INNER JOIN `".$_xvas_parsed2."` ON _blackbox_vessel.vessel_name=".$_xvas_parsed2.".name) INNER JOIN _xvas_siitech_cache ON _blackbox_vessel.vessel_name=_xvas_siitech_cache.xvas_name WHERE 1 AND _blackbox_vessel.location_name='".strtoupper(trim($_GET['load_port']))."' AND _xvas_siitech_cache.satellite='0' ";
+$sql3 = "SELECT _blackbox_vessel.from_time, _blackbox_vessel.to_time, _blackbox_vessel.latest_received, _blackbox_vessel.location_name, _blackbox_vessel.location_lat, _blackbox_vessel.location_lng, _blackbox_vessel.vessel_name, _blackbox_vessel.from_address, ".$_xvas_parsed2.".imo, ".$_xvas_parsed2.".callsign, ".$_xvas_parsed2.".mmsi, ".$_xvas_parsed2.".vessel_type, ".$_xvas_parsed2.".summer_dwt, ".$_xvas_parsed2.".speed, _xvas_siitech_cache.siitech_eta, _xvas_siitech_cache.siitech_destination, _xvas_siitech_cache.siitech_lastseen, _xvas_siitech_cache.siitech_latitude, _xvas_siitech_cache.siitech_longitude, _xvas_siitech_cache.siitech_receivetime, _xvas_siitech_cache.siitech_shippos_data, _xvas_siitech_cache.siitech_shipstat_data FROM (`_blackbox_vessel` INNER JOIN `".$_xvas_parsed2."` ON _blackbox_vessel.vessel_name=".$_xvas_parsed2.".name) INNER JOIN _xvas_siitech_cache ON _blackbox_vessel.vessel_name=_xvas_siitech_cache.xvas_name WHERE 1 AND _blackbox_vessel.location_name='".strtoupper(trim($_GET['load_port']))."' AND _xvas_siitech_cache.satellite='0' ";
 
 if($sqlext3){ $sql3 .= " ".$sqlext3; }
 
@@ -2925,7 +2925,7 @@ if($_GET['semail']){
 	$time_end = microtime_float();
 	$time = $time_end - $time_start;
 	file_put_contents($logfile, "($time)\n", FILE_APPEND);
-}*/
+}
 
 $imoin = array();
 file_put_contents($logfile, "retrieving ships from database ", FILE_APPEND);
@@ -3009,7 +3009,7 @@ for($i=0; $i<$t; $i++){
 			$shipsA2[] = $ships[$i];
 		}
 
-		/*if(1&&($_GET['includebrokermessages']||1)){
+		if(1&&($_GET['includebrokermessages']||1)){
 			//get message from network
 			$nmessage = getMessageByImo($ships[$i]['xvas_imo'], 'network');
 
@@ -3050,7 +3050,7 @@ for($i=0; $i<$t; $i++){
 					$shipsA4[] = $ships[$i];
 				}
 			}
-		}*/
+		}
 	//}
 	if($i%1000==0&&$i!=0){
 		$time_end = microtime_float();
@@ -3064,7 +3064,7 @@ $time = $time_end - $time_start;
 file_put_contents($logfile, "finished populating ship arrays ($time)\n", FILE_APPEND);
 
 //add message to t5
-/*$t5 = count($shipsA5);
+$t5 = count($shipsA5);
 
 for($i=0; $i<$t5; $i++){
 	$nmessage = getMessageByImo($shipsA5[$i]['imo'], 'network');
@@ -3090,7 +3090,7 @@ for($i=0; $i<$t5; $i++){
 		$shipsA5[$i]['destport2'] = $destport;
 		$shipsA5[$i]['nmessage'] = $nmessage;
 	}
-}*/
+}
 
 $lpf = $_GET['load_port_from'];
 $lpf = explode("/", $lpf);
@@ -3117,7 +3117,7 @@ if($_GET['sshore']){
 	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA2.php");
 }
 
-/*if($_GET['sbroker']){
+if($_GET['sbroker']){
 	//process shipsA3
 	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA3.php");
 
@@ -3131,18 +3131,14 @@ if($_GET['sshore']){
 if($_GET['semail']){
 	//process shipsA8
 	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA8.php");
-}*/
+}
 
 $t = count($shipsA1print);
 $t2 = count($shipsA2print);	
-/*$t3 = count($shipsA3print);	
+$t3 = count($shipsA3print);	
 $t4 = count($shipsA4print);
 $t5 = count($shipsA5print);
-$t8 = count($shipsA8print);*/
-$t3 = 0;	
-$t4 = 0;
-$t5 = 0;
-$t8 = 0;
+$t8 = count($shipsA8print);
 
 if($t || $t2 || $t3 || $t4 || $t5 || $t8){
 ?>
@@ -3306,11 +3302,11 @@ if($t || $t2 || $t3 || $t4 || $t5 || $t8){
 	</div>
 
 	<div id="fragment-2">
-	<?php //include_once(dirname(__FILE__)."/includes/shipsearch/positions.php"); ?>
+	<?php include_once(dirname(__FILE__)."/includes/shipsearch/positions.php"); ?>
 	</div>
 
 	<div id="fragment-3">
-    <?php //include_once(dirname(__FILE__)."/includes/shipsearch/schedule.php"); ?>
+    <?php include_once(dirname(__FILE__)."/includes/shipsearch/schedule.php"); ?>
 	</div>
 
 	<?php

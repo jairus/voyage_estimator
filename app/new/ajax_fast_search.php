@@ -33,7 +33,8 @@ td{
 	padding: 5px;
 }
 </style>
-
+<link rel="stylesheet" href="css/stylesheets.css">
+<script type='text/javascript' src='js/jscript.js'></script>
 <link rel="stylesheet" href="js/development-bundle/themes/base/jquery.ui.all.css">
 <script type="text/javascript" src="js/development-bundle/ui/jquery.ui.core.js"></script>
 <script type="text/javascript" src="js/development-bundle/ui/jquery.ui.widget.js"></script>
@@ -52,6 +53,39 @@ td{
 <link type="text/css" rel="stylesheet" href="js/calendar/xc2_default.css" />
 
 <script>
+function jTabs(d){
+	lis = jQuery(d+" li[name|=fragment]");
+	lis.css({"cursor":"pointer"});
+
+	jQuery(d+" ul").addClass("tabs-nav");
+
+	if(document.all){
+		jQuery(d+" ul.tabs-nav").css({height:"39px"}); 
+	}
+
+	jQuery(d+" li[name|=fragment]").removeClass("tabs-selected");
+	jQuery("[id|=fragment]").hide();
+
+	firstx = jQuery(d+" li[name|=fragment]")[0];
+	firstx.className = "tabs-selected";		
+
+	namex = jQuery(d+" li[name|=fragment]").attr('name');
+
+	jQuery('#'+namex).show();	
+
+	lis.click( 
+		function(){
+			jQuery(d+" li[name|=fragment]").removeClass("tabs-selected");
+			jQuery("[id|=fragment]").hide();
+
+			namex = jQuery(this).attr('name');
+
+			jQuery(this).addClass("tabs-selected");
+			jQuery('#'+namex).show();
+		}
+	);
+}
+
 function shipSearchx(){
 	jQuery.ajax({
 		type: 'GET',

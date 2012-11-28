@@ -3,12 +3,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>CargoSpotter</title>
+<link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style_ve.css">
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-	displayContent('voyage_estimator')
+	var page = '<?php echo $_GET['new_search']; ?>';
+	
+	if(page=='1'){
+		displayContent('fast_search');
+	}else{
+		displayContent('voyage_estimator');
+	}
 });
 
 function displayContent(content){
@@ -51,8 +58,7 @@ function displayContent(content){
 
 <div id="outer">
 	<div id="site_content_1" style="padding-bottom:20px;">
-        <div style="float:left; width:70px; height:80px;"><!--<img src="images/logo_ve2.png" width="44" height="44" border="0" />-->&nbsp;</div>
-        <div style="float:left; width:1230px; height:40px; padding-top:40px;">
+        <div style="float:left; width:1300px; height:40px; padding-top:40px; text-align:center;">
             <a onclick="displayContent('voyage_estimator');" id='voyage_estimator_id_link' class="content_link_selected">Voyage Estimator</a> &nbsp; 
             <a onclick="displayContent('fast_search');" id='fast_search_id_link' class="content_link">Fast Search</a> &nbsp; 
             <a onclick="displayContent('ship_search_register');" id='ship_search_register_id_link' class="content_link">Ship Search / Register</a> &nbsp; 

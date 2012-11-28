@@ -108,18 +108,15 @@ function shipSearchx(){
 
 	jQuery("#sbutton").val("SEARCHING...");
 	jQuery("#sbutton")[0].disabled = true;
-	
-	jQuery('#cancelsearch').show();
 
 	jQuery.ajax({
 		type: 'GET',
-		url: "search_ajax.php",
+		url: "search_ajax1ve.php",
 		data: jQuery("#searchform").serialize(),
 
 		success: function(data) {
+			jQuery("#sbutton").val("SEARCH");
 			jQuery("#sbutton")[0].disabled = false;
-			
-			jQuery('#cancelsearch').hide();
 
 			if(data.indexOf("<b>ERROR")!=0){
 				jQuery("#container-1").html(data);
@@ -138,7 +135,7 @@ function shipSearchx(){
 
 				setTimeout("jQuery('#searchform').slideUp('slow')", 500);
 
-				//toggleParams('up');
+				toggleParams('up');
 
 				globalfetch = true;
 
@@ -151,8 +148,6 @@ function shipSearchx(){
 
 				jQuery('#pleasewait').hide();
 			}
-
-			jQuery("#sbutton").val("SEARCH");
 		}
 	});
 }
@@ -162,6 +157,7 @@ function changeCssClass(objDivID){
 		document.getElementById(objDivID).className = 'divclass';
 	}else{
 		document.getElementById(objDivID).className = 'divclass_active';
+
 	}
 }
 
@@ -171,7 +167,7 @@ function showShipDetails(imo){
 
 	jQuery.ajax({
 		type: 'POST',
-		url: "search_ajax.php?imo="+imo,
+		url: "search_ajax1ve.php?imo="+imo,
 		data:  '',
 
 		success: function(data) {
@@ -191,7 +187,7 @@ function ownerDetails(owner, owner_id){
 
 	$(iframe).contents().find("body").html("");
 
-	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
+	jQuery("#contactiframe")[0].src='search_ajax1ve.php?contact=1&owner='+owner+'&owner_id='+owner_id;
 	jQuery("#contactdialog").dialog("open");
 }
 
@@ -375,7 +371,21 @@ function openOptMap(opt){
 	jQuery("#zonemapdialog").dialog("open");
 }
 
-jQuery( "#didyouknowdialog" ).dialog( { autoOpen: false, width: 700, height: 600 });
+function newSearchParam(){
+	jQuery('#pleasewait').show();
+	
+	jQuery.ajax({
+		type: "POST",
+		url: "ajax.php?new_search=1",
+		data: "",
+
+		success: function(data) {
+			self.location = "cargospotter.php?new_search=1";
+		}
+	});
+}
+
+jQuery( "#didyouknowdialog" ).dialog( { autoOpen: false, width: 650, height: 390 });
 jQuery( "#didyouknowdialog" ).dialog("close");
 
 jQuery( "#learndialog" ).dialog( { autoOpen: false, width: 600, height: 360 });
@@ -397,6 +407,7 @@ jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
 jQuery("#contactdialog").dialog("close");
 </script>
 
+<center>
 <div id="shipdetails" title="SHIP DETAILS" style='display:none;'>
 	<div id='shipdetails_in'></div>
 </div>
@@ -424,23 +435,44 @@ jQuery("#contactdialog").dialog("close");
 <div id="miscdialog" title=""  style='display:none'>
 	<iframe id='misciframe' frameborder='0' height="100%" width="1100px" style='border:0px; height:100%; width:1050px;'></iframe>
 </div>
+</center>
 
-<center>
+<div style="width:1200px; height:auto; margin:0 auto;">
 <form id='mapformid' target='mapname' method="post">
 	<input type='hidden' name='details' id='detailsid' />
 </form>
 
-<form id='searchform'>
-<input type='hidden' name='dry' value='1' >
-<input type='hidden' name='tabid' value='<?php echo $tabid; ?>' >
-<table width="1000" border="0" cellpadding="0" cellspacing="0">
-    <tr>
-        <td valign="top" width="400">
-            <table width="400" border="0" cellpadding="3" cellspacing="3">
-                <tr>
-                    <td valign="top" class="title">LOAD PORT</td>
-                    <td valign="top">
-                        <input id='suggest1' type="text" name="load_port" value='<?php echo $tabdata['load_port']; ?>' class="input_1" style='width:200px;' />
+<table width="1200" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="200">
+        <div style="padding-bottom:10px;">
+        <form method="post" action="">
+          <input type='hidden' name='newtab' value='shipsearch'>
+          <input value="+ new search" class="form-button" type="button" onclick="newSearchParam();" />
+        </form>
+        </div>
+        <div>
+            <ul class="menu sbis-tabmenu">
+                <?php $tabsys->showTabs("shipsearch",'',true); ?>
+            </ul>
+        </div>
+    </td>
+    <td width="1000" align="left">
+    	<div style='cursor:pointer;' onclick="jQuery('#searchform').slideToggle('slow', function(){ toggleParams(); })"><a name='params' style='font-size:18px; font-weight:bold;'>PARAMETERS</a> &nbsp; <img src='images/up.png' id='paramicon'></div>
+        <div>&nbsp;</div>
+    	<form id='searchform'>
+            <input type='hidden' name='dry' value='1' >
+            <input type='hidden' name='tabid' value='<?php echo $tabid; ?>' >
+            
+            <table width="1000" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="400" valign="top">
+                  <table width="400" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="90">LOAD PORT</td>
+                      <td width="10">&nbsp;</td>
+                      <td>
+                      	<input id='suggest1' type="text" name="load_port" value='<?php echo $tabdata['load_port']; ?>' class="input_1" style='width:210px;' />
                         <input type='hidden' name='zone2' value='<?php echo $tabdata['zone']; ?>' >
                         
                         <script type="text/javascript">
@@ -473,7 +505,7 @@ jQuery("#contactdialog").dialog("close");
             
                             jQuery.ajax({
                                 type: 'POST',
-                                url: "search_ajax.php?dry=1&load_port="+lp+"&action=getzones&dwt_range="+dwt,
+                                url: "search_ajax1ve.php?dry=1&load_port="+lp+"&action=getzones&dwt_range="+dwt,
                                 data:  '',
                                 
                                 success: function(data) {
@@ -506,11 +538,15 @@ jQuery("#contactdialog").dialog("close");
                             scrollHeight: 180
                         });
                         </script>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" class="title">LOAD PORT DATE RANGE</td>
-                    <td valign="top">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="5" colspan="3"></td>
+                    </tr>
+                    <tr>
+                      <td>LAYCAN</td>
+                      <td width="10">&nbsp;</td>
+                      <td>
                         <input type="text" name="load_port_from" value="<?php
                         if(!trim($tabdata['load_port_from'])){
                             echo date("M d, Y", time());
@@ -528,25 +564,16 @@ jQuery("#contactdialog").dialog("close");
                             echo $tabdata['load_port_to'];
                         }
                         ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" class="title">HULL TYPE</td>
-                    <td valign="top">
-                        <select name="hull_type" class="input_1" id='hull_type_id' style="width:200px;">
-                            <option selected="selected">SINGLE HULL</option>
-                            <option>DOUBLE HULL</option>
-                        </select>
-                        
-                        <?php if($tabdata['hull_type']!=""){ ?>
-                            <script>jQuery("#hull_type_id").val('<?php echo $tabdata['hull_type']; ?>');</script>
-                        <?php } ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" class="title">CATEGORY <strong>DRY</strong></td>
-                    <td valign="top" id='foovt'>
-                        <select name="vessel_type[]" multiple="multiple" size="16" id='vessel_type_id' class="input_1" style="width:200px;">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="5" colspan="3"></td>
+                    </tr>
+                    <tr>
+                      <td valign="top">DRY VESSELS</td>
+                      <td width="10">&nbsp;</td>
+                      <td>
+                      	<select name="vessel_type[]" multiple="multiple" size="18" id='vessel_type_id' class="input_1" style="width:220px;">
                             <optgroup label="BULK CARRIER">
                                 <option value="BULK CARRIER">BULK CARRIER</option>
                                 <option value="ORE CARRIER">ORE CARRIER</option>
@@ -608,16 +635,17 @@ jQuery("#contactdialog").dialog("close");
                             }
                         ?>
                         </script>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td valign="top" width="600">
-            <table width="600" border="0" cellpadding="3" cellspacing="3">
-                <tr>
-                    <td valign="top" class="title">DWT RANGE</td>
-                    <td valign="top">
-                        <select class="input_1" name="dwt_range" id='dwt_range_id' onchange='showZones(jQuery("#suggest1").val(), this.value)'>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td width="600" valign="top">
+                  <table width="600" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="90">DWT RANGE</td>
+                      <td width="10">&nbsp;</td>
+                      <td>
+                      	<select class="input_1" name="dwt_range" id='dwt_range_id' onchange='showZones(jQuery("#suggest1").val(), this.value)'>
                             <option value="5|35">(5,000-35,000) Handysize</option>
                             <option value="40|50" selected="selected">(40,000-50,000) Handymax</option>
                             <option value="50|60">(50,000-60,000) Supramax</option>
@@ -629,162 +657,138 @@ jQuery("#contactdialog").dialog("close");
                         <?php if($tabdata['dwt_range']!=""){ ?>
                             <script>jQuery("#dwt_range_id").val('<?php echo $tabdata['dwt_range']; ?>');</script>
                         <?php } ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" class="title">ZONE</td>
-                    <td valign="top">
-                        <div id='zones'></div>
-                        <div id='minimaps' style='padding-top:5px;'>
-                        <table width='400px'>
-                            <tr>
-                                <td>
-                                    <img id='minimap' style='cursor:pointer; display:none' onclick="openZoneMap(this.alt)" alt='<?php echo $tabdata['zone']; ?>'  src='map/minimaps/<?php echo $tabdata['zone']; ?>.jpg' width="420">
-                                    <div style='text-align:center; display:none; margin-bottom:0px' class='click'>Click on the Map to Enlarge</div>
-                                </td>
-                            </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="5" colspan="3"></td>
+                    </tr>
+                    <tr>
+                      <td>ZONE</td>
+                      <td width="10">&nbsp;</td>
+                      <td><div id='zones'></div></td>
+                    </tr>
+                    <tr>
+                      <td height="3" colspan="3"></td>
+                    </tr>
+                    <tr>
+                      <td>&nbsp;</td>
+                      <td width="10">&nbsp;</td>
+                      <td>
+                      	<div id='minimaps'>
+                        	<img id='minimap' style='cursor:pointer; display:none' onclick="openZoneMap(this.alt)" alt='<?php echo $tabdata['zone']; ?>'  src='map/minimaps/<?php echo $tabdata['zone']; ?>.jpg' width="440">
+                        	<div style='text-align:center; display:none; margin-bottom:0px' class='click'>Click on the Map to Enlarge</div>
                         </div>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style='text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333;'>
-            <b>CHECK BOXES TO ADD SEARCH OPTIONS TO YOUR SEARCH</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>CHOOSE THE NUMBER OF SHIPS YOU WANT TO SEARCH FOR</b>
-            <script>
-            function notAllowed(id_val){
-                if(id_val!=5){
-                    alert("As you are using a \"Trial Account\" you are only allowed to view 5 ships. A Subscription account allows unlimited access and facilities to search.");
-                    
-                    $('#id_slimit').val('5');
-                }
-            }
-            </script>
-            <?php
-            if($user['purchase']=="Trial Account (7 Days Trial Account)"){
-            ?>
-            <select id="id_slimit" name="slimit" style='height:20px; width:70px; font-size:12px;' onchange='notAllowed(this.value);'>
-                <option value="">ALL</option>
-                <option value="5" selected="selected">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select>
-            <?php }else{ ?>
-            <select name="slimit" style='height:20px; width:70px; font-size:12px;'>
-                <option value="">ALL</option>
-                <option value="5" selected="selected">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select>
-            <?php } ?>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <center>
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td>
-                        <div style="padding-bottom:20px; width:170px;">
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td height="10" colspan="2"></td>
+              </tr>
+              <tr>
+                <td colspan="2" align="center">
+                	CHOOSE THE NUMBER OF SHIPS YOU WANT TO SEARCH FOR&nbsp;
+                    <select name="slimit" style='width:70px;' class="input_1">
+                        <option value="">ALL</option>
+                        <option value="5" selected="selected">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="500">500</option>
+                    </select>
+                </td>
+              </tr>
+              <tr>
+                <td height="10" colspan="2"></td>
+              </tr>
+              <tr>
+                <td colspan="2" align="center">
+                	<table border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td>
+                          <table border="0" cellpadding="0" cellspacing="0">
                             <?php if($tabdata['sshore']){ ?>
-                                <div style="float:left;"><input type='checkbox' id='sshore1check' name='sshore' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('sshore1div')"></div>
-                                <div id='sshore1div' class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>AIS SHOREsearch</div>
+                            	<tr>
+                                  <td width="20"><input type='checkbox' id='sshore1check' name='sshore' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('sshore1div')"></td>
+                                  <td><div id='sshore1div' class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>AIS SHOREsearch</div></td>
+                                </tr>
                             <?php }else if(trim($tabdata['load_port'])){ ?>
-                                <div style="float:left;"><input type='checkbox' id='sshore1check' name='sshore' value='1' style='height:30px; width:30px' onclick="changeCssClass('sshore1div')"></div>
-                                <div id="sshore1div" class="divclass" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>AIS SHOREsearch</div>
+                            	<tr>
+                                  <td width="20"><input type='checkbox' id='sshore1check' name='sshore' value='1' style='height:30px; width:30px' onclick="changeCssClass('sshore1div')"></td>
+                                  <td><div id="sshore1div" class="divclass" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>AIS SHOREsearch</div></td>
+                                </tr>
                             <?php }else{ ?>
-                                <div style="float:left;"><input type='checkbox' id='sshore1check' name='sshore' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('sshore1div')"></div>
-                                <div id='sshore1div' class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>AIS SHOREsearch</div>
+                            	<tr>
+                                  <td width="20"><input type='checkbox' id='sshore1check' name='sshore' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('sshore1div')"></td>
+                                  <td><div id='sshore1div' class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>AIS SHOREsearch</div></td>
+                                </tr>
                             <?php } ?>
-                        </div>
-                        <div class='clickable3' style='padding-left:20px;' onclick='showLearnDialog("aisshore")'>CLICK TO LEARN MORE</div>
-                    </td>
-                    <td>
-                        <div style="padding-bottom:20px; width:170px;">
+                            <tr>
+                              <td width="20">&nbsp;</td>
+                              <td><a onclick='showLearnDialog("aisshore");' class="clickable" style="font-size:10px;">CLICK TO LEARN MORE</a></td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td width="50">&nbsp;</td>
+                        <td>
+                          <table border="0" cellpadding="0" cellspacing="0">
+                           <?php if($tabdata['sbroker']){ ?>
+                            	<tr>
+                                  <td width="20"><input type='checkbox' name='sbroker' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('sbroker1')"></td>
+                                  <td><div id="sbroker1" class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>BROKERSintelligence</div></td>
+                                </tr>
+                            <?php }else if(trim($tabdata['load_port'])){ ?>
+                            	<tr>
+                                  <td width="20"><input type='checkbox' name='sbroker' value='1' style='height:30px; width:30px' onclick="changeCssClass('sbroker1')"></td>
+                                  <td><div id="sbroker1" class="divclass" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>BROKERSintelligence</div></td>
+                                </tr>
+                            <?php }else{ ?>
+                            	<tr>
+                                  <td width="20"><input type='checkbox' name='sbroker' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('sbroker1')"></td>
+                                  <td><div id="sbroker1" class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>BROKERSintelligence</div></td>
+                                </tr>
+                            <?php } ?>
+                            <tr>
+                              <td width="20">&nbsp;</td>
+                              <td><a onclick='showLearnDialog("brokersintelligence");' class="clickable" style="font-size:10px;">CLICK TO LEARN MORE</a></td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+              </tr>
+              <tr>
+                <td height="10" colspan="2"></td>
+              </tr>
+              <tr>
+                <td colspan="2" align="center">
+                	<input class='searchbutton' type="button" name="search" value="SEARCH"  style='cursor:pointer' id='sbutton'  />
 
-                            <?php if($tabdata['sbroker']){ ?>
-                                <div style="float:left;"><input type='checkbox' name='sbroker' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('sbroker1')"></div>
-                                <div id="sbroker1" class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>BROKERSintelligence</div>
-                            <?php }else if(trim($tabdata['load_port'])){ ?>
-                                <div style="float:left;"><input type='checkbox' name='sbroker' value='1' style='height:30px; width:30px' onclick="changeCssClass('sbroker1')"></div>
-                                <div id="sbroker1" class="divclass" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>BROKERSintelligence</div>
-                            <?php }else{ ?>
-                                <div style="float:left;"><input type='checkbox' name='sbroker' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('sbroker1')"></div>
-                                <div id="sbroker1" class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>BROKERSintelligence</div>
-                            <?php } ?>
-                        </div>
-                        <div class='clickable3' style='padding-left:20px;' onclick='showLearnDialog("brokersintelligence")'>CLICK TO LEARN MORE</div>
-                    </td>
-                    <td>
-                        <div style="padding-bottom:20px; width:170px;">
-                            <?php if($tabdata['semail']){ ?>
-                                <div style="float:left;"><input type='checkbox' name='semail' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('semail1')"></div>
-                                <div id="semail1" class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>EMAILintelligence</div>
-        <?php }else if(trim($tabdata['load_port'])){ ?>
-                                <div style="float:left;"><input type='checkbox' name='semail' value='1' style='height:30px; width:30px' onclick="changeCssClass('semail1')"></div>
-                                <div id="semail1" class="divclass" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>EMAILintelligence</div>
-        <?php }else{ ?>
-                                <div style="float:left;"><input type='checkbox' name='semail' value='1' checked="checked" style='height:30px; width:30px' onclick="changeCssClass('semail1')"></div>
-                                <div id="semail1" class="divclass_active" style='font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold;'>EMAILintelligence</div>
-                          <?php } ?>
-                        </div>
-                        <div class='clickable3' style='padding-left:20px;' onclick='showLearnDialog("emailintelligence")'>CLICK TO LEARN MORE</div>
-                    </td>
-                </tr>
+					<script>
+                    jQuery("#sbutton").click(
+                        function(){
+                            shipSearchx();
+                        }
+                    )
+                    </script>
+                </td>
+              </tr>
+              <tr>
+                <td height="10" colspan="2"></td>
+              </tr>
             </table>
-            </center>
-        </td>
-    </tr>	
-    <tr>
-        <td style='padding-top:10px; text-align:center;' colspan='2' align="center" >
-            <input class='searchbutton' type="button" name="search" value="SEARCH"  style='cursor:pointer' id='sbutton'  />
-
-            <script>
-            jQuery("#sbutton").click(
-                function(){
-                    shipSearchx();
-                }
-            )
-            </script>
-        </td>
-    </tr>
-    <tr>
-        <td colspan='2'>
-            <div id='pleasewait_fastsearch' style='display:none; text-align:center;'>
-                <center>
-                <table width="400" style="border:1px solid #06F;">
-                    <tr>
-                        <td style='text-align:left; padding:5px;'>Please be patient as S-BIS is doing millions of calculations to get your data. But be assured it is quicker than any other method!</td>
-                    </tr>
-                    <tr>
-                        <td style='text-align:center'>
-                            <div id='didyouknow'></div>
-                            <img src='images/searching.gif' >
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style='text-align:left; padding:5px;'>
-                            <p><b>Tips:</b></p>
-                            <p>&bull; Search by a narrow Date Range.</p>
-                            <p>&bull; Choose the Ship Type/s.</p>
-                            <p>&bull; Select a Region rather than the Whole World. (use your experience and knowledge of trade routes.)</p>
-                            <p>&bull; Number of Ships that display use 20 to start, HOWEVER to get all he possibilities increase that number.</p>
-                            <p>&bull; The first search of a new port is slower than the subsequent searches.</p>
-                            <p>&bull; These are very complicated Searches and take considerable time, so be very patient as the combinations to find the Right Ship for you are multiple millions of calculations.</p>
-                        </td>
-                    </tr>
-                </table>
-                </center>
-            </div>	
-        </td>
-    </tr>
+        </form>
+        
+        <div id='sresults' style='display:none;'>
+            <div id="records_tab_wrapper">
+                <div id="container-1"></div>
+            </div>
+        </div>
+    </td>
+  </tr>
 </table>
 
 <script>
@@ -794,14 +798,5 @@ if($tabdata['load_port']){
 }
 ?>
 </script>
-
-</form>
-
-<div id='sresults' style='display:none;'>
-    <h1 class="title" id='ssr' style='cursor:pointer; margin-bottom:0px;'>SHIP SEARCH RESULTS <img style='display:none' src='images/up.png' id='searchricon' ></h1>
-    <div id="records_tab_wrapper">
-        <div id="container-1"></div>
-    </div>
 </div>
-</center>
 <!--END OF FAST SEARCH-->

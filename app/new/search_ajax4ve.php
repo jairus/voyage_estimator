@@ -1,6 +1,6 @@
 <script>
 function openMapRegister(details){
-	jQuery("#mapiframe")[0].src='map/register_map.php?details='+details+"&t="+(new Date()).getTime();
+	jQuery("#mapiframe")[0].src='map/register_map_ve.php?details='+details+"&t="+(new Date()).getTime();
 	jQuery("#mapdialog").dialog("open");
 }
 </script>

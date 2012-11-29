@@ -2,42 +2,19 @@
 $t = count($shipsA2);
 
 $shipsA2temp = array();
+$shipsA2print = array();
 
 $shipcount = 0;
 
-$shipsA2print = array();
-
 for($i=0; $i<$t; $i++){
-	$t2 = count($imoprint2);
-	
-	for($i2=0;$i2<$t2;$i2++){
-		if($shipsA2[$i]['xvas_imo']==$imoprint2[$i2]['imos']){
-			unset($shipsA2[$i]);
-			
-			continue;
-		}
-	}
-
-	if($shipsA2[$i]['satellite']){
-
-		unset($shipsA2[$i]);
-
-		continue;
-
-	}
-
-	if(trim($shipsA2[$i]['xvas_imo'])==""){
-
-		unset($shipsA2[$i]);
-
-		continue;
-
-	}
-
 	$print = array();
-	$imoarr = array();
 	
-	$imoarr['imos']   = $shipsA2[$i]['xvas_imo'];
+	if(trim($shipsA2[$i]['xvas_imo'])==""){
+		unset($shipsA2[$i]);
+
+		continue;
+	}
+
 	$print['Ship Name']  = $shipsA2[$i]['xvas_name'];
 
 	$print['IMO #']   = $shipsA2[$i]['xvas_imo'];
@@ -428,29 +405,12 @@ for($i=0; $i<$t; $i++){
 	}
 
 	if($shipcount>$shiplimit){
-
 		break;
-
 	}
-
-	
-
-	//$distance = $dc->getDistancePointToPort($lat, $long, $load_portid);
-
-	//echo $lat." ".$long." ".$distance."<br>";
-	$imoprint2[] = $imoarr;
 }
 
-
-
 $shipsA2 = $shipsA2temp;
-
 $shipsA2 = array_values($shipsA2);
-
 $shipsA2 = bbsort($shipsA2);
-
 $shipsA2print = bbsort($shipsA2print);
-
-
-
 ?>

@@ -6,7 +6,7 @@ if($t){
 	echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b; color:white; margin-top:5px;'>
 		<table cellpadding='0' cellspacing='0' width='990px'>
 			<tr>
-				<td><b style='font-size:14px;'>SHIPS WITH CONFIRMED OPEN PORT USING AIS SHORESEARCH</b></td>
+				<td><b style='font-size:14px;'>SHIPS WITH AIS DESTINATIONS & ETA</b></td>
 				<td align='right' style='text-align:right; vertical-align:top'><a href='#params'><img style='border:0px' src='images/up_icon.png' alt='back to top' title='back to top'></a>
 </td>
 			</tr>
@@ -20,15 +20,9 @@ if($t){
 			<th width='190' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Name</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
@@ -121,7 +115,7 @@ if($t){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$ships['ETA TO LOAD PORT (days)']."\" title=\"".$ships['ETA TO LOAD PORT (days)']."\">".substr($ships['ETA TO LOAD PORT (days)'], 0,11)."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap(\"shore\", \"".$details."\", \"SHIPS WITH CONFIRMED OPEN PORT USING AIS SHORESEARCH\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe(\"shore\", \"".$details."\", \"SHIPS WITH AIS DESTINATIONS & ETA\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -228,7 +222,7 @@ if($t){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$ships['ETA TO LOAD PORT (days)']."\" title=\"".$ships['ETA TO LOAD PORT (days)']."\">".substr($ships['ETA TO LOAD PORT (days)'], 0,11)."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap(\"shore\", \"".$details."\", \"SHIPS WITH CONFIRMED OPEN PORT USING AIS SHORESEARCH\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe(\"shore\", \"".$details."\", \"SHIPS WITH AIS DESTINATIONS & ETA\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -335,7 +329,7 @@ if($t){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$ships['ETA TO LOAD PORT (days)']."\" title=\"".$ships['ETA TO LOAD PORT (days)']."\">".substr($ships['ETA TO LOAD PORT (days)'], 0,11)."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap(\"shore\", \"".$details."\", \"SHIPS WITH CONFIRMED OPEN PORT USING AIS SHORESEARCH\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe(\"shore\", \"".$details."\", \"SHIPS WITH AIS DESTINATIONS & ETA\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -380,7 +374,7 @@ if($t2){
 	echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b; color:white; margin-top:5px;'>
 		<table cellpadding='0' cellspacing='0' width='990px'>
 			<tr>
-				<td><b style='font-size:14px;'>SHIPS WITH LAST KNOWN DESTINATION / POSITIONS USING AIS SHORESEARCH</b></td>
+				<td><b style='font-size:14px;'>SHIPS WITH AIS DESTINATIONS & ETA (ACRONYMS OR SPELLING ISSUES)</b></td>
 				<td align='right' style='text-align:right; vertical-align:top'><a href='#params'><img style='border:0px' src='images/up_icon.png' alt='back to top' title='back to top'></a>
 </td>
 			</tr>
@@ -394,15 +388,9 @@ if($t2){
 			<th width='190' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Name</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
@@ -495,7 +483,7 @@ if($t2){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$ships['ETA TO LOAD PORT (days)']."\" title=\"".$ships['ETA TO LOAD PORT (days)']."\">".substr($ships['ETA TO LOAD PORT (days)'], 0,11)."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap(\"shore\", \"".$details."\", \"SHIPS WITH LAST KNOWN DESTINATION / POSITIONS USING AIS SHORESEARCH\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe(\"shore\", \"".$details."\", \"SHIPS WITH AIS DESTINATIONS & ETA (ACRONYMS OR SPELLING ISSUES)\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -602,7 +590,7 @@ if($t2){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$ships['ETA TO LOAD PORT (days)']."\" title=\"".$ships['ETA TO LOAD PORT (days)']."\">".substr($ships['ETA TO LOAD PORT (days)'], 0,11)."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap(\"shore\", \"".$details."\", \"SHIPS WITH LAST KNOWN DESTINATION / POSITIONS USING AIS SHORESEARCH\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe(\"shore\", \"".$details."\", \"SHIPS WITH AIS DESTINATIONS & ETA (ACRONYMS OR SPELLING ISSUES)\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -709,7 +697,7 @@ if($t2){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$ships['ETA TO LOAD PORT (days)']."\" title=\"".$ships['ETA TO LOAD PORT (days)']."\">".substr($ships['ETA TO LOAD PORT (days)'], 0,11)."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap(\"shore\", \"".$details."\", \"SHIPS WITH LAST KNOWN DESTINATION / POSITIONS USING AIS SHORESEARCH\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe(\"shore\", \"".$details."\", \"SHIPS WITH AIS DESTINATIONS & ETA (ACRONYMS OR SPELLING ISSUES)\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -768,15 +756,9 @@ if($t3){
 			<th width='190' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Name</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
@@ -863,7 +845,7 @@ if($t3){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$bupdatearr['delydate_from']."\" title=\"".$bupdatearr['delydate_from']."\">".$bupdatearr['delydate_from']."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap2(\"broker\", \"".$details."\", \"SHIPS WITH CONFIRMED OPEN PORT USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"broker\", \"".$details."\", \"SHIPS WITH CONFIRMED OPEN PORT USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -964,7 +946,7 @@ if($t3){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$bupdatearr['delydate_from']."\" title=\"".$bupdatearr['delydate_from']."\">".$bupdatearr['delydate_from']."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap2(\"broker\", \"".$details."\", \"SHIPS WITH CONFIRMED OPEN PORT USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"broker\", \"".$details."\", \"SHIPS WITH CONFIRMED OPEN PORT USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -1065,7 +1047,7 @@ if($t3){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$bupdatearr['opendate']."\" title=\"".$bupdatearr['opendate']."\">".$bupdatearr['opendate']."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap2(\"broker\", \"".$details."\", \"SHIPS WITH CONFIRMED OPEN PORT USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"broker\", \"".$details."\", \"SHIPS WITH CONFIRMED OPEN PORT USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -1124,15 +1106,9 @@ if($t4){
 			<th width='190' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Name</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
@@ -1219,7 +1195,7 @@ if($t4){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$bupdatearr['delydate_from']."\" title=\"".$bupdatearr['delydate_from']."\">".$bupdatearr['delydate_from']."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap2(\"broker\", \"".$details."\", \"SHIPS WITH LAST KNOWN POSITIONS USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"broker\", \"".$details."\", \"SHIPS WITH LAST KNOWN POSITIONS USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -1320,7 +1296,7 @@ if($t4){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$bupdatearr['delydate_from']."\" title=\"".$bupdatearr['delydate_from']."\">".$bupdatearr['delydate_from']."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap2(\"broker\", \"".$details."\", \"SHIPS WITH LAST KNOWN POSITIONS USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"broker\", \"".$details."\", \"SHIPS WITH LAST KNOWN POSITIONS USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -1421,7 +1397,7 @@ if($t4){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$bupdatearr['opendate']."\" title=\"".$bupdatearr['opendate']."\">".$bupdatearr['opendate']."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap2(\"broker\", \"".$details."\", \"SHIPS WITH LAST KNOWN POSITIONS USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"broker\", \"".$details."\", \"SHIPS WITH LAST KNOWN POSITIONS USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -1480,15 +1456,9 @@ if($t5){
 			<th width='190' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Name</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
@@ -1575,7 +1545,7 @@ if($t5){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$bupdatearr['delydate_from']."\" title=\"".$bupdatearr['delydate_from']."\">".$bupdatearr['delydate_from']."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap2(\"broker\", \"".$details."\", \"SHIPS FOUND USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"broker\", \"".$details."\", \"SHIPS FOUND USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -1676,7 +1646,7 @@ if($t5){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$bupdatearr['delydate_from']."\" title=\"".$bupdatearr['delydate_from']."\">".$bupdatearr['delydate_from']."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap2(\"broker\", \"".$details."\", \"SHIPS FOUND USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"broker\", \"".$details."\", \"SHIPS FOUND USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>
@@ -1777,7 +1747,7 @@ if($t5){
 							echo "<tr style='background:#e5e5e5;'>
 								<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 								<td><div style='padding:5px;'><a class='clickable2' alt=\"".$bupdatearr['opendate']."\" title=\"".$bupdatearr['opendate']."\">".$bupdatearr['opendate']."</a></div></td>
-								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMap2(\"broker\", \"".$details."\", \"SHIPS FOUND USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+								<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"broker\", \"".$details."\", \"SHIPS FOUND USING BROKERSINTELLIGENCE\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 								<td>
 									<div style='padding:5px;'>
 										<table cellpadding='0' cellspacing='0' width='100%'>

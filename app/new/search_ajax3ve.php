@@ -237,7 +237,7 @@ if(trim($t)){
 				if($i3==0){
 					echo "<td rowspan='".$t3."' align='center' valign='top'>
 						<div style='padding:5px;'><a onclick='showMapFP();' class='clickable'>view larger map</a></div>
-						<div style='padding:5px;'><iframe src='map/index2.php' width='800' height='700' frameborder='0'></iframe></div>
+						<div style='padding:5px;'><iframe src='map/map_fleet_positions.php' width='800' height='700' frameborder='0'></iframe></div>
 					</td>";
 				}
 				

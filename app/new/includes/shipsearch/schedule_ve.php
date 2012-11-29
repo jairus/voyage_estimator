@@ -8,7 +8,7 @@ if($t){
 	echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b; color:white; margin-top:5px;'>
 		<table cellpadding='0' cellspacing='0' width='990px'>
 			<tr>
-				<td><b style='font-size:14px;'>SHIPS WITH CONFIRMED OPEN PORT USING AIS SHORESEARCH</b></td>
+				<td><b style='font-size:14px;'>SHIPS WITH AIS DESTINATIONS & ETA</b></td>
 				<td align='right' style='text-align:right; vertical-align:top'>
 					<a class='clickable' onclick=\"csvIt1('fixture')\"><img src='images/csv.jpg'></a>
 					<a class='clickable' onclick=\"printIt1('fixture')\"><img src='images/print.jpg'></a>
@@ -27,15 +27,9 @@ if($t){
 			<th width='110px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Load ETA</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
@@ -321,7 +315,7 @@ if($t2){
 	echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b; color:white; margin-top:5px;'>
 		<table cellpadding='0' cellspacing='0' width='990px'>
 			<tr>
-				<td><b style='font-size:14px;'>SHIPS WITH LAST KNOWN DESTINATION / POSITIONS USING AIS SHORESEARCH</b></td>
+				<td><b style='font-size:14px;'>SHIPS WITH AIS DESTINATIONS & ETA (ACRONYMS OR SPELLING ISSUES)</b></td>
 				<td align='right' style='text-align:right; vertical-align:top'>
 					<a class='clickable' onclick=\"csvIt1('fixture')\"><img src='images/csv.jpg'></a>
 					<a class='clickable' onclick=\"printIt1('fixture')\"><img src='images/print.jpg'></a>
@@ -340,15 +334,9 @@ if($t2){
 			<th width='110px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Load ETA</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
@@ -653,15 +641,9 @@ if($t3){
 			<th width='110px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Open ETA</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
@@ -948,15 +930,9 @@ if($t4){
 			<th width='110px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Open ETA</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
@@ -1243,15 +1219,9 @@ if($t5){
 			<th width='110px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Open ETA</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
-			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>";
-			
-			if($_SESSION['user']['dry']==1 || $_SESSION['user']['dry']==2){
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>";
-			}else{
-				echo "<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Operator</div></th>";
-			}
-			
-			echo "<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
+			<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
+			<th width='180px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
+			<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
 			<th width='80px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 			<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>

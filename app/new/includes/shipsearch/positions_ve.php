@@ -25,10 +25,10 @@
 echo "<form id='positions' method='POST' style='margin:0px;' action='fixtures.php'>";
 echo "<input type='hidden' name='searchtabdata' id='searchtabdata'>";
 echo "<div style='text-align:left; padding:5px;'><b>CURRENT DATE/TIME: ".date("M j, Y G:i e", time())."</b></div>";
-include_once(dirname(__FILE__)."/positionsA1.php");
-include_once(dirname(__FILE__)."/positionsA2.php");
-include_once(dirname(__FILE__)."/positionsA3.php");
-include_once(dirname(__FILE__)."/positionsA4.php");
-include_once(dirname(__FILE__)."/positionsA5.php");
+include_once(dirname(__FILE__)."/positionsA1_ve.php");
+include_once(dirname(__FILE__)."/positionsA2_ve.php");
+include_once(dirname(__FILE__)."/positionsA3_ve.php");
+include_once(dirname(__FILE__)."/positionsA4_ve.php");
+include_once(dirname(__FILE__)."/positionsA5_ve.php");
 echo "</form>";
 ?>

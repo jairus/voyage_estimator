@@ -2175,21 +2175,21 @@ $shiplimit = 5000;
 
 if($_GET['sshore']){
 	//process shipsA1
-	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA1.php");
+	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA1_ve.php");
 
 	//process shipsA2
-	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA2.php");
+	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA2_ve.php");
 }
 
 if($_GET['sbroker']){
 	//process shipsA3
-	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA3.php");
+	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA3_ve.php");
 
 	//process shipsA4
-	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA4.php");
+	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA4_ve.php");
 
 	//process shipsA5
-	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA5.php");
+	include_once(dirname(__FILE__)."/includes/shipsearch/shipsA5_ve.php");
 }
 
 $t = count($shipsA1print);

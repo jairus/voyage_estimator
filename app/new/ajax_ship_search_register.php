@@ -6,7 +6,7 @@
 <script type="text/javascript" src="js/development-bundle/ui/jquery.ui.dialog.js"></script>
 <script>
 function openMessageDialog(mid, imo, type){
-	jQuery("#messageiframeshipsearchonly")[0].src="search_ajax.php?action=getmessages&type="+type+"&mid="+mid+"&imo="+imo+"&t="+(new Date()).getTime();
+	jQuery("#messageiframeshipsearchonly")[0].src="search_ajax1ve.php?action=getmessages&type="+type+"&mid="+mid+"&imo="+imo+"&t="+(new Date()).getTime();
 	jQuery("#messagedialogshipsearchonly").dialog( { autoOpen: false, width: '920', height: jQuery(window).height()*0.9 });
 	jQuery("#messagedialogshipsearchonly").dialog("open");
 }
@@ -17,7 +17,7 @@ function showShipDetails(imo){
 
 	jQuery.ajax({
 		type: 'POST',
-		url: "search_ajax.php?imo="+imo,
+		url: "search_ajax1ve.php?imo="+imo,
 		data:  '',
 
 		success: function(data) {
@@ -37,7 +37,7 @@ function ownerDetails(owner, owner_id){
 
 	$(iframe).contents().find("body").html("");
 
-	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
+	jQuery("#contactiframe")[0].src='search_ajax1ve.php?contact=1&owner='+owner+'&owner_id='+owner_id;
 	jQuery("#contactdialog").dialog("open");
 }
 

@@ -371,6 +371,74 @@ function openOptMap(opt){
 	jQuery("#zonemapdialog").dialog("open");
 }
 
+globalfetch = false;
+
+function fetchMessagesCron(){
+	if(globalfetch){
+		fetchMessages();
+
+		setTimeout("fetchMessagesCron()", 60000);
+	}
+}
+
+function fetchMessages(){
+	pmessages = jQuery(".pmessages");
+
+	pmstr  = "";
+
+	for(i=0; i<pmessages.length; i++){
+		pmstr += pmessages[i].value+"|";
+	}
+
+	nmessages = jQuery(".nmessages");
+
+	nmstr  = "";
+
+	for(i=0; i<nmessages.length; i++){
+		nmstr += nmessages[i].value+"|";
+	}
+
+	mids = pmstr+nmstr;
+
+	jQuery.ajax({
+		type: 'POST',
+		url: "search_ajax1ve.php?action=getmessages&task=fetchmessages",
+		data:  "mids="+mids,
+		dataType: "json",
+
+		success: function(data) {
+			for(x in data){
+				if(x.indexOf("useremail")==0&&data[x].user_email){
+					jQuery("#"+x).html(data[x].user_email);
+					
+					if(data[x].opened==false){
+						jQuery("#"+x).css({"color":"red"});
+					}else{
+						jQuery("#"+x).css({"color":"black"});
+					}
+				}else{
+					jQuery("#"+x).html(data[x].short);
+					jQuery("#"+x).parent().attr("title", data[x].long);
+					jQuery("#"+x).parent().attr("alt", data[x].long);
+					jQuery("#"+x).parent().attr("id", data[x].mid);
+
+					if(data[x].opened==false){
+						jQuery("#"+x).css({"color":"red"});
+					}else{
+						jQuery("#"+x).css({"color":"black"});
+					}
+				}
+			}
+		}
+	});	
+}
+
+function openMessageDialog(mid, imo, type){
+	jQuery("#messageiframe")[0].src="search_ajax1ve.php?action=getmessages&type="+type+"&mid="+mid+"&imo="+imo+"&t="+(new Date()).getTime();
+	jQuery( "#messagedialog" ).dialog( { autoOpen: false, width: '920', height: jQuery(window).height()*0.9 });
+	jQuery("#messagedialog").dialog("open");
+}
+
 function newSearchParam(){
 	jQuery('#pleasewait').show();
 	
@@ -405,6 +473,13 @@ jQuery( "#miscdialog" ).dialog("close");
 
 jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
 jQuery("#contactdialog").dialog("close");
+
+jQuery( "#messagedialog" ).dialog( { autoOpen: false, width: 920, height: 460,
+	close: function (event, ui){
+		fetchMessages();
+	}
+});
+jQuery( "#messagedialog" ).dialog("close");
 </script>
 
 <center>
@@ -434,6 +509,10 @@ jQuery("#contactdialog").dialog("close");
 
 <div id="miscdialog" title=""  style='display:none'>
 	<iframe id='misciframe' frameborder='0' height="100%" width="1100px" style='border:0px; height:100%; width:1050px;'></iframe>
+</div>
+
+<div id="messagedialog" title="MESSAGES"  style='display:none'>
+	<iframe id='messageiframe' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
 </center>
 

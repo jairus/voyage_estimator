@@ -41,6 +41,11 @@ function openMap(xfocus, details, xcategory){
 	jQuery("#mapdialog").dialog("open");
 }
 
+function openMapVe(xfocus, details, xcategory){
+	jQuery("#mapiframe")[0].src='map/map_fast_search.php?focus='+xfocus+'&details='+details+"&xcategory="+xcategory+"&t="+(new Date()).getTime();
+	jQuery("#mapdialog").dialog("open");
+}
+
 function openMap2(xfocus, details, xcategory){
 	jQuery("#mapiframe_brokers")[0].src='map/index_brokers.php?focus='+xfocus+'&details='+details+"&xcategory="+xcategory+"&t="+(new Date()).getTime();
 	jQuery("#mapdialog_brokers").dialog("open");

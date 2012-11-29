@@ -1,9 +1,14 @@
 <?php
-@include_once(dirname(__FILE__)."/../includes/bootstrap.php");
+@session_start();
+include_once(dirname(__FILE__)."/../includes/bootstrap.php");
 
-$imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$_GET['imo']);
+$details = trim(base64_decode($_GET['details']));
+$details = unserialize($details);
+$ship    = $_SESSION[$details['a']][$details['id']];
 
-$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$_GET['imo']."'";
+$imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$ship['IMO #']);
+
+$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$ship['IMO #']."'";
 $xvas = dbQuery($sql);
 $xvas = $xvas[0];
 
@@ -13,7 +18,7 @@ if(!trim($xvasflag)){
 }
 $xvasflag_img = getFlagImage($xvasflag);
 
-$sql_pos  = "SELECT * FROM `_xvas_siitech_cache` WHERE `xvas_imo`='".$_GET['imo']."' ORDER BY `dateupdated` DESC LIMIT 0,1";
+$sql_pos  = "SELECT * FROM `_xvas_siitech_cache` WHERE `xvas_imo`='".$ship['IMO #']."' ORDER BY `dateupdated` DESC LIMIT 0,1";
 $xvas_pos = dbQuery($sql_pos);
 $xvas_pos = $xvas_pos[0];
 
@@ -170,7 +175,6 @@ $xstring = "
 $xstring = str_replace("\n", "", $xstring);
 $xstring = str_replace("\r", "", $xstring);
 ?>
-<!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -195,7 +199,7 @@ map.addLayer(new OpenLayers.Layer.OSM());
 epsg4326 =  new OpenLayers.Projection("EPSG:4326");
 projectTo = map.getProjectionObject();
 
-var lonLat = new OpenLayers.LonLat( <?php echo $xvas_pos['siitech_longitude']; ?>, <?php echo $xvas_pos['siitech_latitude']; ?> ).transform(epsg4326, projectTo);
+var lonLat = new OpenLayers.LonLat( <?php echo $ship['LONG']; ?> , <?php echo $ship['LAT']; ?> ).transform(epsg4326, projectTo);
 
 var zoom = 3;
 map.setCenter (lonLat, zoom);
@@ -203,63 +207,63 @@ map.setCenter (lonLat, zoom);
 var vectorLayer = new OpenLayers.Layer.Vector("Overlay");
 
 var feature = new OpenLayers.Feature.Vector(
-	new OpenLayers.Geometry.Point( <?php echo $xvas_pos['siitech_longitude']; ?>, <?php echo $xvas_pos['siitech_latitude']; ?> ).transform(epsg4326, projectTo),
+	new OpenLayers.Geometry.Point( <?php echo $ship['LONG']; ?> , <?php echo $ship['LAT']; ?> ).transform(epsg4326, projectTo),
 	{description:"<?php echo $xstring; ?>"} ,
-	{externalGraphic: 'icons/<?php
-		if(0>=$true_heading2){
-			echo 'ship0.png';
-		}else if(15>=$true_heading2){
-			echo 'ship15.png';
-		}else if(30>=$true_heading2){
-			echo 'ship30.png';
-		}else if(45>=$true_heading2){
-			echo 'ship45.png';
-		}else if(60>=$true_heading2){
-			echo 'ship60.png';
-		}else if(75>=$true_heading2){
-			echo 'ship75.png';
-		}else if(90>=$true_heading2){
-			echo 'ship90.png';
-		}else if(105>=$true_heading2){
-			echo 'ship105.png';
-		}else if(120>=$true_heading2){
-			echo 'ship120.png';
-		}else if(135>=$true_heading2){
-			echo 'ship135.png';
-		}else if(150>=$true_heading2){
-			echo 'ship150.png';
-		}else if(165>=$true_heading2){
-			echo 'ship165.png';
-		}else if(180>=$true_heading2){
-			echo 'ship180.png';
-		}else if(195>=$true_heading2){
-			echo 'ship195.png';
-		}else if(210>=$true_heading2){
-			echo 'ship210.png';
-		}else if(225>=$true_heading2){
-			echo 'ship225.png';
-		}else if(240>=$true_heading2){
-			echo 'ship240.png';
-		}else if(255>=$true_heading2){
-			echo 'ship255.png';
-		}else if(270>=$true_heading2){
-			echo 'ship270.png';
-		}else if(285>=$true_heading2){
-			echo 'ship285.png';
-		}else if(300>=$true_heading2){
-			echo 'ship300.png';
-		}else if(315>=$true_heading2){
-			echo 'ship315.png';
-		}else if(330>=$true_heading2){
-			echo 'ship330.png';
-		}else if(345>=$true_heading2){
-			echo 'ship345.png';
-		}else if(360>=$true_heading2){
-			echo 'ship360.png';
-		}else{
-			echo 'ship270.png';
-		}
-		?>', graphicHeight: 70, graphicWidth: 70, graphicXOffset:-12, graphicYOffset:-25  }
+	{externalGraphic: '<?php
+	if(0>=$true_heading2){
+		echo 'ship0.png';
+	}else if(15>=$true_heading2){
+		echo 'ship15.png';
+	}else if(30>=$true_heading2){
+		echo 'ship30.png';
+	}else if(45>=$true_heading2){
+		echo 'ship45.png';
+	}else if(60>=$true_heading2){
+		echo 'ship60.png';
+	}else if(75>=$true_heading2){
+		echo 'ship75.png';
+	}else if(90>=$true_heading2){
+		echo 'ship90.png';
+	}else if(105>=$true_heading2){
+		echo 'ship105.png';
+	}else if(120>=$true_heading2){
+		echo 'ship120.png';
+	}else if(135>=$true_heading2){
+		echo 'ship135.png';
+	}else if(150>=$true_heading2){
+		echo 'ship150.png';
+	}else if(165>=$true_heading2){
+		echo 'ship165.png';
+	}else if(180>=$true_heading2){
+		echo 'ship180.png';
+	}else if(195>=$true_heading2){
+		echo 'ship195.png';
+	}else if(210>=$true_heading2){
+		echo 'ship210.png';
+	}else if(225>=$true_heading2){
+		echo 'ship225.png';
+	}else if(240>=$true_heading2){
+		echo 'ship240.png';
+	}else if(255>=$true_heading2){
+		echo 'ship255.png';
+	}else if(270>=$true_heading2){
+		echo 'ship270.png';
+	}else if(285>=$true_heading2){
+		echo 'ship285.png';
+	}else if(300>=$true_heading2){
+		echo 'ship300.png';
+	}else if(315>=$true_heading2){
+		echo 'ship315.png';
+	}else if(330>=$true_heading2){
+		echo 'ship330.png';
+	}else if(345>=$true_heading2){
+		echo 'ship345.png';
+	}else if(360>=$true_heading2){
+		echo 'ship360.png';
+	}else{
+		echo 'ship270.png';
+	}
+	?>', graphicHeight: 70, graphicWidth: 70, graphicXOffset:-12, graphicYOffset:-25  }
 );    
 vectorLayer.addFeatures(feature);
 

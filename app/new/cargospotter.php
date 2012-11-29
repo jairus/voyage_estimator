@@ -35,10 +35,24 @@ function displayContent(content){
 	jQuery('#weather_id_link').removeClass('content_link_selected');
 	
 	jQuery('#voyage_estimator_id_link').addClass('content_link');
-
+	
+	var page = '<?php echo $_GET['new_search']; ?>';
+	var condition = '';
+	
+	if(page=='1'){
+		var tab = '<?php echo $_GET['tab']; ?>';
+		var deltab = '<?php echo $_GET['deltab']; ?>';
+		
+		if(tab!=''){
+			var condition = '?tab='+tab;
+		}else if(deltab!=''){
+			var condition = '?deltab='+deltab;
+		}
+	}
+	
 	jQuery.ajax({
 		type: "POST",
-		url: "ajax_"+ content +".php",
+		url: "ajax_"+ content +".php"+condition,
 		data: "",
 
 		success: function(data) {

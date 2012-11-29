@@ -15,7 +15,7 @@ function showShipDetails(imo){
 
 	jQuery.ajax({
 		type: 'POST',
-		url: "search_ajax.php?imo="+imo,
+		url: "search_ajax1ve.php?imo="+imo,
 		data:  '',
 
 		success: function(data) {
@@ -35,7 +35,7 @@ function ownerDetails(owner, owner_id){
 
 	$(iframe).contents().find("body").html("");
 
-	jQuery("#contactiframe")[0].src='search_ajax.php?contact=1&owner='+owner+'&owner_id='+owner_id;
+	jQuery("#contactiframe")[0].src='search_ajax1ve.php?contact=1&owner='+owner+'&owner_id='+owner_id;
 	jQuery("#contactdialog").dialog("open");
 }
 

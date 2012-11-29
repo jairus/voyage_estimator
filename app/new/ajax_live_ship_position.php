@@ -172,7 +172,7 @@ function toggleCategories(){
                         data:  jQuery("#live_ship_position").serialize(),
 
                         success: function(data) {
-                            jQuery("#mapiframe1")[0].src='map/index10_online.php';
+                            jQuery("#mapiframe1")[0].src='map/map_live_ship_position.php';
                             jQuery("#mapdialog1").dialog("open");
                             
                             jQuery('#pleasewait').hide();

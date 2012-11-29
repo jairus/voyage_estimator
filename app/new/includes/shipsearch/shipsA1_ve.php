@@ -17,32 +17,13 @@ $shipsA1temp = array();
 $shipcount = 0;
 
 for($i=0; $i<$t; $i++){
-	$t2 = count($imoprint);
-	
-	for($i2=0;$i2<$t2;$i2++){
-		if($shipsA1[$i]['xvas_imo']==$imoprint[$i2]['imos']){
-			unset($shipsA1[$i]);
-			
-			continue;
-		}
-	}
-		
-	if($shipsA1[$i]['satellite']){
-		unset($shipsA1[$i]);
-
-		continue;
-	}
-
 	$print = array();
-	$imoarr = array();
 
 	if(trim($shipsA1[$i]['xvas_imo'])==""){
 		unset($shipsA1[$i]);
 
 		continue;
 	}
-	
-	$imoarr['imos']   = $shipsA1[$i]['xvas_imo'];
 	
 	$print['Ship Name']   = $shipsA1[$i]['xvas_name'];
 	$print['IMO #']       = $shipsA1[$i]['xvas_imo'];
@@ -256,8 +237,6 @@ for($i=0; $i<$t; $i++){
 	if($shipcount>$shiplimit){
 		break;
 	}
-	
-	$imoprint[] = $imoarr;
 }
 
 $shipsA1 = $shipsA1temp;

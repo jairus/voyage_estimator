@@ -1,105 +1,233 @@
+<?php
+$dbhost = 's-bis.cfclysrb91of.us-east-1.rds.amazonaws.com';
+$dbuser = 'sbis';
+$dbpass = 'roysbis';
+$dbname = 'sbis';
+
+$conn   = mysql_connect($dbhost,$dbuser,$dbpass) or die('Error connecting to mysql');
+mysql_select_db($dbname);
+
+$activated = false;
+
+if($_GET['activate']){
+	$sql = "select * from `_sbis_users` where md5(`id`)='".base64_decode($_GET['activate'])."'";
+	$r = mysql_fetch_assoc(mysql_query($sql));
+
+	if($r['email']){
+		$sql = "update `_sbis_users` set `activated`=1 where `id`='".$r['id']."'";
+		mysql_query($sql);
+		
+		if($r['dry']==1){
+			$sql1 = "INSERT INTO _network(userid1, userid2, confirmed, dateadded) VALUES ('".$r['id']."', '129', '1', '".date('Y-m-d H-i-s')."') ";
+			$result1 = mysql_query($sql1) or die(mysql_error());
+		}else{
+			$sql1 = "INSERT INTO _network(userid1, userid2, confirmed, dateadded) VALUES ('".$r['id']."', '58', '1', '".date('Y-m-d H-i-s')."') ";
+			$result1 = mysql_query($sql1) or die(mysql_error());
+		}
+
+		$activated = true;
+	}
+}
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>CargoSpotter</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/style_ve.css">
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-	var page = '<?php echo $_GET['new_search']; ?>';
-	
-	if(page=='1'){
-		displayContent('fast_search');
-	}else{
-		displayContent('voyage_estimator');
-	}
-});
-
-function displayContent(content){
-	jQuery('#pleasewait').show();
-	
-	jQuery('#results').hide();
-	
-	jQuery('#voyage_estimator_id_link').removeClass('content_link_selected');
-	jQuery('#fast_search_id_link').removeClass('content_link_selected');
-	jQuery('#ship_search_register_id_link').removeClass('content_link_selected');
-	jQuery('#fleet_positions_id_link').removeClass('content_link_selected');
-	jQuery('#ships_coming_into_ports_id_link').removeClass('content_link_selected');
-	jQuery('#live_ship_position_id_link').removeClass('content_link_selected');
-	jQuery('#ports_intelligence_id_link').removeClass('content_link_selected');
-	jQuery('#piracy_notices_id_link').removeClass('content_link_selected');
-	jQuery('#bunker_pricing_id_link').removeClass('content_link_selected');
-	jQuery('#weather_id_link').removeClass('content_link_selected');
-	
-	jQuery('#voyage_estimator_id_link').addClass('content_link');
-	
-	var page = '<?php echo $_GET['new_search']; ?>';
-	var condition = '';
-	
-	if(page=='1'){
-		var tab = '<?php echo $_GET['tab']; ?>';
-		var deltab = '<?php echo $_GET['deltab']; ?>';
-		
-		if(tab!=''){
-			var condition = '?tab='+tab;
-		}else if(deltab!=''){
-			var condition = '?deltab='+deltab;
-		}
-	}
-	
-	jQuery.ajax({
-		type: "POST",
-		url: "ajax_"+ content +".php"+condition,
-		data: "",
-
-		success: function(data) {
-			jQuery('#' + content + '_id_link').addClass('content_link_selected');
-			
-			jQuery("#records_tab_wrapperonly").html(data);
-			jQuery('#results').fadeIn(200);
-			
-			jQuery('#pleasewait').hide();
-		}
-	});
+<?php include("includehead.php"); ?>
+<style>
+body{
+	background-color:#262324 !important;
+	font-size:11px;
 }
-</script>
+
+.tbox_z{
+	font-size:11px;
+	background-color:#e2e1e1;
+	border:1px solid #c0bfbf;
+	padding:2px 3px;
+	color:#414243;
+	width:150px;
+}
+
+#signup .label{
+	text-align: right;
+	padding-top:5px;
+	vertical-align:top;
+}
+
+#signup .error{
+	border:1px solid red;
+	width:300px;
+	height:auto;
+	padding:4px;
+	font-size:10px;
+	background-color:#FFD4D4;
+	display:none;
+}
+
+#signup .tbox{
+	border: 1px solid #69B3E3;
+	width:300px;
+	height:20px;
+	padding:4px;
+}
+
+#signup .signme{
+	padding:10px;
+}
+
+#signup #signmebutt{
+	border: 2px solid #69B3E3;
+	padding:10px;
+	background: #D8EBF8;
+	cursor:pointer;
+	color:#333333;
+}												
+
+#signup .tbox focus{
+	border: 2px solid #3997D9;
+	width:300px;
+	height:20px;
+}
+
+#signupwrap{
+	height: 400px;
+	vertical-align:top;
+}
+
+#signupsuccess{
+	display:none;
+}
+
+#signupsuccess td{
+	text-align:center;
+}
+</style>
 </head>
-
 <body>
-
-<div id="outer">
-	<div id="site_content_1" style="padding-bottom:20px;">
-        <div style="float:left; width:1300px; height:40px; padding-top:40px; text-align:center;">
-            <a onclick="displayContent('voyage_estimator');" id='voyage_estimator_id_link' class="content_link_selected">Voyage Estimator</a> &nbsp; 
-            <a onclick="displayContent('fast_search');" id='fast_search_id_link' class="content_link">Fast Search</a> &nbsp; 
-            <a onclick="displayContent('ship_search_register');" id='ship_search_register_id_link' class="content_link">Ship Search / Register</a> &nbsp; 
-            <a onclick="displayContent('fleet_positions');" id='fleet_positions_id_link' class="content_link">Fleet Positions</a> &nbsp; 
-            <a onclick="displayContent('ships_coming_into_ports');" id='ships_coming_into_ports_id_link' class="content_link">Ships Coming Into Ports</a> &nbsp; 
-            <a onclick="displayContent('live_ship_position');" id='live_ship_position_id_link' class="content_link">Live Ship Position</a> &nbsp; 
-            <a onclick="displayContent('ports_intelligence');" id='ports_intelligence_id_link' class="content_link">Ports Intelligence</a> &nbsp; 
-            <a onclick="displayContent('piracy_notices');" id='piracy_notices_id_link' class="content_link">Piracy Notices</a> &nbsp; 
-            <a onclick="displayContent('bunker_pricing');" id='bunker_pricing_id_link' class="content_link">Bunker Pricing</a> &nbsp; 
-            <a onclick="displayContent('weather');" id='weather_id_link' class="content_link">Weather</a>
-        </div>
-        <div style="float:left; width:1300px; height:auto; border-bottom:3px dotted #fff;">&nbsp;</div>
-	</div>
-    <div id="site_content_1">
-    	<div id="results">
-            <div id="records_tab_wrapperonly"></div>
-        </div>
-    </div>
+<div style="width:581px; height:283px; background-image:url(images/bg_login.png); margin:0 auto;">
+	<table width="581" cellpadding="0" cellspacing="0" border="0" style="margin-left:-5px; margin-top:50px;">
+		<tr>
+			<td>
+			<?php if( $activated ){ ?>
+					<div style='font-weight:bold; font-size:18px'>Account Activation Successful!</div><br>
+					You may now login to your account.<br><br>
+			<?php } ?>
+			
+			<form id="form_target" method='post' action='/app/cargospotterlogin.php'>
+			<div style="padding:65px 0px;">
+				<center>
+				<table id='signup'>
+					<?php if($_SESSION['loginerror']){ ?>
+						<tr>
+							<td class='label' colspan=2 style='text-align:center; height:auto; padding-bottom:10px;' align="center">
+								<div class='error' style='display:block; font-size:11px; margin:0 auto;'>
+									<?php
+									echo $_SESSION['loginerror'];
+									unset($_SESSION['loginerror']);
+									?>
+								</div>
+							</td>
+						</tr>
+					<?php } ?>
+					
+					<tr>
+						<td class='form' style="padding-bottom:10px; text-align:left;"><input class='tbox_z' type='text' name='email' value="email" onfocus="if(this.value=='email'){ this.value=''; }" onblur="if(this.value==''){ this.value='email'; }" />
+						</td>
+					</tr>
+					<tr>
+						<td class='form' style="padding-bottom:15px; text-align:left;"><input class='tbox_z' type='password' name='password' value="password" onfocus="if(this.value=='password'){ this.value=''; }" onblur="if(this.value==''){ this.value='password'; }" /></td>
+					</tr>
+				</table>
+				</center>
+			</div>
+			</form>
+			</td>
+		</tr>
+	</table>
 </div>
+<script>
+$(".tbox_z").keypress(function(event) {
+  if ( event.which == 13 ) {
+  	$('#form_target').submit();
+  }
+});
+</script>
+<div align="center">
+	<p align="left">
+    	<?php
+		if($_GET['cookie_email']&&$_GET['cookie_password']){
+			signUpSuccess();
+		}
+		?>
+        <script type="text/javascript">
+		var insertid;
 
-<center>
-<table width="100%" height="100%" id="pleasewait" style="display:none; position:fixed; top:0; left:0; z-index:100; background-image:url('images/overlay.png'); background-position:center; background-attachment:scroll; filter:alpha(opacity=90); opacity:0.9;">
-    <tr>
-        <td align="center" valign="middle"><img src="images/loading.gif" /></td>
-    </tr>
-</table>
-</center>
+		function signUpSuccess(str){
+			r = str.split("|");
+			insertid = r[1];
 
+			jQuery("#signupform").hide();
+			jQuery("#signupsuccess").fadeIn(200);
+		}
+
+		function resendEmail(){
+			jQuery.ajax({
+			  type: 'POST',
+			  url: "registration.php?resend="+insertid,
+			  data:  jQuery("#signupform").serialize(),
+
+			  success: function(data) {
+				if(data.indexOf("success")!=0){
+
+				}else{
+					alert("Email Resent!");
+				}
+
+				jQuery("#resendbutt").val("Resend Activation Email");
+				jQuery("#resendbutt").attr("disabled", false);					
+			  }
+			});	
+		}
+
+		function signUp(obj){
+			jQuery.ajax({
+			  type: 'POST',
+			  url: "registration.php",
+			  data:  jQuery("#signupform").serialize(),
+
+			  success: function(data) {
+				if(data.indexOf("success")!=0){
+					eval(data);
+				}else{
+					signUpSuccess(data);
+				}
+
+				jQuery("#signmebutt").val("Sign Me Up");
+				jQuery("#signmebutt").attr("disabled", false);					
+			  }
+			});
+		}
+
+		jQuery("#signmebutt").click(
+			function(){
+				signUp();
+
+				jQuery("#signmebutt").val("Signing up...");
+				jQuery("#signmebutt").attr("disabled", true);
+			}
+		);
+
+		jQuery("#resendbutt").click(
+			function(){
+				resendEmail();
+
+				jQuery("#resendbutt").val("Resending Activation Email...");
+				jQuery("#resendbutt").attr("disabled", true);
+			}
+		);
+	  </script>
+</div>
 </body>
 </html>

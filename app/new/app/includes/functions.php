@@ -229,7 +229,7 @@ function checklogin(){
 
 	if($user['uid']==""){
 
-		redirectjs("/login.php?login_twice=1");
+		redirectjs("/cargospotter.php");
 
 	}
 

@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>CargoSpotter</title>
+<link rel="shortcut icon" href="../images/global/favicon.ico">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style_ve.css">
 <script type="text/javascript" src="js/jquery.js"></script>

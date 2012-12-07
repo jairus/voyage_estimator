@@ -563,7 +563,7 @@ jQuery( "#messagedialog" ).dialog("close");
             
                             jQuery('#zonedescs div').hide();
                             jQuery("#minimap").show();
-                            jQuery("#minimap")[0].src='map/minimaps/'+zone+".jpg";
+                            jQuery("#minimap")[0].src='map/minimaps/'+zone+".png";
                             jQuery("#minimap")[0].alt = zone;
             
                             if(zone)
@@ -725,12 +725,13 @@ jQuery( "#messagedialog" ).dialog("close");
                       <td width="10">&nbsp;</td>
                       <td>
                       	<select class="input_1" name="dwt_range" id='dwt_range_id' onchange='showZones(jQuery("#suggest1").val(), this.value)'>
-                            <option value="5|35">(5,000-35,000) Handysize</option>
-                            <option value="40|50" selected="selected">(40,000-50,000) Handymax</option>
-                            <option value="50|60">(50,000-60,000) Supramax</option>
-                            <option value="60|90">(60,000-90,000) Panamax</option>
-                            <option value="90|120">(90,000-120,000) Post Panamax</option>
-                            <option value="120|350">(120,000-350,000) Capesize</option>
+                            <option value="0|9">(0-9,999) Minibulk</option>
+							<option value="10|35">(10,000-35,000) Handy</option>
+                            <option value="35|60" selected="selected">(35,000-60,000) Handymax</option>
+                            <option value="60|74">(60,000-74,999) Handysize</option>
+                            <option value="70|110">(70,000-110,000) Over Panamax</option>
+                            <option value="110|150">(110,000-150,000) Small Capesize</option>
+                            <option value="150|550">(150,000+) Large Capesize</option>
                         </select>
 
                         <?php if($tabdata['dwt_range']!=""){ ?>
@@ -754,7 +755,7 @@ jQuery( "#messagedialog" ).dialog("close");
                       <td width="10">&nbsp;</td>
                       <td>
                       	<div id='minimaps'>
-                        	<img id='minimap' style='cursor:pointer; display:none' onclick="openZoneMap(this.alt)" alt='<?php echo $tabdata['zone']; ?>'  src='map/minimaps/<?php echo $tabdata['zone']; ?>.jpg' width="440">
+                        	<img id='minimap' style='cursor:pointer; display:none' onclick="openZoneMap(this.alt)" alt='<?php echo $tabdata['zone']; ?>'  src='map/minimaps/<?php echo $tabdata['zone']; ?>.png' width="440" height="264">
                         	<div style='text-align:center; display:none; margin-bottom:0px' class='click'>Click on the Map to Enlarge</div>
                         </div>
                       </td>

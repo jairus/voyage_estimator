@@ -118,7 +118,8 @@ $t = count($ships);
 
 echo "<table id='pblues' width='1300'>
 	<tr>
-		<th style='background:#BCBCBC; color:#333333; text-align:left; width:300px;'><div style='padding:5px;'>SHIP NAME</div></th>
+		<th style='background:#BCBCBC; color:#333333; text-align:left; width:200px;'><div style='padding:5px;'>SHIP NAME</div></th>
+		<th style='background:#BCBCBC; color:#333333; text-align:center; width:100px;'><div style='padding:5px;'>POSITION</div></th>
 		<th style='background:#BCBCBC; color:#333333; text-align:center; width:1000px;'><div style='padding:5px;'>MAP</div></th></th>
 	</tr>";
 
@@ -232,7 +233,8 @@ if(trim($t)){
 			//END
 			
 			echo "<tr style='background:#e5e5e5;'>
-				<td><div style='padding:5px;'><img src='image.php?b=1&mx=20&p=".$imageb."'> <a class='clickable' onclick='return showShipDetails(\"".$ship['IMO #']."\")' >".$ship['Ship Name']."</a></div></td>";
+				<td><div style='padding:5px;'><img src='image.php?b=1&mx=20&p=".$imageb."'> <a class='clickable' onclick='return showShipDetails(\"".$ship['IMO #']."\")' >".$ship['Ship Name']."</a></div></td>
+				<td align='center'><div style='padding:5px;'><a onclick='showMapFPSingle(\"".$ship['IMO #']."\");' class='clickable'>view position</a></div></td>";
 				
 				if($i3==0){
 					echo "<td rowspan='".$t3."' align='center' valign='top'>

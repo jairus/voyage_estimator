@@ -8,6 +8,10 @@
     <iframe id="mapiframefleet" name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
 
+<div id="mapdialogfleetsingle" title="MAP" style='display:none;'>
+    <iframe id="mapiframefleetsingle" name='mapnamesingle' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
+
 <script type="text/javascript">
 function showShipDetails(imo){
 	jQuery("#shipdetails").dialog("close")
@@ -42,6 +46,9 @@ function ownerDetails(owner, owner_id){
 jQuery("#mapdialogfleet" ).dialog( { autoOpen: false, width: '100%', height: jQuery(window).height()*0.9 });
 jQuery("#mapdialogfleet").dialog("close");
 
+jQuery("#mapdialogfleetsingle" ).dialog( { autoOpen: false, width: '100%', height: jQuery(window).height()*0.9 });
+jQuery("#mapdialogfleetsingle").dialog("close");
+
 function showMapFP(){
     jQuery('#pleasewait').show();
 
@@ -57,6 +64,11 @@ function showMapFP(){
             jQuery('#pleasewait').hide();
         }
     });
+}
+
+function showMapFPSingle(imo_single){
+    jQuery("#mapiframefleetsingle")[0].src='map/map_fleet_position.php?imo='+imo_single;
+    jQuery("#mapdialogfleetsingle").dialog("open");
 }
 
 function fleetPositions(){

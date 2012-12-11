@@ -87,7 +87,7 @@ function jTabs(d){
 }
 
 function shipSearchx(){
-	jQuery.ajax({
+	/*jQuery.ajax({
 		type: 'GET',
 		url: "didyouknow.php?t="+(new Date()).getTime(),
 		data:  "",
@@ -96,7 +96,7 @@ function shipSearchx(){
 			jQuery('#didyouknowcontent').html(data);
 			jQuery( "#didyouknowdialog" ).dialog("open"); 
 		}
-	});
+	});*/
 
 	jQuery("#container-1").html("");
 
@@ -725,11 +725,26 @@ jQuery( "#messagedialog" ).dialog("close");
                       <td width="10">&nbsp;</td>
                       <td>
                       	<select class="input_1" name="dwt_range" id='dwt_range_id' onchange='showZones(jQuery("#suggest1").val(), this.value)'>
-                            <option value="0|9">(0-9,999) Minibulk</option>
-							<option value="10|35">(10,000-35,000) Handy</option>
-                            <option value="35|60" selected="selected">(35,000-60,000) Handymax</option>
-                            <option value="60|74">(60,000-74,999) Handysize</option>
-                            <option value="70|110">(70,000-110,000) Over Panamax</option>
+							<option value="0|5">(0-5,000) Minibulk 1</option>
+							<option value="5|10">(5,000-10,000) Minibulk 2</option>
+							<option value="0|10">(0-10,000) All Minibulk</option>
+							<option value="10|15">(10,000-15,000) Handy 1</option>
+							<option value="15|20">(15,000-20,000) Handy 2</option>
+							<option value="20|25">(20,000-25,000) Handy 3</option>
+							<option value="25|30">(25,000-30,000) Handy 4</option>
+							<option value="30|35">(30,000-35,000) Handy 5</option>
+							<option value="10|35">(10,000-35,000) All Handy</option>
+							<option value="35|40">(35,000-40,000) Handymax 1</option>
+							<option value="40|45">(40,000-45,000) Handymax 2</option>
+							<option value="45|50">(45,000-50,000) Handymax 3</option>
+							<option value="50|55">(50,000-55,000) Handymax 4</option>
+							<option value="55|60">(55,000-60,000) Handymax 5</option>
+							<option value="35|60">(35,000-60,000) All Handymax</option>
+							<option value="60|65">(60,000-65,000) Handysize 1</option>
+							<option value="65|70">(65,000-70,000) Handysize 2</option>
+							<option value="70|75">(70,000-75,000) Handysize 3</option>
+							<option value="60|75">(60,000-75,000) All Handysize</option>
+                            <option value="75|110">(75,000-110,000) Over Panamax</option>
                             <option value="110|150">(110,000-150,000) Small Capesize</option>
                             <option value="150|550">(150,000+) Large Capesize</option>
                         </select>

@@ -35,7 +35,7 @@ if($_GET['search']){
 		
 		$ship = array();
 
-		$ship['name'] = $r[$i]['imo']." - ".$r[$i]['name'];
+		$ship['name'] = $r[$i]['name']." - ".$r[$i]['imo'];
 		$ship['mmsi'] = $r[$i]['mmsi'];
 		$ship['imo'] = $r[$i]['imo'];
 		$ship['dwt'] = $r[$i]['summer_dwt'];
@@ -143,7 +143,8 @@ if($_GET['port']){
 	for($i=0; $i<$t; $i++){
 		$item = array();
 
-		$item['name'] = $r[$i]['name']." - ".$r[$i]['portid'];
+		//$item['name'] = $r[$i]['name']." - ".$r[$i]['portid'];
+		$item['name'] = $r[$i]['name'];
 		$item['latitude'] = $r[$i]['latitude'];
 		$item['longitude'] = $r[$i]['longitude'];
 		$item['portid'] = $r[$i]['portid'];
@@ -3016,7 +3017,7 @@ jQuery(function(){
   	<td width="1000">
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
-			<td class="text_1"><div style="padding:3px;"><b>VESSEL NAME / IMO #</b> &nbsp; <input type="text" id="ship" class="input_1" style="max-width:250px;" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div></td>
+			<td class="text_1"><div style="padding:3px;"><b>VESSEL NAME / IMO #</b> &nbsp; <input type="text" id="ship" class="input_1" style="max-width:300px; width:300px;" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div></td>
 		  </tr>
 		</table>
 		<div id="ship_info" style="display:none;">

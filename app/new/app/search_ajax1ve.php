@@ -1216,34 +1216,94 @@ if($_GET['action']=='getzones'){
 
 	if($_GET['dwt_range']){
 		$dwtr = trim($_GET['dwt_range']);
-
-		if($dwtr=="0|9"){
+		
+		if($dwtr=="0|5"){
 			$dwt_low = 0;
-			$dwt_high = 9999;
-			$dwt_type = "Minibulk";
+			$dwt_high = 5000;
+			$dwt_type = "Minibulk 1";
+		}else if($dwtr=="5|10"){
+			$dwt_low = 5000;
+			$dwt_high = 10000;
+			$dwt_type = "Minibulk 2";
+		}else if($dwtr=="0|10"){
+			$dwt_low = 0;
+			$dwt_high = 10000;
+			$dwt_type = "All Minibulk";
+		}else if($dwtr=="10|15"){
+			$dwt_low = 10000;
+			$dwt_high = 15000;
+			$dwt_type = "Handy 1";
+		}else if($dwtr=="15|20"){
+			$dwt_low = 15000;
+			$dwt_high = 20000;
+			$dwt_type = "Handy 2";
+		}else if($dwtr=="20|25"){
+			$dwt_low = 20000;
+			$dwt_high = 25000;
+			$dwt_type = "Handy 3";
+		}else if($dwtr=="25|30"){
+			$dwt_low = 25000;
+			$dwt_high = 30000;
+			$dwt_type = "Handy 4";
+		}else if($dwtr=="30|35"){
+			$dwt_low = 30000;
+			$dwt_high = 35000;
+			$dwt_type = "Handy 5";
 		}else if($dwtr=="10|35"){
 			$dwt_low = 10000;
-			$dwt_high = 35000;	
-			$dwt_type = "Handy";
+			$dwt_high = 35000;
+			$dwt_type = "All Handy";
+		}else if($dwtr=="35|40"){
+			$dwt_low = 35000;
+			$dwt_high = 40000;
+			$dwt_type = "Handymax 1";
+		}else if($dwtr=="40|45"){
+			$dwt_low = 40000;
+			$dwt_high = 45000;
+			$dwt_type = "Handymax 2";
+		}else if($dwtr=="45|50"){
+			$dwt_low = 45000;
+			$dwt_high = 50000;
+			$dwt_type = "Handymax 3";
+		}else if($dwtr=="50|55"){
+			$dwt_low = 50000;
+			$dwt_high = 55000;
+			$dwt_type = "Handymax 4";
+		}else if($dwtr=="55|60"){
+			$dwt_low = 55000;
+			$dwt_high = 60000;
+			$dwt_type = "Handymax 5";
 		}else if($dwtr=="35|60"){
 			$dwt_low = 35000;
-			$dwt_high = 60000;	
-			$dwt_type = "Handymax";
-		}else if($dwtr=="60|74"){
+			$dwt_high = 60000;
+			$dwt_type = "All Handymax";
+		}else if($dwtr=="60|65"){
 			$dwt_low = 60000;
-			$dwt_high = 74999;	
-			$dwt_type = "Handysize";
-		}else if($dwtr=="70|110"){
+			$dwt_high = 65000;
+			$dwt_type = "Handysize 1";
+		}else if($dwtr=="65|70"){
+			$dwt_low = 65000;
+			$dwt_high = 70000;
+			$dwt_type = "Handysize 2";
+		}else if($dwtr=="70|75"){
 			$dwt_low = 70000;
+			$dwt_high = 75000;
+			$dwt_type = "Handysize 3";
+		}else if($dwtr=="60|75"){
+			$dwt_low = 60000;
+			$dwt_high = 75000;
+			$dwt_type = "All Handysize";
+		}else if($dwtr=="75|110"){
+			$dwt_low = 75000;
 			$dwt_high = 110000;
 			$dwt_type = "Over Panamax";
 		}else if($dwtr=="110|150"){
 			$dwt_low = 110000;
-			$dwt_high = 150000;	
-			$dwt_type = "Small Capesize";	
+			$dwt_high = 150000;
+			$dwt_type = "Small Capesize";
 		}else if($dwtr=="150|550"){
 			$dwt_low = 150000;
-			$dwt_high = 550000;
+			$dwt_high = 555000;
 			$dwt_type = "Large Capesize";
 		}
 
@@ -1288,43 +1348,78 @@ if($_GET['action']=='getzones'){
 	?>
 
 	<select name='zone' id='zones_id' onchange='showMinimap(this.value)' style="width:440px;" class="input_1">
-    	<option value='1' <?php if(!in_array('1', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[1] ALL AUSTRALIA</option>
-		<option value='2' <?php if(!in_array('2', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[2] AUSTRALIA - FAR EAST AND JAPAN</option>
-		<option value='3' <?php if(!in_array('3', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[3] BALTIC</option>
-		<option value='4' <?php if(!in_array('4', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[4] CARRIBEAN</option>
-		<option value='5' <?php if(!in_array('5', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[5] CASPAIN</option>
-		<option value='6' <?php if(!in_array('6', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[6] CHINA - JAPAN - KOREA - TAIWAN</option>
-		<option value='7' <?php if(!in_array('7', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[7] EAST AUSSIE</option>
-		<option value='8' <?php if(!in_array('8', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[8] EAST COAST AFRICA</option>
-		<option value='9' <?php if(!in_array('9', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[9] EAST COAST CANADA</option>
-		<option value='10' <?php if(!in_array('10', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[10] EAST COAST CARIBBEAN</option>
-		<option value='11' <?php if(!in_array('11', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[11] EAST COAST SOUTH AMERICA</option>
-		<option value='12' <?php if(!in_array('12', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[12] FAR EAST</option>
-		<option value='13' <?php if(!in_array('13', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[13] FRENCH ATLANTIC</option>
-		<option value='14' <?php if(!in_array('14', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[14] GREAT LAKES</option>
-		<option value='15' <?php if(!in_array('15', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[15] INDIA</option>
-		<option value='16' <?php if(!in_array('16', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[16] INDIAN OCEAN</option>
-		<option value='17' <?php if(!in_array('17', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[17] MEDITERRANEAN</option>
-		<option value='18' <?php if(!in_array('18', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[18] NEW ZEALAND</option>
-		<option value='19' <?php if(!in_array('19', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[19] NOPAC - NORTHERN PACIFIC</option>
-		<option value='20' <?php if(!in_array('20', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[20] NORTH ATLANTIC OCEAN</option>
-		<option value='21' <?php if(!in_array('21', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[21] NORTH COAST SOUTH AMERICA</option>
-		<option value='22' <?php if(!in_array('22', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[22] NORTH CONTINENT</option>
-		<option value='23' <?php if(!in_array('23', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[23] NORTH SEA</option>
-		<option value='24' <?php if(!in_array('24', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[24] NORTHERN PACIFIC</option>
-		<option value='25' <?php if(!in_array('25', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[25] NORWEGIAN SEA</option>
-		<option value='26' <?php if(!in_array('26', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[26] RED SEA</option>
-		<option value='27' <?php if(!in_array('27', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[27] SOUTH AFRICA</option>
-		<option value='28' <?php if(!in_array('28', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[28] SOUTH ATLANTIC OCEAN</option>
-		<option value='29' <?php if(!in_array('29', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[29] SOUTH EAST ASIA</option>
-		<option value='30' <?php if(!in_array('30', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[30] SOUTH WEST AFRICA</option>
-		<option value='31' <?php if(!in_array('31', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[31] SPAIN ATLANTIC</option>
-		<option value='32' <?php if(!in_array('31', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[32] UK & EIRE</option>
-		<option value='33' <?php if(!in_array('32', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[33] UNITED STATES GULF - USG</option>
-		<option value='34' <?php if(!in_array('33', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[34] US EAST COAST</option>
-		<option value='35' <?php if(!in_array('34', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[35] WEST AUSTRALIA</option>
-		<option value='36' <?php if(!in_array('35', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[36] WEST COAST INDIA</option>
-		<option value='37' <?php if(!in_array('36', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[37] WEST COAST SOUTH AMERICA</option>
+    	<option value='z1' <?php if(!in_array('z1', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z1] ALL AUSTRALIA</option>
+		<option value='z2' <?php if(!in_array('z2', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z2] AUSTRALIA - FAR EAST AND JAPAN</option>
+		<option value='z3' <?php if(!in_array('z3', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z3] BALTIC</option>
+		<option value='z4' <?php if(!in_array('z4', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z4] CARRIBEAN</option>
+		<option value='z5' <?php if(!in_array('z5', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z5] CASPAIN</option>
+		<option value='z6' <?php if(!in_array('z6', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z6] CHINA - JAPAN - KOREA - TAIWAN</option>
+		<option value='z7' <?php if(!in_array('z7', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z7] EAST AUSSIE</option>
+		<option value='z8' <?php if(!in_array('z8', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z8] EAST COAST AFRICA</option>
+		<option value='z9' <?php if(!in_array('z9', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z9] EAST COAST CANADA</option>
+		<option value='z10' <?php if(!in_array('z10', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z10] EAST COAST CARIBBEAN</option>
+		<option value='z11' <?php if(!in_array('z11', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z11] EAST COAST SOUTH AMERICA</option>
+		<option value='z12' <?php if(!in_array('z12', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z12] FAR EAST</option>
+		<option value='z13' <?php if(!in_array('z13', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z13] FRENCH ATLANTIC</option>
+		<option value='z14' <?php if(!in_array('z14', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z14] GREAT LAKES</option>
+		<option value='z15' <?php if(!in_array('z15', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z15] INDIA</option>
+		<option value='z16' <?php if(!in_array('z16', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z16] INDIAN OCEAN</option>
+		<option value='z17' <?php if(!in_array('z17', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z17] MEDITERRANEAN</option>
+		<option value='z18' <?php if(!in_array('z18', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z18] NEW ZEALAND</option>
+		<option value='z19' <?php if(!in_array('z19', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z19] NOPAC - NORTHERN PACIFIC</option>
+		<option value='z20' <?php if(!in_array('z20', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z20] NORTH ATLANTIC OCEAN</option>
+		<option value='z21' <?php if(!in_array('z21', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z21] NORTH COAST SOUTH AMERICA</option>
+		<option value='z22' <?php if(!in_array('z22', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z22] NORTH CONTINENT</option>
+		<option value='z23' <?php if(!in_array('z23', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z23] NORTH SEA</option>
+		<option value='z24' <?php if(!in_array('z24', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z24] NORTHERN PACIFIC</option>
+		<option value='z25' <?php if(!in_array('z25', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z25] NORWEGIAN SEA</option>
+		<option value='z26' <?php if(!in_array('z26', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z26] RED SEA</option>
+		<option value='z27' <?php if(!in_array('z27', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z27] SOUTH AFRICA</option>
+		<option value='z28' <?php if(!in_array('z28', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z28] SOUTH ATLANTIC OCEAN</option>
+		<option value='z29' <?php if(!in_array('z29', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z29] SOUTH EAST ASIA</option>
+		<option value='z30' <?php if(!in_array('z30', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z30] SOUTH WEST AFRICA</option>
+		<option value='z31' <?php if(!in_array('z31', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z31] SPAIN ATLANTIC</option>
+		<option value='z32' <?php if(!in_array('z31', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z32] UK & EIRE</option>
+		<option value='z33' <?php if(!in_array('z32', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z33] UNITED STATES GULF - USG</option>
+		<option value='z34' <?php if(!in_array('z33', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z34] US EAST COAST</option>
+		<option value='z35' <?php if(!in_array('z34', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z35] WEST AUSTRALIA</option>
+		<option value='z36' <?php if(!in_array('z35', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z36] WEST COAST INDIA</option>
+		<option value='z37' <?php if(!in_array('z36', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z37] WEST COAST SOUTH AMERICA</option>
+		<option value='CT1' <?php if(!in_array('CT1', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[CT1] C2 CAPESIZE TUBARO (BRAZIL) TO ROTTERDAM (NETHERLANDS) IRON ORE</option>
+        <option value='CT2' <?php if(!in_array('CT2', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[CT2] C3 CAPESIZE TUBARO (BRAZIL) TO BEILUN - BAOSHAN (CHINA) IRON ORE</option>
+        <option value='NE' <?php if(!in_array('NE', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[NE] C5 NEWCASTLE (AUSTRALIA) TO BEILUN - BOASHAN (CHINA) IRON ORE</option>
+        <option value='CB' <?php if(!in_array('CB', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[CB] C4 CAPESIZE RICHARDS BAY (SOUTH AFRICA) TO ROTTERDAM (NETHERLANDS) COAL</option>
+        <option value='PG' <?php if(!in_array('PG', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[PG] C12 PANAMAX GLADSTONE (AUSTRALIA) TO ROTTERDAM (NETHERLANDS) COAL</option>
+        <option value='PT' <?php if(!in_array('PT', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[PT] P1A PANAMAX TRANSATLANTIC (PRIMARILY LATIN AMERICA TO EUROPE) IRON ORE, COAL, GRAIN</option>
+        <option value='PF' <?php if(!in_array('PF', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[PF] P2A PANAMAX EUROPE TO FAR EAST (PRIMARILY CHINA) via SUEZ CANAL IRON ORE, COAL, GRAIN</option>
+        <option value='PP' <?php if(!in_array('PP', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[PP] PA3A PANAMAX PACIFIC ROUND TRIP (AUSTRALI TO CHINA) IRON ORE, COAL, GRAIN</option>
+        <option value='PV' <?php if(!in_array('PV', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[PV] PA4A PANAMAX FAR E. TO EUROPE VIA PANAMA CANAL (Japan eastbound) COAL, IRON ORE, GRAIN</option>
+        <option value='PE' <?php if(!in_array('PE', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[PE] PERSIAN GULF, BAY OF BENGAL AND ASIA</option>
+        <option value='UA' <?php if(!in_array('UA', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[UA] USA TO ASIA COAL, GRAIN</option>
+        <option value='CO' <?php if(!in_array('CO', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[CO] WEST COAST NORTH & SOUTH AMERICAN GRAIN</option>
+        <option value='EU' <?php if(!in_array('EU', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[EU] EUROPE TO US EAST COAST</option>
+        <option value='CV' <?php if(!in_array('CV', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[CV] C7 CAPESIZE BOLIVAR (VENEZUELA) TO ROTTERDAM (NETHERLANDS) COAL</option>
+        <option value='NS' <?php if(!in_array('NS', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[NS] NORTH & SOUTH AMERICA</option>
+        <option value='AF' <?php if(!in_array('AF', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[AF] AFRICA, MEG & INDIA</option>
+        <option value='AU' <?php if(!in_array('AU', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[AU] AUSTRALIA & ASIA</option>
+        <option value='BA' <?php if(!in_array('BA', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[BA] BALTIC TO ASIA</option>
+        <option value='1' <?php if(!in_array('1', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>  [A] NORTH EAST ASIA TO WEST COAST OF NORTH AMERICA</option>
+		<option value='3' <?php if(!in_array('3', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>  [C] EAST INDIA TO AUSTRALIA TO ASIA TO WEST COAST OF NORTH AMERICA</option>
+		<option value='5' <?php if(!in_array('5', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>  [E] EAST AFRICA TO AG/MEG TO ASIA TO AUSTRALIA TO WC OF NORTH AMERICA</option>
+		<option value='5a' <?php if(!in_array('5a', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[E1] ALL COASTAL PORT(S) THROUGHOUT THE WORLD (OVER 80K NO PANAMA CANAL)</option>
+		<option value='6' <?php if(!in_array('6', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>  [F] WEST AND EAST AFRICA TO AG/MEG TO SEA TO AUSTRALIA</option>
+		<option value='7' <?php if(!in_array('7', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>  [G] ALL COASTAL PORT(S) THROUGHOUT THE WORLD (NO CANALS)</option>
+		<option value='8' <?php if(!in_array('8', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>  [H] WITHIN EUROPE, BLACK SEA, MEDITERRANEAN SEA, NORTH SEA, BALTIC SEA</option>
+		<option value='9' <?php if(!in_array('9', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>  [I] EC OF NORTH AND SOUTH AMERICA TO WC AFRICA AND EUROPE (NO SUEZ)</option>
+		<option value='11' <?php if(!in_array('11', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[K] EAST COAST OF N.AMERICA TO WEST COAST OF EUROPE</option>
+		<option value='12' <?php if(!in_array('12', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[L] EAST AND WEST COAST OF NORTH AND SOUTH AMERICA</option>
+		<option value='12a' <?php if(!in_array('12a', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[L1] EAST COAST OF NORTH AND SOUTH AMERICA</option>
+		<option value='13' <?php if(!in_array('13', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[M] WEST COAST OF NORTH AMERICA TO EAST COAST OF RUSSIA</option>
+		<option value='14' <?php if(!in_array('14', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[N] WEST COAST OF NORTH AND SOUTH AMERICA TO EAST COAST OF RUSSIA</option>
+		<option value='15' <?php if(!in_array('15', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[O] WEST COAST OF NORTH AND SOUTH AMERICA AND EAST AUSTRALIA</option>
+		<option value='16' <?php if(!in_array('16', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[P] EC OF AUSTRALIA TO NORTH EAST ASIA TO WC OF NORTH AMERICA</option>
+		<option value='AG' <?php if(!in_array('AG', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[AG] AFRICA TO MEDITERRANEAN SEA, BLACK SEA, BALTIC SEA TO ARABIAN GULF</option>
+		<option value='AS' <?php if(!in_array('AS', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[AS] INDIA TO ASIA TO AUSTRALIA</option>
 	</select>
     
 	<?php
@@ -1827,33 +1922,93 @@ if(!$_GET['options']){
 	}else if($_GET['dwt_range']){
 		$dwtr = trim($_GET['dwt_range']);
 
-		if($dwtr=="0|9"){
+		if($dwtr=="0|5"){
 			$dwt_low = 0;
-			$dwt_high = 9999;
-			$dwt_type = "Minibulk";
+			$dwt_high = 5000;
+			$dwt_type = "Minibulk 1";
+		}else if($dwtr=="5|10"){
+			$dwt_low = 5000;
+			$dwt_high = 10000;
+			$dwt_type = "Minibulk 2";
+		}else if($dwtr=="0|10"){
+			$dwt_low = 0;
+			$dwt_high = 10000;
+			$dwt_type = "All Minibulk";
+		}else if($dwtr=="10|15"){
+			$dwt_low = 10000;
+			$dwt_high = 15000;
+			$dwt_type = "Handy 1";
+		}else if($dwtr=="15|20"){
+			$dwt_low = 15000;
+			$dwt_high = 20000;
+			$dwt_type = "Handy 2";
+		}else if($dwtr=="20|25"){
+			$dwt_low = 20000;
+			$dwt_high = 25000;
+			$dwt_type = "Handy 3";
+		}else if($dwtr=="25|30"){
+			$dwt_low = 25000;
+			$dwt_high = 30000;
+			$dwt_type = "Handy 4";
+		}else if($dwtr=="30|35"){
+			$dwt_low = 30000;
+			$dwt_high = 35000;
+			$dwt_type = "Handy 5";
 		}else if($dwtr=="10|35"){
 			$dwt_low = 10000;
-			$dwt_high = 35000;	
-			$dwt_type = "Handy";
+			$dwt_high = 35000;
+			$dwt_type = "All Handy";
+		}else if($dwtr=="35|40"){
+			$dwt_low = 35000;
+			$dwt_high = 40000;
+			$dwt_type = "Handymax 1";
+		}else if($dwtr=="40|45"){
+			$dwt_low = 40000;
+			$dwt_high = 45000;
+			$dwt_type = "Handymax 2";
+		}else if($dwtr=="45|50"){
+			$dwt_low = 45000;
+			$dwt_high = 50000;
+			$dwt_type = "Handymax 3";
+		}else if($dwtr=="50|55"){
+			$dwt_low = 50000;
+			$dwt_high = 55000;
+			$dwt_type = "Handymax 4";
+		}else if($dwtr=="55|60"){
+			$dwt_low = 55000;
+			$dwt_high = 60000;
+			$dwt_type = "Handymax 5";
 		}else if($dwtr=="35|60"){
 			$dwt_low = 35000;
-			$dwt_high = 60000;	
-			$dwt_type = "Handymax";
-		}else if($dwtr=="60|74"){
+			$dwt_high = 60000;
+			$dwt_type = "All Handymax";
+		}else if($dwtr=="60|65"){
 			$dwt_low = 60000;
-			$dwt_high = 74999;	
-			$dwt_type = "Handysize";
-		}else if($dwtr=="70|110"){
+			$dwt_high = 65000;
+			$dwt_type = "Handysize 1";
+		}else if($dwtr=="65|70"){
+			$dwt_low = 65000;
+			$dwt_high = 70000;
+			$dwt_type = "Handysize 2";
+		}else if($dwtr=="70|75"){
 			$dwt_low = 70000;
+			$dwt_high = 75000;
+			$dwt_type = "Handysize 3";
+		}else if($dwtr=="60|75"){
+			$dwt_low = 60000;
+			$dwt_high = 75000;
+			$dwt_type = "All Handysize";
+		}else if($dwtr=="75|110"){
+			$dwt_low = 75000;
 			$dwt_high = 110000;
 			$dwt_type = "Over Panamax";
 		}else if($dwtr=="110|150"){
 			$dwt_low = 110000;
-			$dwt_high = 150000;	
-			$dwt_type = "Small Capesize";	
+			$dwt_high = 150000;
+			$dwt_type = "Small Capesize";
 		}else if($dwtr=="150|550"){
 			$dwt_low = 150000;
-			$dwt_high = 550000;
+			$dwt_high = 555000;
 			$dwt_type = "Large Capesize";
 		}
 

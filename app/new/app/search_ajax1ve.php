@@ -1308,7 +1308,7 @@ if($_GET['action']=='getzones'){
 		}
 
 		$zcount = count($zones);
-
+		
 		if($dwt_low>180000){
 			for($zoni=0; $zoni<$zcount; $zoni++){
 				$value = $zones[$zoni];
@@ -1379,12 +1379,12 @@ if($_GET['action']=='getzones'){
 		<option value='z29' <?php if(!in_array('z29', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z29] SOUTH EAST ASIA</option>
 		<option value='z30' <?php if(!in_array('z30', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z30] SOUTH WEST AFRICA</option>
 		<option value='z31' <?php if(!in_array('z31', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z31] SPAIN ATLANTIC</option>
-		<option value='z32' <?php if(!in_array('z31', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z32] UK & EIRE</option>
-		<option value='z33' <?php if(!in_array('z32', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z33] UNITED STATES GULF - USG</option>
-		<option value='z34' <?php if(!in_array('z33', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z34] US EAST COAST</option>
-		<option value='z35' <?php if(!in_array('z34', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z35] WEST AUSTRALIA</option>
-		<option value='z36' <?php if(!in_array('z35', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z36] WEST COAST INDIA</option>
-		<option value='z37' <?php if(!in_array('z36', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z37] WEST COAST SOUTH AMERICA</option>
+		<option value='z32' <?php if(!in_array('z32', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z32] UK & EIRE</option>
+		<option value='z33' <?php if(!in_array('z33', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z33] UNITED STATES GULF - USG</option>
+		<option value='z34' <?php if(!in_array('z34', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z34] US EAST COAST</option>
+		<option value='z35' <?php if(!in_array('z35', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z35] WEST AUSTRALIA</option>
+		<option value='z36' <?php if(!in_array('z36', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z36] WEST COAST INDIA</option>
+		<option value='z37' <?php if(!in_array('z37', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[z37] WEST COAST SOUTH AMERICA</option>
 		<option value='CT1' <?php if(!in_array('CT1', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[CT1] C2 CAPESIZE TUBARO (BRAZIL) TO ROTTERDAM (NETHERLANDS) IRON ORE</option>
         <option value='CT2' <?php if(!in_array('CT2', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[CT2] C3 CAPESIZE TUBARO (BRAZIL) TO BEILUN - BAOSHAN (CHINA) IRON ORE</option>
         <option value='NE' <?php if(!in_array('NE', $zones)) echo "style='color:#909090' "; else { echo "class='blackzone'"; } ?>>[NE] C5 NEWCASTLE (AUSTRALIA) TO BEILUN - BOASHAN (CHINA) IRON ORE</option>

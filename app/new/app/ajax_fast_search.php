@@ -563,7 +563,7 @@ jQuery( "#messagedialog" ).dialog("close");
             
                             jQuery('#zonedescs div').hide();
                             jQuery("#minimap").show();
-                            jQuery("#minimap")[0].src='map/minimaps/'+zone+".png";
+                            jQuery("#minimap")[0].src='map/minimaps/'+zone+".jpg";
                             jQuery("#minimap")[0].alt = zone;
             
                             if(zone)
@@ -770,7 +770,7 @@ jQuery( "#messagedialog" ).dialog("close");
                       <td width="10">&nbsp;</td>
                       <td>
                       	<div id='minimaps'>
-                        	<img id='minimap' style='cursor:pointer; display:none' onclick="openZoneMap(this.alt)" alt='<?php echo $tabdata['zone']; ?>'  src='map/minimaps/<?php echo $tabdata['zone']; ?>.png' width="440" height="264">
+                        	<img id='minimap' style='cursor:pointer; display:none' onclick="openZoneMap(this.alt)" alt='<?php echo $tabdata['zone']; ?>'  src='map/minimaps/<?php echo $tabdata['zone']; ?>.jpg' width="440" height="264">
                         	<div style='text-align:center; display:none; margin-bottom:0px' class='click'>Click on the Map to Enlarge</div>
                         </div>
                       </td>

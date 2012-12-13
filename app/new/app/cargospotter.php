@@ -52,6 +52,20 @@ function displayContent(content){
 		}
 	}
 	
+	if(page=='3'){
+		var tabid = '<?php echo $_GET['tabid']; ?>';
+		
+		if(tabid==""){
+			var condition = '?new_search=3';
+		}else{
+			var condition = '?new_search=3&tabid='+tabid;
+		}
+	}
+	
+	if(page=='4'){
+		var condition = '?new_search=4';
+	}
+	
 	jQuery.ajax({
 		type: "POST",
 		url: "ajax_"+ content +".php"+condition,

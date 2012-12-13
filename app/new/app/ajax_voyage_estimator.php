@@ -35,7 +35,7 @@ if($_GET['search']){
 		
 		$ship = array();
 
-		$ship['name'] = $r[$i]['name']." - ".$r[$i]['imo'];
+		$ship['name'] = $r[$i]['imo']." - ".$r[$i]['name'];
 		$ship['mmsi'] = $r[$i]['mmsi'];
 		$ship['imo'] = $r[$i]['imo'];
 		$ship['dwt'] = $r[$i]['summer_dwt'];
@@ -2943,12 +2943,6 @@ jQuery(function(){
 
 	});
 
-
-
-
-
-	
-
 	jQuery('.number').each(function(){
 
 		fnum = valueF(jQuery(this));
@@ -3002,6 +2996,50 @@ jQuery(function(){
 
 	thread();
 });
+
+function saveScenario(){
+	if(jQuery('#ship').val()){
+		jQuery('#pleasewait').show();
+	
+		jQuery.ajax({
+			type: "POST",
+			url: "ajax.php?new_search=2",
+			data: jQuery("#voyageestimatorform").serialize(),
+	
+			success: function(data) {
+				alert("Scenario Saved!");
+			
+				self.location = "cargospotter.php";
+			}
+		});
+	}else{
+		alert("Please select a ship.");
+	}
+}
+
+function deleteScenario(tabid){
+	if (confirm("Are you sure you want to delete?")) {
+		jQuery('#pleasewait').show();
+		
+		jQuery.ajax({
+			type: "POST",
+			url: "ajax.php?new_search=3&tabid="+tabid,
+			data: jQuery("#voyageestimatorform").serialize(),
+	
+			success: function(data) {
+				alert("Scenario Deleted!");
+			
+				self.location = "cargospotter.php";
+			}
+		});
+	}
+}
+
+function newScenario(){
+	jQuery('#pleasewait').show();
+	
+	self.location = "cargospotter.php?new_search=3";
+}
 </script>
 
 <div id="shipdetails" title="SHIP DETAILS" style='display:none;'>
@@ -3012,12 +3050,209 @@ jQuery(function(){
 	<iframe id='contactiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
 
+<?php
+if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
+	if(isset($_GET['tabid'])){
+		$sql = "SELECT * FROM `_user_tabs` WHERE `id`='".$_GET['tabid']."'";
+		$r = dbQuery($sql, $link);
+	}else{
+		$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='voyageestimator' ORDER BY `dateadded` DESC LIMIT 0,1";
+		$r = dbQuery($sql, $link);
+	}
+	
+	if(trim($r)){
+		$tabid = $r[0]['id'];
+		$tabname = $r[0]['tabname'];
+		$tabdata = unserialize($r[0]['tabdata']);
+		
+		$ship = $tabdata['ship'];
+		$c31 = $tabdata['c31'];
+		$d31 = $tabdata['d31'];
+		$e31 = $tabdata['e31'];
+		$g31 = $tabdata['g31'];
+		$e33 = $tabdata['e33'];
+		$g33 = $tabdata['g33'];
+		$e34 = $tabdata['e34'];
+		$g34 = $tabdata['g34'];
+		$s31 = $tabdata['s31'];
+		$t31 = $tabdata['t31'];
+		$i32 = $tabdata['i32'];
+		$k32 = $tabdata['k32'];
+		$m32 = $tabdata['m32'];
+		$n32 = $tabdata['n32'];
+		$p32 = $tabdata['p32'];
+		$q32 = $tabdata['q32'];
+		$s32 = $tabdata['s32'];
+		$t32 = $tabdata['t32'];
+		$l33 = $tabdata['l33'];
+		$m33 = $tabdata['m33'];
+		$n33 = $tabdata['n33'];
+		$p33 = $tabdata['p33'];
+		$q33 = $tabdata['q33'];
+		$s33 = $tabdata['s33'];
+		$t33 = $tabdata['t33'];
+		$s34 = $tabdata['s34'];
+		$t34 = $tabdata['t34'];
+		$i35 = $tabdata['i35'];
+		$k35 = $tabdata['k35'];
+		$m35 = $tabdata['m35'];
+		$n35 = $tabdata['n35'];
+		$p35 = $tabdata['p35'];
+		$q35 = $tabdata['q35'];
+		$s35 = $tabdata['s35'];
+		$t35 = $tabdata['t35'];
+		$d42 = $tabdata['d42'];
+		$h42 = $tabdata['h42'];
+		$c44 = $tabdata['c44'];
+		$d44 = $tabdata['d44'];
+		$e44 = $tabdata['e44'];
+		$g44 = $tabdata['g44'];
+		$h44 = $tabdata['h44'];
+		$f45 = $tabdata['f45'];
+		$i45 = $tabdata['i45'];
+		$d19 = $tabdata['d19'];
+		$d20 = $tabdata['d20'];
+		$d21 = $tabdata['d21'];
+		$d22 = $tabdata['d22'];
+		$d23 = $tabdata['d23'];
+		$d24 = $tabdata['d24'];
+		$c51 = $tabdata['c51'];
+		$c52 = $tabdata['c52'];
+		$term = $tabdata['term'];
+		$linerterms = $tabdata['linerterms'];
+		$dues1 = $tabdata['dues1'];
+		$dues2 = $tabdata['dues2'];
+		$dues3 = $tabdata['dues3'];
+		$pilotage1 = $tabdata['pilotage1'];
+		$pilotage2 = $tabdata['pilotage2'];
+		$pilotage3 = $tabdata['pilotage3'];
+		$tugs1 = $tabdata['tugs1'];
+		$tugs2 = $tabdata['tugs2'];
+		$tugs3 = $tabdata['tugs3'];
+		$bunkeradjustment1 = $tabdata['bunkeradjustment1'];
+		$bunkeradjustment2 = $tabdata['bunkeradjustment2'];
+		$bunkeradjustment3 = $tabdata['bunkeradjustment3'];
+		$mooring1 = $tabdata['mooring1'];
+		$mooring2 = $tabdata['mooring2'];
+		$mooring3 = $tabdata['mooring3'];
+		$dockage1 = $tabdata['dockage1'];
+		$dockage2 = $tabdata['dockage2'];
+		$dockage3 = $tabdata['dockage3'];
+		$loaddischarge1 = $tabdata['loaddischarge1'];
+		$loaddischarge2 = $tabdata['loaddischarge2'];
+		$loaddischarge3 = $tabdata['loaddischarge3'];
+		$agencyfee1 = $tabdata['agencyfee1'];
+		$agencyfee2 = $tabdata['agencyfee2'];
+		$agencyfee3 = $tabdata['agencyfee3'];
+		$miscellaneous1 = $tabdata['miscellaneous1'];
+		$miscellaneous2 = $tabdata['miscellaneous2'];
+		$miscellaneous3 = $tabdata['miscellaneous3'];
+		$canal = $tabdata['canal'];
+		$cbook1 = $tabdata['cbook1'];
+		$cbook2 = $tabdata['cbook2'];
+		$ctug1 = $tabdata['ctug1'];
+		$ctug2 = $tabdata['ctug2'];
+		$cline1 = $tabdata['cline1'];
+		$cline2 = $tabdata['cline2'];
+		$cmisc1 = $tabdata['cmisc1'];
+		$cmisc2 = $tabdata['cmisc2'];
+		$e74 = $tabdata['e74'];
+		$f74 = $tabdata['f74'];
+		$g74 = $tabdata['g74'];
+		$h74 = $tabdata['h74'];
+		$i74 = $tabdata['i74'];
+		$j74 = $tabdata['j74'];
+		$b80 = $tabdata['b80'];
+		$d80 = $tabdata['d80'];
+		$e80 = $tabdata['e80'];
+		$d85 = $tabdata['d85'];
+		$e85 = $tabdata['e85'];
+		$g85 = $tabdata['g85'];
+	}
+}
+?>
+
+<form method="post" id="voyageestimatorform" name="voyageestimatorform" enctype="multipart/form-data">
+<table width="1300" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+  	<td style="border-bottom:none;"><input type="button" value="Save Scenario" onclick="saveScenario();" style="border:1px solid #666666; background-color:#333333; color:#FFFFFF; cursor:pointer; padding:5px 10px;" /></td>
+  </tr>
+  <tr>
+  	<td>&nbsp;</td>
+  </tr>
+  
+	<?php
+	$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='voyageestimator' ORDER BY `dateadded` DESC";
+	$r = dbQuery($sql, $link);
+	
+	$t = count($r);
+	
+	if(trim($t)){
+		echo '<tr>';
+		echo '<td style="border-bottom:none; padding-top:10px;">';
+		echo '<div style="float:left; width:auto; height:auto; padding-right:30px;"><input type="button" value="+ New Scenario" onclick="newScenario();" style="border:1px solid #666666; background-color:#333333; color:#FFFFFF; cursor:pointer; padding:5px 10px;" /></div>';
+		
+		for($i=0; $i<$t; $i++){
+			$tabdata = unserialize($r[$i]['tabdata']);
+		
+			if($r[$i]['tabname']){
+				if(isset($_GET['tabid'])){
+					if($_GET['tabid']==$r[$i]['id']){
+						echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+						echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+						echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+						echo '</div>';
+					}else{
+						echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+						echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+						echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+						echo '</div>';
+					}
+				}else{
+					if($i==0){
+						if(isset($_GET['new_search'])){
+							if($_GET['new_search']==3){
+								echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
+							}
+						}else{
+							echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+							echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+							echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+							echo '</div>';
+						}
+					}else{
+						echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
+						echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+						echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+						echo '</div>';
+					}
+				}
+			}
+			
+			echo '<div style="float:left; width:auto; height:auto;">&nbsp;&nbsp;</div>';
+		}
+		
+		echo '</td>';
+		echo '</tr>';
+		echo '<tr>';
+		echo '<td>&nbsp;</td>';
+		echo '</tr>';
+	}
+	?>
+	
+  <tr>
+  	<td style="border-bottom:none;">&nbsp;</td>
+  </tr>
+</table>
 <table width="1300" border="0" cellspacing="0" cellpadding="0">
   <tr>
   	<td width="1000">
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
-			<td class="text_1"><div style="padding:3px;"><b>VESSEL NAME / IMO #</b> &nbsp; <input type="text" id="ship" class="input_1" style="max-width:300px; width:300px;" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div></td>
+			<td class="text_1"><div style="padding:3px;"><b>VESSEL NAME / IMO #</b> &nbsp; <input type="hidden" id="tabid" name="tabid" value="<?php echo $tabid; ?>" /><input type="text" id="ship" name="ship" class="input_1" style="max-width:300px; width:300px;" value="<?php echo $ship; ?>" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div></td>
 		  </tr>
 		</table>
 		<div id="ship_info" style="display:none;">
@@ -3119,11 +3354,11 @@ jQuery(function(){
 		  </tr>
 		  <tr id='ballast1' bgcolor="f5f5f5">
 			<td class='general b31' style="padding:3px;"><strong>Ballast</strong></td>
-			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general c31' style="max-width:190px;" /></div></td>
-			<td class="input"><div style="padding:3px;"><input type='text' class='input_1 general d31' style="max-width:170px;" /></div></td>
-			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general e31' style="max-width:190px;" /></div></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general c31' name="c31" value="<?php echo $c31; ?>" style="max-width:190px;" /></div></td>
+			<td class="input"><div style="padding:3px;"><input type='text' class='input_1 general d31' name="d31" value="<?php echo $d31; ?>" style="max-width:170px;" /></div></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general e31' name="e31" value="<?php echo $e31; ?>" style="max-width:190px;" /></div></td>
 			<td class='calculated general f31' style="padding:3px;"></td>
-			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number g31' style="max-width:90px;" /></div></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number g31' name="g31" value="<?php echo $g31; ?>" style="max-width:90px;" /></div></td>
 			<td class="calculated number h31" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='loading1' bgcolor="e9e9e9">
@@ -3139,18 +3374,18 @@ jQuery(function(){
 			<td class='general b33' style="padding:3px;"><strong>Bunker Stop</strong></td>
 			<td class='input general c33' style="padding:3px;"></td>
 			<td class='general d33' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e33' style="max-width:190px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e33' name="e33" value="<?php echo $e33; ?>"  style="max-width:190px;" /></td>
 			<td class="calculated f33" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g33' style="max-width:90px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g33' name="g33" value="<?php echo $g33; ?>"  style="max-width:90px;" /></td>
 			<td class="calculated h33" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='laden1' bgcolor="e9e9e9">
 			<td class='general b34' style="padding:3px;"><strong>Laden</strong></td>
 			<td class='input general c34' style="padding:3px;"></td>
 			<td class='general d34' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e34' style="max-width:190px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e34' name="e34" value="<?php echo $e34; ?>" style="max-width:190px;" /></td>
 			<td class="calculated f34" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g34' style="max-width:90px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g34' name="g34" value="<?php echo $g34; ?>" style="max-width:90px;" /></td>
 			<td class="calculated number h34" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='discharging1' bgcolor="f5f5f5">
@@ -3205,60 +3440,88 @@ jQuery(function(){
 			<td class='number p31' style="padding:3px;"></td>
 			<td class='number q31' style="padding:3px;"></td>
 			<td class="calculated number r31" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s31' style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t31' style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s31' name="s31" value="<?php echo $s31; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t31' name="t31" value="<?php echo $t31; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='loading1' bgcolor="e9e9e9">
 			<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i32' style="max-width:140px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i32' name="i32" value="<?php echo $i32; ?>" style="max-width:140px;" /></td>
 			<td class='number j32' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' name="k32" value="<?php echo $k32; ?>" style="max-width:70px;" /></td>
 			<td class='calculated number l32' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' name="m32" value="<?php echo $m32; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;">
-				<select class='input_1 general n32' style="max-width:100px; min-width:100px;">
-					<option value='SHINC'>SHINC</option>
-					<option value='SATSHINC or SSHINC'>SATSHINC or SSHINC</option>
-					<option value='SHEX'>SHEX</option>
-					<option value='SA/SHEX or SATPMSHEX'>SA/SHEX or SATPMSHEX</option>
-					<option value='SATSHEX or SSHEX'>SATSHEX or SSHEX</option>
-					<option value='SHEXEIU or SHEXEIUBE or SHEXUU'>SHEXEIU or SHEXEIUBE or SHEXUU</option>
-					<option value='FHINC'>FHINC</option>
-					<option value='FHEX'>FHEX</option>
+				<?php
+				$n32arr = array(
+							1=>"SHINC", 
+							2=>"SATSHINC or SSHINC", 
+							3=>"SHEX", 
+							4=>"SA/SHEX or SATPMSHEX", 
+							5=>"SHEXEIU or SHEXEIUBE or SHEXUU", 
+							6=>"FHINC", 
+							7=>"FHEX"
+						);
+						
+				$n32t = count($n32arr);
+				?>
+				<select class='input_1 general n32' name="n32" style="max-width:100px; min-width:100px;">
+					<?php
+					for($n32i=1; $n32i<=$n32t; $n32i++){
+						if($n32arr[$n32i]==$n32){
+							echo '<option value="'.$n32arr[$n32i].'" selected="selected">'.$n32arr[$n32i].'</option>';
+						}else{
+							echo '<option value="'.$n32arr[$n32i].'">'.$n32arr[$n32i].'</option>';
+						}
+					}
+					?>
 				</select>
 			</td>
 			<td class="calculated number o32" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number q32' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' name="p32" value="<?php echo $p32; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number q32' name="q32" value="<?php echo $q32; ?>" style="max-width:70px;" /></td>
 			<td class="number r32" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s32' style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t32' style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s32' name="s32" value="<?php echo $s32; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t32' name="t32" value="<?php echo $t32; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='bunkerstop1' bgcolor="f5f5f5">
 			<td class='general b33' style="padding:3px;"><strong>Bunker Stop</strong></td>
 			<td class='number i33' style="padding:3px;"></td>
 			<td class='number j33' style="padding:3px;"></td>
 			<td class='number k33' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number l33' style="max-width:70px;"  /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m33' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number l33' name="l33" value="<?php echo $l33; ?>" style="max-width:70px;"  /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m33' name="m33" value="<?php echo $m33; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;">
-				<select class='input_1 general n33' style="max-width:100px; min-width:100px;">
-					<option value='SHINC'>SHINC</option>
-					<option value='SATSHINC or SSHINC'>SATSHINC or SSHINC</option>
-					<option value='SHEX'>SHEX</option>
-					<option value='SA/SHEX or SATPMSHEX'>SA/SHEX or SATPMSHEX</option>
-					<option value='SATSHEX or SSHEX'>SATSHEX or SSHEX</option>
-					<option value='SHEXEIU or SHEXEIUBE or SHEXUU'>SHEXEIU or SHEXEIUBE or SHEXUU</option>
-					<option value='FHINC'>FHINC</option>
-					<option value='FHEX'>FHEX</option>
+				<?php
+				$n33arr = array(
+							1=>"SHINC", 
+							2=>"SATSHINC or SSHINC", 
+							3=>"SHEX", 
+							4=>"SA/SHEX or SATPMSHEX", 
+							5=>"SHEXEIU or SHEXEIUBE or SHEXUU", 
+							6=>"FHINC", 
+							7=>"FHEX"
+						);
+						
+				$n33t = count($n33arr);
+				?>
+				<select class='input_1 general n33' name="n33" style="max-width:100px; min-width:100px;">
+					<?php
+					for($n33i=1; $n33i<=$n33t; $n33i++){
+						if($n33arr[$n33i]==$n33){
+							echo '<option value="'.$n33arr[$n33i].'" selected="selected">'.$n33arr[$n33i].'</option>';
+						}else{
+							echo '<option value="'.$n33arr[$n33i].'">'.$n33arr[$n33i].'</option>';
+						}
+					}
+					?>
 				</select>
 			</td>
 			<td class="calculated o33" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q33' style="max-width:70px;"  /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' name="p33" value="<?php echo $p33; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q33' name="q33" value="<?php echo $q33; ?>" style="max-width:70px;"  /></td>
 			<td class="calculated number r33" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number s33' style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t33' style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number s33' name="s33" value="<?php echo $s33; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t33' name="t33" value="<?php echo $t33; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='laden1' bgcolor="e9e9e9">
 			<td class='general b34' style="padding:3px;"><strong>Laden</strong></td>
@@ -3272,34 +3535,48 @@ jQuery(function(){
 			<td class='number p34' style="padding:3px;"></td>
 			<td class='number q34' style="padding:3px;"></td>
 			<td class="calculated number r34" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s34' style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t34' style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s34' name="s34" value="<?php echo $s34; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t34' name="t34" value="<?php echo $t34; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='discharging1' bgcolor="f5f5f5">
 			<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i35' style="max-width:140px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i35' name="i35" value="<?php echo $i35; ?>" style="max-width:140px;" /></td>
 			<td class='number j35' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k35' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k35' name="k35" value="<?php echo $k35; ?>" style="max-width:70px;" /></td>
 			<td class='calculated number l35' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number m35' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number m35' name="m35" value="<?php echo $m35; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;">
-				<select class='input_1 general n35' style="max-width:100px; min-width:100px;">
-					<option value='SHINC'>SHINC</option>
-					<option value='SATSHINC or SSHINC'>SATSHINC or SSHINC</option>
-					<option value='SHEX'>SHEX</option>
-					<option value='SA/SHEX or SATPMSHEX'>SA/SHEX or SATPMSHEX</option>
-					<option value='SATSHEX or SSHEX'>SATSHEX or SSHEX</option>
-					<option value='SHEXEIU or SHEXEIUBE or SHEXUU'>SHEXEIU or SHEXEIUBE or SHEXUU</option>
-					<option value='FHINC'>FHINC</option>
-					<option value='FHEX'>FHEX</option>
+				<?php
+				$n35arr = array(
+							1=>"SHINC", 
+							2=>"SATSHINC or SSHINC", 
+							3=>"SHEX", 
+							4=>"SA/SHEX or SATPMSHEX", 
+							5=>"SHEXEIU or SHEXEIUBE or SHEXUU", 
+							6=>"FHINC", 
+							7=>"FHEX"
+						);
+						
+				$n35t = count($n35arr);
+				?>
+				<select class='input_1 general n35' name="n35" style="max-width:100px; min-width:100px;">
+					<?php
+					for($n35i=1; $n35i<=$n35t; $n35i++){
+						if($n35arr[$n35i]==$n35){
+							echo '<option value="'.$n35arr[$n35i].'" selected="selected">'.$n35arr[$n35i].'</option>';
+						}else{
+							echo '<option value="'.$n35arr[$n35i].'">'.$n35arr[$n35i].'</option>';
+						}
+					}
+					?>
 				</select>
 			</td>
 			<td class="calculated number o35" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q35' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' name="p35" value="<?php echo $p35; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q35' name="q35" value="<?php echo $q35; ?>" style="max-width:70px;" /></td>
 			<td class="number r35" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s35' style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t35' style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s35' name="s35" value="<?php echo $s35; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t35' name="t35" value="<?php echo $t35; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		</table>
 		
@@ -3348,9 +3625,9 @@ jQuery(function(){
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>FO Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='d42' class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='d42' name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;"><b>DO Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='h42' class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='h42' name="h42" value="<?php echo $h42; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
 		  <tr>
 			<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
@@ -3364,12 +3641,12 @@ jQuery(function(){
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td style="padding:3px;"><b>Consumption (MT/day)</b></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='c44' class='input_1 number' style="max-width:100px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='d44' class='input_1 number' style="max-width:100px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='e44' class='input_1 number' style="max-width:100px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='c44' name="c44" value="<?php echo $c44; ?>" class='input_1 number' style="max-width:100px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='d44' name="d44" value="<?php echo $d44; ?>" class='input_1 number' style="max-width:100px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='e44' name="e44" value="<?php echo $e44; ?>" class='input_1 number' style="max-width:100px;" /></td>
 			<td class='input number' id='f44' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='g44' class='input_1 number' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='h44' class='input_1 number' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='g44' name="g44" value="<?php echo $g44; ?>" class='input_1 number' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='h44' name="h44" value="<?php echo $h44; ?>" class='input_1 number' style="max-width:70px;" /></td>
 			<td class='general' id='i44' style="padding:3px;"></td>
 		  </tr>
 		  <tr>
@@ -3377,10 +3654,10 @@ jQuery(function(){
 			<td class="label calculated" id='c45' style="padding:3px;"></td>
 			<td class="label calculated" id='d45' style="padding:3px;"></td>
 			<td class="label calculated" id='e45' style="padding:3px;"></td>
-			<td class='label input' style="padding:3px;"><input type='text' id='f45' class='input_1 number' style="max-width:100px;" /></td>
+			<td class='label input' style="padding:3px;"><input type='text' id='f45' name="f45" value="<?php echo $f45; ?>" class='input_1 number' style="max-width:100px;" /></td>
 			<td class="label calculated" id='g45' style="padding:3px;"></td>
 			<td class="label calculated" id='h45' style="padding:3px;"></td>
-			<td class='label input' style="padding:3px;"><input type='text' id='i45' class='input_1 number' style="max-width:70px;" /></td>
+			<td class='label input' style="padding:3px;"><input type='text' id='i45' name="i45" value="<?php echo $i45; ?>" class='input_1 number' style="max-width:70px;" /></td>
 		  </tr>
 		</table>
 		
@@ -3425,33 +3702,33 @@ jQuery(function(){
 				  <tr bgcolor="e9e9e9">
 					<td width="100" height="34" rowspan="2" style="padding:3px;"><b>Consumption (MT)</b></td>
 					<td width="30" style="padding:3px;"><b>FO</b></td>
-					<td height="12" class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d19' style="max-width:100px;" /></td>
+					<td height="12" class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d19' name="d19" value="<?php echo $d19; ?>" style="max-width:100px;" /></td>
 					<td class='calculated general' id='d19b' style="padding:3px;"></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><b>DO</b></td>
-					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d20' style="max-width:100px;" /></td>
+					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d20' name="d20" value="<?php echo $d20; ?>" style="max-width:100px;" /></td>
 					<td class='calculated general' id='d20b' style="padding:3px;"></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td rowspan="2" style="padding:3px;"><b>Reserve (MT)</b></td>
 					<td style="padding:3px;"><b>FO</b></td>
-					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d21' style="max-width:100px;" /></td>
+					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d21' name="d21" value="<?php echo $d21; ?>" style="max-width:100px;" /></td>
 					<td class='calculated general' id='d21b' style="padding:3px;"></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><b>DO</b></td>
-					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d22' style="max-width:100px;" /></td>
+					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d22' name="d22" value="<?php echo $d22; ?>" style="max-width:100px;" /></td>
 					<td class='calculated general' id='d22b' style="padding:3px;"></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td height="17" colspan="2" style="padding:3px;"><b>FW (MT)</b></td>
-					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d23' style="max-width:100px;" /></td>
+					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d23' name="d23" value="<?php echo $d23; ?>" style="max-width:100px;" /></td>
 					<td class='calculated general' id='d23b' style="padding:3px;"></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td height="18" colspan="2" style="padding:3px;"><b>Constant (MT)</b></td>
-					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d24' style="max-width:100px;" /></td>
+					<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='d24' name="d24" value="<?php echo $d24; ?>" style="max-width:100px;" /></td>
 					<td class='calculated general' id='d24b' style="padding:3px;"></td>
 				  </tr>
 				  <tr>
@@ -3473,23 +3750,38 @@ jQuery(function(){
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td width="122" style="padding:3px;"><strong>Laytime (hrs)</strong></td>
-					<td width="122" class='input' style="padding:3px;"><input type='text' id='c51' class='input_1 number' style="max-width:100px;" /></td>
+					<td width="122" class='input' style="padding:3px;"><input type='text' id='c51' name="c51" value="<?php echo $c51; ?>" class='input_1 number' style="max-width:100px;" /></td>
 					<td width="123" style="padding:3px;"></td>
 					<td width="123" style="padding:3px;"></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Dem ($/day)</strong></td>
-					<td class='input' style="padding:3px;"><input type='text' id='c52' class='input_1 number' style="max-width:100px;" /></td>
+					<td class='input' style="padding:3px;"><input type='text' id='c52' name="c52" value="<?php echo $c52; ?>" class='input_1 number' style="max-width:100px;" /></td>
 					<td style="padding:3px;"><strong>Pro rated</strong></td>
 					<td style="padding:3px;"></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Term</strong></td>
 					<td style="padding:3px;">
-						<select id='term' class="input_1" style="max-width:100px;">
-							<option value='DHDLTSBENDS' >DHDLTSBENDS</option>
-							<option value='DHDATSBENDS' >DHDATSBENDS</option>
-							<option value='DHDWTSBENDS' >DHDWTSBENDS</option>
+						<?php
+						$termarr = array(
+									1=>"DHDLTSBENDS", 
+									2=>"DHDATSBENDS", 
+									3=>"DHDWTSBENDS"
+								);
+								
+						$termt = count($termarr);
+						?>
+						<select id='term' name="term" class="input_1" style="max-width:100px;">
+							<?php
+							for($termi=1; $termi<=$termt; $termi++){
+								if($termarr[$termi]==$term){
+									echo '<option value="'.$termarr[$termi].'" selected="selected">'.$termarr[$termi].'</option>';
+								}else{
+									echo '<option value="'.$termarr[$termi].'">'.$termarr[$termi].'</option>';
+								}
+							}
+							?>
 						</select>
 					</td>
 					<td style="padding:3px;"></td>
@@ -3504,16 +3796,31 @@ jQuery(function(){
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Liner Terms</strong></td>
 					<td style="padding:3px;">
-					<select id='linerterms' class="input_1" style="max-width:100px;">
-						<option value='FILO' >FILO</option>
-						<option value='FILTD' >FILTD</option>
-						<option value='FIOLS' >FIOLS</option>
-						<option value='FIOSLSD' >FIOSLSD</option>
-						<option value='FIOSPT' >FIOSPT</option>
-						<option value='FIOST' >FIOST</option>
-						<option value='LIFO' >LIFO</option>
-						<option value='BTBT' >BTBT</option>
-					</select>
+						<?php
+						$linertermsarr = array(
+									1=>"FILO", 
+									2=>"FILTD", 
+									3=>"FIOLS",
+									4=>"FIOSLSD",
+									5=>"FIOSPT",
+									6=>"FIOST",
+									7=>"LIFO",
+									8=>"BTBT"
+								);
+								
+						$linertermst = count($linertermsarr);
+						?>
+						<select id='linerterms' name="linerterms" class="input_1" style="max-width:100px;">
+							<?php
+							for($linertermsi=1; $linertermsi<=$linertermst; $linertermsi++){
+								if($linertermsarr[$linertermsi]==$linerterms){
+									echo '<option value="'.$linertermsarr[$linertermsi].'" selected="selected">'.$linertermsarr[$linertermsi].'</option>';
+								}else{
+									echo '<option value="'.$linertermsarr[$linertermsi].'">'.$linertermsarr[$linertermsi].'</option>';
+								}
+							}
+							?>
+						</select>
 					</td>
 					<td style="padding:3px;"></td>
 					<td style="padding:3px;"></td>
@@ -3526,57 +3833,57 @@ jQuery(function(){
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Dues ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number dues' style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number dues' style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number dues' style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number dues' name="dues1" value="<?php echo $dues1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number dues' name="dues2" value="<?php echo $dues2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number dues' name="dues3" value="<?php echo $dues3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Pilotage ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number pilotage' style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number pilotage' style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number pilotage' style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number pilotage' name="pilotage1" value="<?php echo $pilotage1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number pilotage' name="pilotage2" value="<?php echo $pilotage2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number pilotage' name="pilotage3" value="<?php echo $pilotage3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Tugs ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number tugs' style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number tugs' style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number tugs' style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number tugs' name="tugs1" value="<?php echo $tugs1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number tugs' name="tugs2" value="<?php echo $tugs2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number tugs' name="tugs3" value="<?php echo $tugs3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Bunker Adjustment ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' name="bunkeradjustment1" value="<?php echo $bunkeradjustment1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' name="bunkeradjustment2" value="<?php echo $bunkeradjustment2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' name="bunkeradjustment3" value="<?php echo $bunkeradjustment3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Mooring ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number mooring' style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number mooring' style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number mooring' style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number mooring' name="mooring1" value="<?php echo $mooring1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number mooring' name="mooring2" value="<?php echo $mooring2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number mooring' name="mooring3" value="<?php echo $mooring3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Dockage ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number dockage' style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number dockage' style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number dockage' style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number dockage' name="dockage1" value="<?php echo $dockage1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number dockage' name="dockage2" value="<?php echo $dockage2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number dockage' name="dockage3" value="<?php echo $dockage3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Load/Discharge ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number loaddischarge' style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number loaddischarge' style="max-width:100px;" /></td>
-					<td height="12" class='input port3' style="height: 12px; padding:3px;"><span class="input port3" style="padding:3px;"><input type='text' class='input_1 number loaddischarge' style="max-width:100px;" /></span></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number loaddischarge' name="loaddischarge1" value="<?php echo $loaddischarge1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number loaddischarge' name="loaddischarge2" value="<?php echo $loaddischarge2; ?>" style="max-width:100px;" /></td>
+					<td height="12" class='input port3' style="height: 12px; padding:3px;"><span class="input port3" style="padding:3px;"><input type='text' class='input_1 number loaddischarge' name="loaddischarge3" value="<?php echo $loaddischarge3; ?>" style="max-width:100px;" /></span></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Agency Fee ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number agencyfee' style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number agencyfee' style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number agencyfee' style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number agencyfee' name="agencyfee1" value="<?php echo $agencyfee1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number agencyfee' name="agencyfee2" value="<?php echo $agencyfee2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number agencyfee' name="agencyfee3" value="<?php echo $agencyfee3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Miscellaneous ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' name="miscellaneous1" value="<?php echo $miscellaneous1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' name="miscellaneous2" value="<?php echo $miscellaneous2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' name="miscellaneous3" value="<?php echo $miscellaneous3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr>
 					<td class="label" style="padding:3px;"><strong>Demurrage ($)</strong></td>
@@ -3601,41 +3908,56 @@ jQuery(function(){
 					<td width="115" style="padding:3px;"><b>Canal</b></td>
 					<td width="100" style="padding:3px;">&nbsp;</td>
 					<td width="125" style="padding:3px;">
-						<select id='canal' class="input_1" style="max-width:100px;">
-							<option value='White Sea - Baltic Canal' >White Sea - Baltic Canal</option>
-							<option value='Rhine - Main- Danube Canal' >Rhine - Main- Danube Canal</option>
-							<option value='Volga - Don Canal' >Volga - Don Canal</option>
-							<option value='Kiel Canal' >Kiel Canal</option>
-							<option value='Houston Ship Channel' >Houston Ship Channel</option>
-							<option value='Alphonse Xlll Canal' >Alphonse Xlll Canal</option>
-							<option value='Panama Canal' >Panama Canal</option>
-							<option value='Danube Black - Sea Canal' >Danube Black - Sea Canal</option>
-							<option value='Manchester Ship Canal' >Manchester Ship Canal</option>
-							<option value='Welland Canal' >Welland Canal</option>
-							<option value='Saint Lawrence Seaway' >Saint Lawrence Seaway</option>
-							<option value='Suez Canal' >Suez Canal</option>
+						<?php
+						$canalarr = array(
+									1=>"White Sea - Baltic Canal", 
+									2=>"Rhine - Main- Danube Canal", 
+									3=>"Volga - Don Canal",
+									4=>"Kiel Canal",
+									5=>"Houston Ship Channel",
+									6=>"Alphonse Xlll Canal",
+									7=>"Panama Canal",
+									8=>"Danube Black - Sea Canal",
+									9=>"Manchester Ship Canal",
+									10=>"Welland Canal",
+									11=>"Saint Lawrence Seaway",
+									12=>"Suez Canal"
+								);
+								
+						$canalt = count($canalarr);
+						?>
+						<select id='canal' name="canal" class="input_1" style="max-width:100px;">
+							<?php
+							for($canali=1; $canali<=$canalt; $canali++){
+								if($canalarr[$canali]==$canal){
+									echo '<option value="'.$canalarr[$canali].'" selected="selected">'.$canalarr[$canali].'</option>';
+								}else{
+									echo '<option value="'.$canalarr[$canali].'">'.$canalarr[$canali].'</option>';
+								}
+							}
+							?>
 						</select>
 					</td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><b>Booking Fee ($)</b></td>
-					<td class='empty' style="padding:3px;"><input type='text' id='cbook1' class='input_1 number' style="max-width:200px;" /></td>
-					<td class='empty' style="padding:3px;"><input type='text' id='cbook2' class='input_1 number' style="max-width:200px;" /></td>
+					<td class='empty' style="padding:3px;"><input type='text' id='cbook1' name="cbook1" value="<?php echo $cbook1; ?>"  class='input_1 number' style="max-width:200px;" /></td>
+					<td class='empty' style="padding:3px;"><input type='text' id='cbook2' name="cbook2" value="<?php echo $cbook2; ?>"  class='input_1 number' style="max-width:200px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><b>Tugs ($)</b></td>
-					<td class='empty' style="padding:3px;"><input type='text' id='ctug1' class='input_1 number' style="max-width:200px;" /></td>
-					<td class='empty' style="padding:3px;"><input type='text' id='ctug2' class='input_1 number' style="max-width:200px;" /></td>
+					<td class='empty' style="padding:3px;"><input type='text' id='ctug1' name="ctug1" value="<?php echo $ctug1; ?>" class='input_1 number' style="max-width:200px;" /></td>
+					<td class='empty' style="padding:3px;"><input type='text' id='ctug2' name="ctug2" value="<?php echo $ctug2; ?>" class='input_1 number' style="max-width:200px;" /></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><b>Line Handlers ($)</b></td>
-					<td class='empty' style="padding:3px;"><input type='text' id='cline1' class='input_1 number' style="max-width:200px;" /></td>
-					<td class='empty' style="padding:3px;"><span class="empty" style="padding:3px;"><input type='text' id='cline2' class='input_1 number' style="max-width:200px;" /></span></td>
+					<td class='empty' style="padding:3px;"><input type='text' id='cline1' name="cline1" value="<?php echo $cline1; ?>" class='input_1 number' style="max-width:200px;" /></td>
+					<td class='empty' style="padding:3px;"><span class="empty" style="padding:3px;"><input type='text' id='cline2' name="cline2" value="<?php echo $cline2; ?>" class='input_1 number' style="max-width:200px;" /></span></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><b>Miscellaneous ($)</b></td>
-					<td class='empty' style="padding:3px;"><input type='text' id='cmisc1' class='input_1 number' style="max-width:200px;" /></td>
-					<td class='empty' style="padding:3px;"><input type='text' id='cmisc2' class='input_1 number' style="max-width:200px;" /></td>
+					<td class='empty' style="padding:3px;"><input type='text' id='cmisc1' name="cmisc1" value="<?php echo $cmisc1; ?>" class='input_1 number' style="max-width:200px;" /></td>
+					<td class='empty' style="padding:3px;"><input type='text' id='cmisc2' name="cmisc2" value="<?php echo $cmisc2; ?>" class='input_1 number' style="max-width:200px;" /></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td class="label" style="padding:3px;"><strong>Total ($)</strong></td>
@@ -3685,12 +4007,12 @@ jQuery(function(){
 			<td class="calculated" id='b74' style="padding:3px;"></td>
 			<td class="calculated" id='c74' style="padding:3px;"><strong>161,150.69</strong></td>
 			<td class="calculated" id='d74' style="padding:3px;"><strong>150,000.00</strong></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='e74' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='f74' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='g74' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='h74' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='i74' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='j74' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='e74' name="e74" value="<?php echo $e74; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='f74' name="f74" value="<?php echo $f74; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='g74' name="g74" value="<?php echo $g74; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='h74' name="h74" value="<?php echo $h74; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='i74' name="i74" value="<?php echo $i74; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number' id='j74' name="j74" value="<?php echo $j74; ?>" style="max-width:70px;" /></td>
 		  </tr>
 		  <tr>
 			<td colspan="9" class="label calculated" id='b75' style="padding:3px;"></td>
@@ -3714,7 +4036,7 @@ jQuery(function(){
 								<td class="label" style="padding:3px;"><strong>Freight Rate ($/MT)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='b80' style="max-width:100px;" /></td>
+								<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='b80' name="b80" value="<?php echo $b80; ?>" style="max-width:100px;" /></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>
@@ -3732,7 +4054,7 @@ jQuery(function(){
 								<td class="label" style="padding:3px;"><strong>Brok. Comm ($)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td style="padding:3px;"><input type='text' class='input_1 number' id='d80' style="max-width:100px;" /></td>
+								<td style="padding:3px;"><input type='text' class='input_1 number' id='d80' name="b80" value="<?php echo $b80; ?>" style="max-width:100px;" /></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>
@@ -3741,7 +4063,7 @@ jQuery(function(){
 								<td class="label" style="padding:3px;"><strong>Add. Comm ($)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td style="padding:3px;"><input type='text' class='input_1 number' id='e80' style="max-width:100px;" /></td>
+								<td style="padding:3px;"><input type='text' class='input_1 number' id='e80' name='e80' value="<?php echo $e80; ?>" style="max-width:100px;" /></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>
@@ -3804,7 +4126,7 @@ jQuery(function(){
 								<td class="label" style="padding:3px;"><strong>Brok. Comm ($)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td style="padding:3px;"><input type='text' class='input_1 number' id='d85' style="max-width:100px;" /></td>
+								<td style="padding:3px;"><input type='text' class='input_1 number' id='d85' name='d85' value="<?php echo $d85; ?>" style="max-width:100px;" /></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>
@@ -3813,7 +4135,7 @@ jQuery(function(){
 								<td class="label" style="padding:3px;"><strong>Add. Comm ($)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td style="padding:3px;"><input type='text' class='input_1 number' id='e85' style="max-width:100px;" /></td>
+								<td style="padding:3px;"><input type='text' class='input_1 number' id='e85' name='e85' value="<?php echo $e85; ?>" style="max-width:100px;" /></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>
@@ -3831,7 +4153,7 @@ jQuery(function(){
 								<td class="label" style="padding:3px;"><strong>TCE ($/day)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='g85' style="max-width:100px;" /></td>
+								<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='g85' name='g85' value="<?php echo $g85; ?>" style="max-width:100px;" /></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>
@@ -3852,3 +4174,4 @@ jQuery(function(){
   </tr>
 </table>
 <div>&nbsp;</div>
+</form>

@@ -132,7 +132,7 @@ if($_GET['wd']){
 if($_GET['port']){
 	$search = $_GET['term'];
 
-	$sql = "select * from    _veson_ports where name like '%".mysql_escape_string($search)."%' limit 20";
+	$sql = "select * from _veson_ports where name like '%".mysql_escape_string($search)."%' limit 20";
 
 	$items = array();
 
@@ -172,11 +172,9 @@ if($_GET['port']){
 
 <script type="text/javascript">
 var dateFormat = function () {
-
 	var	token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
 
 		timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
-
 		timezoneClip = /[^-+\dA-Z]/g,
 
 		pad = function (val, len) {
@@ -193,37 +191,22 @@ var dateFormat = function () {
 	// Regexes and supporting functions are cached through closure
 
 	return function (date, mask, utc) {
-
 		var dF = dateFormat;
-
-
-
 		// You can't provide utc if you skip other args (use the "UTC:" mask prefix)
-
 		if (arguments.length == 1 && Object.prototype.toString.call(date) == "[object String]" && !/\d/.test(date)) {
-
 			mask = date;
 
 			date = undefined;
-
 		}
-
-
-
+		
 		// Passing date through Date applies Date.parse, if necessary
-
 		date = date ? new Date(date) : new Date;
 
 		if (isNaN(date)) throw SyntaxError("invalid date");
-
-
-
+		
 		mask = String(dF.masks[mask] || mask || dF.masks["default"]);
 
-
-
 		// Allow setting the utc argument via the mask
-
 		if (mask.slice(0, 4) == "UTC:") {
 			mask = mask.slice(4);
 
@@ -231,84 +214,45 @@ var dateFormat = function () {
 		}
 
 		var	_ = utc ? "getUTC" : "get",
-
 			d = date[_ + "Date"](),
-
 			D = date[_ + "Day"](),
-
 			m = date[_ + "Month"](),
-
 			y = date[_ + "FullYear"](),
-
 			H = date[_ + "Hours"](),
-
 			M = date[_ + "Minutes"](),
-
 			s = date[_ + "Seconds"](),
-
 			L = date[_ + "Milliseconds"](),
-
 			o = utc ? 0 : date.getTimezoneOffset(),
 
 			flags = {
-
 				d:    d,
-
 				dd:   pad(d),
-
 				ddd:  dF.i18n.dayNames[D],
-
 				dddd: dF.i18n.dayNames[D + 7],
-
 				m:    m + 1,
-
 				mm:   pad(m + 1),
-
 				mmm:  dF.i18n.monthNames[m],
-
 				mmmm: dF.i18n.monthNames[m + 12],
-
 				yy:   String(y).slice(2),
-
 				yyyy: y,
-
 				h:    H % 12 || 12,
-
 				hh:   pad(H % 12 || 12),
-
 				H:    H,
-
 				HH:   pad(H),
-
 				M:    M,
-
 				MM:   pad(M),
-
 				s:    s,
-
 				ss:   pad(s),
-
 				l:    pad(L, 3),
-
 				L:    pad(L > 99 ? Math.round(L / 10) : L),
-
 				t:    H < 12 ? "a"  : "p",
-
 				tt:   H < 12 ? "am" : "pm",
-
 				T:    H < 12 ? "A"  : "P",
-
 				TT:   H < 12 ? "AM" : "PM",
-
 				Z:    utc ? "UTC" : (String(date).match(timezone) || [""]).pop().replace(timezoneClip, ""),
-
 				o:    (o > 0 ? "-" : "+") + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),
-
 				S:    ["th", "st", "nd", "rd"][d % 10 > 3 ? 0 : (d % 100 - d % 10 != 10) * d % 10]
-
 			};
-
-
 
 		return mask.replace(token, function ($0) {
 
@@ -320,124 +264,66 @@ var dateFormat = function () {
 
 }();
 
-
-
 // Some common format strings
-
 dateFormat.masks = {
-
 	"default":      "ddd mmm dd yyyy HH:MM:ss",
-
 	shortDate:      "m/d/yy",
-
 	mediumDate:     "mmm d, yyyy",
-
 	longDate:       "mmmm d, yyyy",
-
 	fullDate:       "dddd, mmmm d, yyyy",
-
 	shortTime:      "h:MM TT",
-
 	mediumTime:     "h:MM:ss TT",
-
 	longTime:       "h:MM:ss TT Z",
-
 	isoDate:        "yyyy-mm-dd",
-
 	isoTime:        "HH:MM:ss",
-
 	isoDateTime:    "yyyy-mm-dd'T'HH:MM:ss",
-
 	isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
-
 };
-
-
 
 // Internationalization strings
-
 dateFormat.i18n = {
-
 	dayNames: [
-
 		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
-
 		"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-
 	],
-
 	monthNames: [
-
 		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-
 		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-
 	]
-
 };
-
-
 
 // For convenience...
-
 Date.prototype.format = function (mask, utc) {
-
 	return dateFormat(this, mask, utc);
-
 };
 
-
-
 function addDays(date, daystoadd){
-
 	if(daystoadd==""){
-
 		daystoadd = 0;
-
 	}
 
 	daystoadd = Math.ceil(daystoadd);
 
-
-
 	if(date){
-
 		date = date.split(",");
-
 		date = date[0].split("/");
-
 		date = date[1]+"/"+date[0]+"/"+date[2];
 
-
-
 		try{
-
 			thedate = new Date(date);
-
 			thedate.setDate(thedate.getDate()+daystoadd);
-
+			
 			return dateFormat(thedate, "dd/mm/yyyy, dddd");
+		}catch(e){
 
 		}
-
-		catch(e){
-
-		}
-
-		
-
 	}
-
 }
-
-
 
 /***************************************************************************************************************************************************/
 
 var suggestions = [];
-
 var imos = [];
-
 var dwts = [];
 var gross_tonnages = [];
 var built_years = [];
@@ -464,11 +350,13 @@ var manager_owner_emails = [];
 var class_societys = [];
 var holdss = [];
 var largest_hatchs = [];
-
 var sfs = [];
 var gimo = "";
 
 $(function(){
+	jQuery( "#miscdialog" ).dialog( { autoOpen: false, width: 1100, height: 500 });
+	jQuery( "#miscdialog" ).dialog("close");
+	
 	jQuery("#shipdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
 	jQuery("#shipdetails").dialog("close");
 	
@@ -478,7 +366,6 @@ $(function(){
 	//ballast
 	$(".d31, .d32, .d33, .d34, .d35").datepicker({ 
 		dateFormat: "dd/mm/yy, DD",
-
 		onSelect: function(date) {
 				jQuery(this).val(date);
 
@@ -517,56 +404,28 @@ $(function(){
 		},
 	});
 
-
-
 	$(".e31").autocomplete({
-
-		
-
 		//define callback to format results
-
 		source: function(req, add){
-
-			
-
 			//pass request to server
-
 			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
 
-				
-
 				//create array for response objects
-
 				var suggestions = [];
 
-				
-
 				//process response
-
-				$.each(data, function(i, val){								
-
+				$.each(data, function(i, val){
 					suggestions.push(val.name);
-
 				});
 
-				
-
 				//pass array to callback
-
 				add(suggestions);
-
 			});
-
 		},
 
-		
-
 		//define select handler
-
 		select: function(e, ui) {
-
 			str = ui.item.value;
-
 			idx = jQuery(this).parent().parent().attr('id');
 
 			setValue(jQuery("#"+idx+" .e31"), str);
@@ -574,67 +433,33 @@ $(function(){
 			ballastCalc(true);
 
 			calculateDates();
-
 		},
-
-
-
 	});
 
-
-
-
-
 	//laden
-
 	$(".c34").autocomplete({
 
-		
-
 		//define callback to format results
-
 		source: function(req, add){
-
-			
-
 			//pass request to server
-
 			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
 
-				
-
 				//create array for response objects
-
 				var suggestions = [];
 
-				
-
 				//process response
-
-				$.each(data, function(i, val){								
-
+				$.each(data, function(i, val){
 					suggestions.push(val.name);
-
 				});
 
-				
-
 				//pass array to callback
-
 				add(suggestions);
-
 			});
-
 		},
 
-		
-
 		//define select handler
-
 		select: function(e, ui) {
-
 			str = ui.item.value;
-
 			idx = jQuery(this).parent().parent().attr('id');
 
 			setValue(jQuery("#"+idx+" .c34"), str);
@@ -642,63 +467,32 @@ $(function(){
 			ladenCalc(true);
 
 			calculateDates();
-
 		},
-
-
-
 	});
 
-
-
 	$(".e34").autocomplete({
-
-		
-
 		//define callback to format results
-
 		source: function(req, add){
 
-			
-
 			//pass request to server
-
 			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
 
-				
-
 				//create array for response objects
-
 				var suggestions = [];
 
-				
-
 				//process response
-
-				$.each(data, function(i, val){								
-
+				$.each(data, function(i, val){
 					suggestions.push(val.name);
-
 				});
 
-				
-
 				//pass array to callback
-
 				add(suggestions);
-
 			});
-
 		},
 
-		
-
 		//define select handler
-
 		select: function(e, ui) {
-
 			str = ui.item.value;
-
 			idx = jQuery(this).parent().parent().attr('id');
 
 			setValue(jQuery("#"+idx+" .e34"), str);
@@ -706,65 +500,33 @@ $(function(){
 			ladenCalc(true);
 
 			calculateDates();
-
 		},
-
-
-
 	});
 
-
-
 	//bunkerstop
-
 	$(".c33").autocomplete({
-
-		
-
 		//define callback to format results
-
 		source: function(req, add){
 
-			
-
 			//pass request to server
-
 			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
 
-				
-
 				//create array for response objects
-
 				var suggestions = [];
 
-				
-
 				//process response
-
-				$.each(data, function(i, val){								
-
+				$.each(data, function(i, val){
 					suggestions.push(val.name);
-
 				});
 
-				
-
 				//pass array to callback
-
 				add(suggestions);
-
 			});
-
 		},
 
-		
-
 		//define select handler
-
 		select: function(e, ui) {
-
 			str = ui.item.value;
-
 			idx = jQuery(this).parent().parent().attr('id');
 
 			setValue(jQuery("#"+idx+" .c33"), str);
@@ -772,63 +534,30 @@ $(function(){
 			bunkerstopCalc2(true);
 
 			calculateDates();
-
 		},
-
-
-
 	});
 
-
-
 	$(".e33").autocomplete({
-
-		
-
 		//define callback to format results
-
 		source: function(req, add){
-
-			
-
 			//pass request to server
-
 			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
-
-				
-
 				//create array for response objects
-
 				var suggestions = [];
 
-				
-
 				//process response
-
 				$.each(data, function(i, val){								
-
 					suggestions.push(val.name);
-
 				});
 
-				
-
 				//pass array to callback
-
 				add(suggestions);
-
 			});
-
 		},
 
-		
-
 		//define select handler
-
 		select: function(e, ui) {
-
 			str = ui.item.value;
-
 			idx = jQuery(this).parent().parent().attr('id');
 
 			setValue(jQuery("#"+idx+" .e33"), str);
@@ -836,135 +565,67 @@ $(function(){
 			bunkerstopCalc2(true);
 
 			calculateDates();
-
 		},
-
-
-
 	});
 
-
-
-
-
 	//loading, Bunker Stop, discharging
-
 	$(".c32, .e32, .c35, .e35").autocomplete({
-
-		
-
 		//define callback to format results
-
 		source: function(req, add){
-
-			
-
 			//pass request to server
-
 			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
 
-				
-
 				//create array for response objects
-
 				var suggestions = [];
 
-				
-
 				//process response
-
-				$.each(data, function(i, val){								
-
+				$.each(data, function(i, val){
 					suggestions.push(val.name);
-
 				});
 
-				
-
 				//pass array to callback
-
 				add(suggestions);
-
 			});
-
 		},
 
 		//define select handler
-
 		select: function(e, ui) {
-
 			calculateDates();
-
 		},
-
-		
-
 	});
 
 	$(".i35").autocomplete({
 
-		
-
 		//define callback to format results
-
 		source: function(req, add){
 
-			
-
 			//pass request to server
-
 			$.getJSON("ajax_voyage_estimator.php?sf=1", req, function(data) {
 
-				
-
 				//create array for response objects
-
 				var suggestions = [];
-
 				var sfs = [];
 
-				
-
 				//process response
-
-				$.each(data, function(i, val){								
-
+				$.each(data, function(i, val){
 					suggestions.push(val.cargo_name);
 
 					sfs[val.cargo_name] = val.sf;
-
 				});
 
-				
-
 				//pass array to callback
-
 				add(suggestions);
-
 			});
-
 		},
 
-		
-
-		
-
 		//define select handler
-
 		select: function(e, ui) {
-
 			str = ui.item.value;
-
 			pcs = str.split("-");
-
 			cargo = pcs[0];
-
 			cargo = jQuery.trim(cargo);
-
 			sf = pcs[1];
-
 			sf = jQuery.trim(sf);
-
 			idx = jQuery(this).parent().parent().attr('id');
 
 			if(sf){
@@ -1209,233 +870,124 @@ function ownerDetails(owner, owner_id){
 	jQuery("#contactdialog").dialog("open");
 }
 
-function addCommas(nStr)
-
-{
-
+function addCommas(nStr){
 	nStr += '';
 
 	x = nStr.split('.');
-
 	x1 = x[0];
-
 	x2 = x.length > 1 ? '.' + x[1] : '';
 
 	var rgx = /(\d+)(\d{3})/;
 
 	while (rgx.test(x1)) {
-
 		x1 = x1.replace(rgx, '$1' + ',' + '$2');
-
 	}
 
 	return x1 + x2;
-
 }
 
-
-
 function fNum(num){
-
 	num = uNum(num);
 
 	if(num==0){
-
 		return "";
-
 	}
 
 	num = num.toFixed(2);
 
 	return addCommas(num);
-
 }
 
 function uNum(num){
-
 	if(!num){
-
 		num = 0;
-
-	}
-
-	else if(isNaN(num)){
-
+	}else if(isNaN(num)){
 		num = num.replace(/[^0-9\.]/g, "");
 
 		if(isNaN(num)){
-
 			num = 0;
-
 		}
-
 	}
 
 	return num*1;
-
 }
-
-
-
-
 
 function valueF(elem){
-
 	if(elem.prop("tagName")=="TD"){
-
 		return fNum(elem.html());
-
-	}
-
-	else{
-
+	}else{
 		return fNum(elem.val());
-
 	}
-
 }
-
-
 
 function valueU(elem){
-
 	if(elem.prop("tagName")=="TD"){
-
 		return uNum(elem.html());
-
-	}
-
-	else{
-
+	}else{
 		return uNum(elem.val());
-
 	}
-
 }
-
-
 
 function setValue(elem, value){
-
 	if(elem.prop("tagName")=="TD"){
-
 		elem.html(value);
-
-	}
-
-	else{
-
+	}else{
 		elem.val(value);
-
 	}
-
 }
-
-
 
 function getValue(elem){
-
 	if(elem.prop("tagName")=="TD"){
-
 		return elem.html();
-
-	}
-
-	else{
-
+	}else{
 		return elem.val();
-
 	}
-
 }
 
-
-
-
-
 function sumF(id1, id2){
-
 	alpha = id1.replace(/[0-9]/ig, "");
-
 	num1 = id1.replace(/[a-z]/ig, "")*1;
-
 	num2 = id2.replace(/[a-z]/ig, "")*1;
-
 	sum = 0;
 
 	for(i=num1; i<=num2; i++){
-
 		sum += valueU(jQuery("#"+alpha+i));
-
 	}
 
 	return fNum(sum);
-
-	
-
 }
 
-
-
 function ballastDistCalc(tmp, to, from, triggerajax){
-
 	fromx = getValue(jQuery(tmp+".c31"));
-
 	pcs = fromx.split("-");
-
 	fromx = pcs[pcs.length-1];
-
 	fromx = jQuery.trim(fromx);
-
-
-
 	tox = getValue(jQuery(tmp+".e31")); 
-
 	pcs = str.split("-");
-
 	tox = pcs[pcs.length-1];
-
 	tox = jQuery.trim(tox);
-
-
-
-
 
 	distance = valueU(jQuery(tmp+".h31"));
 
 	if(to!=tox||from!=fromx||!distance||triggerajax){
-
 		setValue(jQuery(tmp+".h31"), 'calculating...');
 
 		jQuery.ajax({
-
 			type: 'POST',
-
 			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
-
 			data:  '',
 
-			
-
 			success: function(data) {
-
 				setValue(jQuery(tmp+".h31"), fNum(data));
 
 				distance = valueU(jQuery(tmp+".h31"));
-
 				speed = valueU(jQuery(tmp+".g31"));
 
-				
-
 				if(speed == 0){
-
 					speed = 13; //default speed is 13knots
-
+					
 					setValue(jQuery(tmp+".g31"), fNum(speed));
-
 				}
-
-				
 
 				//seadays
 
@@ -1454,18 +1006,9 @@ function ballastDistCalc(tmp, to, from, triggerajax){
 				calculateSeaPortDays();
 
 				calculateDates();
-
-				
-
-				
-
 			}
-
 		});
-
-	}
-
-	else{
+	}else{
 
 		distance = valueU(jQuery(tmp+".h31"));
 
@@ -1481,8 +1024,6 @@ function ballastDistCalc(tmp, to, from, triggerajax){
 
 		}
 
-		
-
 		//seadays
 
 		//jQuery(tmp+".h31") is distance
@@ -1497,8 +1038,6 @@ function ballastDistCalc(tmp, to, from, triggerajax){
 
 		);
 
-
-
 		calculateSeaPortDays();
 
 		calculateDates();
@@ -1507,12 +1046,7 @@ function ballastDistCalc(tmp, to, from, triggerajax){
 
 }
 
-
-
 function bunkerstopDistCalc(tmp, to, from, triggerajax){
-
-
-
 	fromx = getValue(jQuery(tmp+".c33"));
 
 	pcs = fromx.split("-");
@@ -3040,7 +2574,21 @@ function newScenario(){
 	
 	self.location = "cargospotter.php?new_search=3";
 }
+
+function mailItVe(){
+	jQuery("#misciframe")[0].src="misc/email_ve.php";
+	jQuery("#miscdialog").dialog("open");
+}
+
+function printItVe(){
+	jQuery("#misciframe")[0].src="misc/print_ve.php";
+	jQuery("#miscdialog").dialog("open");
+}
 </script>
+
+<div id="miscdialog" title=""  style='display:none'>
+	<iframe id='misciframe' frameborder='0' height="100%" width="1100px" style='border:0px; height:100%; width:1050px;'></iframe>
+</div>
 
 <div id="shipdetails" title="SHIP DETAILS" style='display:none;'>
 	<div id='shipdetails_in'></div>
@@ -3175,7 +2723,15 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 <form method="post" id="voyageestimatorform" name="voyageestimatorform" enctype="multipart/form-data">
 <table width="1300" border="0" cellspacing="0" cellpadding="0">
   <tr>
-  	<td style="border-bottom:none;"><input type="button" value="Save Scenario" onclick="saveScenario();" style="border:1px solid #666666; background-color:#333333; color:#FFFFFF; cursor:pointer; padding:5px 10px;" /></td>
+  	<td style="border-bottom:none;">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td width="125" style="border-bottom:none;"><input type="button" value="Save Scenario" onclick="saveScenario();" style="border:1px solid #666666; background-color:#333333; color:#FFFFFF; cursor:pointer; padding:5px 10px;" /></td>
+				<td width="50" style="border-bottom:none;"><a class='clickable' onclick="printItVe();"><img src='images/print.jpg'></a></td>
+				<td style="border-bottom:none;"><a class='clickable' onclick="mailItVe();"><img src='images/email_small.jpg'></a></td>
+			</tr>
+		</table>
+	</td>
   </tr>
   <tr>
   	<td>&nbsp;</td>
@@ -3354,7 +2910,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 		  </tr>
 		  <tr id='ballast1' bgcolor="f5f5f5">
 			<td class='general b31' style="padding:3px;"><strong>Ballast</strong></td>
-			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general c31' name="c31" value="<?php echo $c31; ?>" style="max-width:190px;" /></div></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general c31' id="c31" name="c31" value="<?php echo $c31; ?>" style="max-width:190px;" /></div></td>
 			<td class="input"><div style="padding:3px;"><input type='text' class='input_1 general d31' name="d31" value="<?php echo $d31; ?>" style="max-width:170px;" /></div></td>
 			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general e31' name="e31" value="<?php echo $e31; ?>" style="max-width:190px;" /></div></td>
 			<td class='calculated general f31' style="padding:3px;"></td>
@@ -4175,3 +3731,9 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 </table>
 <div>&nbsp;</div>
 </form>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#c31").focus();
+	$("#c31").blur();
+});
+</script>

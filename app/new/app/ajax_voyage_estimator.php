@@ -996,1208 +996,649 @@ function ballastDistCalc(tmp, to, from, triggerajax){
 				sea = ( distance / valueU(jQuery(tmp+".g31")) / 24);
 
 				setValue(
-
 					jQuery(tmp+".r31"), 
 
 					fNum(sea)
-
 				);
 
 				calculateSeaPortDays();
-
 				calculateDates();
 			}
 		});
 	}else{
-
 		distance = valueU(jQuery(tmp+".h31"));
-
 		speed = valueU(jQuery(tmp+".g31"));
 
-		
-
 		if(speed == 0){
-
 			speed = 13; //default speed is 13knots
 
 			setValue(jQuery(tmp+".g31"), fNum(speed));
-
 		}
 
 		//seadays
-
 		//jQuery(tmp+".h31") is distance
-
 		sea = ( distance / valueU(jQuery(tmp+".g31")) / 24);
 
 		setValue(
-
 			jQuery(tmp+".r31"), 
 
 			fNum(sea)
-
 		);
 
 		calculateSeaPortDays();
-
 		calculateDates();
-
 	}
-
 }
 
 function bunkerstopDistCalc(tmp, to, from, triggerajax){
 	fromx = getValue(jQuery(tmp+".c33"));
-
 	pcs = fromx.split("-");
-
 	fromx = pcs[pcs.length-1];
-
 	fromx = jQuery.trim(fromx);
-
-
-
 	tox = getValue(jQuery(tmp+".e33")); 
-
 	pcs = str.split("-");
-
 	tox = pcs[pcs.length-1];
-
 	tox = jQuery.trim(tox);
-
-
-
 	distance = valueU(jQuery(tmp+".h33"));
 
-
-
-	
-
 	if(to!=tox||from!=fromx||!distance||triggerajax){
-
 		setValue(jQuery(tmp+".h33"), 'calculating...');
 
 		jQuery.ajax({
-
 			type: 'POST',
-
 			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
-
 			data:  '',
 
-			
-
 			success: function(data) {
-
 				setValue(jQuery(tmp+".h33"), fNum(data));
 
 				distance = valueU(jQuery(tmp+".h33"));
-
 				speed = valueU(jQuery(tmp+".g33"));
 
-				
-
 				if(speed == 0){
-
 					speed = 13; //default speed is 13knots
 
 					setValue(jQuery(tmp+".g33"), fNum(speed));
-
 				}
 
-				
-
 				//seadays
-
 				//jQuery(tmp+".h31") is distance
-
 				sea = ( distance / valueU(jQuery(tmp+".g33")) / 24);
 
 				setValue(
-
 					jQuery(tmp+".r33"), 
 
 					fNum(sea)
-
 				);
 
 				calculateSeaPortDays();
-
 				calculateDates();
-
-				
-
 			}
-
 		});
-
-	}
-
-	else{
-
+	}else{
 		distance = valueU(jQuery(tmp+".h33"));
-
 		speed = valueU(jQuery(tmp+".g33"));
 
-		
-
 		if(speed == 0){
-
 			speed = 13; //default speed is 13knots
 
 			setValue(jQuery(tmp+".g33"), fNum(speed));
-
 		}
 
-		
-
 		//seadays
-
 		//jQuery(tmp+".h31") is distance
-
 		sea = ( distance / valueU(jQuery(tmp+".g33")) / 24);
 
 		setValue(
-
 			jQuery(tmp+".r33"), 
 
 			fNum(sea)
-
 		);
 
 		calculateSeaPortDays();
-
 		calculateDates();
-
 	}
-
 }
 
-
-
 function ladenDistCalc(tmp, to, from, triggerajax){
-
-
-
 	fromx = getValue(jQuery(tmp+".c34"));
-
 	pcs = fromx.split("-");
-
 	fromx = pcs[pcs.length-1];
-
 	fromx = jQuery.trim(fromx);
-
-
-
 	tox = getValue(jQuery(tmp+".e34")); 
-
 	pcs = str.split("-");
-
 	tox = pcs[pcs.length-1];
-
 	tox = jQuery.trim(tox);
-
-
-
 	distance = valueU(jQuery(tmp+".h34"));
-
-
 
 	//alert("triggerajax = "+triggerajax);
 
-
-
 	if(to!=tox||from!=fromx||!distance||triggerajax){
-
 		setValue(jQuery(tmp+".h34"), 'calculating...');
 
 		jQuery.ajax({
-
 			type: 'POST',
-
 			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
-
 			data:  '',
 
-			
-
 			success: function(data) {
-
 				setValue(jQuery(tmp+".h34"), fNum(data));
 
 				distance = valueU(jQuery(tmp+".h34"));
-
 				speed = valueU(jQuery(tmp+".g34"));
 
-				
-
 				if(speed == 0){
-
 					speed = 13; //default speed is 13knots
 
 					setValue(jQuery(tmp+".g34"), fNum(speed));
-
 				}
 
-				
-
 				//seadays
-
 				//jQuery(tmp+".h31") is distance
-
 				sea = ( distance / valueU(jQuery(tmp+".g34")) / 24);
 
 				setValue(
-
 					jQuery(tmp+".r34"), 
 
 					fNum(sea)
-
 				);
 
 				calculateSeaPortDays();
-
 				calculateDates();
-
-				
-
 			}
-
 		});
-
-	}
-
-	else{
-
+	}else{
 		distance = valueU(jQuery(tmp+".h34"));
-
 		speed = valueU(jQuery(tmp+".g34"));
 
-		
-
 		if(speed == 0){
-
 			speed = 13; //default speed is 13knots
 
 			setValue(jQuery(tmp+".g34"), fNum(speed));
-
 		}
 
-		
-
 		//seadays
-
 		//jQuery(tmp+".h31") is distance
-
 		sea = ( distance / valueU(jQuery(tmp+".g34")) / 24);
 
 		setValue(
-
 			jQuery(tmp+".r34"), 
 
 			fNum(sea)
-
 		);
 
 		calculateSeaPortDays();
-
 		calculateDates();
-
 	}
-
 }
 
-
-
 function ballastCalc(triggerajax){
-
 	n = 1;
 
 	while(jQuery("#ballast"+n)[0]){
-
-
-
 		tmp = "#ballast"+n+" ";
 
 		//distance calc
-
 		str = getValue(jQuery(tmp+".c31"));
 
 		if(str){
-
 			pcs = str.split("-");
-
 			from = pcs[pcs.length-1];
-
 			from = jQuery.trim(from);
-
-
-
 			str = getValue(jQuery(tmp+".e31")); 
-
 			pcs = str.split("-");
-
 			to = pcs[pcs.length-1];
-
 			to = jQuery.trim(to);
 
-
-
 			if(from&&to){
-
-
-
-				ballastDistCalc(tmp, to, from, triggerajax);	
-
+				ballastDistCalc(tmp, to, from, triggerajax);
 			}
-
 		}
 
 		n++;
-
 	}
-
 }
 
-
-
 function bunkerstopCalc2(triggerajax){
-
 	n = 1;
 
 	while(jQuery("#bunkerstop"+n)[0]){
-
-
-
 		tmp = "#bunkerstop"+n+" ";
 
 		//distance calc
-
 		str = getValue(jQuery(tmp+".c33"));
 
-		
-
 		if(str){
-
 			pcs = str.split("-");
-
 			from = pcs[pcs.length-1];
-
 			from = jQuery.trim(from);
-
-
-
 			str = getValue(jQuery(tmp+".e33")); 
-
 			pcs = str.split("-");
-
 			to = pcs[pcs.length-1];
-
 			to = jQuery.trim(to);
 
-
-
 			if(from&&to){
-
-
-
 				bunkerstopDistCalc(tmp, to, from, triggerajax);	
-
 			}
-
 		}
 
 		n++;
-
 	}
-
 }
 
-
-
 function ladenCalc(triggerajax){
-
 	n = 1;
 
 	while(jQuery("#laden"+n)[0]){
-
-		
-
 		tmp = "#laden"+n+" ";
 
 		//distance calc
-
 		str = getValue(jQuery(tmp+".c34"));
 
 		if(str){
-
 			pcs = str.split("-");
-
 			from = pcs[pcs.length-1];
-
 			from = jQuery.trim(from);
-
-
-
 			str = getValue(jQuery(tmp+".e34")); 
-
 			pcs = str.split("-");
-
 			to = pcs[pcs.length-1];
-
 			to = jQuery.trim(to);
 
-
-
 			if(from&&to){
-
-
-
 				ladenDistCalc(tmp, to, from, triggerajax);	
-
 			}
-
 		}
 
 		n++;
-
 	}
-
-
-
 }
 
-
-
 function bunkerstopCalc(){
-
 	n = 1;
-
 	seadays = 0;
-
 	portdays = 0;
 
 	while(jQuery("#bunkerstop"+n)[0]){
-
 		tmp = "#bunkerstop"+n+" ";
 
-
-
-		
-
 		//calculate ld
-
 		ld = 0;
-
 		ld = valueU(jQuery(tmp+".l33")) / valueU(jQuery(tmp+".m33")) / 24;
 
 		setValue(jQuery(tmp+".o33"), fNum(ld));
 
-		
-
 		//seadays
-
 		seadays += ( valueU(jQuery(tmp+".s33")) + valueU(jQuery(tmp+".t33")) );
 
-		
-
 		//portdays
-
 		portdays += ( ld + valueU(jQuery(tmp+".p33")) + valueU(jQuery(tmp+".q33")) );
 
 		n++;
-
 	}
 
-
-
 	bunkerstopCalc2();
-
-
-
-
-
 }
 
-
-
 function loadingCalc(){
-
 	n = 1;
-
 	seadays = 0;
-
 	portdays = 0;
 
 	while(jQuery("#loading"+n)[0]){
-
 		tmp = "#loading"+n+" ";
 
-		
-
 		//calculate volume
-
 		volume = valueU(jQuery(tmp+".k32")) * valueU(jQuery(tmp+".j32"));
 
 		setValue(jQuery(tmp+".l32"), fNum(volume));
 
-		
-
 		//calculate ld
-
 		ld = 0;
-
 		ld = valueU(jQuery(tmp+".k32")) / valueU(jQuery(tmp+".m32"));
 
 		setValue(jQuery(tmp+".o32"), fNum(ld));
 
-		
-
 		//seadays
-
 		seadays += ( valueU(jQuery(tmp+".s32")) + valueU(jQuery(tmp+".t32")) );
 
-		
-
 		//portdays
-
 		portdays += ( ld + valueU(jQuery(tmp+".p32")) + valueU(jQuery(tmp+".q32")) );
 
 		n++;
-
 	}
-
-	
-
-
-
-
-
 }
 
-
-
 function dischargingCalc(){
-
 	n = 1;
 
 	while(jQuery("#discharging"+n)[0]){
-
 		tmp = "#discharging"+n+" ";
 
-		
-
 		//calculate volume
-
 		volume = valueU(jQuery(tmp+".k35")) * valueU(jQuery(tmp+".j35"));
 
 		setValue(jQuery(tmp+".l35"), fNum(volume));
 
-		
-
 		//calculate ld
-
 		ld = 0;
-
 		ld = valueU(jQuery(tmp+".k35")) / valueU(jQuery(tmp+".m35"));
 
 		setValue(jQuery(tmp+".o35"), fNum(ld));
 
-		
-
 		n++;
-
 	}
-
-	
-
-
-
 }
 
-
-
 function sumClass(clas){
-
 	sum = 0;
 
 	jQuery("."+clas).each(function(){
-
 		sum += valueU(jQuery(this));
-
 	});
 
 	return sum;
-
 }
-
-
 
 function calculatePortDays(){
-
 	sum = 0;
-
-
 
 	sum += sumClass("o31");
-
 	sum += sumClass("o32");
-
 	sum += sumClass("o33");
-
 	sum += sumClass("o34");
-
 	sum += sumClass("o35");
-
-
-
 	sum += sumClass("p31");
-
 	sum += sumClass("p32");
-
 	sum += sumClass("p33");
-
 	sum += sumClass("p34");
-
 	sum += sumClass("p35");
-
-
-
 	sum += sumClass("q31");
-
 	sum += sumClass("q32");
-
 	sum += sumClass("q33");
-
 	sum += sumClass("q34");
-
 	sum += sumClass("q35");
 
-
-
 	return sum;
-
 }
-
-
-
-
-
-
 
 function calculateSeaDays(){
-
 	sum = 0;
 
-
-
 	sum += sumClass("r31");
-
 	sum += sumClass("r32");
-
 	sum += sumClass("r33");
-
 	sum += sumClass("r34");
-
 	sum += sumClass("r35");
-
-
-
 	sum += sumClass("s31");
-
 	sum += sumClass("s32");
-
 	sum += sumClass("s33");
-
 	sum += sumClass("s34");
-
 	sum += sumClass("s35");
-
-
-
-
 	sum += sumClass("t31");
-
 	sum += sumClass("t32");
-
 	sum += sumClass("t33");
-
 	sum += sumClass("t34");
-
 	sum += sumClass("t35");
 
-
-
 	return sum;
-
 }
-
-
 
 function calculateSeaPortDays(){
-
 	totalportdays = calculatePortDays();
-
 	totalseadays = calculateSeaDays();
 
-
-
 	setValue(jQuery("#r36"), fNum(totalseadays));
-
 	setValue(jQuery("#o36"), fNum(totalportdays));
-
 	setValue(jQuery("#o37"), fNum(totalseadays+totalportdays));
-
 }
 
-
-
 function calculateDates(){
-
 	//ballast
-
 	n = 1;
 
 	while(jQuery("#ballast"+n)[0]){
-
-
-
 		tmp = "#ballast"+n+" ";
 
 		//initial date
-
 		date = getValue(jQuery(tmp+".d31"));
 
-
-
 		//port days and sea days
-
 		days = valueU(jQuery(tmp+".o31")) + valueU(jQuery(tmp+".p31")) + valueU(jQuery(tmp+".q31")) + valueU(jQuery(tmp+".r31")) + valueU(jQuery(tmp+".s31")) + valueU(jQuery(tmp+".t31"));
-
-
 
 		adate = addDays(date, days);
 
 		setValue(jQuery(tmp+".f31"), adate);
 
-
-
 		n++;
-
 	}
 
-
-
 	c45 = uNum(getValue(jQuery("#c44")))*days;
-
 	c46 = c45*uNum(getValue(jQuery("#d42")));
 
 	setValue(jQuery("#c45"), fNum(c45));
-
 	setValue(jQuery("#c46"), fNum(c46));
 
-
-
-
-
 	//loading
-
 	n = 1;
 
 	while(jQuery("#loading"+n)[0]){
-
-		
-
 		num = 32;
-
 		
-
 		tmp = "#ballast"+n+" ";
-
 		date = getValue(jQuery(tmp+".f"+(num-1)));
-
 		portto = getValue(jQuery(tmp+".e"+(num-1)));
-
-
-
+		
 		tmp = "#loading"+n+" ";
 
-		
-
 		//ports
-
 		setValue(jQuery(tmp+".c"+num), portto);
-
 		setValue(jQuery(tmp+".e"+num), portto);
 
-
-
 		//dates
-
 		setValue(jQuery(tmp+".d"+num), date);
 
 		date = getValue(jQuery(tmp+".d"+num));
 
 		//port days and sea days
-
 		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
 
 		adate = addDays(date, days);
 
 		setValue(jQuery(tmp+".f"+num), adate);
 
-		
-
 		n++;
-
 	}
-
-
-
+	
 	//bunkerstop
-
 	n = 1;
 
 	while(jQuery("#bunkerstop"+n)[0]){
-
-		
-
 		num = 33;
-
 		
-
 		tmp = "#loading"+n+" ";
-
 		date = getValue(jQuery(tmp+".f"+(num-1)));
-
 		portto = getValue(jQuery(tmp+".e"+(num-1)));
-
-
 
 		tmp = "#bunkerstop"+n+" ";
 
-		
-
 		//ports
-
 		setValue(jQuery(tmp+".c"+num), portto);
 
-
-
 		//dates
-
 		setValue(jQuery(tmp+".d"+num), date);
 
 		date = getValue(jQuery(tmp+".d"+num));
 
 		//port days and sea days
-
 		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
 
 		adate = addDays(date, days);
 
 		setValue(jQuery(tmp+".f"+num), adate);
-
 		
-
 		n++;
-
 	}
 
-
-
 	//laden
-
 	n = 1;
 
 	while(jQuery("#laden"+n)[0]){
-
-		
-
 		num = 34;
 
-		
-
 		tmp = "#bunkerstop"+n+" ";
-
 		date = getValue(jQuery(tmp+".f"+(num-1)));
-
 		portto = getValue(jQuery(tmp+".e"+(num-1)));
-
-
 
 		tmp = "#laden"+n+" ";
 
-		
-
 		//ports
-
 		setValue(jQuery(tmp+".c"+num), portto);
 
-
-
 		//dates
-
 		setValue(jQuery(tmp+".d"+num), date);
 
 		date = getValue(jQuery(tmp+".d"+num));
 
 		//port days and sea days
-
 		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
 
 		adate = addDays(date, days);
 
 		setValue(jQuery(tmp+".f"+num), adate);
 
-		
-
 		n++;
-
 	}
 
-
-
 	d45 = uNum(getValue(jQuery("#d44")))*days;
-
 	d46 = d45*uNum(getValue(jQuery("#d42")));
 
 	setValue(jQuery("#d45"), fNum(d45));
-
 	setValue(jQuery("#d46"), fNum(d46));
 
-
-
 	//discharging
-
 	n = 1;
 
 	while(jQuery("#discharging"+n)[0]){
-
-		
-
 		num = 35;
 
-		
-
 		tmp = "#laden"+n+" ";
-
 		date = getValue(jQuery(tmp+".f"+(num-1)));
-
 		portto = getValue(jQuery(tmp+".e"+(num-1)));
-
-
 
 		tmp = "#discharging"+n+" ";
 
-		
-
 		//ports
-
 		setValue(jQuery(tmp+".c"+num), portto);
-
 		setValue(jQuery(tmp+".e"+num), portto);
-
-
-
+		
 		//dates
-
 		setValue(jQuery(tmp+".d"+num), date);
 
 		date = getValue(jQuery(tmp+".d"+num));
 
 		//port days and sea days
-
 		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
 
 		adate = addDays(date, days);
 
 		setValue(jQuery(tmp+".f"+num), adate);
 
-		
-
 		n++;
-
 	}
-
-
 
 	portdays = calculatePortDays();
 
 	e45 = uNum(getValue(jQuery("#e44")))*portdays;
-
 	e46 = e45*uNum(getValue(jQuery("#d42")));
 
 	setValue(jQuery("#e45"), fNum(e45));
-
 	setValue(jQuery("#e46"), fNum(e46));
 
-
-
 	f45 = uNum(getValue(jQuery("#f45")));
-
 	f46 = f45*uNum(getValue(jQuery("#d42")));
 
 	setValue(jQuery("#f46"), fNum(f46));
 
-
-
 	c47 = c46+d46+e46+f46;
-
 	setValue(jQuery("#c47"), fNum(c47));
 
-
-
 	d19b = c45+d45+e45;
-
 	setValue(jQuery("#d19b"), fNum(d19b));
 
-
-
 	d21b = f45;
-
 	setValue(jQuery("#d21b"), fNum(d21b));
 
-
-
 	seadays = calculateSeaDays();
-
 	g45 = uNum(getValue(jQuery("#g44")))*seadays;
 
 	setValue(jQuery("#g45"), fNum(g45));
-
 	g46 = g45 * uNum(getValue(jQuery("#h42")));
-
 	setValue(jQuery("#g46"), fNum(g46));
 
-
-
 	h45 = uNum(getValue(jQuery("#h44")))*(portdays+uNum(getValue(jQuery("#s34"))));
-
 	setValue(jQuery("#h45"), fNum(h45));
 
 	h46 = h45 * uNum(getValue(jQuery("#h42")));
-
-
-
 	setValue(jQuery("#h46"), fNum(h46));
 
-
-
 	i46 = uNum(getValue(jQuery("#h42")))*uNum(getValue(jQuery("#i45")));
-
 	setValue(jQuery("#i46"), fNum(i46));
 
-
-
 	g47 = g46+h46+i46;
-
 	setValue(jQuery("#g47"), fNum(g47));	
 
-
-
 	d20b = g45+h45;
-
 	setValue(jQuery("#d20b"), fNum(d20b));
 
-
-
 	d22b = uNum(getValue(jQuery("#i45")));
-
 	setValue(jQuery("#d22b"), fNum(d22b));	
 
-	
-
 	//b74
-
 	b74 = c47 + g47
-
 	setValue(jQuery("#b74"), fNum(b74));
-
-	
-
-	
-
 }
 
-
-
 function setupPortInterface(){
-
 	setValue(jQuery("#port1"), getValue(jQuery(".e31")));
-
 	setValue(jQuery("#port2"), getValue(jQuery(".e33")));
-
 	setValue(jQuery("#port3"), getValue(jQuery(".e34")));
 
-	
-
 	jQuery(".port1 input").hide();
-
 	jQuery(".port2 input").hide();
-
 	jQuery(".port3 input").hide();
 
-	
-
 	if(getValue(jQuery("#port1"))){
-
 		jQuery(".port1 input").show();
-
 	}
 
 	if(getValue(jQuery("#port2"))){
-
 		jQuery(".port2 input").show();
-
 	}
 
 	if(getValue(jQuery("#port3"))){
-
 		jQuery(".port3 input").show();
-
 	}
-
-	
 
 	port1 = 0;
 
 	jQuery(".port1 input").each(function(){
-
 		if(jQuery(this).is(":visible")){
-
 			port1 += uNum(getValue(jQuery(this)));
-
 		} 
-
 	});
-
-	
 
 	port2 = 0;
-
 	jQuery(".port2 input").each(function(){
-
 		if(jQuery(this).is(":visible")){
-
 			port2 += uNum(getValue(jQuery(this)));
-
 		} 
-
 	});
 
-	
-
 	port3 = 0;
-
 	jQuery(".port3 input").each(function(){
-
 		if(jQuery(this).is(":visible")){
-
 			port3 += uNum(getValue(jQuery(this)));
-
 		} 
-
 	});
 
 	o32 = uNum(getValue(jQuery(".o32")));
@@ -2298,32 +1739,22 @@ function result1(){
 
 function result2(){
 	//=G85*O37
-
 	f85 = uNum(getValue(jQuery("#g85"))) * uNum(getValue(jQuery("#o37")));
-
 	setValue(jQuery("#f85"), fNum(f85));
 
-	
-
 	//=(F85+B75)/(100-D85-E85)*100
-
 	c85 = (uNum(getValue(jQuery("#f85"))) + uNum(getValue(jQuery("#b75"))) ) / (100 - uNum(getValue(jQuery("#d85"))) - uNum(getValue(jQuery("#e85")))) * 100;
-
 	setValue(jQuery("#c85"), fNum(c85));
 
 	b85 = uNum(getValue(jQuery("#c85"))) / uNum(getValue(jQuery(".k32")));
-
 	setValue(jQuery("#b85"), fNum(b85));
 
 	//=(D85+E85)/100*C85
-
 	d86 = ( uNum(getValue(jQuery("#d85"))) + uNum(getValue(jQuery("#e85"))) ) / 100 * uNum(getValue(jQuery("#c85")));
-
 	setValue(jQuery("#d86"), fNum(d86));
 }
 
 var totalseadays = 0;
-
 var totalportdays = 0;
 
 function thread(skip){
@@ -2576,12 +2007,270 @@ function newScenario(){
 }
 
 function mailItVe(){
-	jQuery("#misciframe")[0].src="misc/email_ve.php";
+	var imo = jQuery('#ship').val().substring(0,7);
+	var c31 = jQuery('#c31').val();
+	var d31 = jQuery('#d31').val();
+	var e31 = jQuery('#e31').val();
+	var g31 = jQuery('#g31').val();
+	var e33 = jQuery('#e33').val();
+	var g33 = jQuery('#g33').val();
+	var e34 = jQuery('#e34').val();
+	var g34 = jQuery('#g34').val();
+	var s31 = jQuery('#s31').val();
+	var t31 = jQuery('#t31').val();
+	var i32 = jQuery('#i32').val();
+	var k32 = jQuery('#k32').val();
+	var m32 = jQuery('#m32').val();
+	var n32 = jQuery('#n32').val();
+	var p32 = jQuery('#p32').val();
+	var q32 = jQuery('#q32').val();
+	var s32 = jQuery('#s32').val();
+	var t32 = jQuery('#t32').val();
+	var l33 = jQuery('#l33').val();
+	var m33 = jQuery('#m33').val();
+	var n33 = jQuery('#n33').val();
+	var p33 = jQuery('#p33').val();
+	var q33 = jQuery('#q33').val();
+	var s33 = jQuery('#s33').val();
+	var t33 = jQuery('#t33').val();
+	var s34 = jQuery('#s34').val();
+	var t34 = jQuery('#t34').val();
+	var i35 = jQuery('#i35').val();
+	var k35 = jQuery('#k35').val();
+	var m35 = jQuery('#m35').val();
+	var n35 = jQuery('#n35').val();
+	var p35 = jQuery('#p35').val();
+	var q35 = jQuery('#q35').val();
+	var s35 = jQuery('#s35').val();
+	var t35 = jQuery('#t35').val();
+	var d42 = jQuery('#d42').val();
+	var h42 = jQuery('#h42').val();
+	var c44 = jQuery('#c44').val();
+	var d44 = jQuery('#d44').val();
+	var e44 = jQuery('#e44').val();
+	var g44 = jQuery('#g44').val();
+	var h44 = jQuery('#h44').val();
+	var f45 = jQuery('#f45').val();
+	var i45 = jQuery('#i45').val();
+	var d19 = jQuery('#d19').val();
+	var d20 = jQuery('#d20').val();
+	var d21 = jQuery('#d21').val();
+	var d22 = jQuery('#d22').val();
+	var d23 = jQuery('#d23').val();
+	var d24 = jQuery('#d24').val();
+	var c51 = jQuery('#c51').val();
+	var c52 = jQuery('#c52').val();
+	var term = jQuery('#term').val();
+	var linerterms = jQuery('#linerterms').val();
+	var dues1 = jQuery('#dues1').val();
+	var dues2 = jQuery('#dues2').val();
+	var dues3 = jQuery('#dues3').val();
+	var pilotage1 = jQuery('#pilotage1').val();
+	var pilotage2 = jQuery('#pilotage2').val();
+	var pilotage3 = jQuery('#pilotage3').val();
+	var tugs1 = jQuery('#tugs1').val();
+	var tugs2 = jQuery('#tugs2').val();
+	var tugs3 = jQuery('#tugs3').val();
+	var bunkeradjustment1 = jQuery('#bunkeradjustment1').val();
+	var bunkeradjustment2 = jQuery('#bunkeradjustment2').val();
+	var bunkeradjustment3 = jQuery('#bunkeradjustment3').val();
+	var mooring1 = jQuery('#mooring1').val();
+	var mooring2 = jQuery('#mooring2').val();
+	var mooring3 = jQuery('#mooring3').val();
+	var dockage1 = jQuery('#dockage1').val();
+	var dockage2 = jQuery('#dockage2').val();
+	var dockage3 = jQuery('#dockage3').val();
+	var loaddischarge1 = jQuery('#loaddischarge1').val();
+	var loaddischarge2 = jQuery('#loaddischarge2').val();
+	var loaddischarge3 = jQuery('#loaddischarge3').val();
+	var agencyfee1 = jQuery('#agencyfee1').val();
+	var agencyfee2 = jQuery('#agencyfee2').val();
+	var agencyfee3 = jQuery('#agencyfee3').val();
+	var miscellaneous1 = jQuery('#miscellaneous1').val();
+	var miscellaneous2 = jQuery('#miscellaneous2').val();
+	var miscellaneous3 = jQuery('#miscellaneous3').val();
+	var canal = jQuery('#canal').val();
+	var cbook1 = jQuery('#cbook1').val();
+	var cbook2 = jQuery('#cbook2').val();
+	var ctug1 = jQuery('#ctug1').val();
+	var ctug2 = jQuery('#ctug2').val();
+	var cline1 = jQuery('#cline1').val();
+	var cline2 = jQuery('#cline2').val();
+	var cmisc1 = jQuery('#cmisc1').val();
+	var cmisc2 = jQuery('#cmisc2').val();
+	var e74 = jQuery('#e74').val();
+	var f74 = jQuery('#f74').val();
+	var g74 = jQuery('#g74').val();
+	var h74 = jQuery('#h74').val();
+	var i74 = jQuery('#i74').val();
+	var j74 = jQuery('#j74').val();
+	var b80 = jQuery('#b80').val();
+	var d80 = jQuery('#d80').val();
+	var e80 = jQuery('#e80').val();
+	var d85 = jQuery('#d85').val();
+	var e85 = jQuery('#e85').val();
+	var g85 = jQuery('#g85').val();
+	
+	//CALCULATED
+	var f31 = jQuery('#f31').text();
+	var h31 = jQuery('#h31').text();
+	var c32 = jQuery('#c32').text();
+	var d32 = jQuery('#d32').text();
+	var e32 = jQuery('#e32').text();
+	var f32 = jQuery('#f32').text();
+	var g32 = jQuery('#g32').text();
+	var h32 = jQuery('#h32').text();
+	var c33 = jQuery('#c33').text();
+	var d33 = jQuery('#d33').text();
+	var f33 = jQuery('#f33').text();
+	var h33 = jQuery('#h33').text();
+	var c34 = jQuery('#c34').text();
+	var d34 = jQuery('#d34').text();
+	var f34 = jQuery('#f34').text();
+	var h34 = jQuery('#h34').text();
+	var c35 = jQuery('#c35').text();
+	var d35 = jQuery('#d35').text();
+	var e35 = jQuery('#e35').text();
+	var f35 = jQuery('#f35').text();
+	var g35 = jQuery('#g35').text();
+	var h35 = jQuery('#h35').text();
+	//END OF CALCULATED
+
+	jQuery("#misciframe")[0].src="misc/email_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&d42="+d42+"&h42="+h42+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35;
 	jQuery("#miscdialog").dialog("open");
 }
 
 function printItVe(){
-	jQuery("#misciframe")[0].src="misc/print_ve.php";
+	var imo = jQuery('#ship').val().substring(0,7);
+	var c31 = jQuery('#c31').val();
+	var d31 = jQuery('#d31').val();
+	var e31 = jQuery('#e31').val();
+	var g31 = jQuery('#g31').val();
+	var e33 = jQuery('#e33').val();
+	var g33 = jQuery('#g33').val();
+	var e34 = jQuery('#e34').val();
+	var g34 = jQuery('#g34').val();
+	var s31 = jQuery('#s31').val();
+	var t31 = jQuery('#t31').val();
+	var i32 = jQuery('#i32').val();
+	var k32 = jQuery('#k32').val();
+	var m32 = jQuery('#m32').val();
+	var n32 = jQuery('#n32').val();
+	var p32 = jQuery('#p32').val();
+	var q32 = jQuery('#q32').val();
+	var s32 = jQuery('#s32').val();
+	var t32 = jQuery('#t32').val();
+	var l33 = jQuery('#l33').val();
+	var m33 = jQuery('#m33').val();
+	var n33 = jQuery('#n33').val();
+	var p33 = jQuery('#p33').val();
+	var q33 = jQuery('#q33').val();
+	var s33 = jQuery('#s33').val();
+	var t33 = jQuery('#t33').val();
+	var s34 = jQuery('#s34').val();
+	var t34 = jQuery('#t34').val();
+	var i35 = jQuery('#i35').val();
+	var k35 = jQuery('#k35').val();
+	var m35 = jQuery('#m35').val();
+	var n35 = jQuery('#n35').val();
+	var p35 = jQuery('#p35').val();
+	var q35 = jQuery('#q35').val();
+	var s35 = jQuery('#s35').val();
+	var t35 = jQuery('#t35').val();
+	var d42 = jQuery('#d42').val();
+	var h42 = jQuery('#h42').val();
+	var c44 = jQuery('#c44').val();
+	var d44 = jQuery('#d44').val();
+	var e44 = jQuery('#e44').val();
+	var g44 = jQuery('#g44').val();
+	var h44 = jQuery('#h44').val();
+	var f45 = jQuery('#f45').val();
+	var i45 = jQuery('#i45').val();
+	var d19 = jQuery('#d19').val();
+	var d20 = jQuery('#d20').val();
+	var d21 = jQuery('#d21').val();
+	var d22 = jQuery('#d22').val();
+	var d23 = jQuery('#d23').val();
+	var d24 = jQuery('#d24').val();
+	var c51 = jQuery('#c51').val();
+	var c52 = jQuery('#c52').val();
+	var term = jQuery('#term').val();
+	var linerterms = jQuery('#linerterms').val();
+	var dues1 = jQuery('#dues1').val();
+	var dues2 = jQuery('#dues2').val();
+	var dues3 = jQuery('#dues3').val();
+	var pilotage1 = jQuery('#pilotage1').val();
+	var pilotage2 = jQuery('#pilotage2').val();
+	var pilotage3 = jQuery('#pilotage3').val();
+	var tugs1 = jQuery('#tugs1').val();
+	var tugs2 = jQuery('#tugs2').val();
+	var tugs3 = jQuery('#tugs3').val();
+	var bunkeradjustment1 = jQuery('#bunkeradjustment1').val();
+	var bunkeradjustment2 = jQuery('#bunkeradjustment2').val();
+	var bunkeradjustment3 = jQuery('#bunkeradjustment3').val();
+	var mooring1 = jQuery('#mooring1').val();
+	var mooring2 = jQuery('#mooring2').val();
+	var mooring3 = jQuery('#mooring3').val();
+	var dockage1 = jQuery('#dockage1').val();
+	var dockage2 = jQuery('#dockage2').val();
+	var dockage3 = jQuery('#dockage3').val();
+	var loaddischarge1 = jQuery('#loaddischarge1').val();
+	var loaddischarge2 = jQuery('#loaddischarge2').val();
+	var loaddischarge3 = jQuery('#loaddischarge3').val();
+	var agencyfee1 = jQuery('#agencyfee1').val();
+	var agencyfee2 = jQuery('#agencyfee2').val();
+	var agencyfee3 = jQuery('#agencyfee3').val();
+	var miscellaneous1 = jQuery('#miscellaneous1').val();
+	var miscellaneous2 = jQuery('#miscellaneous2').val();
+	var miscellaneous3 = jQuery('#miscellaneous3').val();
+	var canal = jQuery('#canal').val();
+	var cbook1 = jQuery('#cbook1').val();
+	var cbook2 = jQuery('#cbook2').val();
+	var ctug1 = jQuery('#ctug1').val();
+	var ctug2 = jQuery('#ctug2').val();
+	var cline1 = jQuery('#cline1').val();
+	var cline2 = jQuery('#cline2').val();
+	var cmisc1 = jQuery('#cmisc1').val();
+	var cmisc2 = jQuery('#cmisc2').val();
+	var e74 = jQuery('#e74').val();
+	var f74 = jQuery('#f74').val();
+	var g74 = jQuery('#g74').val();
+	var h74 = jQuery('#h74').val();
+	var i74 = jQuery('#i74').val();
+	var j74 = jQuery('#j74').val();
+	var b80 = jQuery('#b80').val();
+	var d80 = jQuery('#d80').val();
+	var e80 = jQuery('#e80').val();
+	var d85 = jQuery('#d85').val();
+	var e85 = jQuery('#e85').val();
+	var g85 = jQuery('#g85').val();
+	
+	//CALCULATED
+	var f31 = jQuery('#f31').text();
+	var h31 = jQuery('#h31').text();
+	var c32 = jQuery('#c32').text();
+	var d32 = jQuery('#d32').text();
+	var e32 = jQuery('#e32').text();
+	var f32 = jQuery('#f32').text();
+	var g32 = jQuery('#g32').text();
+	var h32 = jQuery('#h32').text();
+	var c33 = jQuery('#c33').text();
+	var d33 = jQuery('#d33').text();
+	var f33 = jQuery('#f33').text();
+	var h33 = jQuery('#h33').text();
+	var c34 = jQuery('#c34').text();
+	var d34 = jQuery('#d34').text();
+	var f34 = jQuery('#f34').text();
+	var h34 = jQuery('#h34').text();
+	var c35 = jQuery('#c35').text();
+	var d35 = jQuery('#d35').text();
+	var e35 = jQuery('#e35').text();
+	var f35 = jQuery('#f35').text();
+	var g35 = jQuery('#g35').text();
+	var h35 = jQuery('#h35').text();
+	//END OF CALCULATED
+
+	jQuery("#misciframe")[0].src="misc/email_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&d42="+d42+"&h42="+h42+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35;
 	jQuery("#miscdialog").dialog("open");
 }
 </script>
@@ -2911,47 +2600,47 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 		  <tr id='ballast1' bgcolor="f5f5f5">
 			<td class='general b31' style="padding:3px;"><strong>Ballast</strong></td>
 			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general c31' id="c31" name="c31" value="<?php echo $c31; ?>" style="max-width:190px;" /></div></td>
-			<td class="input"><div style="padding:3px;"><input type='text' class='input_1 general d31' name="d31" value="<?php echo $d31; ?>" style="max-width:170px;" /></div></td>
-			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general e31' name="e31" value="<?php echo $e31; ?>" style="max-width:190px;" /></div></td>
-			<td class='calculated general f31' style="padding:3px;"></td>
-			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number g31' name="g31" value="<?php echo $g31; ?>" style="max-width:90px;" /></div></td>
-			<td class="calculated number h31" style="padding:3px;"></td>
+			<td class="input"><div style="padding:3px;"><input type='text' class='input_1 general d31' id="d31" name="d31" value="<?php echo $d31; ?>" style="max-width:170px;" /></div></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general e31' id="e31" name="e31" value="<?php echo $e31; ?>" style="max-width:190px;" /></div></td>
+			<td class='calculated general f31' id="f31" style="padding:3px;"></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number g31' id="g31" name="g31" value="<?php echo $g31; ?>" style="max-width:90px;" /></div></td>
+			<td class="calculated number h31" id="h31" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='loading1' bgcolor="e9e9e9">
 			<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
-			<td class='general c32' style="padding:3px;"></td>
-			<td class='general d32' style="padding:3px;"></td>
-			<td class='general e32' style="padding:3px;"></td>
-			<td class="calculated f32" style="padding:3px;"></td>
-			<td class='number g32' style="padding:3px;"></td>
-			<td class="number h32" style="padding:3px;"></td>
+			<td class='general c32' id="c32" style="padding:3px;"></td>
+			<td class='general d32' id="d32" style="padding:3px;"></td>
+			<td class='general e32' id="e32" style="padding:3px;"></td>
+			<td class="calculated f32" id="f32" style="padding:3px;"></td>
+			<td class='number g32' id="g32" style="padding:3px;"></td>
+			<td class="number h32" id="h32" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='bunkerstop1' bgcolor="f5f5f5">
 			<td class='general b33' style="padding:3px;"><strong>Bunker Stop</strong></td>
-			<td class='input general c33' style="padding:3px;"></td>
-			<td class='general d33' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e33' name="e33" value="<?php echo $e33; ?>"  style="max-width:190px;" /></td>
-			<td class="calculated f33" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g33' name="g33" value="<?php echo $g33; ?>"  style="max-width:90px;" /></td>
-			<td class="calculated h33" style="padding:3px;"></td>
+			<td id="c33" class='input general c33' style="padding:3px;"></td>
+			<td id="d33" class='general d33' style="padding:3px;"></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e33' id="e33" name="e33" value="<?php echo $e33; ?>"  style="max-width:190px;" /></td>
+			<td id="f33" class="calculated f33" style="padding:3px;"></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g33' id="g33" name="g33" value="<?php echo $g33; ?>"  style="max-width:90px;" /></td>
+			<td id="h33" class="calculated h33" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='laden1' bgcolor="e9e9e9">
 			<td class='general b34' style="padding:3px;"><strong>Laden</strong></td>
-			<td class='input general c34' style="padding:3px;"></td>
-			<td class='general d34' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e34' name="e34" value="<?php echo $e34; ?>" style="max-width:190px;" /></td>
-			<td class="calculated f34" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g34' name="g34" value="<?php echo $g34; ?>" style="max-width:90px;" /></td>
-			<td class="calculated number h34" style="padding:3px;"></td>
+			<td id="c34" class='input general c34' style="padding:3px;"></td>
+			<td id="d34" class='general d34' style="padding:3px;"></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e34' id="e34" name="e34" value="<?php echo $e34; ?>" style="max-width:190px;" /></td>
+			<td id="f34" class="calculated f34" style="padding:3px;"></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g34' id="g34" name="g34" value="<?php echo $g34; ?>" style="max-width:90px;" /></td>
+			<td id="h34" class="calculated number h34" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='discharging1' bgcolor="f5f5f5">
 			<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
-			<td class='input general c35' style="padding:3px;"></td>
-			<td class='general d35' style="padding:3px;"></td>
-			<td class='general e35' style="padding:3px;"></td>
-			<td class="calculated f35" style="padding:3px;"></td>
-			<td class='number g35' style="padding:3px;"></td>
-			<td class="number h35" style="padding:3px;"></td>
+			<td id="c35" class='input general c35' style="padding:3px;"></td>
+			<td id="d35" class='general d35' style="padding:3px;"></td>
+			<td id="e35" class='general e35' style="padding:3px;"></td>
+			<td id="f35" class="calculated f35" style="padding:3px;"></td>
+			<td id="g35" class='number g35' style="padding:3px;"></td>
+			<td id="h35" class="number h35" style="padding:3px;"></td>
 		  </tr>
 		</table>
 		
@@ -2996,16 +2685,16 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 			<td class='number p31' style="padding:3px;"></td>
 			<td class='number q31' style="padding:3px;"></td>
 			<td class="calculated number r31" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s31' name="s31" value="<?php echo $s31; ?>" style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t31' name="t31" value="<?php echo $t31; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s31' id="s31" name="s31" value="<?php echo $s31; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t31' id="t31" name="t31" value="<?php echo $t31; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='loading1' bgcolor="e9e9e9">
 			<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i32' name="i32" value="<?php echo $i32; ?>" style="max-width:140px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i32' id="i32" name="i32" value="<?php echo $i32; ?>" style="max-width:140px;" /></td>
 			<td class='number j32' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' name="k32" value="<?php echo $k32; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' id="k32" name="k32" value="<?php echo $k32; ?>" style="max-width:70px;" /></td>
 			<td class='calculated number l32' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' name="m32" value="<?php echo $m32; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' id="m32" name="m32" value="<?php echo $m32; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n32arr = array(
@@ -3020,7 +2709,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 						
 				$n32t = count($n32arr);
 				?>
-				<select class='input_1 general n32' name="n32" style="max-width:100px; min-width:100px;">
+				<select class='input_1 general n32' id="n32" name="n32" style="max-width:100px; min-width:100px;">
 					<?php
 					for($n32i=1; $n32i<=$n32t; $n32i++){
 						if($n32arr[$n32i]==$n32){
@@ -3033,19 +2722,19 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				</select>
 			</td>
 			<td class="calculated number o32" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' name="p32" value="<?php echo $p32; ?>" style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number q32' name="q32" value="<?php echo $q32; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' id="p32" name="p32" value="<?php echo $p32; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number q32' id="q32" name="q32" value="<?php echo $q32; ?>" style="max-width:70px;" /></td>
 			<td class="number r32" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s32' name="s32" value="<?php echo $s32; ?>" style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t32' name="t32" value="<?php echo $t32; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s32' id="s32" name="s32" value="<?php echo $s32; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t32' id="t32" name="t32" value="<?php echo $t32; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='bunkerstop1' bgcolor="f5f5f5">
 			<td class='general b33' style="padding:3px;"><strong>Bunker Stop</strong></td>
 			<td class='number i33' style="padding:3px;"></td>
 			<td class='number j33' style="padding:3px;"></td>
 			<td class='number k33' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number l33' name="l33" value="<?php echo $l33; ?>" style="max-width:70px;"  /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m33' name="m33" value="<?php echo $m33; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number l33' id="l33" name="l33" value="<?php echo $l33; ?>" style="max-width:70px;"  /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m33' id="m33" name="m33" value="<?php echo $m33; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n33arr = array(
@@ -3060,7 +2749,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 						
 				$n33t = count($n33arr);
 				?>
-				<select class='input_1 general n33' name="n33" style="max-width:100px; min-width:100px;">
+				<select class='input_1 general n33' id="n33" name="n33" style="max-width:100px; min-width:100px;">
 					<?php
 					for($n33i=1; $n33i<=$n33t; $n33i++){
 						if($n33arr[$n33i]==$n33){
@@ -3073,11 +2762,11 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				</select>
 			</td>
 			<td class="calculated o33" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' name="p33" value="<?php echo $p33; ?>" style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q33' name="q33" value="<?php echo $q33; ?>" style="max-width:70px;"  /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' id="p33" name="p33" value="<?php echo $p33; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q33' id="q33" name="q33" value="<?php echo $q33; ?>" style="max-width:70px;"  /></td>
 			<td class="calculated number r33" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number s33' name="s33" value="<?php echo $s33; ?>" style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t33' name="t33" value="<?php echo $t33; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number s33' id="s33" name="s33" value="<?php echo $s33; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t33' id="t33" name="t33" value="<?php echo $t33; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='laden1' bgcolor="e9e9e9">
 			<td class='general b34' style="padding:3px;"><strong>Laden</strong></td>
@@ -3091,16 +2780,16 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 			<td class='number p34' style="padding:3px;"></td>
 			<td class='number q34' style="padding:3px;"></td>
 			<td class="calculated number r34" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s34' name="s34" value="<?php echo $s34; ?>" style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t34' name="t34" value="<?php echo $t34; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s34' id="s34" name="s34" value="<?php echo $s34; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t34' id="t34" name="t34" value="<?php echo $t34; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='discharging1' bgcolor="f5f5f5">
 			<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i35' name="i35" value="<?php echo $i35; ?>" style="max-width:140px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i35' id="i35" name="i35" value="<?php echo $i35; ?>" style="max-width:140px;" /></td>
 			<td class='number j35' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k35' name="k35" value="<?php echo $k35; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k35' id="k35" name="k35" value="<?php echo $k35; ?>" style="max-width:70px;" /></td>
 			<td class='calculated number l35' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number m35' name="m35" value="<?php echo $m35; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number m35' id="m35" name="m35" value="<?php echo $m35; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n35arr = array(
@@ -3115,7 +2804,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 						
 				$n35t = count($n35arr);
 				?>
-				<select class='input_1 general n35' name="n35" style="max-width:100px; min-width:100px;">
+				<select class='input_1 general n35' id="n35" name="n35" style="max-width:100px; min-width:100px;">
 					<?php
 					for($n35i=1; $n35i<=$n35t; $n35i++){
 						if($n35arr[$n35i]==$n35){
@@ -3128,11 +2817,11 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				</select>
 			</td>
 			<td class="calculated number o35" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' name="p35" value="<?php echo $p35; ?>" style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q35' name="q35" value="<?php echo $q35; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' id="p35" name="p35" value="<?php echo $p35; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q35' id="q35" name="q35" value="<?php echo $q35; ?>" style="max-width:70px;" /></td>
 			<td class="number r35" style="padding:3px;"></td>
-			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s35' name="s35" value="<?php echo $s35; ?>" style="max-width:50px;" /></td>
-			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t35' name="t35" value="<?php echo $t35; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s35' id="s35" name="s35" value="<?php echo $s35; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t35' id="t35" name="t35" value="<?php echo $t35; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		</table>
 		
@@ -3389,57 +3078,57 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Dues ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number dues' name="dues1" value="<?php echo $dues1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number dues' name="dues2" value="<?php echo $dues2; ?>" style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number dues' name="dues3" value="<?php echo $dues3; ?>" style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number dues' id="dues1" name="dues1" value="<?php echo $dues1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number dues' id="dues2" name="dues2" value="<?php echo $dues2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number dues' id="dues3" name="dues3" value="<?php echo $dues3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Pilotage ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number pilotage' name="pilotage1" value="<?php echo $pilotage1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number pilotage' name="pilotage2" value="<?php echo $pilotage2; ?>" style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number pilotage' name="pilotage3" value="<?php echo $pilotage3; ?>" style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number pilotage' id="pilotage1" name="pilotage1" value="<?php echo $pilotage1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number pilotage' id="pilotage2" name="pilotage2" value="<?php echo $pilotage2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number pilotage' id="pilotage3" name="pilotage3" value="<?php echo $pilotage3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Tugs ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number tugs' name="tugs1" value="<?php echo $tugs1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number tugs' name="tugs2" value="<?php echo $tugs2; ?>" style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number tugs' name="tugs3" value="<?php echo $tugs3; ?>" style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number tugs' id="tugs1" name="tugs1" value="<?php echo $tugs1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number tugs' id="tugs2" name="tugs2" value="<?php echo $tugs2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number tugs' id="tugs3" name="tugs3" value="<?php echo $tugs3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Bunker Adjustment ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' name="bunkeradjustment1" value="<?php echo $bunkeradjustment1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' name="bunkeradjustment2" value="<?php echo $bunkeradjustment2; ?>" style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' name="bunkeradjustment3" value="<?php echo $bunkeradjustment3; ?>" style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' id="bunkeradjustment1" name="bunkeradjustment1" value="<?php echo $bunkeradjustment1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' id="bunkeradjustment2" name="bunkeradjustment2" value="<?php echo $bunkeradjustment2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number bunkeradjustment' id="bunkeradjustment3" name="bunkeradjustment3" value="<?php echo $bunkeradjustment3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Mooring ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number mooring' name="mooring1" value="<?php echo $mooring1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number mooring' name="mooring2" value="<?php echo $mooring2; ?>" style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number mooring' name="mooring3" value="<?php echo $mooring3; ?>" style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number mooring' id="mooring1" name="mooring1" value="<?php echo $mooring1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number mooring' id="mooring2" name="mooring2" value="<?php echo $mooring2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number mooring' id="mooring3" name="mooring3" value="<?php echo $mooring3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Dockage ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number dockage' name="dockage1" value="<?php echo $dockage1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number dockage' name="dockage2" value="<?php echo $dockage2; ?>" style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number dockage' name="dockage3" value="<?php echo $dockage3; ?>" style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number dockage' id="dockage1" name="dockage1" value="<?php echo $dockage1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number dockage' id="dockage2" name="dockage2" value="<?php echo $dockage2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number dockage' id="dockage3" name="dockage3" value="<?php echo $dockage3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Load/Discharge ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number loaddischarge' name="loaddischarge1" value="<?php echo $loaddischarge1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number loaddischarge' name="loaddischarge2" value="<?php echo $loaddischarge2; ?>" style="max-width:100px;" /></td>
-					<td height="12" class='input port3' style="height: 12px; padding:3px;"><span class="input port3" style="padding:3px;"><input type='text' class='input_1 number loaddischarge' name="loaddischarge3" value="<?php echo $loaddischarge3; ?>" style="max-width:100px;" /></span></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number loaddischarge' id="loaddischarge1" name="loaddischarge1" value="<?php echo $loaddischarge1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number loaddischarge' id="loaddischarge2" name="loaddischarge2" value="<?php echo $loaddischarge2; ?>" style="max-width:100px;" /></td>
+					<td height="12" class='input port3' style="height: 12px; padding:3px;"><span class="input port3" style="padding:3px;"><input type='text' class='input_1 number loaddischarge' id="loaddischarge3" name="loaddischarge3" value="<?php echo $loaddischarge3; ?>" style="max-width:100px;" /></span></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Agency Fee ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number agencyfee' name="agencyfee1" value="<?php echo $agencyfee1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number agencyfee' name="agencyfee2" value="<?php echo $agencyfee2; ?>" style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number agencyfee' name="agencyfee3" value="<?php echo $agencyfee3; ?>" style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number agencyfee' id="agencyfee1" name="agencyfee1" value="<?php echo $agencyfee1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number agencyfee' id="agencyfee2" name="agencyfee2" value="<?php echo $agencyfee2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number agencyfee' id="agencyfee3" name="agencyfee3" value="<?php echo $agencyfee3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Miscellaneous ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' name="miscellaneous1" value="<?php echo $miscellaneous1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' name="miscellaneous2" value="<?php echo $miscellaneous2; ?>" style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' name="miscellaneous3" value="<?php echo $miscellaneous3; ?>" style="max-width:100px;" /></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' id="miscellaneous1" name="miscellaneous1" value="<?php echo $miscellaneous1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' id="miscellaneous2" name="miscellaneous2" value="<?php echo $miscellaneous2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' id="miscellaneous3" name="miscellaneous3" value="<?php echo $miscellaneous3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr>
 					<td class="label" style="padding:3px;"><strong>Demurrage ($)</strong></td>

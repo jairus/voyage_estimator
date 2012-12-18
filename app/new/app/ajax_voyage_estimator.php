@@ -2134,9 +2134,61 @@ function mailItVe(){
 	var f35 = jQuery('#f35').text();
 	var g35 = jQuery('#g35').text();
 	var h35 = jQuery('#h35').text();
+	var r31 = jQuery('#r31').text();
+	var j32 = jQuery('#j32').text();
+	var l32 = jQuery('#l32').text();
+	var o32 = jQuery('#o32').text();
+	var o33 = jQuery('#o33').text();
+	var r33 = jQuery('#r33').text();
+	var r34 = jQuery('#r34').text();
+	var j35 = jQuery('#j35').text();
+	var l35 = jQuery('#l35').text();
+	var o35 = jQuery('#o35').text();
+	var o36 = jQuery('#o36').text();
+	var r36 = jQuery('#r36').text();
+	var o37 = jQuery('#o37').text();
+	var c45 = jQuery('#c45').text();
+	var d45 = jQuery('#d45').text();
+	var e45 = jQuery('#e45').text();
+	var g45 = jQuery('#g45').text();
+	var h45 = jQuery('#h45').text();
+	var c46 = jQuery('#c46').text();
+	var d46 = jQuery('#d46').text();
+	var e46 = jQuery('#e46').text();
+	var f46 = jQuery('#f46').text();
+	var g46 = jQuery('#g46').text();
+	var h46 = jQuery('#h46').text();
+	var i46 = jQuery('#i46').text();
+	var c47 = jQuery('#c47').text();
+	var g47 = jQuery('#g47').text();
+	var d18 = jQuery('#d18').text();
+	var d19b = jQuery('#d19b').text();
+	var d20b = jQuery('#d20b').text();
+	var d21b = jQuery('#d21b').text();
+	var d22b = jQuery('#d22b').text();
+	var d25 = jQuery('#d25').text();
+	var d26 = jQuery('#d26').text();
+	var ctotal1 = jQuery('#ctotal1').text();
+	var ctotal2 = jQuery('#ctotal2').text();
+	var c54 = jQuery('#c54').text();
+	var c66 = jQuery('#c66').text();
+	var c67 = jQuery('#c67').text();
+	var c68 = jQuery('#c68').text();
+	var b74 = jQuery('#b74').text();
+	var c74 = jQuery('#c74').text();
+	var d74 = jQuery('#d74').text();
+	var b75 = jQuery('#b75').text();
+	var b85 = jQuery('#b85').text();
+	var c85 = jQuery('#c85').text();
+	var f85 = jQuery('#f85').text();
+	var d86 = jQuery('#d86').text();
+	var c80 = jQuery('#c80').text();
+	var f80 = jQuery('#f80').text();
+	var g80 = jQuery('#g80').text();
+	var d81 = jQuery('#d81').text();
 	//END OF CALCULATED
 
-	jQuery("#misciframe")[0].src="misc/email_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&d42="+d42+"&h42="+h42+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35;
+	jQuery("#misciframe")[0].src="misc/email_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&d42="+d42+"&h42="+h42+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35+"&r31="+r31+"&j32="+j32+"&l32="+l32+"&o32="+o32+"&o33="+o33+"&r33="+r33+"&r34="+r34+"&j35="+j35+"&l35="+l35+"&o35="+o35+"&o36="+o36+"&r36="+r36+"&o37="+o37+"&c45="+c45+"&d45="+d45+"&e45="+e45+"&g45="+g45+"&h45="+h45+"&c46="+c46+"&d46="+d46+"&e46="+e46+"&f46="+f46+"&g46="+g46+"&h46="+h46+"&i46="+i46+"&c47="+c47+"&g47="+g47+"&d18="+d18+"&d19b="+d19b+"&d20b="+d20b+"&d21b="+d21b+"&d22b="+d22b+"&d25="+d25+"&d26="+d26+"&ctotal1="+ctotal1+"&ctotal2="+ctotal2+"&c54="+c54+"&c66="+c66+"&c67="+c67+"&c68="+c68+"&b74="+b74+"&c74="+c74+"&d74="+d74+"&b75="+b75+"&b85="+b85+"&c85="+c85+"&f85="+f85+"&d86="+d86+"&c80="+c80+"&f80="+f80+"&g80="+g80+"&d81="+d81;
 	jQuery("#miscdialog").dialog("open");
 }
 
@@ -2268,9 +2320,61 @@ function printItVe(){
 	var f35 = jQuery('#f35').text();
 	var g35 = jQuery('#g35').text();
 	var h35 = jQuery('#h35').text();
+	var r31 = jQuery('#r31').text();
+	var j32 = jQuery('#j32').text();
+	var l32 = jQuery('#l32').text();
+	var o32 = jQuery('#o32').text();
+	var o33 = jQuery('#o33').text();
+	var r33 = jQuery('#r33').text();
+	var r34 = jQuery('#r34').text();
+	var j35 = jQuery('#j35').text();
+	var l35 = jQuery('#l35').text();
+	var o35 = jQuery('#o35').text();
+	var o36 = jQuery('#o36').text();
+	var r36 = jQuery('#r36').text();
+	var o37 = jQuery('#o37').text();
+	var c45 = jQuery('#c45').text();
+	var d45 = jQuery('#d45').text();
+	var e45 = jQuery('#e45').text();
+	var g45 = jQuery('#g45').text();
+	var h45 = jQuery('#h45').text();
+	var c46 = jQuery('#c46').text();
+	var d46 = jQuery('#d46').text();
+	var e46 = jQuery('#e46').text();
+	var f46 = jQuery('#f46').text();
+	var g46 = jQuery('#g46').text();
+	var h46 = jQuery('#h46').text();
+	var i46 = jQuery('#i46').text();
+	var c47 = jQuery('#c47').text();
+	var g47 = jQuery('#g47').text();
+	var d18 = jQuery('#d18').text();
+	var d19b = jQuery('#d19b').text();
+	var d20b = jQuery('#d20b').text();
+	var d21b = jQuery('#d21b').text();
+	var d22b = jQuery('#d22b').text();
+	var d25 = jQuery('#d25').text();
+	var d26 = jQuery('#d26').text();
+	var ctotal1 = jQuery('#ctotal1').text();
+	var ctotal2 = jQuery('#ctotal2').text();
+	var c54 = jQuery('#c54').text();
+	var c66 = jQuery('#c66').text();
+	var c67 = jQuery('#c67').text();
+	var c68 = jQuery('#c68').text();
+	var b74 = jQuery('#b74').text();
+	var c74 = jQuery('#c74').text();
+	var d74 = jQuery('#d74').text();
+	var b75 = jQuery('#b75').text();
+	var b85 = jQuery('#b85').text();
+	var c85 = jQuery('#c85').text();
+	var f85 = jQuery('#f85').text();
+	var d86 = jQuery('#d86').text();
+	var c80 = jQuery('#c80').text();
+	var f80 = jQuery('#f80').text();
+	var g80 = jQuery('#g80').text();
+	var d81 = jQuery('#d81').text();
 	//END OF CALCULATED
 
-	jQuery("#misciframe")[0].src="misc/email_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&d42="+d42+"&h42="+h42+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35;
+	jQuery("#misciframe")[0].src="misc/print_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&d42="+d42+"&h42="+h42+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35+"&r31="+r31+"&j32="+j32+"&l32="+l32+"&o32="+o32+"&o33="+o33+"&r33="+r33+"&r34="+r34+"&j35="+j35+"&l35="+l35+"&o35="+o35+"&o36="+o36+"&r36="+r36+"&o37="+o37+"&c45="+c45+"&d45="+d45+"&e45="+e45+"&g45="+g45+"&h45="+h45+"&c46="+c46+"&d46="+d46+"&e46="+e46+"&f46="+f46+"&g46="+g46+"&h46="+h46+"&i46="+i46+"&c47="+c47+"&g47="+g47+"&d18="+d18+"&d19b="+d19b+"&d20b="+d20b+"&d21b="+d21b+"&d22b="+d22b+"&d25="+d25+"&d26="+d26+"&ctotal1="+ctotal1+"&ctotal2="+ctotal2+"&c54="+c54+"&c66="+c66+"&c67="+c67+"&c68="+c68+"&b74="+b74+"&c74="+c74+"&d74="+d74+"&b75="+b75+"&b85="+b85+"&c85="+c85+"&f85="+f85+"&d86="+d86+"&c80="+c80+"&f80="+f80+"&g80="+g80+"&d81="+d81;
 	jQuery("#miscdialog").dialog("open");
 }
 </script>
@@ -2684,16 +2788,16 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 			<td class="number o31" style="padding:3px;"></td>
 			<td class='number p31' style="padding:3px;"></td>
 			<td class='number q31' style="padding:3px;"></td>
-			<td class="calculated number r31" style="padding:3px;"></td>
+			<td id="r31" class="calculated number r31" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s31' id="s31" name="s31" value="<?php echo $s31; ?>" style="max-width:50px;" /></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t31' id="t31" name="t31" value="<?php echo $t31; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='loading1' bgcolor="e9e9e9">
 			<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i32' id="i32" name="i32" value="<?php echo $i32; ?>" style="max-width:140px;" /></td>
-			<td class='number j32' style="padding:3px;"></td>
+			<td id="j32" class='number j32' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' id="k32" name="k32" value="<?php echo $k32; ?>" style="max-width:70px;" /></td>
-			<td class='calculated number l32' style="padding:3px;"></td>
+			<td id="l32" class='calculated number l32' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' id="m32" name="m32" value="<?php echo $m32; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;">
 				<?php
@@ -2721,7 +2825,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 					?>
 				</select>
 			</td>
-			<td class="calculated number o32" style="padding:3px;"></td>
+			<td id="o32" class="calculated number o32" style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' id="p32" name="p32" value="<?php echo $p32; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number q32' id="q32" name="q32" value="<?php echo $q32; ?>" style="max-width:70px;" /></td>
 			<td class="number r32" style="padding:3px;"></td>
@@ -2761,10 +2865,10 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 					?>
 				</select>
 			</td>
-			<td class="calculated o33" style="padding:3px;"></td>
+			<td id="o33" class="calculated o33" style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' id="p33" name="p33" value="<?php echo $p33; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q33' id="q33" name="q33" value="<?php echo $q33; ?>" style="max-width:70px;"  /></td>
-			<td class="calculated number r33" style="padding:3px;"></td>
+			<td id="r33" class="calculated number r33" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number s33' id="s33" name="s33" value="<?php echo $s33; ?>" style="max-width:50px;" /></td>
 			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t33' id="t33" name="t33" value="<?php echo $t33; ?>" style="max-width:50px;" /></td>
 		  </tr>
@@ -2779,16 +2883,16 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 			<td class="number o34" style="padding:3px;"></td>
 			<td class='number p34' style="padding:3px;"></td>
 			<td class='number q34' style="padding:3px;"></td>
-			<td class="calculated number r34" style="padding:3px;"></td>
+			<td id="r34" class="calculated number r34" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s34' id="s34" name="s34" value="<?php echo $s34; ?>" style="max-width:50px;" /></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t34' id="t34" name="t34" value="<?php echo $t34; ?>" style="max-width:50px;" /></td>
 		  </tr>
 		  <tr id='discharging1' bgcolor="f5f5f5">
 			<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i35' id="i35" name="i35" value="<?php echo $i35; ?>" style="max-width:140px;" /></td>
-			<td class='number j35' style="padding:3px;"></td>
+			<td id="j35" class='number j35' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k35' id="k35" name="k35" value="<?php echo $k35; ?>" style="max-width:70px;" /></td>
-			<td class='calculated number l35' style="padding:3px;"></td>
+			<td id="l35" class='calculated number l35' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number m35' id="m35" name="m35" value="<?php echo $m35; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;">
 				<?php
@@ -2816,7 +2920,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 					?>
 				</select>
 			</td>
-			<td class="calculated number o35" style="padding:3px;"></td>
+			<td id="o35" class="calculated number o35" style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' id="p35" name="p35" value="<?php echo $p35; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q35' id="q35" name="q35" value="<?php echo $q35; ?>" style="max-width:70px;" /></td>
 			<td class="number r35" style="padding:3px;"></td>

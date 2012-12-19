@@ -1828,7 +1828,13 @@ else if($_GET['imo']){
 	$image = "http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$_GET['imo'];
 
 	$imageb = base64_encode($image);
-
+	
+	echo '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="50" style="border-bottom:none;"><a class="clickable" onclick="printItVe_2();"><img src="images/print.jpg"></a></td>
+			<td><a class="clickable" onclick="mailItVe_2();"><img src="images/email_small.jpg"></a></td>
+		</tr>
+	</table>';
 	echo "<div style='text-align:center;' ><img src='image.php?b=1&mx=500&p=".$imageb."'></div><br>";
 
 	foreach($rdata as $key=>$value){

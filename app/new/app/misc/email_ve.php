@@ -863,6 +863,9 @@ echo "<div class='landScape'>
 					
 						<table width="490" height='460' border="0" cellspacing="0" cellpadding="0">
 						  <tr>
+							<td align="center">Map will not show on email</td>
+						  </tr>
+						  <tr>
 							<td bgcolor="#000000"><iframe src='http://www.s-bisonline.com/app/map/map_voyage_estimator_2.php?imo=<?php echo $imo; ?>' id="map_iframeve" width='490' height='460' frameborder="0"></iframe></td>
 						  </tr>
 						</table>

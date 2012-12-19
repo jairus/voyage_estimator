@@ -133,7 +133,7 @@ if($_GET['port']){
 	$search = $_GET['term'];
 
 	$sql = "select * from _veson_ports where name like '%".mysql_escape_string($search)."%' limit 20";
-
+	
 	$items = array();
 
 	$r = dbQuery($sql);
@@ -148,6 +148,16 @@ if($_GET['port']){
 		$item['latitude'] = $r[$i]['latitude'];
 		$item['longitude'] = $r[$i]['longitude'];
 		$item['portid'] = $r[$i]['portid'];
+		
+		$sql_2 = "select average_price, dateupdated from bunker_price where port_name='".mysql_escape_string($r[$i]['name'])."' and grade='IFO380' limit 1";
+		$r_2 = dbQuery($sql_2);
+		
+		$sql_3 = "select average_price from bunker_price where port_name='".mysql_escape_string($r[$i]['name'])."' and grade='MDO' limit 1";
+		$r_3 = dbQuery($sql_3);
+		
+		$item['dateupdated'] = $r_2[0]['dateupdated'];
+		$item['average_price_ifo380'] = $r_2[0]['average_price'];
+		$item['average_price_mdo'] = $r_3[0]['average_price'];
 
 		$items[] = $item;
 	}
@@ -171,6 +181,11 @@ if($_GET['port']){
 <script src="js/development-bundle/ui/jquery.ui.datepicker.js"></script>
 
 <script type="text/javascript">
+function populatek35(val){
+	setValue(jQuery("#k35"), fNum(val));
+	setValue(jQuery("#l35"), jQuery("#l32").text());
+}
+
 var dateFormat = function () {
 	var	token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
 
@@ -352,6 +367,10 @@ var holdss = [];
 var largest_hatchs = [];
 var sfs = [];
 var gimo = "";
+
+var average_price_ifo380s = [];
+var average_price_mdos = [];
+var dateupdateds = [];
 
 $(function(){
 	jQuery( "#miscdialog" ).dialog( { autoOpen: false, width: 1100, height: 500 });
@@ -546,8 +565,12 @@ $(function(){
 				var suggestions = [];
 
 				//process response
-				$.each(data, function(i, val){								
+				$.each(data, function(i, val){
 					suggestions.push(val.name);
+					
+					average_price_ifo380s[val.name] = val.average_price_ifo380;
+					average_price_mdos[val.name] = val.average_price_mdo;
+					dateupdateds[val.name] = val.dateupdated;
 				});
 
 				//pass array to callback
@@ -561,6 +584,20 @@ $(function(){
 			idx = jQuery(this).parent().parent().attr('id');
 
 			setValue(jQuery("#"+idx+" .e33"), str);
+			
+			jQuery("#d42").each(function(){
+				setValue(jQuery(this), fNum(average_price_ifo380s[str]));
+			});
+			
+			jQuery("#h42").each(function(){
+				setValue(jQuery(this), fNum(average_price_mdos[str]));
+			});
+			
+			if(dateupdateds[str]){
+				jQuery('#bunker_price_dateupdated').text('Correct as of '+dateupdateds[str]);
+			}else{
+				jQuery('#bunker_price_dateupdated').text('');
+			}
 
 			bunkerstopCalc2(true);
 
@@ -668,6 +705,8 @@ $(function(){
 
 			if(sf){
 				setValue(jQuery("#"+idx+" .j32"), fNum(sf));
+				setValue(jQuery("#i35"), str);
+				setValue(jQuery("#j35"), fNum(sf));
 			}
 
 			thread("sf");
@@ -2006,6 +2045,20 @@ function newScenario(){
 	self.location = "cargospotter.php?new_search=3";
 }
 
+function mailItVe_2(){
+	var imo = jQuery('#ship').val().substring(0,7);
+
+	jQuery("#misciframe")[0].src="misc/email_ve_2.php?imo="+imo;
+	jQuery("#miscdialog").dialog("open");
+}
+
+function printItVe_2(){
+	var imo = jQuery('#ship').val().substring(0,7);
+
+	jQuery("#misciframe")[0].src="misc/print_ve_2.php?imo="+imo;
+	jQuery("#miscdialog").dialog("open");
+}
+
 function mailItVe(){
 	var imo = jQuery('#ship').val().substring(0,7);
 	var c31 = jQuery('#c31').val();
@@ -2511,6 +2564,14 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 		$g85 = $tabdata['g85'];
 	}
 }
+
+if(!trim($d80)){
+	$d80 = "1.25";
+}
+
+if(!trim($e85)){
+	$e85 = "2.50";
+}
 ?>
 
 <form method="post" id="voyageestimatorform" name="voyageestimatorform" enctype="multipart/form-data">
@@ -2796,7 +2857,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 			<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i32' id="i32" name="i32" value="<?php echo $i32; ?>" style="max-width:140px;" /></td>
 			<td id="j32" class='number j32' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' id="k32" name="k32" value="<?php echo $k32; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' id="k32" name="k32" value="<?php echo $k32; ?>" style="max-width:70px;" onblur="populatek35(this.value);" /></td>
 			<td id="l32" class='calculated number l32' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' id="m32" name="m32" value="<?php echo $m32; ?>" style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;">
@@ -2964,29 +3025,29 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 		
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
-			<td class="text_1" colspan="8"><div style="padding:3px;"><b>BUNKER PRICING - Data from Bunkerworld</b></div></td>
+			<td class="text_1" colspan="8"><div style="padding:3px;"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated"></span></div></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
-			<td width="100" style="padding:3px;"><b>FO Type</b></td>
+			<td width="100" style="padding:3px;"><b>IFO 380 Type</b></td>
 			<td width="450" colspan="3" style="padding:3px;"></td>
-			<td width="200" style="padding:3px;"><b>DO Type</b></td>
+			<td width="200" style="padding:3px;"><b>MDO Type</b></td>
 			<td width="250" colspan="3" style="padding:3px;"></td>
 		  </tr>
 		  <tr bgcolor="e9e9e9">
-			<td style="padding:3px;"><b>FO Price ($)</b></td>
+			<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='d42' name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px;" /></td>
-			<td style="padding:3px;"><b>DO Price ($)</b></td>
+			<td style="padding:3px;"><b>MDO Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='h42' name="h42" value="<?php echo $h42; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
 		  <tr>
 			<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>FO/Ballast</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>FO/Laden</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>FO/Port</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>FO/Reserve</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>DO/Sea</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>DO/Port</i></b></td>
-			<td class="text_1 label" style="padding:3px;" colspan="2"><b><i>DO/Reserve</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO 380/Ballast</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO 380/Laden</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO 380/Port</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO 380/Reserve</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Sea</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Port</i></b></td>
+			<td class="text_1 label" style="padding:3px;" colspan="2"><b><i>MDO/Reserve</i></b></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td style="padding:3px;"><b>Consumption (MT/day)</b></td>
@@ -3403,7 +3464,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 								<td class="label" style="padding:3px;"><strong>Brok. Comm ($)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td style="padding:3px;"><input type='text' class='input_1 number' id='d80' name="b80" value="<?php echo $b80; ?>" style="max-width:100px;" /></td>
+								<td style="padding:3px;"><input type='text' class='input_1 number' id='d80' name="d80" value="<?php echo $d80; ?>" style="max-width:100px;" /></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>

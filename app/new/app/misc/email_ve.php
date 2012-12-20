@@ -1076,7 +1076,7 @@ echo "<div class='landScape'>
 </table>
 <table cellpadding='0' cellspacing='0' width='1300'>
 	<tr>
-		<td style='border:0px; text-align:right;'>Powered by <img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_cargospotter1.png' width='20'> <b>Cargospotter</b></td>
+		<td style='border:0px; text-align:right;'>Powered by <img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_cargospotter1.png' width='20'> <b>CargoSpotter</b></td>
 	</tr>
 </table>
 </div>";
@@ -1110,7 +1110,7 @@ if(!$_POST['email']){
 
 
 $from = "tools@cargospotter.no";
-$fromname = "Cargospotter Mailer";
+$fromname = "CargoSpotter Mailer";
 $bouncereturn = "tools@cargospotter.no"; //where the email will forward in cases of bounced email
 $subject = "Voyage Estimation";
 $emailsp = explode("\n",$_POST['email']);

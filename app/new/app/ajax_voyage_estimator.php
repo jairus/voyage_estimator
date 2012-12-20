@@ -155,9 +155,29 @@ if($_GET['port']){
 		$sql_3 = "select average_price from bunker_price where port_name='".mysql_escape_string($r[$i]['name'])."' and grade='MDO' limit 1";
 		$r_3 = dbQuery($sql_3);
 		
+		$sql_4 = "select average_price from bunker_price where port_name='".mysql_escape_string($r[$i]['name'])."' and grade='IFO180' limit 1";
+		$r_4 = dbQuery($sql_4);
+		
+		$sql_5 = "select average_price from bunker_price where port_name='".mysql_escape_string($r[$i]['name'])."' and grade='MGO' limit 1";
+		$r_5 = dbQuery($sql_5);
+		
+		$sql_6 = "select average_price from bunker_price where port_name='".mysql_escape_string($r[$i]['name'])."' and grade='LS180 1%' limit 1";
+		$r_6 = dbQuery($sql_6);
+		
+		$sql_7 = "select average_price from bunker_price where port_name='".mysql_escape_string($r[$i]['name'])."' and grade='LS380 1%' limit 1";
+		$r_7 = dbQuery($sql_7);
+		
+		$sql_8 = "select average_price from bunker_price where port_name='".mysql_escape_string($r[$i]['name'])."' and grade='LSMGO 0.1%' limit 1";
+		$r_8 = dbQuery($sql_8);
+		
 		$item['dateupdated'] = $r_2[0]['dateupdated'];
 		$item['average_price_ifo380'] = $r_2[0]['average_price'];
 		$item['average_price_mdo'] = $r_3[0]['average_price'];
+		$item['average_price_ifo180'] = $r_4[0]['average_price'];
+		$item['average_price_mgo'] = $r_5[0]['average_price'];
+		$item['average_price_ls180_1'] = $r_6[0]['average_price'];
+		$item['average_price_ls380_1'] = $r_7[0]['average_price'];
+		$item['average_price_lsmgo'] = $r_8[0]['average_price'];
 
 		$items[] = $item;
 	}
@@ -370,6 +390,11 @@ var gimo = "";
 
 var average_price_ifo380s = [];
 var average_price_mdos = [];
+var average_price_ifo180s = [];
+var average_price_mgos = [];
+var average_price_ls180_1s = [];
+var average_price_ls380_1s = [];
+var average_price_lsmgos = [];
 var dateupdateds = [];
 
 $(function(){
@@ -570,6 +595,12 @@ $(function(){
 					
 					average_price_ifo380s[val.name] = val.average_price_ifo380;
 					average_price_mdos[val.name] = val.average_price_mdo;
+					average_price_ifo180s[val.name] = val.average_price_ifo180;
+					
+					average_price_mgos[val.name] = val.average_price_mgo;
+					average_price_ls180_1s[val.name] = val.average_price_ls180_1;
+					average_price_ls380_1s[val.name] = val.average_price_ls380_1;
+					average_price_lsmgos[val.name] = val.average_price_lsmgo;
 					dateupdateds[val.name] = val.dateupdated;
 				});
 
@@ -2567,6 +2598,14 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 
 if(!trim($d80)){
 	$d80 = "1.25";
+}
+
+if(!trim($e80)){
+	$e80 = "2.50";
+}
+
+if(!trim($d85)){
+	$d85 = "1.25";
 }
 
 if(!trim($e85)){

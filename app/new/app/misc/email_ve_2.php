@@ -83,6 +83,101 @@ function cleanXML($data){
 	return $str;
 }
 
+function printVal2($value){
+	if(!is_array($value)){
+		$vtemp = array();
+
+		$vtemp[0] = $value;
+
+		$value = $vtemp;
+	}
+
+	$t = count($value);
+
+	if($t){
+		$extra_array = array();;
+
+		$longest = 0;
+		$index = 0;
+
+		for($i=0; $i<$t; $i++){
+			$c = 0;
+
+			if(is_array($value[$i])){
+				foreach($value[$i] as $v){
+					$c++;
+				}
+
+				if($c>$longest){
+					$longest = $c;
+					$index = $i;
+				}
+			}
+		}
+
+		echo "<table>";
+		echo "<tr>";
+
+		foreach($value[$index] as $k=>$v){
+			if(!is_array($v)){
+				$k = str_replace("_", " ", $k);
+				
+				echo "<td class='leftlabel' style='padding:3px 5px 3px 5px' >";
+				echo $k;
+				echo "</td>";
+			}
+		}	
+
+		echo "</tr>";			
+
+		for($i=0; $i<$t; $i++){
+			echo "<tr>";
+
+			foreach($value[$index] as $k=>$v){
+				if(!is_array($value[$i]->$k)){
+					echo "<td style='padding:3px 6px 3px 7px'>";
+
+					if(is_scalar($value[$i]->$k)){
+						echo $value[$i]->$k;
+					}else{
+						echo "";
+					}
+
+					echo "</td>";
+				}else{
+					$extra_array[$k] = $value[$i]->$k;
+				}
+			}
+
+			echo "</tr>";
+		}
+
+		echo "</table>";
+
+		if(count($extra_array)){
+			echo "<table>";
+
+			foreach($extra_array as $k=>$v){
+				echo "<tr><td class='leftlabel' style='padding:3px 5px 3px 5px'>".$k."</td><tr>";
+
+				$t = count($v);
+
+				echo "<tr><td style='padding:3px 6px 3px 7px'>"; 
+
+				for($i=0; $i<$t; $i++){
+					echo $v[$i]."<br>"; 
+				}
+
+				echo "</td><tr>";
+			}
+
+			echo "<table>";
+		}
+
+		echo "<br>";
+	}
+}
+
 function printVal($value){
 	if(is_array($value)){
 		$t = count($value);
@@ -369,7 +464,7 @@ foreach($rdata as $key=>$value){
 
 echo "<table cellpadding='0' cellspacing='0' width='100%'>
 	<tr>
-		<td style='border:0px; text-align:right;'>Powered by <img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_cargospotter1.png' width='20'> <b>Cargospotter</b></td>
+		<td style='border:0px; text-align:right;'>Powered by <img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_cargospotter1.png' width='20'> <b>CargoSpotter</b></td>
 	</tr>
 </table>
 <div>&nbsp;</div>";
@@ -403,7 +498,7 @@ if(!$_POST['email']){
 
 
 $from = "tools@cargospotter.no";
-$fromname = "Cargospotter Mailer";
+$fromname = "CargoSpotter Mailer";
 $bouncereturn = "tools@cargospotter.no"; //where the email will forward in cases of bounced email
 $subject = "Ship Details";
 $emailsp = explode("\n",$_POST['email']);

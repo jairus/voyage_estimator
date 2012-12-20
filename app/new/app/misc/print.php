@@ -1413,7 +1413,7 @@ if($t||$t2||$t3||$t4||$t5){
 
 echo "<table cellpadding='0' cellspacing='0' width='1000px'>
 	<tr>
-		<td style='border:0px; text-align:right;'>Powered by <img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_cargospotter1.png' width='20'> <b>Cargospotter</b></td>
+		<td style='border:0px; text-align:right;'>Powered by <img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_cargospotter1.png' width='20'> <b>CargoSpotter</b></td>
 	</tr>
 </table>";
 ?>

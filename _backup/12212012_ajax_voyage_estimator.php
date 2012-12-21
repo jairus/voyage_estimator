@@ -620,28 +620,8 @@ $(function(){
 				setValue(jQuery(this), fNum(average_price_ifo380s[str]));
 			});
 			
-			jQuery("#d42_180").each(function(){
-				setValue(jQuery(this), fNum(average_price_ifo180s[str]));
-			});
-			
-			jQuery("#d42_lsifo380").each(function(){
-				setValue(jQuery(this), fNum(average_price_ls380_1s[str]));
-			});
-			
-			jQuery("#d42_lsifo180").each(function(){
-				setValue(jQuery(this), fNum(average_price_ls180_1s[str]));
-			});
-			
 			jQuery("#h42").each(function(){
 				setValue(jQuery(this), fNum(average_price_mdos[str]));
-			});
-			
-			jQuery("#h42_mgo").each(function(){
-				setValue(jQuery(this), fNum(average_price_mgos[str]));
-			});
-			
-			jQuery("#h42_lsmgo").each(function(){
-				setValue(jQuery(this), fNum(average_price_lsmgos[str]));
 			});
 			
 			if(dateupdateds[str]){
@@ -1503,7 +1483,7 @@ function calculateDates(){
 	}
 
 	c45 = uNum(getValue(jQuery("#c44")))*days;
-	c46 = c45*(uNum(getValue(jQuery("#d42")))+uNum(getValue(jQuery("#d42_180")))+uNum(getValue(jQuery("#d42_lsifo380")))+uNum(getValue(jQuery("#d42_lsifo180"))));
+	c46 = c45*uNum(getValue(jQuery("#d42")));
 
 	setValue(jQuery("#c45"), fNum(c45));
 	setValue(jQuery("#c46"), fNum(c46));
@@ -1600,7 +1580,7 @@ function calculateDates(){
 	}
 
 	d45 = uNum(getValue(jQuery("#d44")))*days;
-	d46 = d45*(uNum(getValue(jQuery("#d42")))+uNum(getValue(jQuery("#d42_180")))+uNum(getValue(jQuery("#d42_lsifo380")))+uNum(getValue(jQuery("#d42_lsifo180"))));
+	d46 = d45*uNum(getValue(jQuery("#d42")));
 
 	setValue(jQuery("#d45"), fNum(d45));
 	setValue(jQuery("#d46"), fNum(d46));
@@ -1639,13 +1619,13 @@ function calculateDates(){
 	portdays = calculatePortDays();
 
 	e45 = uNum(getValue(jQuery("#e44")))*portdays;
-	e46 = e45*(uNum(getValue(jQuery("#d42")))+uNum(getValue(jQuery("#d42_180")))+uNum(getValue(jQuery("#d42_lsifo380")))+uNum(getValue(jQuery("#d42_lsifo180"))));
+	e46 = e45*uNum(getValue(jQuery("#d42")));
 
 	setValue(jQuery("#e45"), fNum(e45));
 	setValue(jQuery("#e46"), fNum(e46));
 
 	f45 = uNum(getValue(jQuery("#f45")));
-	f46 = f45*(uNum(getValue(jQuery("#d42")))+uNum(getValue(jQuery("#d42_180")))+uNum(getValue(jQuery("#d42_lsifo380")))+uNum(getValue(jQuery("#d42_lsifo180"))));
+	f46 = f45*uNum(getValue(jQuery("#d42")));
 
 	setValue(jQuery("#f46"), fNum(f46));
 
@@ -1662,16 +1642,16 @@ function calculateDates(){
 	g45 = uNum(getValue(jQuery("#g44")))*seadays;
 
 	setValue(jQuery("#g45"), fNum(g45));
-	g46 = g45 * (uNum(getValue(jQuery("#h42")))+uNum(getValue(jQuery("#h42_mgo")))+uNum(getValue(jQuery("#h42_lsmgo"))));
+	g46 = g45 * uNum(getValue(jQuery("#h42")));
 	setValue(jQuery("#g46"), fNum(g46));
 
 	h45 = uNum(getValue(jQuery("#h44")))*(portdays+uNum(getValue(jQuery("#s34"))));
 	setValue(jQuery("#h45"), fNum(h45));
 
-	h46 = h45 * (uNum(getValue(jQuery("#h42")))+uNum(getValue(jQuery("#h42_mgo")))+uNum(getValue(jQuery("#h42_lsmgo"))));
+	h46 = h45 * uNum(getValue(jQuery("#h42")));
 	setValue(jQuery("#h46"), fNum(h46));
 
-	i46 = (uNum(getValue(jQuery("#h42")))+uNum(getValue(jQuery("#h42_mgo")))+uNum(getValue(jQuery("#h42_lsmgo"))))*uNum(getValue(jQuery("#i45")));
+	i46 = uNum(getValue(jQuery("#h42")))*uNum(getValue(jQuery("#i45")));
 	setValue(jQuery("#i46"), fNum(i46));
 
 	g47 = g46+h46+i46;
@@ -2147,14 +2127,8 @@ function mailItVe(){
 	var q35 = jQuery('#q35').val();
 	var s35 = jQuery('#s35').val();
 	var t35 = jQuery('#t35').val();
-	var bunker_price_dateupdated = jQuery('#bunker_price_dateupdated').text();
 	var d42 = jQuery('#d42').val();
-	var d42_180 = jQuery('#d42_180').val();
-	var d42_lsifo380 = jQuery('#d42_lsifo380').val();
-	var d42_lsifo180 = jQuery('#d42_lsifo180').val();
 	var h42 = jQuery('#h42').val();
-	var h42_mgo = jQuery('#h42_mgo').val();
-	var h42_lsmgo = jQuery('#h42_lsmgo').val();
 	var c44 = jQuery('#c44').val();
 	var d44 = jQuery('#d44').val();
 	var e44 = jQuery('#e44').val();
@@ -2298,7 +2272,7 @@ function mailItVe(){
 	var d81 = jQuery('#d81').text();
 	//END OF CALCULATED
 
-	jQuery("#misciframe")[0].src="misc/email_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&bunker_price_dateupdated="+bunker_price_dateupdated+"&d42="+d42+"&d42_180="+d42_180+"&d42_lsifo380="+d42_lsifo380+"&d42_lsifo180="+d42_lsifo180+"&h42="+h42+"&h42_mgo="+h42_mgo+"&h42_lsmgo="+h42_lsmgo+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35+"&r31="+r31+"&j32="+j32+"&l32="+l32+"&o32="+o32+"&o33="+o33+"&r33="+r33+"&r34="+r34+"&j35="+j35+"&l35="+l35+"&o35="+o35+"&o36="+o36+"&r36="+r36+"&o37="+o37+"&c45="+c45+"&d45="+d45+"&e45="+e45+"&g45="+g45+"&h45="+h45+"&c46="+c46+"&d46="+d46+"&e46="+e46+"&f46="+f46+"&g46="+g46+"&h46="+h46+"&i46="+i46+"&c47="+c47+"&g47="+g47+"&d18="+d18+"&d19b="+d19b+"&d20b="+d20b+"&d21b="+d21b+"&d22b="+d22b+"&d25="+d25+"&d26="+d26+"&ctotal1="+ctotal1+"&ctotal2="+ctotal2+"&c54="+c54+"&c66="+c66+"&c67="+c67+"&c68="+c68+"&b74="+b74+"&c74="+c74+"&d74="+d74+"&b75="+b75+"&b85="+b85+"&c85="+c85+"&f85="+f85+"&d86="+d86+"&c80="+c80+"&f80="+f80+"&g80="+g80+"&d81="+d81;
+	jQuery("#misciframe")[0].src="misc/email_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&d42="+d42+"&h42="+h42+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35+"&r31="+r31+"&j32="+j32+"&l32="+l32+"&o32="+o32+"&o33="+o33+"&r33="+r33+"&r34="+r34+"&j35="+j35+"&l35="+l35+"&o35="+o35+"&o36="+o36+"&r36="+r36+"&o37="+o37+"&c45="+c45+"&d45="+d45+"&e45="+e45+"&g45="+g45+"&h45="+h45+"&c46="+c46+"&d46="+d46+"&e46="+e46+"&f46="+f46+"&g46="+g46+"&h46="+h46+"&i46="+i46+"&c47="+c47+"&g47="+g47+"&d18="+d18+"&d19b="+d19b+"&d20b="+d20b+"&d21b="+d21b+"&d22b="+d22b+"&d25="+d25+"&d26="+d26+"&ctotal1="+ctotal1+"&ctotal2="+ctotal2+"&c54="+c54+"&c66="+c66+"&c67="+c67+"&c68="+c68+"&b74="+b74+"&c74="+c74+"&d74="+d74+"&b75="+b75+"&b85="+b85+"&c85="+c85+"&f85="+f85+"&d86="+d86+"&c80="+c80+"&f80="+f80+"&g80="+g80+"&d81="+d81;
 	jQuery("#miscdialog").dialog("open");
 }
 
@@ -2339,14 +2313,8 @@ function printItVe(){
 	var q35 = jQuery('#q35').val();
 	var s35 = jQuery('#s35').val();
 	var t35 = jQuery('#t35').val();
-	var bunker_price_dateupdated = jQuery('#bunker_price_dateupdated').text();
 	var d42 = jQuery('#d42').val();
-	var d42_180 = jQuery('#d42_180').val();
-	var d42_lsifo380 = jQuery('#d42_lsifo380').val();
-	var d42_lsifo180 = jQuery('#d42_lsifo180').val();
 	var h42 = jQuery('#h42').val();
-	var h42_mgo = jQuery('#h42_mgo').val();
-	var h42_lsmgo = jQuery('#h42_lsmgo').val();
 	var c44 = jQuery('#c44').val();
 	var d44 = jQuery('#d44').val();
 	var e44 = jQuery('#e44').val();
@@ -2490,7 +2458,7 @@ function printItVe(){
 	var d81 = jQuery('#d81').text();
 	//END OF CALCULATED
 
-	jQuery("#misciframe")[0].src="misc/print_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&bunker_price_dateupdated="+bunker_price_dateupdated+"&d42="+d42+"&d42_180="+d42_180+"&d42_lsifo380="+d42_lsifo380+"&d42_lsifo180="+d42_lsifo180+"&h42="+h42+"&h42_mgo="+h42_mgo+"&h42_lsmgo="+h42_lsmgo+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35+"&r31="+r31+"&j32="+j32+"&l32="+l32+"&o32="+o32+"&o33="+o33+"&r33="+r33+"&r34="+r34+"&j35="+j35+"&l35="+l35+"&o35="+o35+"&o36="+o36+"&r36="+r36+"&o37="+o37+"&c45="+c45+"&d45="+d45+"&e45="+e45+"&g45="+g45+"&h45="+h45+"&c46="+c46+"&d46="+d46+"&e46="+e46+"&f46="+f46+"&g46="+g46+"&h46="+h46+"&i46="+i46+"&c47="+c47+"&g47="+g47+"&d18="+d18+"&d19b="+d19b+"&d20b="+d20b+"&d21b="+d21b+"&d22b="+d22b+"&d25="+d25+"&d26="+d26+"&ctotal1="+ctotal1+"&ctotal2="+ctotal2+"&c54="+c54+"&c66="+c66+"&c67="+c67+"&c68="+c68+"&b74="+b74+"&c74="+c74+"&d74="+d74+"&b75="+b75+"&b85="+b85+"&c85="+c85+"&f85="+f85+"&d86="+d86+"&c80="+c80+"&f80="+f80+"&g80="+g80+"&d81="+d81;
+	jQuery("#misciframe")[0].src="misc/print_ve.php?imo="+imo+"&c31="+c31+"&d31="+d31+"&e31="+e31+"&g31="+g31+"&e33="+e33+"&g33="+g33+"&e34="+e34+"&g34="+g34+"&s31="+s31+"&t31="+t31+"&i32="+i32+"&k32="+k32+"&m32="+m32+"&n32="+n32+"&p32="+p32+"&q32="+q32+"&s32="+s32+"&t32="+t32+"&l33="+l33+"&m33="+m33+"&n33="+n33+"&p33="+p33+"&q33="+q33+"&s33="+s33+"&t33="+t33+"&s34="+s34+"&t34="+t34+"&i35="+i35+"&k35="+k35+"&m35="+m35+"&n35="+n35+"&p35="+p35+"&q35="+q35+"&s35="+s35+"&t35="+t35+"&d42="+d42+"&h42="+h42+"&c44="+c44+"&d44="+d44+"&e44="+e44+"&g44="+g44+"&h44="+h44+"&f45="+f45+"&i45="+i45+"&d19="+d19+"&d20="+d20+"&d21="+d21+"&d22="+d22+"&d23="+d23+"&d24="+d24+"&c51="+c51+"&c52="+c52+"&term="+term+"&linerterms="+linerterms+"&dues1="+dues1+"&dues2="+dues2+"&dues3="+dues3+"&pilotage1="+pilotage1+"&pilotage2="+pilotage2+"&pilotage3="+pilotage3+"&tugs1="+tugs1+"&tugs2="+tugs2+"&tugs3="+tugs3+"&bunkeradjustment1="+bunkeradjustment1+"&bunkeradjustment2="+bunkeradjustment2+"&bunkeradjustment3="+bunkeradjustment3+"&mooring1="+mooring1+"&mooring2="+mooring2+"&mooring3="+mooring3+"&dockage1="+dockage1+"&dockage2="+dockage2+"&dockage3="+dockage3+"&loaddischarge1="+loaddischarge1+"&loaddischarge2="+loaddischarge2+"&loaddischarge3="+loaddischarge3+"&agencyfee1="+agencyfee1+"&agencyfee2="+agencyfee2+"&agencyfee3="+agencyfee3+"&miscellaneous1="+miscellaneous1+"&miscellaneous2="+miscellaneous2+"&miscellaneous3="+miscellaneous3+"&canal="+canal+"&cbook1="+cbook1+"&cbook2="+cbook2+"&ctug1="+ctug1+"&ctug2="+ctug2+"&cline1="+cline1+"&cline2="+cline2+"&cmisc1="+cmisc1+"&cmisc2="+cmisc2+"&e74="+e74+"&f74="+f74+"&g74="+g74+"&h74="+h74+"&i74="+i74+"&j74="+j74+"&b80="+b80+"&d80="+d80+"&e80="+e80+"&d85="+d85+"&e85="+e85+"&g85="+g85+"&f31="+f31+"&h31="+h31+"&c32="+c32+"&d32="+d32+"&e32="+e32+"&f32="+f32+"&g32="+g32+"&h32="+h32+"&c33="+c33+"&d33="+d33+"&f33="+f33+"&h33="+h33+"&c34="+c34+"&d34="+d34+"&f34="+f34+"&h34="+h34+"&c35="+c35+"&d35="+d35+"&e35="+e35+"&f35="+f35+"&g35="+g35+"&h35="+h35+"&r31="+r31+"&j32="+j32+"&l32="+l32+"&o32="+o32+"&o33="+o33+"&r33="+r33+"&r34="+r34+"&j35="+j35+"&l35="+l35+"&o35="+o35+"&o36="+o36+"&r36="+r36+"&o37="+o37+"&c45="+c45+"&d45="+d45+"&e45="+e45+"&g45="+g45+"&h45="+h45+"&c46="+c46+"&d46="+d46+"&e46="+e46+"&f46="+f46+"&g46="+g46+"&h46="+h46+"&i46="+i46+"&c47="+c47+"&g47="+g47+"&d18="+d18+"&d19b="+d19b+"&d20b="+d20b+"&d21b="+d21b+"&d22b="+d22b+"&d25="+d25+"&d26="+d26+"&ctotal1="+ctotal1+"&ctotal2="+ctotal2+"&c54="+c54+"&c66="+c66+"&c67="+c67+"&c68="+c68+"&b74="+b74+"&c74="+c74+"&d74="+d74+"&b75="+b75+"&b85="+b85+"&c85="+c85+"&f85="+f85+"&d86="+d86+"&c80="+c80+"&f80="+f80+"&g80="+g80+"&d81="+d81;
 	jQuery("#miscdialog").dialog("open");
 }
 </script>
@@ -2558,14 +2526,8 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 		$q35 = $tabdata['q35'];
 		$s35 = $tabdata['s35'];
 		$t35 = $tabdata['t35'];
-		$bunker_price_dateupdated = $tabdata['bunker_price_dateupdated'];
 		$d42 = $tabdata['d42'];
-		$d42_180 = $tabdata['d42_180'];
-		$d42_lsifo380 = $tabdata['d42_lsifo380'];
-		$d42_lsifo180 = $tabdata['d42_lsifo180'];
 		$h42 = $tabdata['h42'];
-		$h42_mgo = $tabdata['h42_mgo'];
-		$h42_lsmgo = $tabdata['h42_lsmgo'];
 		$c44 = $tabdata['c44'];
 		$d44 = $tabdata['d44'];
 		$e44 = $tabdata['e44'];
@@ -3102,56 +3064,36 @@ if(!trim($e85)){
 		
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
-			<td class="text_1"><div style="padding:3px;"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated"><?php echo $bunker_price_dateupdated; ?></span></div></td>
+			<td class="text_1" colspan="8"><div style="padding:3px;"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated"></span></div></td>
 		  </tr>
-		</table>
-		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="f5f5f5">
-			<td width="500" colspan="5" style="padding:3px;"><b>IFO Type</b></td>
-			<td width="500" colspan="4" style="padding:3px;"><b>MDO Type</b></td>
+			<td width="100" style="padding:3px;"><b>IFO 380 Type</b></td>
+			<td width="450" colspan="3" style="padding:3px;"></td>
+			<td width="200" style="padding:3px;"><b>MDO Type</b></td>
+			<td width="250" colspan="3" style="padding:3px;"></td>
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text'  id='d42' name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='d42' name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;"><b>MDO Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='h42' name="h42" value="<?php echo $h42; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
-		  <tr bgcolor="e9e9e9">
-			<td style="padding:3px;"><b>IFO 180 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text'  id='d42_180' name="d42_180" value="<?php echo $d42_180; ?>" class='input_1 number' style="max-width:150px;" /></td>
-			<td style="padding:3px;"><b>MGO Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='h42_mgo' name="h42_mgo" value="<?php echo $h42_mgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
-		  </tr>
-		  <tr bgcolor="e9e9e9">
-			<td style="padding:3px;"><b>LS IFO 380 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text'  id='d42_lsifo380' name="d42_lsifo380" value="<?php echo $d42_lsifo380; ?>" class='input_1 number' style="max-width:150px;" /></td>
-			<td style="padding:3px;"><b>LS MGO 1% Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='h42_lsmgo' name="h42_lsmgo" value="<?php echo $h42_lsmgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
-		  </tr>
-		  <tr bgcolor="e9e9e9">
-			<td style="padding:3px;"><b>LS IFO 180 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text'  id='d42_lsifo180' name="d42_lsifo180" value="<?php echo $d42_lsifo180; ?>" class='input_1 number' style="max-width:150px;" /></td>
-			<td style="padding:3px;">&nbsp;</td>
-			<td colspan="3" class="input" style="padding:3px;">&nbsp;</td>
-		  </tr>
 		  <tr>
 			<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Ballast</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Laden</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Port</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Reserve</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Laden</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO 380/Ballast</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO 380/Laden</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO 380/Port</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO 380/Reserve</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Sea</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Port</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Reserve</i></b></td>
+			<td class="text_1 label" style="padding:3px;" colspan="2"><b><i>MDO/Reserve</i></b></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td style="padding:3px;"><b>Consumption (MT/day)</b></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='c44' name="c44" value="<?php echo $c44; ?>" class='input_1 number' style="max-width:100px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='d44' name="d44" value="<?php echo $d44; ?>" class='input_1 number' style="max-width:100px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='e44' name="e44" value="<?php echo $e44; ?>" class='input_1 number' style="max-width:100px;" /></td>
-			<td class="input" style="padding:3px;">&nbsp;</td>
-			<td class="input" style="padding:3px;">&nbsp;</td>
+			<td class='input number' id='f44' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='g44' name="g44" value="<?php echo $g44; ?>" class='input_1 number' style="max-width:70px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='h44' name="h44" value="<?php echo $h44; ?>" class='input_1 number' style="max-width:70px;" /></td>
 			<td class='general' id='i44' style="padding:3px;"></td>
@@ -3161,8 +3103,7 @@ if(!trim($e85)){
 			<td class="label calculated" id='c45' style="padding:3px;"></td>
 			<td class="label calculated" id='d45' style="padding:3px;"></td>
 			<td class="label calculated" id='e45' style="padding:3px;"></td>
-			<td class='label' style="padding:3px;"><input type='text' id='f45' name="f45" value="<?php echo $f45; ?>" class='input_1 number' style="max-width:100px;" /></td>
-			<td class="label" style="padding:3px;"></td>
+			<td class='label input' style="padding:3px;"><input type='text' id='f45' name="f45" value="<?php echo $f45; ?>" class='input_1 number' style="max-width:100px;" /></td>
 			<td class="label calculated" id='g45' style="padding:3px;"></td>
 			<td class="label calculated" id='h45' style="padding:3px;"></td>
 			<td class='label input' style="padding:3px;"><input type='text' id='i45' name="i45" value="<?php echo $i45; ?>" class='input_1 number' style="max-width:70px;" /></td>

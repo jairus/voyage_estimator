@@ -130,8 +130,14 @@ $p35 = $_GET['p35'];
 $q35 = $_GET['q35'];
 $s35 = $_GET['s35'];
 $t35 = $_GET['t35'];
+$bunker_price_dateupdated = $_GET['bunker_price_dateupdated'];
 $d42 = $_GET['d42'];
+$d42_180 = $_GET['d42_180'];
+$d42_lsifo380 = $_GET['d42_lsifo380'];
+$d42_lsifo180 = $_GET['d42_lsifo180'];
 $h42 = $_GET['h42'];
+$h42_mgo = $_GET['h42_mgo'];
+$h42_lsmgo = $_GET['h42_lsmgo'];
 $c44 = $_GET['c44'];
 $d44 = $_GET['d44'];
 $e44 = $_GET['e44'];
@@ -584,36 +590,56 @@ echo "<div class='landScape'>
 				
 				<table width="1000" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="cddee5">
-					<td class="text_1" colspan="8"><div style="padding:3px;"><b>BUNKER PRICING - Data from Bunkerworld</b></div></td>
+					<td class="text_1"><div style="padding:3px;"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated"><?php echo $bunker_price_dateupdated; ?></span></div></td>
 				  </tr>
+				</table>
+				<table width="1000" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="f5f5f5">
-					<td width="100" style="padding:3px;"><b>FO Type</b></td>
-					<td width="450" colspan="3" style="padding:3px;"></td>
-					<td width="200" style="padding:3px;"><b>DO Type</b></td>
-					<td width="250" colspan="3" style="padding:3px;"></td>
+					<td width="500" colspan="5" style="padding:3px;"><b>IFO Type</b></td>
+					<td width="500" colspan="4" style="padding:3px;"><b>MDO Type</b></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
-					<td style="padding:3px;"><b>FO Price ($)</b></td>
-					<td colspan="3" class="input" style="padding:3px;"><?php echo $d42; ?></td>
-					<td style="padding:3px;"><b>DO Price ($)</b></td>
+					<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
+					<td colspan="4" class="input" style="padding:3px;"><?php echo $d42; ?></td>
+					<td style="padding:3px;"><b>MDO Price ($)</b></td>
 					<td colspan="3" class="input" style="padding:3px;"><?php echo $h42; ?></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td style="padding:3px;"><b>IFO 180 Price ($)</b></td>
+					<td colspan="4" class="input" style="padding:3px;"><?php echo $d42_180; ?></td>
+					<td style="padding:3px;"><b>MGO Price ($)</b></td>
+					<td colspan="3" class="input" style="padding:3px;"><?php echo $h42_mgo; ?></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td style="padding:3px;"><b>LS IFO 380 1% Price ($)</b></td>
+					<td colspan="4" class="input" style="padding:3px;"><?php echo $d42_lsifo380; ?></td>
+					<td style="padding:3px;"><b>LS MGO 1% Price ($)</b></td>
+					<td colspan="3" class="input" style="padding:3px;"><?php echo $h42_lsmgo; ?></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td style="padding:3px;"><b>LS IFO 180 1% Price ($)</b></td>
+					<td colspan="4" class="input" style="padding:3px;"><?php echo $d42_lsifo180; ?></td>
+					<td style="padding:3px;">&nbsp;</td>
+					<td colspan="3" class="input" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr>
 					<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
-					<td class="text_1 label" style="padding:3px;"><b><i>FO/Ballast</i></b></td>
-					<td class="text_1 label" style="padding:3px;"><b><i>FO/Laden</i></b></td>
-					<td class="text_1 label" style="padding:3px;"><b><i>FO/Port</i></b></td>
-					<td class="text_1 label" style="padding:3px;"><b><i>FO/Reserve</i></b></td>
-					<td class="text_1 label" style="padding:3px;"><b><i>DO/Sea</i></b></td>
-					<td class="text_1 label" style="padding:3px;"><b><i>DO/Port</i></b></td>
-					<td class="text_1 label" style="padding:3px;" colspan="2"><b><i>DO/Reserve</i></b></td>
+					<td class="text_1 label" style="padding:3px;"><b><i>IFO/Ballast</i></b></td>
+					<td class="text_1 label" style="padding:3px;"><b><i>IFO/Laden</i></b></td>
+					<td class="text_1 label" style="padding:3px;"><b><i>IFO/Port</i></b></td>
+					<td class="text_1 label" style="padding:3px;"><b><i>IFO/Reserve</i></b></td>
+					<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
+					<td class="text_1 label" style="padding:3px;"><b><i>MDO/Laden</i></b></td>
+					<td class="text_1 label" style="padding:3px;"><b><i>MDO/Port</i></b></td>
+					<td class="text_1 label" style="padding:3px;"><b><i>MDO/Reserve</i></b></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><b>Consumption (MT/day)</b></td>
 					<td class='input' style="padding:3px;"><?php echo $c44; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $d44; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $e44; ?></td>
-					<td class='input number' id='f44' style="padding:3px;"></td>
+					<td class="input" style="padding:3px;">&nbsp;</td>
+					<td class="input" style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $g44; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $h44; ?></td>
 					<td class='general' id='i44' style="padding:3px;"></td>
@@ -623,7 +649,8 @@ echo "<div class='landScape'>
 					<td class="label calculated" id='c45' style="padding:3px;"><?php echo $c45; ?></td>
 					<td class="label calculated" id='d45' style="padding:3px;"><?php echo $d45; ?></td>
 					<td class="label calculated" id='e45' style="padding:3px;"><?php echo $e45; ?></td>
-					<td class='label input' style="padding:3px;"><?php echo $f45; ?></td>
+					<td class='label' style="padding:3px;"><?php echo $f45; ?></td>
+					<td class="label" style="padding:3px;"></td>
 					<td class="label calculated" id='g45' style="padding:3px;"><?php echo $g45; ?></td>
 					<td class="label calculated" id='h45' style="padding:3px;"><?php echo $h45; ?></td>
 					<td class='label input' style="padding:3px;"><?php echo $i45; ?></td>

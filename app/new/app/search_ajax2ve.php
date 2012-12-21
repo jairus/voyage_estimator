@@ -209,6 +209,27 @@ if(trim($t)){
 					$t1 = count($siitech_ships);
 					//END
 					
+					//PRIVATE MESSAGE
+					$private    = getMessageByImo($ships[$i]['imo'], 'private');
+					$mid        = $private['id'];
+					$private    = stripslashes($private['message']);
+					$privatealt = htmlentities($private);
+					$private    = word_limit($private, 2);
+					//END
+					
+					//BROKERS UPDATES
+					$nmessage      = getMessageByImo($ships[$i]['imo'], 'network');
+					$nmessagesuper = $nmessage;
+					$nmid          = $nmessage['id'];
+					$nmessage      = unserialize($nmessage['message']);
+					
+					$dely          = $nmessage['dely'];
+					$delydate_from = $nmessage['delydate_from'];
+					
+					$remarksalt = $nmessage['remarks'];
+					$remarks    = word_limit($nmessage['remarks'], 2);
+					//END
+					
 					if(trim($t1)){
 						$sat_arr = array();
 						for($i1=0; $i1<$t1; $i1++){

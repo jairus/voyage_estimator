@@ -11,9 +11,12 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	var page = '<?php echo $_GET['new_search']; ?>';
+	var action = '<?php echo $_GET['action']; ?>';
 	
 	if(page=='1'){
 		displayContent('fast_search');
+	}else if(action=='network' || action=='alerts' || action=='account'){
+		displayContent('account');
 	}else{
 		displayContent('voyage_estimator');
 	}
@@ -35,10 +38,12 @@ function displayContent(content){
 	jQuery('#piracy_notices_id_link').removeClass('content_link_selected');
 	jQuery('#bunker_pricing_id_link').removeClass('content_link_selected');
 	jQuery('#weather_id_link').removeClass('content_link_selected');
+	jQuery('#account_id_link').removeClass('content_link_selected');
 	
 	jQuery('#voyage_estimator_id_link').addClass('content_link');
 	
 	var page = '<?php echo $_GET['new_search']; ?>';
+	var action = '<?php echo $_GET['action']; ?>';
 	var condition = '';
 	
 	if(page=='1'){
@@ -64,6 +69,10 @@ function displayContent(content){
 	
 	if(page=='4'){
 		var condition = '?new_search=4';
+	}
+	
+	if(action!=''){
+		var condition = '?action='+action;
 	}
 	
 	jQuery.ajax({
@@ -100,6 +109,7 @@ function displayContent(content){
             <a onclick="displayContent('piracy_notices');" id='piracy_notices_id_link' class="content_link">Piracy</a> &nbsp; 
             <a onclick="displayContent('bunker_pricing');" id='bunker_pricing_id_link' class="content_link">Bunker</a> &nbsp; 
             <a onclick="displayContent('weather');" id='weather_id_link' class="content_link">Weather</a> &nbsp; 
+			<a onclick="displayContent('account');" id='account_id_link' class="content_link">Account</a> &nbsp; 
 			<a href="cargospotterlogout.php" id='weather_id_link' class="content_link">Logout</a>
         </div>
         <div style="float:left; width:1300px; height:auto; border-bottom:3px dotted #fff;">&nbsp;</div>

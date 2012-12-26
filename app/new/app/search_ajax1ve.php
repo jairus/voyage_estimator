@@ -2040,7 +2040,6 @@ if($vessel_type){
 	if($vtarr){
 		$sqlext .= " ( ";
 		$sqlext2 .= " ( ";
-		$sqlext3 .= " ( ";
 	}
 	
 	for($vti=0; $vti<$vtarr; $vti++){

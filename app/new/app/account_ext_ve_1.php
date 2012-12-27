@@ -1813,7 +1813,7 @@ $table_memberships .= '</table>';
         <div class="profile-table" id="view-miscellaneous-details">  
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td width="220" class="field" valign="bottom">Subscribe to our Newsletters and recieve information from Maritime Infosys or its partners:</td>
+                    <td width="220" class="field" valign="bottom">Subscribe to our Newsletters and recieve information from CargoSpotter or its partners:</td>
                     <td valign="bottom" style="padding:2px 0px;"><?=ucfirst($row['subscribe_newsletter'])?></td>
                 </tr>			
             </table>            
@@ -1823,7 +1823,7 @@ $table_memberships .= '</table>';
                 <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td width="20" valign="top" style="padding:2px 0px;"><input type="checkbox" name="newsletters" value="Yes"<?=$row['subscribe_newsletter'] == 'yes' ? 'checked="checked"' : ''?> /></td>
-                        <td class="field" valign="top">Subscribe to our Newsletters and recieve information from Maritime Infosys or its partners</td>
+                        <td class="field" valign="top">Subscribe to our Newsletters and recieve information from CargoSpotter or its partners</td>
                     </tr>			
                 </table>        
 				<input type="hidden" name="trigger" id="trigger" value="update_miscellaneous_details" />                    

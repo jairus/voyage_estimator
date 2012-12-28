@@ -47,7 +47,7 @@ if($t2){
 			$siitech_shippos_data = $ships['siitech_shippos_data'];
 			$siitech_shippos_data = getXMLtoArr($siitech_shippos_data);
 			
-			$heading = $siitech_shippos_data['TrueHeading'].'&deg;';
+			$heading = str_replace(' degrees', '', $ships['TRUE HEADING']).'&deg;';
 			
 			$siitech_shipstat_data = $ships['siitech_shipstat_data'];
 			$siitech_shipstat_data = getXMLtoArr($siitech_shipstat_data);

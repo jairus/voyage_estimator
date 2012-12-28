@@ -2109,9 +2109,9 @@ $logfile = dirname(__FILE__)."/includes/searchcache/logs/".date("Ymd")."_".micro
 $logfile = dirname(__FILE__)."/includes/searchcache/logs/log.txt";
 file_put_contents($logfile, "");
 
-$sql2 = "select * from `_xvas_parsed2_dry` where 1 ";
 $userid = $_SESSION['user']['id'];
-$sqlext2 .= " and `imo` in (
+$sql2 = "select * from `_xvas_parsed2_dry` where 1 ";
+/*$sqlext2 .= " and `imo` in (
 	select `imo` from `_messages` where `type`='network' and 
 	`user_email` in ( 
 		select `email` from `_sbis_users` where 
@@ -2124,6 +2124,18 @@ $sqlext2 .= " and `imo` in (
 	)
 	and `imo` not in (
 		select distinct `xvas_imo` from `_xvas_siitech_cache`
+	)
+)";*/
+$sqlext2 .= " and `imo` in (
+	select `imo` from `_messages` where `type`='network' and 
+	`user_email` in ( 
+		select `email` from `_sbis_users` where 
+		`id` in (
+			select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+		) or
+		`id` in (
+			select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+		)
 	)
 )";
 	
@@ -2227,7 +2239,7 @@ for($i=0; $i<$t; $i++){
 			$shipsA2[] = $ships[$i];
 		}
 
-		if(1&&($_GET['includebrokermessages']||1)){
+		//if(1&&($_GET['includebrokermessages']||1)){
 			//get message from network
 			$nmessage = getMessageByImo($ships[$i]['xvas_imo'], 'network');
 
@@ -2235,15 +2247,18 @@ for($i=0; $i<$t; $i++){
 
 			$nmessage = unserialize($nmessage['message']);
 
-			if($nmessage['openport']){
+			/*if($nmessage['openport']){
 				$nmessage['openport'] = strtoupper($nmessage['openport']);
-				$nmessage['opendate_ts'] = convertDateToTs($nmessage['opendate']);
+				$nmessage['opendate_ts'] = convertDateToTs($nmessage['opendate']);*/
+			if($nmessage['dely']){
+				$nmessage['dely'] = strtoupper($nmessage['dely']);
+				$nmessage['opendate_ts'] = convertDateToTs($nmessage['delydate_from']);
 
 				$ots = floorTs($ships[$i]['siitech_eta_ts']);
 
 				$tsdiff = $ots-time(); 
 
-				$destport = strtoupper(trim($nmessage['openport']));
+				$destport = strtoupper(trim($nmessage['dely']));
 
 				$destportx = $destport;
 
@@ -2268,7 +2283,7 @@ for($i=0; $i<$t; $i++){
 					$shipsA4[] = $ships[$i];
 				}
 			}
-		}
+		//}
 	//}
 	if($i%1000==0&&$i!=0){
 		$time_end = microtime_float();
@@ -2291,15 +2306,18 @@ for($i=0; $i<$t5; $i++){
 
 	$nmessage = unserialize($nmessage['message']);
 
-	if($nmessage['openport']){
+	/*if($nmessage['openport']){
 		$nmessage['openport'] = strtoupper($nmessage['openport']);
-		$nmessage['opendate_ts'] = convertDateToTs($nmessage['opendate']);
+		$nmessage['opendate_ts'] = convertDateToTs($nmessage['opendate']);*/
+	if($nmessage['dely']){
+		$nmessage['dely'] = strtoupper($nmessage['dely']);
+		$nmessage['opendate_ts'] = convertDateToTs($nmessage['delydate_from']);
 
 		$ots = floorTs($ships[$i]['siitech_eta_ts']);
 
 		$tsdiff = $ots-time(); 
 
-		$destport = strtoupper(trim($nmessage['openport']));
+		$destport = strtoupper(trim($nmessage['dely']));
 
 		$destportx = $destport;
 

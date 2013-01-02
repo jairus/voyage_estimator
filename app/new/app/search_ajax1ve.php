@@ -2094,7 +2094,7 @@ $sql = "select
 (unix_timestamp(siitech_lastseen)+$adjusthours) as `siitech_lastseen_ts`, 
 (unix_timestamp(siitech_receivetime)+$adjusthours) as `siitech_receivetime_ts`
 
-from `_xvas_siitech_cache` where `qc_color`='green' or  `qc_color`='' ";
+from `_xvas_siitech_cache` where `qc_color`='green' or `qc_color`='' ";
 
 if($sqlext){
 	$sql .= " ".$sqlext;
@@ -2111,21 +2111,6 @@ file_put_contents($logfile, "");
 
 $userid = $_SESSION['user']['id'];
 $sql2 = "select * from `_xvas_parsed2_dry` where 1 ";
-/*$sqlext2 .= " and `imo` in (
-	select `imo` from `_messages` where `type`='network' and 
-	`user_email` in ( 
-		select `email` from `_sbis_users` where 
-		`id` in (
-			select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
-		) or
-		`id` in (
-			select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
-		)
-	)
-	and `imo` not in (
-		select distinct `xvas_imo` from `_xvas_siitech_cache`
-	)
-)";*/
 $sqlext2 .= " and `imo` in (
 	select `imo` from `_messages` where `type`='network' and 
 	`user_email` in ( 

@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style_ve.css">
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<!--<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>-->
 <script type="text/javascript">
 $(document).ready(function() {
 	var page = '<?php echo $_GET['new_search']; ?>';
@@ -15,7 +15,7 @@ $(document).ready(function() {
 	
 	if(page=='1'){
 		displayContent('fast_search');
-	}else if(action=='network' || action=='alerts' || action=='account'){
+	}else if(action=='network' || action=='alerts' || action=='account' || action=='accountview'){
 		displayContent('account');
 	}else{
 		displayContent('voyage_estimator');
@@ -73,6 +73,12 @@ function displayContent(content){
 	
 	if(action!=''){
 		var condition = '?action='+action;
+		
+		var id = '<?php echo $_GET['id']; ?>';
+		
+		if(id!=''){
+			var condition = '?action='+action+'&id='+id;
+		}
 	}
 	
 	jQuery.ajax({

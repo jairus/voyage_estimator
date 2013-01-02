@@ -128,7 +128,7 @@ if($_GET['ajax']){
 							<table width='100%' border='0' cellspacing='0' cellpadding='0'>
 								<tr>
 									<td width='60'>".$image."</td>
-									<td class='person' width='140'><a href='account.php?action=accountview&id=".$r[$i]['id']."' class='clickable2' target='_blank'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
+									<td class='person' width='140'><a href='cargospotter.php?action=accountview&id=".$r[$i]['id']."' class='clickable2' target='_blank'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
 									<td class='status' width='260' align='right'>
 										<div id='addbutt".$r[$i]['id']."'><input type='button' value='add to my network' onclick='addUser(".$r[$i]['id'].")' style='border:1px solid #47a5e7; background-color:white; padding:3px 11px; cursor:pointer;'></div>
 									</td>
@@ -145,7 +145,7 @@ if($_GET['ajax']){
 							<table width='100%' border='0' cellspacing='0' cellpadding='0'>
 								<tr>
 									<td width='60'>".$image."</td>
-									<td class='person' width='140'><a href='account.php?action=accountview&id=".$r[$i]['id']."' class='clickable2' target='_blank'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
+									<td class='person' width='140'><a href='cargospotter.php?action=accountview&id=".$r[$i]['id']."' class='clickable2' target='_blank'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
 									<td class='status' width='260' align='right'>
 										<div id='addbutt".$r[$i]['id']."'>In Network <input type='button' value='remove from network' onclick='removeUser(".$r[$i]['id'].")' style='border:1px solid #47a5e7; background-color:white; padding:3px; cursor:pointer;'></div>
 									</td>
@@ -162,7 +162,7 @@ if($_GET['ajax']){
 							<table width='100%' border='0' cellspacing='0' cellpadding='0'>
 								<tr>
 									<td width='60'>".$image."</td>
-									<td class='person' width='140'><a href='account.php?action=accountview&id=".$r[$i]['id']."' class='clickable2' target='_blank'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
+									<td class='person' width='140'><a href='cargospotter.php?action=accountview&id=".$r[$i]['id']."' class='clickable2' target='_blank'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
 									<td class='status' width='260' align='right'>
 										<div id='addbutt".$r[$i]['id']."'>Awaiting Network Confirmation</div>
 									</td>
@@ -179,7 +179,7 @@ if($_GET['ajax']){
 							<table width='100%' border='0' cellspacing='0' cellpadding='0'>
 								<tr>
 									<td width='60'>".$image."</td>
-									<td class='person' width='140'><a href='account.php?action=accountview&id=".$r[$i]['id']."' class='clickable'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
+									<td class='person' width='140'><a href='cargospotter.php?action=accountview&id=".$r[$i]['id']."' class='clickable'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
 									<td class='status' width='260' align='right'>
 										<div id='addbutt".$r[$i]['id']."'><input type='button' value='confirm to add' onclick='confirmUser(".$r[$i]['id'].")' style='border:1px solid #47a5e7; background-color:white; padding:3px; cursor:pointer;'></div>
 									</td>
@@ -616,7 +616,7 @@ function aremoveUser(id){
 															echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>
 																<tr>
 																	<td width='60'>".$image."</td>
-																	<td class='person' width='140'><a href='account.php?action=accountview&id=".$r[$i]['id']."' class='clickable2' target='_blank'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
+																	<td class='person' width='140'><a href='cargospotter.php?action=accountview&id=".$r[$i]['id']."' class='clickable2' target='_blank'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
 																	<td class='status' width='290' align='right'>
 																		<div id='naddbutt".$r[$i]['id']."'>In Network <input type='button' value='remove from network' onclick='nremoveUser(".$r[$i]['id'].")' style='border:1px solid #47a5e7; background-color:white; padding:3px; cursor:pointer;'></div>
 																	</td>
@@ -663,7 +663,7 @@ function aremoveUser(id){
 										<input type='hidden' name='adduserid' value=\"".htmlentities($r[$i]['id'])."\">
 										<tr>
 											<td valign='top'>$image</td>
-											<td valign='top' class='person'><a href='account.php?action=accountview&id=".$r[$i]['id']."'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
+											<td valign='top' class='person'><a href='cargospotter.php?action=accountview&id=".$r[$i]['id']."'>".$r[$i]['firstname']." ".$r[$i]['lastname']."</a></td>
 											<td valign='top' class='status'>
 												<div id='aaddbutt".$r[$i]['id']."'>
 													<input type='button' value='Confirm to Add' onclick='aconfirmUser(".$r[$i]['id'].")'>

@@ -242,7 +242,7 @@ if(trim($t)){
 								$print = array();
 								
 								$print['id']        = $siitech_ships[$i1]['id'];
-								$print['Ship Name'] = $siitech_ships[$i1]['xvas_name'];
+								$print['Ship Name'] = $ships[$i]['name'];
 								$print['IMO #']     = $siitech_ships[$i1]['xvas_imo'];
 								
 								$imageb          = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$print['IMO #']);

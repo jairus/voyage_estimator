@@ -39,7 +39,7 @@ if($t){
 			$load_port = $ships['LOAD_PORT'];
 			$load_port_eta = "<a class='clickable2' alt=\"".$ships['ETA TO LOAD PORT (days)']."\" title=\"".$ships['ETA TO LOAD PORT (days)']."\">".substr($ships['ETA TO LOAD PORT (days)'], 0,11)."</a>";
 			
-			$destination = $ships['DEST PORT NAME'];
+			$destination = $ships['DESTINATION'];
 			if(!trim($destination)){ $destination = "<img style='height:15px; width:15px;' src='images/alert1.png' alt='No AIS Data Available' title='No AIS Data Available' />"; }
 			
 			$destination_eta = "<a class='clickable2' alt=\"".$ships['ETA TO DESTINATION (days)']."\" title=\"".$ships['ETA TO DESTINATION (days)']."\" >".substr($ships['ETA TO DESTINATION (days)'], 0,11)."</a>";

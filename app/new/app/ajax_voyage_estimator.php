@@ -616,33 +616,59 @@ $(function(){
 
 			setValue(jQuery("#"+idx+" .e33"), str);
 			
-			jQuery("#d42").each(function(){
-				setValue(jQuery(this), fNum(average_price_ifo380s[str]));
-			});
+			//1st ROW
+			if(average_price_ifo380s[str] || average_price_mdos[str]){
+				jQuery("#d42").each(function(){
+					setValue(jQuery(this), fNum(average_price_ifo380s[str]));
+				});
+				
+				jQuery("#h42").each(function(){
+					setValue(jQuery(this), fNum(average_price_mdos[str]));
+				});
+				jQuery('#bunker_first_row').show();
+			}else{
+				jQuery('#bunker_first_row').hide();
+			}
+			//1st ROW
 			
-			jQuery("#d42_180").each(function(){
-				setValue(jQuery(this), fNum(average_price_ifo180s[str]));
-			});
+			//2nd ROW
+			if(average_price_ifo180s[str] || average_price_mgos[str]){
+				jQuery("#d42_180").each(function(){
+					setValue(jQuery(this), fNum(average_price_ifo180s[str]));
+				});
+				jQuery("#h42_mgo").each(function(){
+					setValue(jQuery(this), fNum(average_price_mgos[str]));
+				});
+				jQuery('#bunker_second_row').show();
+			}else{
+				jQuery('#bunker_second_row').hide();
+			}
+			//2nd ROW
 			
-			jQuery("#d42_lsifo380").each(function(){
-				setValue(jQuery(this), fNum(average_price_ls380_1s[str]));
-			});
+			//3rd ROW
+			if(average_price_ls380_1s[str] || average_price_lsmgos[str]){
+				jQuery("#d42_lsifo380").each(function(){
+					setValue(jQuery(this), fNum(average_price_ls380_1s[str]));
+				});
+				jQuery("#h42_lsmgo").each(function(){
+					setValue(jQuery(this), fNum(average_price_lsmgos[str]));
+				});
+				jQuery('#bunker_third_row').show();
+			}else{
+				jQuery('#bunker_third_row').hide();
+			}
+			//3rd ROW
 			
-			jQuery("#d42_lsifo180").each(function(){
-				setValue(jQuery(this), fNum(average_price_ls180_1s[str]));
-			});
-			
-			jQuery("#h42").each(function(){
-				setValue(jQuery(this), fNum(average_price_mdos[str]));
-			});
-			
-			jQuery("#h42_mgo").each(function(){
-				setValue(jQuery(this), fNum(average_price_mgos[str]));
-			});
-			
-			jQuery("#h42_lsmgo").each(function(){
-				setValue(jQuery(this), fNum(average_price_lsmgos[str]));
-			});
+			//4th ROW
+			if(average_price_ls180_1s[str]){
+				jQuery("#d42_lsifo180").each(function(){
+					setValue(jQuery(this), fNum(average_price_ls180_1s[str]));
+				});
+				jQuery('#bunker_fourth_row').show();
+			}else{
+				jQuery('#bunker_fourth_row').hide();
+			}
+			//4th ROW
 			
 			if(dateupdateds[str]){
 				jQuery('#bunker_price_dateupdated').text('Correct as of '+dateupdateds[str]);
@@ -3112,25 +3138,49 @@ if(!trim($e85)){
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text'  id='d42' name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;"><b>MDO Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='h42' name="h42" value="<?php echo $h42; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="3" class="input" style="padding:3px;"><input type='text' name="h42" value="<?php echo $h42; ?>" class='input_1 number' style="max-width:150px;" /></td>
+		  </tr>
+		  <tr id="bunker_first_row" bgcolor="e9e9e9" style="display:none;">
+			<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
+			<td colspan="4" class="input" style="padding:3px;" id='d42'></td>
+			<td style="padding:3px;"><b>MDO Price ($)</b></td>
+			<td colspan="3" class="input" style="padding:3px;" id='h42'></td>
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>IFO 180 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text'  id='d42_180' name="d42_180" value="<?php echo $d42_180; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42_180" value="<?php echo $d42_180; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;"><b>MGO Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='h42_mgo' name="h42_mgo" value="<?php echo $h42_mgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="3" class="input" style="padding:3px;"><input type='text' name="h42_mgo" value="<?php echo $h42_mgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
+		  </tr>
+		  <tr id="bunker_second_row" bgcolor="e9e9e9" style="display:none;">
+			<td style="padding:3px;"><b>IFO 180 Price ($)</b></td>
+			<td colspan="4" class="input" style="padding:3px;" id='d42_180'></td>
+			<td style="padding:3px;"><b>MGO Price ($)</b></td>
+			<td colspan="3" class="input" style="padding:3px;" id='h42_mgo'></td>
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>LS IFO 380 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text'  id='d42_lsifo380' name="d42_lsifo380" value="<?php echo $d42_lsifo380; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42_lsifo380" value="<?php echo $d42_lsifo380; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;"><b>LS MGO 1% Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text'  id='h42_lsmgo' name="h42_lsmgo" value="<?php echo $h42_lsmgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="3" class="input" style="padding:3px;"><input type='text' name="h42_lsmgo" value="<?php echo $h42_lsmgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
+		  </tr>
+		  <tr id="bunker_third_row" bgcolor="e9e9e9" style="display:none;">
+			<td style="padding:3px;"><b>LS IFO 380 1% Price ($)</b></td>
+			<td colspan="4" class="input" style="padding:3px;" id='d42_lsifo380'></td>
+			<td style="padding:3px;"><b>LS MGO 1% Price ($)</b></td>
+			<td colspan="3" class="input" style="padding:3px;" id='h42_lsmgo'></td>
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>LS IFO 180 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text'  id='d42_lsifo180' name="d42_lsifo180" value="<?php echo $d42_lsifo180; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42_lsifo180" value="<?php echo $d42_lsifo180; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td style="padding:3px;">&nbsp;</td>
+			<td colspan="3" class="input" style="padding:3px;">&nbsp;</td>
+		  </tr>
+		  <tr id="bunker_fourth_row" bgcolor="e9e9e9" style="display:none;">
+			<td style="padding:3px;"><b>LS IFO 180 1% Price ($)</b></td>
+			<td colspan="4" class="input" style="padding:3px;" id='d42_lsifo180'></td>
 			<td style="padding:3px;">&nbsp;</td>
 			<td colspan="3" class="input" style="padding:3px;">&nbsp;</td>
 		  </tr>

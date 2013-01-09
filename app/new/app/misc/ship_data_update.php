@@ -1,3 +1,47 @@
+<script language="JavaScript">
+function saveForm(){
+	var submitok = 1;
+	
+	alertmsg = "";
+	
+	if(document.inputfrm.IMO_NUMBER.value==""){ 
+		alertmsg="Please enter the IMO NUMBER\n"; submitok = 0; 
+		document.inputfrm.submitok.value=0
+	}else if(document.inputfrm.IMO_NUMBER.value.length!=7){
+		alertmsg="IMO NUMBER should be 7 digits\n"; submitok = 0; 
+		document.inputfrm.submitok.value=0
+	}else{
+		document.inputfrm.submitok.value=1
+	}
+	
+	if(submitok==1){document.inputfrm.submit();}
+	else{alert(alertmsg);}
+}
+</script>
+<style>
+*{
+	font-size:11px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+
+.main_title{
+	font-weight:bold;
+	font-size:24px;
+}
+
+.title{
+	font-weight:bold;
+}
+
+.btn_1{
+	border:1px solid #333333;
+	background-color:#000000;
+	color:#CCCCCC;
+	padding:5px 30px;
+	cursor:pointer;
+	font-size:14px;
+}
+</style>
 <?php
 @session_start();
 include_once(dirname(__FILE__)."/../includes/bootstrap.php");
@@ -6,7 +50,7 @@ date_default_timezone_set('UTC');
 if($_POST['submitok']==1){
 	$print = array();
 
-	$print['MAIN']['IMO_NUMBER'] = $_POST['imo'];
+	$print['MAIN']['IMO_NUMBER'] = $_POST['IMO_NUMBER'];
 	$print['MAIN']['MMSI_CODE'] = $_POST['MMSI_CODE'];
 	$print['MAIN']['STATUS'] = $_POST['STATUS'];
 	$print['MAIN']['NAME'] = $_POST['NAME'];
@@ -15,6 +59,7 @@ if($_POST['submitok']==1){
 	$print['MAIN']['SUMMER_DWT'] = $_POST['SUMMER_DWT'];
 	$print['MAIN']['BUILD'] = $_POST['BUILD'];
 	$print['MAIN']['BUILDER'] = $_POST['BUILDER'];
+	$print['MAIN']['FLAG'] = $_POST['FLAG'];
 	$print['MAIN']['HOME_PORT'] = $_POST['HOME_PORT'];
 	$print['MAIN']['MANAGER'] = $_POST['MANAGER'];
 	$print['MAIN']['OWNER'] = $_POST['OWNER'];
@@ -212,287 +257,506 @@ if($_POST['submitok']==1){
 	$print['CERTIFICATES']['EXPIRES'] = $_POST['EXPIRES'];
 	$print['CERTIFICATES']['CERTIFICATE'] = $_POST['CERTIFICATE'];
 	
-	echo '<pre>';
-	die(print_r($print));
+	$data = serialize($print);
+	$by_user = $user['email'];
 	
-	header('Location: ship_data_update.php?msg=Update successfull!');
-}
-
-if(!trim($_GET['imo'])){
-	echo 'IMO is not found!';
-}else{
-	$sql = "SELECT * FROM _xvas_shipdata_dry WHERE imo='".$_GET['imo']."' LIMIT 0,1";
+	$sql = "SELECT `imo` FROM `_xvas_shipdata_dry_user` WHERE `imo`='".$print['MAIN']['IMO_NUMBER']."' LIMIT 0,1";
 	$r = dbQuery($sql);
 	
 	if(!trim($r[0]['imo'])){
-		echo 'IMO does not exist!';
+		$sql = "INSERT INTO `_xvas_shipdata_dry_user` (`imo`, `data`, `by_user`, `dateadded`, `dateupdated`) VALUES('".mysql_escape_string($print['MAIN']['IMO_NUMBER'])."', '".mysql_escape_string($data)."', '".mysql_escape_string($by_user)."', NOW(), NOW())";
+		dbQuery($sql, $link);
 	}else{
-		$IMO_NUMBER = $r[0]['imo'];
-		$MMSI_CODE = getValue($r[0]['data'], 'MMSI_CODE');
-		$STATUS	 = getValue($r[0]['data'], 'STATUS');
-		$NAME = getValue($r[0]['data'], 'NAME');
-		$VESSEL_TYPE = getValue($r[0]['data'], 'VESSEL_TYPE');
-		$GROSS_TONNAGE = getValue($r[0]['data'], 'GROSS_TONNAGE');
-		$SUMMER_DWT = getValue($r[0]['data'], 'SUMMER_DWT');
-		$BUILD = getValue($r[0]['data'], 'BUILD');
-		$BUILDER = getValue($r[0]['data'], 'BUILDER');
+		$sql = "UPDATE `_xvas_shipdata_dry_user`
+				SET `data` = '".mysql_escape_string($data)."', 
+					`by_user` = '".mysql_escape_string($by_user)."', 
+					dateupdated = NOW()
+				WHERE imo = '".$print['MAIN']['IMO_NUMBER']."'";
+		dbQuery($sql, $link);
+	}
+	
+	redirectjs("ship_data_update.php?msg=Update successfull!");
+}
+
+if(!trim($_GET['imo']) && !isset($_GET['msg'])){
+	echo 'IMO is not found!';
+}else{
+	$sql = "SELECT * FROM _xvas_shipdata_dry_user WHERE imo='".$_GET['imo']."' LIMIT 0,1";
+	$r = dbQuery($sql);
+	
+	if($r[0]['imo']==''){
+		$sql = "SELECT * FROM _xvas_shipdata_dry WHERE imo='".$_GET['imo']."' LIMIT 0,1";
+		$r = dbQuery($sql);
 		
-		$FLAG = getValue($r[0]['data'], 'LAST_KNOWN_FLAG');
-		if($FLAG==""){
-			$FLAG = getValue($r[0]['data'], 'FLAG');
-			$FLAG_IMAGE = getFlagImage($FLAG);
+		if(!trim($r[0]['imo']) && !isset($_GET['msg'])){
+			echo 'IMO does not exist!';
 		}else{
-			$FLAG = $FLAG;
-			$FLAG_IMAGE = getFlagImage($FLAG);
-		}
+			$by_user = '';
 		
-		$HOME_PORT = getValue($r[0]['data'], 'HOME_PORT');
-		$MANAGER = getValue($r[0]['data'], 'MANAGER');
-		$OWNER = getValue($r[0]['data'], 'OWNER');
-		$CLASS_SOCIETY = getValue($r[0]['data'], 'CLASS_SOCIETY');
-		$DUAL_CLASS_SOCIETY = getValue($r[0]['data'], 'DUAL_CLASS_SOCIETY');
-		$INSURER = getValue($r[0]['data'], 'INSURER');
-		$ALTERATION = getValue($r[0]['data'], 'ALTERATION');
-		$DEAD_REASON = getValue($r[0]['data'], 'DEAD_REASON');
-		$GEAR = getValue($r[0]['data'], 'GEAR');
-		$HOME_PORT = getValue($r[0]['data'], 'HOME_PORT');
-		$NAVIGATION_AREA = getValue($r[0]['data'], 'NAVIGATION_AREA');
-		$REGISTRATION_NUMBER = getValue($r[0]['data'], 'REGISTRATION_NUMBER');
-		$SERVICE_LIMIT = getValue($r[0]['data'], 'SERVICE_LIMIT');
-		$SPEED_AVERAGE = getValue($r[0]['data'], 'SPEED_AVERAGE');
-		$SPEED_ECON = getValue($r[0]['data'], 'SPEED_ECON');
-		$SPEED_MAX = getValue($r[0]['data'], 'SPEED_MAX');
-		$SPEED_SERVICE = getValue($r[0]['data'], 'SPEED_SERVICE');
-		$SPEED_TRIAL = getValue($r[0]['data'], 'SPEED_TRIAL');
-		$TRADING_AREAS = getValue($r[0]['data'], 'TRADING_AREAS');
-		$ALTERATION_DATE = getValue($r[0]['data'], 'ALTERATION_DATE');
-		$BROKEN_UP = getValue($r[0]['data'], 'BROKEN_UP');
-		$BUILD_END = getValue($r[0]['data'], 'BUILD_END');
-		$BUILD_START = getValue($r[0]['data'], 'BUILD_START');
-		$DATE_OF_ORDER = getValue($r[0]['data'], 'DATE_OF_ORDER');
-		$DELIVERY_DATE = getValue($r[0]['data'], 'DELIVERY_DATE');
-		$FIRST_MOVEMENT = getValue($r[0]['data'], 'FIRST_MOVEMENT');
-		$KEEL_LAID = getValue($r[0]['data'], 'KEEL_LAID');
-		$LAUNCH_DATE = getValue($r[0]['data'], 'LAUNCH_DATE');
-		$LOSS_DATE = getValue($r[0]['data'], 'LOSS_DATE');
-		$PLACE_OF_BUILD = getValue($r[0]['data'], 'PLACE_OF_BUILD');
-		$STEEL_CUTTING = getValue($r[0]['data'], 'STEEL_CUTTING');
-		$YARD_NUMBER = getValue($r[0]['data'], 'YARD_NUMBER');
-		$ANCHOR_CHAIN_DIAMETER = getValue($r[0]['data'], 'ANCHOR_CHAIN_DIAMETER');
-		$ANCHOR_HOLDING_ABILITY = getValue($r[0]['data'], 'ANCHOR_HOLDING_ABILITY');
-		$ANCHOR_STRENGTH_LEVEL = getValue($r[0]['data'], 'ANCHOR_STRENGTH_LEVEL');
-		$ASPHALT = getValue($r[0]['data'], 'ASPHALT');
-		$BALE = getValue($r[0]['data'], 'BALE');
-		$BALLAST = getValue($r[0]['data'], 'BALLAST');
-		$BALLAST_CLEAN = getValue($r[0]['data'], 'BALLAST_CLEAN');
-		$BALLAST_SEGREGATED = getValue($r[0]['data'], 'BALLAST_SEGREGATED');
-		$BERTHS = getValue($r[0]['data'], 'BERTHS');
-		$BUNKER = getValue($r[0]['data'], 'BUNKER');
-		$CABINS = getValue($r[0]['data'], 'CABINS');
-		$CARGO_CAPACITY = getValue($r[0]['data'], 'CARGO_CAPACITY');
-		$CARS = getValue($r[0]['data'], 'CARS');
-		$CRUDE_CAPACITY = getValue($r[0]['data'], 'CRUDE_CAPACITY');
-		$DIESEL_OIL = getValue($r[0]['data'], 'DIESEL_OIL');
-		$FISH_HOLD_VOLUME = getValue($r[0]['data'], 'FISH_HOLD_VOLUME');
-		$FRESHWATER = getValue($r[0]['data'], 'FRESHWATER');
-		$FUEL = getValue($r[0]['data'], 'FUEL');
-		$FUEL_OIL = getValue($r[0]['data'], 'FUEL_OIL');
-		$GRAIN = getValue($r[0]['data'], 'GRAIN');
-		$GRAIN_LIQUID = getValue($r[0]['data'], 'GRAIN_LIQUID');
-		$HOPPERS = getValue($r[0]['data'], 'HOPPERS');
-		$HYDRAULIC_OIL_CAPACITY = getValue($r[0]['data'], 'HYDRAULIC_OIL_CAPACITY');
-		$INSULATED = getValue($r[0]['data'], 'INSULATED');
-		$LIQUID_GAS = getValue($r[0]['data'], 'LIQUID_GAS');
-		$LIQUID_OIL = getValue($r[0]['data'], 'LIQUID_OIL');
-		$LORRIES = getValue($r[0]['data'], 'LORRIES');
-		$LUBE_OIL = getValue($r[0]['data'], 'LUBE_OIL');
-		$ORE = getValue($r[0]['data'], 'ORE');
-		$PASSENGERS = getValue($r[0]['data'], 'PASSENGERS');
-		$RAIL_WAGONS = getValue($r[0]['data'], 'RAIL_WAGONS');
-		$SLOPS = getValue($r[0]['data'], 'SLOPS');
-		$TEU = getValue($r[0]['data'], 'TEU');
-		$TRAILERS = getValue($r[0]['data'], 'TRAILERS');
-		$CARGO_HANDLING = getValue($r[0]['data'], 'CARGO_HANDLING');
-		$CARGO_PUMPS = getValue($r[0]['data'], 'CARGO_PUMPS');
-		$CARGO_SPACE = getValue($r[0]['data'], 'CARGO_SPACE');
-		$CARGO_TANKS = getValue($r[0]['data'], 'CARGO_TANKS');
-		$CRANES = getValue($r[0]['data'], 'CRANES');
-		$DERRICKS = getValue($r[0]['data'], 'DERRICKS');
-		$HATCHWAYS = getValue($r[0]['data'], 'HATCHWAYS');
-		$HOLDS = getValue($r[0]['data'], 'HOLDS');
-		$LARGEST_HATCH = getValue($r[0]['data'], 'LARGEST_HATCH');
-		$LIFTING_EQUIPMENT = getValue($r[0]['data'], 'LIFTING_EQUIPMENT');
-		$CLASS_ASSIGNMENT = getValue($r[0]['data'], 'CLASS_ASSIGNMENT');
-		$CLASS_NOTATION = getValue($r[0]['data'], 'CLASS_NOTATION');
-		$LAST_DRYDOCK_SURVEY = getValue($r[0]['data'], 'LAST_DRYDOCK_SURVEY');
-		$LAST_HULL_SURVEY = getValue($r[0]['data'], 'LAST_HULL_SURVEY');
-		$LAST_SPECIAL_SURVEY = getValue($r[0]['data'], 'LAST_SPECIAL_SURVEY');
-		$NEXT_DRYDOCK_SURVEY = getValue($r[0]['data'], 'NEXT_DRYDOCK_SURVEY');
-		$NEXT_HULL_SURVEY = getValue($r[0]['data'], 'NEXT_HULL_SURVEY');
-		$NEXT_SPECIAL_SURVEY = getValue($r[0]['data'], 'NEXT_SPECIAL_SURVEY');
-		$ACTUAL_MANNING_OFFICERS = getValue($r[0]['data'], 'ACTUAL_MANNING_OFFICERS');
-		$ACTUAL_MANNING_RATINGS = getValue($r[0]['data'], 'ACTUAL_MANNING_RATINGS');
-		$LANGUAGE_USED_COMMON = getValue($r[0]['data'], 'LANGUAGE_USED_COMMON');
-		$LANGUAGE_USED_VESSEL_OPERATOR = getValue($r[0]['data'], 'LANGUAGE_USED_VESSEL_OPERATOR');
-		$MINIMUM_MANNING_REQUIRED_OFFICERS = getValue($r[0]['data'], 'MINIMUM_MANNING_REQUIRED_OFFICERS');
-		$MINIMUM_MANNING_REQUIRED_RATINGS = getValue($r[0]['data'], 'MINIMUM_MANNING_REQUIRED_RATINGS');
-		$TOTAL_CREW = getValue($r[0]['data'], 'TOTAL_CREW');
-		$BOW_TO_BRIDGE = getValue($r[0]['data'], 'BOW_TO_BRIDGE');
-		$BOW_TO_CENTER_MANIFOLD = getValue($r[0]['data'], 'BOW_TO_CENTER_MANIFOLD');
-		$BREADTH_EXTREME = getValue($r[0]['data'], 'BREADTH_EXTREME');
-		$BREADTH_MOULDED = getValue($r[0]['data'], 'BREADTH_MOULDED');
-		$BREADTH_REGISTERED = getValue($r[0]['data'], 'BREADTH_REGISTERED');
-		$BRIDGE = getValue($r[0]['data'], 'BRIDGE');
-		$BULB_LENGTH_FROM_FP = getValue($r[0]['data'], 'BULB_LENGTH_FROM_FP');
-		$DEPTH = getValue($r[0]['data'], 'DEPTH');
-		$DRAUGHT = getValue($r[0]['data'], 'DRAUGHT');
-		$FORECASTLE = getValue($r[0]['data'], 'FORECASTLE');
-		$HEIGHT = getValue($r[0]['data'], 'HEIGHT');
-		$KEEL_TO_MASTHEAD = getValue($r[0]['data'], 'KEEL_TO_MASTHEAD');
-		$LENGTH_B_W_PERPENDICULARS = getValue($r[0]['data'], 'LENGTH_B_W_PERPENDICULARS');
-		$LENGTH_ON_DECK = getValue($r[0]['data'], 'LENGTH_ON_DECK');
-		$LENGTH_OVERALL = getValue($r[0]['data'], 'LENGTH_OVERALL');
-		$LENGTH_REGISTERED = getValue($r[0]['data'], 'LENGTH_REGISTERED');
-		$LENGTH_WATERLINE = getValue($r[0]['data'], 'LENGTH_WATERLINE');
-		$LIGHTSHIP_PARALLEL_BODY = getValue($r[0]['data'], 'LIGHTSHIP_PARALLEL_BODY');
-		$NORMAL_BALLAST_PARALLEL_BODY = getValue($r[0]['data'], 'NORMAL_BALLAST_PARALLEL_BODY');
-		$PARALLEL_BODY_LENGTH_AT_SUMMER_DWT = getValue($r[0]['data'], 'PARALLEL_BODY_LENGTH_AT_SUMMER_DWT');
-		$POOP = getValue($r[0]['data'], 'POOP');
-		$QUARTERDECK = getValue($r[0]['data'], 'QUARTERDECK');
-		$ENGINE_NUMBER = getValue($r[0]['data'], 'ENGINE_#');
-		$ENGINE_BORE = getValue($r[0]['data'], 'ENGINE_BORE');
-		$ENGINE_BUILD_YEAR = getValue($r[0]['data'], 'ENGINE_BUILD_YEAR');
-		$ENGINE_BUILDER = getValue($r[0]['data'], 'ENGINE_BUILDER');
-		$ENGINE_CYLINDERS = getValue($r[0]['data'], 'ENGINE_CYLINDERS');
-		$ENGINE_MODEL = getValue($r[0]['data'], 'ENGINE_MODEL');
-		$ENGINE_POWER = getValue($r[0]['data'], 'ENGINE_POWER');
-		$ENGINE_RATIO = getValue($r[0]['data'], 'ENGINE_RATIO');
-		$ENGINE_RPM = getValue($r[0]['data'], 'ENGINE_RPM');
-		$ENGINE_STROKE = getValue($r[0]['data'], 'ENGINE_STROKE');
-		$ENGINE_TYPE = getValue($r[0]['data'], 'ENGINE_TYPE');
-		$FUEL_CONSUMPTION = getValue($r[0]['data'], 'FUEL_CONSUMPTION');
-		$FUEL_TYPE = getValue($r[0]['data'], 'FUEL_TYPE');
-		$PROPELLER = getValue($r[0]['data'], 'PROPELLER');
-		$PROPELLING_TYPE = getValue($r[0]['data'], 'PROPELLING_TYPE');
-		$DEADWEIGHT_LIGHTSHIP = getValue($r[0]['data'], 'DEADWEIGHT_LIGHTSHIP');
-		$DEADWEIGHT_MAXIMUM_ASSIGNED = getValue($r[0]['data'], 'DEADWEIGHT_MAXIMUM_ASSIGNED');
-		$DEADWEIGHT_NORMAL_BALLAST = getValue($r[0]['data'], 'DEADWEIGHT_NORMAL_BALLAST');
-		$DEADWEIGHT_SEGREGATED_BALLAST = getValue($r[0]['data'], 'DEADWEIGHT_SEGREGATED_BALLAST');
-		$DEADWEIGHT_TROPICAL = getValue($r[0]['data'], 'DEADWEIGHT_TROPICAL');
-		$DEADWEIGHT_WINTER = getValue($r[0]['data'], 'DEADWEIGHT_WINTER');
-		$DISPLACEMENT_LIGHTSHIP = getValue($r[0]['data'], 'DISPLACEMENT_LIGHTSHIP');
-		$DISPLACEMENT_NORMAL_BALLAST = getValue($r[0]['data'], 'DISPLACEMENT_NORMAL_BALLAST');
-		$DISPLACEMENT_SEGREGATED_BALLAST = getValue($r[0]['data'], 'DISPLACEMENT_SEGREGATED_BALLAST');
-		$DISPLACEMENT_SUMMER = getValue($r[0]['data'], 'DISPLACEMENT_SUMMER');
-		$DISPLACEMENT_TROPICAL = getValue($r[0]['data'], 'DISPLACEMENT_TROPICAL');
-		$DISPLACEMENT_WINTER = getValue($r[0]['data'], 'DISPLACEMENT_WINTER');
-		$DRAFT_LIGHTSHIP = getValue($r[0]['data'], 'DRAFT_LIGHTSHIP');
-		$DRAFT_NORMAL_BALLAST = getValue($r[0]['data'], 'DRAFT_NORMAL_BALLAST');
-		$DRAFT_SEGREGATED_BALLAST = getValue($r[0]['data'], 'DRAFT_SEGREGATED_BALLAST');
-		$DRAFT_SUMMER = getValue($r[0]['data'], 'DRAFT_SUMMER');
-		$DRAFT_TROPICAL = getValue($r[0]['data'], 'DRAFT_TROPICAL');
-		$DRAFT_WINTER = getValue($r[0]['data'], 'DRAFT_WINTER');
-		$DRAUGHT_AFT_NORMAL_BALLAST = getValue($r[0]['data'], 'DRAUGHT_AFT_NORMAL_BALLAST');
-		$DRAUGHT_FORE_NORMAL_BALLAST = getValue($r[0]['data'], 'DRAUGHT_FORE_NORMAL_BALLAST');
-		$FREEBOARD_C1 = getValue($r[0]['data'], 'FREEBOARD_C1');
-		$FREEBOARD_LIGHTSHIP = getValue($r[0]['data'], 'FREEBOARD_LIGHTSHIP');
-		$FREEBOARD_NORMAL_BALLAST = getValue($r[0]['data'], 'FREEBOARD_NORMAL_BALLAST');
-		$FREEBOARD_SEGREGATED_BALLAST = getValue($r[0]['data'], 'FREEBOARD_SEGREGATED_BALLAST');
-		$FREEBOARD_SUMMER = getValue($r[0]['data'], 'FREEBOARD_SUMMER');
-		$FREEBOARD_TROPICAL = getValue($r[0]['data'], 'FREEBOARD_TROPICAL');
-		$FREEBOARD_WINTER = getValue($r[0]['data'], 'FREEBOARD_WINTER');
-		$FWA_SUMMER_DRAFT = getValue($r[0]['data'], 'FWA_SUMMER_DRAFT');
-		$TPC_IMMERSION_SUMMER_DRAFT = getValue($r[0]['data'], 'TPC_IMMERSION_SUMMER_DRAFT');
-		$BULKHEADS = getValue($r[0]['data'], 'BULKHEADS');
-		$CONTINUOUS_DECKS = getValue($r[0]['data'], 'CONTINUOUS_DECKS');
-		$DECK_ERECTIONS = getValue($r[0]['data'], 'DECK_ERECTIONS');
-		$DECKS_NUMBER = getValue($r[0]['data'], 'DECKS_NUMBER');
-		$HULL_MATERIAL = getValue($r[0]['data'], 'HULL_MATERIAL');
-		$HULL_TYPE = getValue($r[0]['data'], 'HULL_TYPE');
-		$LONGITUDINAL_BULKHEADS = getValue($r[0]['data'], 'LONGITUDINAL_BULKHEADS');
-		$LONGITUDINAL_FRAMES = getValue($r[0]['data'], 'LONGITUDINAL_FRAMES');
-		$RO_RO_LANES = getValue($r[0]['data'], 'RO-RO_LANES');
-		$RO_RO_RAMPS = getValue($r[0]['data'], 'RO-RO_RAMPS');
-		$SUPERSTRUCTURES = getValue($r[0]['data'], 'SUPERSTRUCTURES');
-		$TRANSVERSE_BULKHEADS = getValue($r[0]['data'], 'TRANSVERSE_BULKHEADS');
-		$WATERTIGHT_BULKHEADS = getValue($r[0]['data'], 'WATERTIGHT_BULKHEADS');
-		$WATERTIGHT_COMPARTMENTS = getValue($r[0]['data'], 'WATERTIGHT_COMPARTMENTS');
-		$NET_TONNAGE = getValue($r[0]['data'], 'NET_TONNAGE');
-		$PANAMA_GROSS_TONNAGE = getValue($r[0]['data'], 'PANAMA_GROSS_TONNAGE');
-		$PANAMA_NET_TONNAGE = getValue($r[0]['data'], 'PANAMA_NET_TONNAGE');
-		$PANAMA_TONNAGE = getValue($r[0]['data'], 'PANAMA_TONNAGE');
-		$SUEZ_GROSS_TONNAGE = getValue($r[0]['data'], 'SUEZ_GROSS_TONNAGE');
-		$SUEZ_NET_TONNAGE = getValue($r[0]['data'], 'SUEZ_NET_TONNAGE');
-		$SUEZ_TONNAGE = getValue($r[0]['data'], 'SUEZ_TONNAGE');
-		$CALL_SIGN = getValue($r[0]['data'], 'CALL_SIGN');
-		$SATCOM_ANSWER_BACK = getValue($r[0]['data'], 'SATCOM_ANSWER_BACK');
-		$SATCOM_ID = getValue($r[0]['data'], 'SATCOM_ID');
-		$DATE = getValue($r[0]['data'], 'DATE');
-		$TYPE = getValue($r[0]['data'], 'TYPE');
-		$ORGANIZATION = getValue($r[0]['data'], 'ORGANIZATION');
-		$AUTHORITY = getValue($r[0]['data'], 'AUTHORITY');
-		$PLACE = getValue($r[0]['data'], 'PLACE');
-		$DETENTION = getValue($r[0]['data'], 'DETENTION');
-		$DEFICIENCY = getValue($r[0]['data'], 'DEFICIENCY');
-		$PSC = getValue($r[0]['data'], 'PSC');
-		$DETENTIONS = getValue($r[0]['data'], 'DETENTIONS');
-		$DEFICIENCIES = getValue($r[0]['data'], 'DEFICIENCIES');
-		$CERTIFICATE_TYPE = getValue($r[0]['data'], 'CERTIFICATE_TYPE');
-		$ISSUED = getValue($r[0]['data'], 'ISSUED');
-		$FROM = getValue($r[0]['data'], 'FROM');
-		$EXPIRES = getValue($r[0]['data'], 'EXPIRES');
-		$CERTIFICATE = getValue($r[0]['data'], 'CERTIFICATE');
-		?>
-		<script language="JavaScript">
-		function saveForm(){
-			var submitok = 1;
+			$IMO_NUMBER = $r[0]['imo'];
+			$MMSI_CODE = getValue($r[0]['data'], 'MMSI_CODE');
+			$STATUS	 = getValue($r[0]['data'], 'STATUS');
+			$NAME = getValue($r[0]['data'], 'NAME');
+			$VESSEL_TYPE = getValue($r[0]['data'], 'VESSEL_TYPE');
+			$GROSS_TONNAGE = getValue($r[0]['data'], 'GROSS_TONNAGE');
+			$SUMMER_DWT = getValue($r[0]['data'], 'SUMMER_DWT');
+			$BUILD = getValue($r[0]['data'], 'BUILD');
+			$BUILDER = getValue($r[0]['data'], 'BUILDER');
 			
-			alertmsg = "";
-			
-			if(document.inputfrm.IMO_NUMBER.value==""){ 
-				alertmsg="Please enter the IMO NUMBER\n"; submitok = 0; 
-				document.inputfrm.submitok.value=0
-			}else if(document.inputfrm.IMO_NUMBER.value.length!=7){
-				alertmsg="IMO NUMBER should be 7 digits\n"; submitok = 0; 
-				document.inputfrm.submitok.value=0
+			$FLAG = getValue($r[0]['data'], 'LAST_KNOWN_FLAG');
+			if($FLAG==""){
+				$FLAG = getValue($r[0]['data'], 'FLAG');
+				$FLAG_IMAGE = getFlagImage($FLAG);
 			}else{
-				document.inputfrm.submitok.value=1
+				$FLAG = $FLAG;
+				$FLAG_IMAGE = getFlagImage($FLAG);
 			}
 			
-			if(submitok==1){document.inputfrm.submit();}
-			else{alert(alertmsg);}
+			$HOME_PORT = getValue($r[0]['data'], 'HOME_PORT');
+			$MANAGER = getValue($r[0]['data'], 'MANAGER');
+			$OWNER = getValue($r[0]['data'], 'OWNER');
+			$CLASS_SOCIETY = getValue($r[0]['data'], 'CLASS_SOCIETY');
+			$DUAL_CLASS_SOCIETY = getValue($r[0]['data'], 'DUAL_CLASS_SOCIETY');
+			$INSURER = getValue($r[0]['data'], 'INSURER');
+			$ALTERATION = getValue($r[0]['data'], 'ALTERATION');
+			$DEAD_REASON = getValue($r[0]['data'], 'DEAD_REASON');
+			$GEAR = getValue($r[0]['data'], 'GEAR');
+			$HOME_PORT = getValue($r[0]['data'], 'HOME_PORT');
+			$NAVIGATION_AREA = getValue($r[0]['data'], 'NAVIGATION_AREA');
+			$REGISTRATION_NUMBER = getValue($r[0]['data'], 'REGISTRATION_NUMBER');
+			$SERVICE_LIMIT = getValue($r[0]['data'], 'SERVICE_LIMIT');
+			$SPEED_AVERAGE = getValue($r[0]['data'], 'SPEED_AVERAGE');
+			$SPEED_ECON = getValue($r[0]['data'], 'SPEED_ECON');
+			$SPEED_MAX = getValue($r[0]['data'], 'SPEED_MAX');
+			$SPEED_SERVICE = getValue($r[0]['data'], 'SPEED_SERVICE');
+			$SPEED_TRIAL = getValue($r[0]['data'], 'SPEED_TRIAL');
+			$TRADING_AREAS = getValue($r[0]['data'], 'TRADING_AREAS');
+			$ALTERATION_DATE = getValue($r[0]['data'], 'ALTERATION_DATE');
+			$BROKEN_UP = getValue($r[0]['data'], 'BROKEN_UP');
+			$BUILD_END = getValue($r[0]['data'], 'BUILD_END');
+			$BUILD_START = getValue($r[0]['data'], 'BUILD_START');
+			$DATE_OF_ORDER = getValue($r[0]['data'], 'DATE_OF_ORDER');
+			$DELIVERY_DATE = getValue($r[0]['data'], 'DELIVERY_DATE');
+			$FIRST_MOVEMENT = getValue($r[0]['data'], 'FIRST_MOVEMENT');
+			$KEEL_LAID = getValue($r[0]['data'], 'KEEL_LAID');
+			$LAUNCH_DATE = getValue($r[0]['data'], 'LAUNCH_DATE');
+			$LOSS_DATE = getValue($r[0]['data'], 'LOSS_DATE');
+			$PLACE_OF_BUILD = getValue($r[0]['data'], 'PLACE_OF_BUILD');
+			$STEEL_CUTTING = getValue($r[0]['data'], 'STEEL_CUTTING');
+			$YARD_NUMBER = getValue($r[0]['data'], 'YARD_NUMBER');
+			$ANCHOR_CHAIN_DIAMETER = getValue($r[0]['data'], 'ANCHOR_CHAIN_DIAMETER');
+			$ANCHOR_HOLDING_ABILITY = getValue($r[0]['data'], 'ANCHOR_HOLDING_ABILITY');
+			$ANCHOR_STRENGTH_LEVEL = getValue($r[0]['data'], 'ANCHOR_STRENGTH_LEVEL');
+			$ASPHALT = getValue($r[0]['data'], 'ASPHALT');
+			$BALE = getValue($r[0]['data'], 'BALE');
+			$BALLAST = getValue($r[0]['data'], 'BALLAST');
+			$BALLAST_CLEAN = getValue($r[0]['data'], 'BALLAST_CLEAN');
+			$BALLAST_SEGREGATED = getValue($r[0]['data'], 'BALLAST_SEGREGATED');
+			$BERTHS = getValue($r[0]['data'], 'BERTHS');
+			$BUNKER = getValue($r[0]['data'], 'BUNKER');
+			$CABINS = getValue($r[0]['data'], 'CABINS');
+			$CARGO_CAPACITY = getValue($r[0]['data'], 'CARGO_CAPACITY');
+			$CARS = getValue($r[0]['data'], 'CARS');
+			$CRUDE_CAPACITY = getValue($r[0]['data'], 'CRUDE_CAPACITY');
+			$DIESEL_OIL = getValue($r[0]['data'], 'DIESEL_OIL');
+			$FISH_HOLD_VOLUME = getValue($r[0]['data'], 'FISH_HOLD_VOLUME');
+			$FRESHWATER = getValue($r[0]['data'], 'FRESHWATER');
+			$FUEL = getValue($r[0]['data'], 'FUEL');
+			$FUEL_OIL = getValue($r[0]['data'], 'FUEL_OIL');
+			$GRAIN = getValue($r[0]['data'], 'GRAIN');
+			$GRAIN_LIQUID = getValue($r[0]['data'], 'GRAIN_LIQUID');
+			$HOPPERS = getValue($r[0]['data'], 'HOPPERS');
+			$HYDRAULIC_OIL_CAPACITY = getValue($r[0]['data'], 'HYDRAULIC_OIL_CAPACITY');
+			$INSULATED = getValue($r[0]['data'], 'INSULATED');
+			$LIQUID_GAS = getValue($r[0]['data'], 'LIQUID_GAS');
+			$LIQUID_OIL = getValue($r[0]['data'], 'LIQUID_OIL');
+			$LORRIES = getValue($r[0]['data'], 'LORRIES');
+			$LUBE_OIL = getValue($r[0]['data'], 'LUBE_OIL');
+			$ORE = getValue($r[0]['data'], 'ORE');
+			$PASSENGERS = getValue($r[0]['data'], 'PASSENGERS');
+			$RAIL_WAGONS = getValue($r[0]['data'], 'RAIL_WAGONS');
+			$SLOPS = getValue($r[0]['data'], 'SLOPS');
+			$TEU = getValue($r[0]['data'], 'TEU');
+			$TRAILERS = getValue($r[0]['data'], 'TRAILERS');
+			$CARGO_HANDLING = getValue($r[0]['data'], 'CARGO_HANDLING');
+			$CARGO_PUMPS = getValue($r[0]['data'], 'CARGO_PUMPS');
+			$CARGO_SPACE = getValue($r[0]['data'], 'CARGO_SPACE');
+			$CARGO_TANKS = getValue($r[0]['data'], 'CARGO_TANKS');
+			$CRANES = getValue($r[0]['data'], 'CRANES');
+			$DERRICKS = getValue($r[0]['data'], 'DERRICKS');
+			$HATCHWAYS = getValue($r[0]['data'], 'HATCHWAYS');
+			$HOLDS = getValue($r[0]['data'], 'HOLDS');
+			$LARGEST_HATCH = getValue($r[0]['data'], 'LARGEST_HATCH');
+			$LIFTING_EQUIPMENT = getValue($r[0]['data'], 'LIFTING_EQUIPMENT');
+			$CLASS_ASSIGNMENT = getValue($r[0]['data'], 'CLASS_ASSIGNMENT');
+			$CLASS_NOTATION = getValue($r[0]['data'], 'CLASS_NOTATION');
+			$LAST_DRYDOCK_SURVEY = getValue($r[0]['data'], 'LAST_DRYDOCK_SURVEY');
+			$LAST_HULL_SURVEY = getValue($r[0]['data'], 'LAST_HULL_SURVEY');
+			$LAST_SPECIAL_SURVEY = getValue($r[0]['data'], 'LAST_SPECIAL_SURVEY');
+			$NEXT_DRYDOCK_SURVEY = getValue($r[0]['data'], 'NEXT_DRYDOCK_SURVEY');
+			$NEXT_HULL_SURVEY = getValue($r[0]['data'], 'NEXT_HULL_SURVEY');
+			$NEXT_SPECIAL_SURVEY = getValue($r[0]['data'], 'NEXT_SPECIAL_SURVEY');
+			$ACTUAL_MANNING_OFFICERS = getValue($r[0]['data'], 'ACTUAL_MANNING_OFFICERS');
+			$ACTUAL_MANNING_RATINGS = getValue($r[0]['data'], 'ACTUAL_MANNING_RATINGS');
+			$LANGUAGE_USED_COMMON = getValue($r[0]['data'], 'LANGUAGE_USED_COMMON');
+			$LANGUAGE_USED_VESSEL_OPERATOR = getValue($r[0]['data'], 'LANGUAGE_USED_VESSEL_OPERATOR');
+			$MINIMUM_MANNING_REQUIRED_OFFICERS = getValue($r[0]['data'], 'MINIMUM_MANNING_REQUIRED_OFFICERS');
+			$MINIMUM_MANNING_REQUIRED_RATINGS = getValue($r[0]['data'], 'MINIMUM_MANNING_REQUIRED_RATINGS');
+			$TOTAL_CREW = getValue($r[0]['data'], 'TOTAL_CREW');
+			$BOW_TO_BRIDGE = getValue($r[0]['data'], 'BOW_TO_BRIDGE');
+			$BOW_TO_CENTER_MANIFOLD = getValue($r[0]['data'], 'BOW_TO_CENTER_MANIFOLD');
+			$BREADTH_EXTREME = getValue($r[0]['data'], 'BREADTH_EXTREME');
+			$BREADTH_MOULDED = getValue($r[0]['data'], 'BREADTH_MOULDED');
+			$BREADTH_REGISTERED = getValue($r[0]['data'], 'BREADTH_REGISTERED');
+			$BRIDGE = getValue($r[0]['data'], 'BRIDGE');
+			$BULB_LENGTH_FROM_FP = getValue($r[0]['data'], 'BULB_LENGTH_FROM_FP');
+			$DEPTH = getValue($r[0]['data'], 'DEPTH');
+			$DRAUGHT = getValue($r[0]['data'], 'DRAUGHT');
+			$FORECASTLE = getValue($r[0]['data'], 'FORECASTLE');
+			$HEIGHT = getValue($r[0]['data'], 'HEIGHT');
+			$KEEL_TO_MASTHEAD = getValue($r[0]['data'], 'KEEL_TO_MASTHEAD');
+			$LENGTH_B_W_PERPENDICULARS = getValue($r[0]['data'], 'LENGTH_B_W_PERPENDICULARS');
+			$LENGTH_ON_DECK = getValue($r[0]['data'], 'LENGTH_ON_DECK');
+			$LENGTH_OVERALL = getValue($r[0]['data'], 'LENGTH_OVERALL');
+			$LENGTH_REGISTERED = getValue($r[0]['data'], 'LENGTH_REGISTERED');
+			$LENGTH_WATERLINE = getValue($r[0]['data'], 'LENGTH_WATERLINE');
+			$LIGHTSHIP_PARALLEL_BODY = getValue($r[0]['data'], 'LIGHTSHIP_PARALLEL_BODY');
+			$NORMAL_BALLAST_PARALLEL_BODY = getValue($r[0]['data'], 'NORMAL_BALLAST_PARALLEL_BODY');
+			$PARALLEL_BODY_LENGTH_AT_SUMMER_DWT = getValue($r[0]['data'], 'PARALLEL_BODY_LENGTH_AT_SUMMER_DWT');
+			$POOP = getValue($r[0]['data'], 'POOP');
+			$QUARTERDECK = getValue($r[0]['data'], 'QUARTERDECK');
+			$ENGINE_NUMBER = getValue($r[0]['data'], 'ENGINE_#');
+			$ENGINE_BORE = getValue($r[0]['data'], 'ENGINE_BORE');
+			$ENGINE_BUILD_YEAR = getValue($r[0]['data'], 'ENGINE_BUILD_YEAR');
+			$ENGINE_BUILDER = getValue($r[0]['data'], 'ENGINE_BUILDER');
+			$ENGINE_CYLINDERS = getValue($r[0]['data'], 'ENGINE_CYLINDERS');
+			$ENGINE_MODEL = getValue($r[0]['data'], 'ENGINE_MODEL');
+			$ENGINE_POWER = getValue($r[0]['data'], 'ENGINE_POWER');
+			$ENGINE_RATIO = getValue($r[0]['data'], 'ENGINE_RATIO');
+			$ENGINE_RPM = getValue($r[0]['data'], 'ENGINE_RPM');
+			$ENGINE_STROKE = getValue($r[0]['data'], 'ENGINE_STROKE');
+			$ENGINE_TYPE = getValue($r[0]['data'], 'ENGINE_TYPE');
+			$FUEL_CONSUMPTION = getValue($r[0]['data'], 'FUEL_CONSUMPTION');
+			$FUEL_TYPE = getValue($r[0]['data'], 'FUEL_TYPE');
+			$PROPELLER = getValue($r[0]['data'], 'PROPELLER');
+			$PROPELLING_TYPE = getValue($r[0]['data'], 'PROPELLING_TYPE');
+			$DEADWEIGHT_LIGHTSHIP = getValue($r[0]['data'], 'DEADWEIGHT_LIGHTSHIP');
+			$DEADWEIGHT_MAXIMUM_ASSIGNED = getValue($r[0]['data'], 'DEADWEIGHT_MAXIMUM_ASSIGNED');
+			$DEADWEIGHT_NORMAL_BALLAST = getValue($r[0]['data'], 'DEADWEIGHT_NORMAL_BALLAST');
+			$DEADWEIGHT_SEGREGATED_BALLAST = getValue($r[0]['data'], 'DEADWEIGHT_SEGREGATED_BALLAST');
+			$DEADWEIGHT_TROPICAL = getValue($r[0]['data'], 'DEADWEIGHT_TROPICAL');
+			$DEADWEIGHT_WINTER = getValue($r[0]['data'], 'DEADWEIGHT_WINTER');
+			$DISPLACEMENT_LIGHTSHIP = getValue($r[0]['data'], 'DISPLACEMENT_LIGHTSHIP');
+			$DISPLACEMENT_NORMAL_BALLAST = getValue($r[0]['data'], 'DISPLACEMENT_NORMAL_BALLAST');
+			$DISPLACEMENT_SEGREGATED_BALLAST = getValue($r[0]['data'], 'DISPLACEMENT_SEGREGATED_BALLAST');
+			$DISPLACEMENT_SUMMER = getValue($r[0]['data'], 'DISPLACEMENT_SUMMER');
+			$DISPLACEMENT_TROPICAL = getValue($r[0]['data'], 'DISPLACEMENT_TROPICAL');
+			$DISPLACEMENT_WINTER = getValue($r[0]['data'], 'DISPLACEMENT_WINTER');
+			$DRAFT_LIGHTSHIP = getValue($r[0]['data'], 'DRAFT_LIGHTSHIP');
+			$DRAFT_NORMAL_BALLAST = getValue($r[0]['data'], 'DRAFT_NORMAL_BALLAST');
+			$DRAFT_SEGREGATED_BALLAST = getValue($r[0]['data'], 'DRAFT_SEGREGATED_BALLAST');
+			$DRAFT_SUMMER = getValue($r[0]['data'], 'DRAFT_SUMMER');
+			$DRAFT_TROPICAL = getValue($r[0]['data'], 'DRAFT_TROPICAL');
+			$DRAFT_WINTER = getValue($r[0]['data'], 'DRAFT_WINTER');
+			$DRAUGHT_AFT_NORMAL_BALLAST = getValue($r[0]['data'], 'DRAUGHT_AFT_NORMAL_BALLAST');
+			$DRAUGHT_FORE_NORMAL_BALLAST = getValue($r[0]['data'], 'DRAUGHT_FORE_NORMAL_BALLAST');
+			$FREEBOARD_C1 = getValue($r[0]['data'], 'FREEBOARD_C1');
+			$FREEBOARD_LIGHTSHIP = getValue($r[0]['data'], 'FREEBOARD_LIGHTSHIP');
+			$FREEBOARD_NORMAL_BALLAST = getValue($r[0]['data'], 'FREEBOARD_NORMAL_BALLAST');
+			$FREEBOARD_SEGREGATED_BALLAST = getValue($r[0]['data'], 'FREEBOARD_SEGREGATED_BALLAST');
+			$FREEBOARD_SUMMER = getValue($r[0]['data'], 'FREEBOARD_SUMMER');
+			$FREEBOARD_TROPICAL = getValue($r[0]['data'], 'FREEBOARD_TROPICAL');
+			$FREEBOARD_WINTER = getValue($r[0]['data'], 'FREEBOARD_WINTER');
+			$FWA_SUMMER_DRAFT = getValue($r[0]['data'], 'FWA_SUMMER_DRAFT');
+			$TPC_IMMERSION_SUMMER_DRAFT = getValue($r[0]['data'], 'TPC_IMMERSION_SUMMER_DRAFT');
+			$BULKHEADS = getValue($r[0]['data'], 'BULKHEADS');
+			$CONTINUOUS_DECKS = getValue($r[0]['data'], 'CONTINUOUS_DECKS');
+			$DECK_ERECTIONS = getValue($r[0]['data'], 'DECK_ERECTIONS');
+			$DECKS_NUMBER = getValue($r[0]['data'], 'DECKS_NUMBER');
+			$HULL_MATERIAL = getValue($r[0]['data'], 'HULL_MATERIAL');
+			$HULL_TYPE = getValue($r[0]['data'], 'HULL_TYPE');
+			$LONGITUDINAL_BULKHEADS = getValue($r[0]['data'], 'LONGITUDINAL_BULKHEADS');
+			$LONGITUDINAL_FRAMES = getValue($r[0]['data'], 'LONGITUDINAL_FRAMES');
+			$RO_RO_LANES = getValue($r[0]['data'], 'RO-RO_LANES');
+			$RO_RO_RAMPS = getValue($r[0]['data'], 'RO-RO_RAMPS');
+			$SUPERSTRUCTURES = getValue($r[0]['data'], 'SUPERSTRUCTURES');
+			$TRANSVERSE_BULKHEADS = getValue($r[0]['data'], 'TRANSVERSE_BULKHEADS');
+			$WATERTIGHT_BULKHEADS = getValue($r[0]['data'], 'WATERTIGHT_BULKHEADS');
+			$WATERTIGHT_COMPARTMENTS = getValue($r[0]['data'], 'WATERTIGHT_COMPARTMENTS');
+			$NET_TONNAGE = getValue($r[0]['data'], 'NET_TONNAGE');
+			$PANAMA_GROSS_TONNAGE = getValue($r[0]['data'], 'PANAMA_GROSS_TONNAGE');
+			$PANAMA_NET_TONNAGE = getValue($r[0]['data'], 'PANAMA_NET_TONNAGE');
+			$PANAMA_TONNAGE = getValue($r[0]['data'], 'PANAMA_TONNAGE');
+			$SUEZ_GROSS_TONNAGE = getValue($r[0]['data'], 'SUEZ_GROSS_TONNAGE');
+			$SUEZ_NET_TONNAGE = getValue($r[0]['data'], 'SUEZ_NET_TONNAGE');
+			$SUEZ_TONNAGE = getValue($r[0]['data'], 'SUEZ_TONNAGE');
+			$CALL_SIGN = getValue($r[0]['data'], 'CALL_SIGN');
+			$SATCOM_ANSWER_BACK = getValue($r[0]['data'], 'SATCOM_ANSWER_BACK');
+			$SATCOM_ID = getValue($r[0]['data'], 'SATCOM_ID');
+			$DATE = getValue($r[0]['data'], 'DATE');
+			$TYPE = getValue($r[0]['data'], 'TYPE');
+			$ORGANIZATION = getValue($r[0]['data'], 'ORGANIZATION');
+			$AUTHORITY = getValue($r[0]['data'], 'AUTHORITY');
+			$PLACE = getValue($r[0]['data'], 'PLACE');
+			$DETENTION = getValue($r[0]['data'], 'DETENTION');
+			$DEFICIENCY = getValue($r[0]['data'], 'DEFICIENCY');
+			$PSC = getValue($r[0]['data'], 'PSC');
+			$DETENTIONS = getValue($r[0]['data'], 'DETENTIONS');
+			$DEFICIENCIES = getValue($r[0]['data'], 'DEFICIENCIES');
+			$CERTIFICATE_TYPE = getValue($r[0]['data'], 'CERTIFICATE_TYPE');
+			$ISSUED = getValue($r[0]['data'], 'ISSUED');
+			$FROM = getValue($r[0]['data'], 'FROM');
+			$EXPIRES = getValue($r[0]['data'], 'EXPIRES');
+			$CERTIFICATE = getValue($r[0]['data'], 'CERTIFICATE');
 		}
-		</script>
-		<style>
-		*{
-			font-size:11px;
-			font-family:Verdana, Arial, Helvetica, sans-serif;
+	}else{
+		$by_user = $r[0]['by_user'];
+		
+		$userid = $_SESSION['user']['id'];
+		$sql1 = "select `imo` from `_xvas_shipdata_dry_user` where `by_user` in ( 
+					select `email` from `_sbis_users` where 
+					`id` in (
+						select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+					) or
+					`id` in (
+						select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+					)
+				)";
+		$r1 = dbQuery($sql1, $link);
+		
+		if($r1[0]['imo']=='' && $by_user!=$user['email']){
+			die('The person who updated this ship is not in your network.');
 		}
 		
-		.main_title{
-			font-weight:bold;
-			font-size:24px;
-		}
+		$dateupdated = $r[0]['dateupdated'];
+	
+		$data = unserialize($r[0]['data']);
+			
+		$IMO_NUMBER = $r[0]['imo'];
+		$MMSI_CODE = $data['MAIN']['MMSI_CODE'];
+		$STATUS	 = $data['MAIN']['STATUS'];
+		$NAME = $data['MAIN']['NAME'];
+		$VESSEL_TYPE = $data['MAIN']['VESSEL_TYPE'];
+		$GROSS_TONNAGE = $data['MAIN']['GROSS_TONNAGE'];
+		$SUMMER_DWT = $data['MAIN']['SUMMER_DWT'];
+		$BUILD = $data['MAIN']['BUILD'];
+		$BUILDER = $data['MAIN']['BUILDER'];
 		
-		.title{
-			font-weight:bold;
-		}
+		$FLAG = $data['MAIN']['FLAG'];
+		$FLAG_IMAGE = getFlagImage($FLAG);
 		
-		.btn_1{
-			border:1px solid #333333;
-			background-color:#000000;
-			color:#CCCCCC;
-			padding:3px 10px;
-			cursor:pointer;
-		}
-		</style>
-		<form id="inputfrm_id" name="inputfrm" method="post" enctype="multipart/form-data">
-		<table width="1000" border="0" cellspacing="0" cellpadding="0">
-		  <?php if(isset($_GET['msg'])){ ?>
-		  <tr>
-			<td colspan="2" style="color:#FF0000; font-weight:bold;"><?php echo $_GET['msg']; ?></td>
-		  </tr>
-		  <?php }else{ ?>
+		$HOME_PORT = $data['MAIN']['HOME_PORT'];
+		$MANAGER = $data['MAIN']['MANAGER'];
+		$OWNER = $data['MAIN']['OWNER'];
+		$CLASS_SOCIETY = $data['MAIN']['CLASS_SOCIETY'];
+		$DUAL_CLASS_SOCIETY = $data['MAIN']['DUAL_CLASS_SOCIETY'];
+		$INSURER = $data['MAIN']['INSURER'];
+		$ALTERATION = $data['GENERAL']['ALTERATION'];
+		$DEAD_REASON = $data['GENERAL']['DEAD_REASON'];
+		$GEAR = $data['GENERAL']['GEAR'];
+		$HOME_PORT = $data['GENERAL']['HOME_PORT'];
+		$NAVIGATION_AREA = $data['GENERAL']['NAVIGATION_AREA'];
+		$REGISTRATION_NUMBER = $data['GENERAL']['REGISTRATION_NUMBER'];
+		$SERVICE_LIMIT = $data['GENERAL']['SERVICE_LIMIT'];
+		$SPEED_AVERAGE = $data['GENERAL']['SPEED_AVERAGE'];
+		$SPEED_ECON = $data['GENERAL']['SPEED_ECON'];
+		$SPEED_MAX = $data['GENERAL']['SPEED_MAX'];
+		$SPEED_SERVICE = $data['GENERAL']['SPEED_SERVICE'];
+		$SPEED_TRIAL = $data['GENERAL']['SPEED_TRIAL'];
+		$TRADING_AREAS = $data['GENERAL']['TRADING_AREAS'];
+		$ALTERATION_DATE = $data['HISTORICAL']['ALTERATION_DATE'];
+		$BROKEN_UP = $data['HISTORICAL']['BROKEN_UP'];
+		$BUILD_END = $data['HISTORICAL']['BUILD_END'];
+		$BUILD_START = $data['HISTORICAL']['BUILD_START'];
+		$DATE_OF_ORDER = $data['HISTORICAL']['DATE_OF_ORDER'];
+		$DELIVERY_DATE = $data['HISTORICAL']['DELIVERY_DATE'];
+		$FIRST_MOVEMENT = $data['HISTORICAL']['FIRST_MOVEMENT'];
+		$KEEL_LAID = $data['HISTORICAL']['KEEL_LAID'];
+		$LAUNCH_DATE = $data['HISTORICAL']['LAUNCH_DATE'];
+		$LOSS_DATE = $data['HISTORICAL']['LOSS_DATE'];
+		$PLACE_OF_BUILD = $data['HISTORICAL']['PLACE_OF_BUILD'];
+		$STEEL_CUTTING = $data['HISTORICAL']['STEEL_CUTTING'];
+		$YARD_NUMBER = $data['HISTORICAL']['YARD_NUMBER'];
+		$ANCHOR_CHAIN_DIAMETER = $data['ANCHOR']['ANCHOR_CHAIN_DIAMETER'];
+		$ANCHOR_HOLDING_ABILITY = $data['ANCHOR']['ANCHOR_HOLDING_ABILITY'];
+		$ANCHOR_STRENGTH_LEVEL = $data['ANCHOR']['ANCHOR_STRENGTH_LEVEL'];
+		$ASPHALT = $data['CAPACITIES']['ASPHALT'];
+		$BALE = $data['CAPACITIES']['BALE'];
+		$BALLAST = $data['CAPACITIES']['BALLAST'];
+		$BALLAST_CLEAN = $data['CAPACITIES']['BALLAST_CLEAN'];
+		$BALLAST_SEGREGATED = $data['CAPACITIES']['BALLAST_SEGREGATED'];
+		$BERTHS = $data['CAPACITIES']['BERTHS'];
+		$BUNKER = $data['CAPACITIES']['BUNKER'];
+		$CABINS = $data['CAPACITIES']['CABINS'];
+		$CARGO_CAPACITY = $data['CAPACITIES']['CARGO_CAPACITY'];
+		$CARS = $data['CAPACITIES']['CARS'];
+		$CRUDE_CAPACITY = $data['CAPACITIES']['CRUDE_CAPACITY'];
+		$DIESEL_OIL = $data['CAPACITIES']['DIESEL_OIL'];
+		$FISH_HOLD_VOLUME = $data['CAPACITIES']['FISH_HOLD_VOLUME'];
+		$FRESHWATER = $data['CAPACITIES']['FRESHWATER'];
+		$FUEL = $data['CAPACITIES']['FUEL'];
+		$FUEL_OIL = $data['CAPACITIES']['FUEL_OIL'];
+		$GRAIN = $data['CAPACITIES']['GRAIN'];
+		$GRAIN_LIQUID = $data['CAPACITIES']['GRAIN_LIQUID'];
+		$HOPPERS = $data['CAPACITIES']['HOPPERS'];
+		$HYDRAULIC_OIL_CAPACITY = $data['CAPACITIES']['HYDRAULIC_OIL_CAPACITY'];
+		$INSULATED = $data['CAPACITIES']['INSULATED'];
+		$LIQUID_GAS = $data['CAPACITIES']['LIQUID_GAS'];
+		$LIQUID_OIL = $data['CAPACITIES']['LIQUID_OIL'];
+		$LORRIES = $data['CAPACITIES']['LORRIES'];
+		$LUBE_OIL = $data['CAPACITIES']['LUBE_OIL'];
+		$ORE = $data['CAPACITIES']['ORE'];
+		$PASSENGERS = $data['CAPACITIES']['PASSENGERS'];
+		$RAIL_WAGONS = $data['CAPACITIES']['RAIL_WAGONS'];
+		$SLOPS = $data['CAPACITIES']['SLOPS'];
+		$TEU = $data['CAPACITIES']['TEU'];
+		$TRAILERS = $data['CAPACITIES']['TRAILERS'];
+		$CARGO_HANDLING = $data['CARGO']['CARGO_HANDLING'];
+		$CARGO_PUMPS = $data['CARGO']['CARGO_PUMPS'];
+		$CARGO_SPACE = $data['CARGO']['CARGO_SPACE'];
+		$CARGO_TANKS = $data['CARGO']['CARGO_TANKS'];
+		$CRANES = $data['CARGO']['CRANES'];
+		$DERRICKS = $data['CARGO']['DERRICKS'];
+		$HATCHWAYS = $data['CARGO']['HATCHWAYS'];
+		$HOLDS = $data['CARGO']['HOLDS'];
+		$LARGEST_HATCH = $data['CARGO']['LARGEST_HATCH'];
+		$LIFTING_EQUIPMENT = $data['CARGO']['LIFTING_EQUIPMENT'];
+		$CLASS_ASSIGNMENT = $data['CLASSIFICATION']['CLASS_ASSIGNMENT'];
+		$CLASS_NOTATION = $data['CLASSIFICATION']['CLASS_NOTATION'];
+		$LAST_DRYDOCK_SURVEY = $data['CLASSIFICATION']['LAST_DRYDOCK_SURVEY'];
+		$LAST_HULL_SURVEY = $data['CLASSIFICATION']['LAST_HULL_SURVEY'];
+		$LAST_SPECIAL_SURVEY = $data['CLASSIFICATION']['LAST_SPECIAL_SURVEY'];
+		$NEXT_DRYDOCK_SURVEY = $data['CLASSIFICATION']['NEXT_DRYDOCK_SURVEY'];
+		$NEXT_HULL_SURVEY = $data['CLASSIFICATION']['NEXT_HULL_SURVEY'];
+		$NEXT_SPECIAL_SURVEY = $data['CLASSIFICATION']['NEXT_SPECIAL_SURVEY'];
+		$ACTUAL_MANNING_OFFICERS = $data['CREW']['ACTUAL_MANNING_OFFICERS'];
+		$ACTUAL_MANNING_RATINGS = $data['CREW']['ACTUAL_MANNING_RATINGS'];
+		$LANGUAGE_USED_COMMON = $data['CREW']['LANGUAGE_USED_COMMON'];
+		$LANGUAGE_USED_VESSEL_OPERATOR = $data['CREW']['LANGUAGE_USED_VESSEL_OPERATOR'];
+		$MINIMUM_MANNING_REQUIRED_OFFICERS = $data['CREW']['MINIMUM_MANNING_REQUIRED_OFFICERS'];
+		$MINIMUM_MANNING_REQUIRED_RATINGS = $data['CREW']['MINIMUM_MANNING_REQUIRED_RATINGS'];
+		$TOTAL_CREW = $data['CREW']['TOTAL_CREW'];
+		$BOW_TO_BRIDGE = $data['DIMENSIONS']['BOW_TO_BRIDGE'];
+		$BOW_TO_CENTER_MANIFOLD = $data['DIMENSIONS']['BOW_TO_CENTER_MANIFOLD'];
+		$BREADTH_EXTREME = $data['DIMENSIONS']['BREADTH_EXTREME'];
+		$BREADTH_MOULDED = $data['DIMENSIONS']['BREADTH_MOULDED'];
+		$BREADTH_REGISTERED = $data['DIMENSIONS']['BREADTH_REGISTERED'];
+		$BRIDGE = $data['DIMENSIONS']['BRIDGE'];
+		$BULB_LENGTH_FROM_FP = $data['DIMENSIONS']['BULB_LENGTH_FROM_FP'];
+		$DEPTH = $data['DIMENSIONS']['DEPTH'];
+		$DRAUGHT = $data['DIMENSIONS']['DRAUGHT'];
+		$FORECASTLE = $data['DIMENSIONS']['FORECASTLE'];
+		$HEIGHT = $data['DIMENSIONS']['HEIGHT'];
+		$KEEL_TO_MASTHEAD = $data['DIMENSIONS']['KEEL_TO_MASTHEAD'];
+		$LENGTH_B_W_PERPENDICULARS = $data['DIMENSIONS']['LENGTH_B_W_PERPENDICULARS'];
+		$LENGTH_ON_DECK = $data['DIMENSIONS']['LENGTH_ON_DECK'];
+		$LENGTH_OVERALL = $data['DIMENSIONS']['LENGTH_OVERALL'];
+		$LENGTH_REGISTERED = $data['DIMENSIONS']['LENGTH_REGISTERED'];
+		$LENGTH_WATERLINE = $data['DIMENSIONS']['LENGTH_WATERLINE'];
+		$LIGHTSHIP_PARALLEL_BODY = $data['DIMENSIONS']['LIGHTSHIP_PARALLEL_BODY'];
+		$NORMAL_BALLAST_PARALLEL_BODY = $data['DIMENSIONS']['NORMAL_BALLAST_PARALLEL_BODY'];
+		$PARALLEL_BODY_LENGTH_AT_SUMMER_DWT = $data['DIMENSIONS']['PARALLEL_BODY_LENGTH_AT_SUMMER_DWT'];
+		$POOP = $data['DIMENSIONS']['POOP'];
+		$QUARTERDECK = $data['DIMENSIONS']['QUARTERDECK'];
+		$ENGINE_NUMBER = $data['ENGINE']['ENGINE_#'];
+		$ENGINE_BORE = $data['ENGINE']['ENGINE_BORE'];
+		$ENGINE_BUILD_YEAR = $data['ENGINE']['ENGINE_BUILD_YEAR'];
+		$ENGINE_BUILDER = $data['ENGINE']['ENGINE_BUILDER'];
+		$ENGINE_CYLINDERS = $data['ENGINE']['ENGINE_CYLINDERS'];
+		$ENGINE_MODEL = $data['ENGINE']['ENGINE_MODEL'];
+		$ENGINE_POWER = $data['ENGINE']['ENGINE_POWER'];
+		$ENGINE_RATIO = $data['ENGINE']['ENGINE_RATIO'];
+		$ENGINE_RPM = $data['ENGINE']['ENGINE_RPM'];
+		$ENGINE_STROKE = $data['ENGINE']['ENGINE_STROKE'];
+		$ENGINE_TYPE = $data['ENGINE']['ENGINE_TYPE'];
+		$FUEL_CONSUMPTION = $data['ENGINE']['FUEL_CONSUMPTION'];
+		$FUEL_TYPE = $data['ENGINE']['FUEL_TYPE'];
+		$PROPELLER = $data['ENGINE']['PROPELLER'];
+		$PROPELLING_TYPE = $data['ENGINE']['PROPELLING_TYPE'];
+		$DEADWEIGHT_LIGHTSHIP = $data['LOADLINES']['DEADWEIGHT_LIGHTSHIP'];
+		$DEADWEIGHT_MAXIMUM_ASSIGNED = $data['LOADLINES']['DEADWEIGHT_MAXIMUM_ASSIGNED'];
+		$DEADWEIGHT_NORMAL_BALLAST = $data['LOADLINES']['DEADWEIGHT_NORMAL_BALLAST'];
+		$DEADWEIGHT_SEGREGATED_BALLAST = $data['LOADLINES']['DEADWEIGHT_SEGREGATED_BALLAST'];
+		$DEADWEIGHT_TROPICAL = $data['LOADLINES']['DEADWEIGHT_TROPICAL'];
+		$DEADWEIGHT_WINTER = $data['LOADLINES']['DEADWEIGHT_WINTER'];
+		$DISPLACEMENT_LIGHTSHIP = $data['LOADLINES']['DISPLACEMENT_LIGHTSHIP'];
+		$DISPLACEMENT_NORMAL_BALLAST = $data['LOADLINES']['DISPLACEMENT_NORMAL_BALLAST'];
+		$DISPLACEMENT_SEGREGATED_BALLAST = $data['LOADLINES']['DISPLACEMENT_SEGREGATED_BALLAST'];
+		$DISPLACEMENT_SUMMER = $data['LOADLINES']['DISPLACEMENT_SUMMER'];
+		$DISPLACEMENT_TROPICAL = $data['LOADLINES']['DISPLACEMENT_TROPICAL'];
+		$DISPLACEMENT_WINTER = $data['LOADLINES']['DISPLACEMENT_WINTER'];
+		$DRAFT_LIGHTSHIP = $data['LOADLINES']['DRAFT_LIGHTSHIP'];
+		$DRAFT_NORMAL_BALLAST = $data['LOADLINES']['DRAFT_NORMAL_BALLAST'];
+		$DRAFT_SEGREGATED_BALLAST = $data['LOADLINES']['DRAFT_SEGREGATED_BALLAST'];
+		$DRAFT_SUMMER = $data['LOADLINES']['DRAFT_SUMMER'];
+		$DRAFT_TROPICAL = $data['LOADLINES']['DRAFT_TROPICAL'];
+		$DRAFT_WINTER = $data['LOADLINES']['DRAFT_WINTER'];
+		$DRAUGHT_AFT_NORMAL_BALLAST = $data['LOADLINES']['DRAUGHT_AFT_NORMAL_BALLAST'];
+		$DRAUGHT_FORE_NORMAL_BALLAST = $data['LOADLINES']['DRAUGHT_FORE_NORMAL_BALLAST'];
+		$FREEBOARD_C1 = $data['LOADLINES']['FREEBOARD_C1'];
+		$FREEBOARD_LIGHTSHIP = $data['LOADLINES']['FREEBOARD_LIGHTSHIP'];
+		$FREEBOARD_NORMAL_BALLAST = $data['LOADLINES']['FREEBOARD_NORMAL_BALLAST'];
+		$FREEBOARD_SEGREGATED_BALLAST = $data['LOADLINES']['FREEBOARD_SEGREGATED_BALLAST'];
+		$FREEBOARD_SUMMER = $data['LOADLINES']['FREEBOARD_SUMMER'];
+		$FREEBOARD_TROPICAL = $data['LOADLINES']['FREEBOARD_TROPICAL'];
+		$FREEBOARD_WINTER = $data['LOADLINES']['FREEBOARD_WINTER'];
+		$FWA_SUMMER_DRAFT = $data['LOADLINES']['FWA_SUMMER_DRAFT'];
+		$TPC_IMMERSION_SUMMER_DRAFT = $data['LOADLINES']['TPC_IMMERSION_SUMMER_DRAFT'];
+		$BULKHEADS = $data['STRUCTURES']['BULKHEADS'];
+		$CONTINUOUS_DECKS = $data['STRUCTURES']['CONTINUOUS_DECKS'];
+		$DECK_ERECTIONS = $data['STRUCTURES']['DECK_ERECTIONS'];
+		$DECKS_NUMBER = $data['STRUCTURES']['DECKS_NUMBER'];
+		$HULL_MATERIAL = $data['STRUCTURES']['HULL_MATERIAL'];
+		$HULL_TYPE = $data['STRUCTURES']['HULL_TYPE'];
+		$LONGITUDINAL_BULKHEADS = $data['STRUCTURES']['LONGITUDINAL_BULKHEADS'];
+		$LONGITUDINAL_FRAMES = $data['STRUCTURES']['LONGITUDINAL_FRAMES'];
+		$RO_RO_LANES = $data['STRUCTURES']['RO-RO_LANES'];
+		$RO_RO_RAMPS = $data['STRUCTURES']['RO-RO_RAMPS'];
+		$SUPERSTRUCTURES = $data['STRUCTURES']['SUPERSTRUCTURES'];
+		$TRANSVERSE_BULKHEADS = $data['STRUCTURES']['TRANSVERSE_BULKHEADS'];
+		$WATERTIGHT_BULKHEADS = $data['STRUCTURES']['WATERTIGHT_BULKHEADS'];
+		$WATERTIGHT_COMPARTMENTS = $data['STRUCTURES']['WATERTIGHT_COMPARTMENTS'];
+		$NET_TONNAGE = $data['TONNAGES']['NET_TONNAGE'];
+		$PANAMA_GROSS_TONNAGE = $data['TONNAGES']['PANAMA_GROSS_TONNAGE'];
+		$PANAMA_NET_TONNAGE = $data['TONNAGES']['PANAMA_NET_TONNAGE'];
+		$PANAMA_TONNAGE = $data['TONNAGES']['PANAMA_TONNAGE'];
+		$SUEZ_GROSS_TONNAGE = $data['TONNAGES']['SUEZ_GROSS_TONNAGE'];
+		$SUEZ_NET_TONNAGE = $data['TONNAGES']['SUEZ_NET_TONNAGE'];
+		$SUEZ_TONNAGE = $data['TONNAGES']['SUEZ_TONNAGE'];
+		$CALL_SIGN = $data['COMMUNICATION']['CALL_SIGN'];
+		$SATCOM_ANSWER_BACK = $data['COMMUNICATION']['SATCOM_ANSWER_BACK'];
+		$SATCOM_ID = $data['COMMUNICATION']['SATCOM_ID'];
+		$DATE = $data['PORT STATE CONTROLS']['DATE'];
+		$TYPE = $data['PORT STATE CONTROLS']['TYPE'];
+		$ORGANIZATION = $data['PORT STATE CONTROLS']['ORGANIZATION'];
+		$AUTHORITY = $data['PORT STATE CONTROLS']['AUTHORITY'];
+		$PLACE = $data['PORT STATE CONTROLS']['PLACE'];
+		$DETENTION = $data['PORT STATE CONTROLS']['DETENTION'];
+		$DEFICIENCY = $data['PORT STATE CONTROLS']['DEFICIENCY'];
+		$PSC = $data['PORT STATE CONTROLS']['PSC'];
+		$DETENTIONS = $data['PORT STATE CONTROLS']['DETENTIONS'];
+		$DEFICIENCIES = $data['PORT STATE CONTROLS']['DEFICIENCIES'];
+		$CERTIFICATE_TYPE = $data['CERTIFICATES']['CERTIFICATE_TYPE'];
+		$ISSUED = $data['CERTIFICATES']['ISSUED'];
+		$FROM = $data['CERTIFICATES']['FROM'];
+		$EXPIRES = $data['CERTIFICATES']['EXPIRES'];
+		$CERTIFICATE = $data['CERTIFICATES']['CERTIFICATE'];
+	}
+}
+?>
+<form id="inputfrm_id" name="inputfrm" method="post" enctype="multipart/form-data">
+<table width="1320" border="0" cellspacing="0" cellpadding="0">
+  <?php if(isset($_GET['msg'])){ ?>
+  <tr>
+	<td style="color:#FF0000; font-weight:bold;"><?php echo $_GET['msg']; ?></td>
+  </tr>
+  <?php }else{ ?>
+  <tr>
+    <td colspan="4"><?php if($by_user!=''){ echo '<b>DATE UPDATED: </b>'.$dateupdated.' <i>by: </i>'.$by_user; } ?><hr /></td>
+  </tr>
+  <tr>
+	<td width="600" valign="top">
+	  <table width="600" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td colspan="2" class="main_title">MAIN</td>
 		  </tr>
@@ -507,7 +771,7 @@ if(!trim($_GET['imo'])){
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td width="100" class="title">MMSI</td>
+			<td class="title">MMSI</td>
 			<td>: <input type="text" id="MMSI_CODE_ID" name="MMSI_CODE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $MMSI_CODE; ?>" /></td>
 		  </tr>
 		  <tr>
@@ -521,91 +785,91 @@ if(!trim($_GET['imo'])){
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">SHIP NAME</td>
+			<td class="title">SHIP NAME</td>
 			<td>: <input type="text" id="NAME_ID" name="NAME" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $NAME; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">VESSEL TYPE</td>
+			<td class="title">VESSEL TYPE</td>
 			<td>: <input type="text" id="VESSEL_TYPE_ID" name="VESSEL_TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $VESSEL_TYPE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">GROSS TONNAGE</td>
+			<td class="title">GROSS TONNAGE</td>
 			<td>: <input type="text" id="GROSS_TONNAGE_ID" name="GROSS_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $GROSS_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">SUMMER DWT</td>
+			<td class="title">SUMMER DWT</td>
 			<td>: <input type="text" id="SUMMER_DWT_ID" name="SUMMER_DWT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUMMER_DWT; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">BUILD</td>
+			<td class="title">BUILD</td>
 			<td>: <input type="text" id="BUILD_ID" name="BUILD" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BUILD; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">BUILDER</td>
+			<td class="title">BUILDER</td>
 			<td>: <input type="text" id="BUILDER_ID" name="BUILDER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BUILDER; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">COUNTRY</td>
-			<td>: <img src="../<?php echo $FLAG_IMAGE; ?>" alt="<?php echo $FLAG; ?>" title="<?php echo $FLAG; ?>" /></td>
+			<td class="title">COUNTRY</td>
+			<td>: <img src="../<?php echo $FLAG_IMAGE; ?>" alt="<?php echo $FLAG; ?>" title="<?php echo $FLAG; ?>" /> <input type="hidden" id="FLAG_ID" name="FLAG" value="<?php echo $FLAG; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">HOME PORT</td>
+			<td class="title">HOME PORT</td>
 			<td>: <input type="text" id="HOME_PORT_ID" name="HOME_PORT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HOME_PORT; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">MANAGER</td>
+			<td class="title">MANAGER</td>
 			<td>: <input type="text" id="MANAGER_ID" name="MANAGER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $MANAGER; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">OWNER</td>
+			<td class="title">OWNER</td>
 			<td>: <input type="text" id="OWNER_ID" name="OWNER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $OWNER; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">CLASS SOCIETY</td>
+			<td class="title">CLASS SOCIETY</td>
 			<td>: <input type="text" id="CLASS_SOCIETY_ID" name="CLASS_SOCIETY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CLASS_SOCIETY; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">DUAL CLASS SOCIETY</td>
+			<td class="title">DUAL CLASS SOCIETY</td>
 			<td>: <input type="text" id="DUAL_CLASS_SOCIETY_ID" name="DUAL_CLASS_SOCIETY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DUAL_CLASS_SOCIETY; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-		    <td class="title">INSURER</td>
+			<td class="title">INSURER</td>
 			<td>: <input type="text" id="INSURER_ID" name="INSURER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $INSURER; ?>" /></td>
 		  </tr>
 		  <tr>
@@ -1056,82 +1320,6 @@ if(!trim($_GET['imo'])){
 			<td height="20"></td>
 		  </tr>
 		  <tr>
-			<td colspan="2" class="main_title">CARGO</td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">CARGO HANDLING</td>
-			<td>: <input type="text" id="CARGO_HANDLING_ID" name="CARGO_HANDLING" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CARGO_HANDLING; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">CARGO PUMPS</td>
-			<td>: <input type="text" id="CARGO_PUMPS_ID" name="CARGO_PUMPS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CARGO_PUMPS; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">CARGO SPACE</td>
-			<td>: <input type="text" id="CARGO_SPACE_ID" name="CARGO_SPACE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CARGO_SPACE; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">CARGO TANKS</td>
-			<td>: <input type="text" id="CARGO_TANKS_ID" name="CARGO_TANKS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CARGO_TANKS; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">CRANES</td>
-			<td>: <input type="text" id="CRANES_ID" name="CRANES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CRANES; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">DERRICKS</td>
-			<td>: <input type="text" id="DERRICKS_ID" name="DERRICKS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DERRICKS; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">HATCHWAYS</td>
-			<td>: <input type="text" id="HATCHWAYS_ID" name="HATCHWAYS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HATCHWAYS; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">HOLDS</td>
-			<td>: <input type="text" id="HOLDS_ID" name="HOLDS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HOLDS; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">LARGEST HATCH</td>
-			<td>: <input type="text" id="LARGEST_HATCH_ID" name="LARGEST_HATCH" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LARGEST_HATCH; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">LIFTING EQUIPMENT</td>
-			<td>: <input type="text" id="LIFTING_EQUIPMENT_ID" name="LIFTING_EQUIPMENT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LIFTING_EQUIPMENT; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="20"></td>
-		  </tr>
-		  <tr>
 			<td colspan="2" class="main_title">CLASSIFICATIONS</td>
 		  </tr>
 		  <tr>
@@ -1194,327 +1382,238 @@ if(!trim($_GET['imo'])){
 			<td height="20"></td>
 		  </tr>
 		  <tr>
-			<td colspan="2" class="main_title">CREW</td>
+			<td colspan="2" class="main_title">PORT STATE CONTROLS</td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">ACTUAL MANNING (OFFICERS)</td>
-			<td>: <input type="text" id="ACTUAL_MANNING_OFFICERS_ID" name="ACTUAL_MANNING_OFFICERS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ACTUAL_MANNING_OFFICERS; ?>" /></td>
+			<td class="title">DATE</td>
+			<td>: <input type="text" id="DATE_ID" name="DATE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DATE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">ACTUAL MANNING (RATINGS)</td>
-			<td>: <input type="text" id="ACTUAL_MANNING_RATINGS_ID" name="ACTUAL_MANNING_RATINGS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ACTUAL_MANNING_RATINGS; ?>" /></td>
+			<td class="title">TYPE OF INSPECTION</td>
+			<td>: <input type="text" id="TYPE_ID" name="TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TYPE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LANGUAGE USED (COMMON)</td>
-			<td>: <input type="text" id="LANGUAGE_USED_COMMON_ID" name="LANGUAGE_USED_COMMON" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LANGUAGE_USED_COMMON; ?>" /></td>
+			<td class="title">INSPECTING ORGANIZATION</td>
+			<td>: <input type="text" id="ORGANIZATION_ID" name="ORGANIZATION" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ORGANIZATION; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LANGUAGE USED (VESSEL OPERATOR)</td>
-			<td>: <input type="text" id="LANGUAGE_USED_VESSEL_OPERATOR_ID" name="LANGUAGE_USED_VESSEL_OPERATOR" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LANGUAGE_USED_VESSEL_OPERATOR; ?>" /></td>
+			<td class="title">AUTHORITY</td>
+			<td>: <input type="text" id="AUTHORITY_ID" name="AUTHORITY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $AUTHORITY; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">MINIMUM MANNING REQUIRED (OFFICERS)</td>
-			<td>: <input type="text" id="MINIMUM_MANNING_REQUIRED_OFFICERS_ID" name="MINIMUM_MANNING_REQUIRED_OFFICERS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $MINIMUM_MANNING_REQUIRED_OFFICERS; ?>" /></td>
+			<td class="title">PLACE</td>
+			<td>: <input type="text" id="PLACE_ID" name="PLACE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PLACE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">MINIMUM MANNING REQUIRED (RATINGS)</td>
-			<td>: <input type="text" id="MINIMUM_MANNING_REQUIRED_RATINGS_ID" name="MINIMUM_MANNING_REQUIRED_RATINGS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $MINIMUM_MANNING_REQUIRED_RATINGS; ?>" /></td>
+			<td class="title">DETENTION DESCRIPTION</td>
+			<td>: <input type="text" id="DETENTION_ID" name="DETENTION" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DETENTION; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">TOTAL CREW</td>
-			<td>: <input type="text" id="TOTAL_CREW_ID" name="TOTAL_CREW" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TOTAL_CREW; ?>" /></td>
+			<td class="title">DEFICIENCY DESCRIPTION</td>
+			<td>: <input type="text" id="DEFICIENCY_ID" name="DEFICIENCY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DEFICIENCY; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">START OF PSC DESCRIPTION</td>
+			<td>: <input type="text" id="PSC_ID" name="PSC" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PSC; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">START OF DETENTIONS LIST</td>
+			<td>: <input type="text" id="DETENTIONS_ID" name="DETENTIONS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DETENTIONS; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">START OF DEFICIENCIES LIST</td>
+			<td>: <input type="text" id="DEFICIENCIES_ID" name="DEFICIENCIES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DEFICIENCIES; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="20"></td>
 		  </tr>
 		  <tr>
-			<td colspan="2" class="main_title">DIMENSIONS</td>
+			<td colspan="2" class="main_title">STRUCTURES</td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">BOW TO BRIDGE</td>
-			<td>: <input type="text" id="BOW_TO_BRIDGE_ID" name="BOW_TO_BRIDGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BOW_TO_BRIDGE; ?>" /></td>
+			<td class="title">BULKHEADS</td>
+			<td>: <input type="text" id="BULKHEADS_ID" name="BULKHEADS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BULKHEADS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">BOW TO CENTER MANIFOLD</td>
-			<td>: <input type="text" id="BOW_TO_CENTER_MANIFOLD_ID" name="BOW_TO_CENTER_MANIFOLD" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BOW_TO_CENTER_MANIFOLD; ?>" /></td>
+			<td class="title">CONTINUOUS DECKS</td>
+			<td>: <input type="text" id="CONTINUOUS_DECKS_ID" name="CONTINUOUS_DECKS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONTINUOUS_DECKS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">BREADTH EXTREME</td>
-			<td>: <input type="text" id="BREADTH_EXTREME_ID" name="BREADTH_EXTREME" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BREADTH_EXTREME; ?>" /></td>
+			<td class="title">DECK ERECTIONS</td>
+			<td>: <input type="text" id="DECK_ERECTIONS_ID" name="DECK_ERECTIONS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DECK_ERECTIONS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">BREADTH MOULDED</td>
-			<td>: <input type="text" id="BREADTH_MOULDED_ID" name="BREADTH_MOULDED" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BREADTH_MOULDED; ?>" /></td>
+			<td class="title">DECKS NUMBER</td>
+			<td>: <input type="text" id="DECKS_NUMBER_ID" name="DECKS_NUMBER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DECKS_NUMBER; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">BREADTH REGISTERED</td>
-			<td>: <input type="text" id="BREADTH_REGISTERED_ID" name="BREADTH_REGISTERED" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BREADTH_REGISTERED; ?>" /></td>
+			<td class="title">HULL MATERIAL</td>
+			<td>: <input type="text" id="HULL_MATERIAL_ID" name="HULL_MATERIAL" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HULL_MATERIAL; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">BRIDGE</td>
-			<td>: <input type="text" id="BRIDGE_ID" name="BRIDGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BRIDGE; ?>" /></td>
+			<td class="title">HULL TYPE</td>
+			<td>: <input type="text" id="HULL_TYPE_ID" name="HULL_TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HULL_TYPE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">BULB LENGTH FROM FP</td>
-			<td>: <input type="text" id="BULB_LENGTH_FROM_FP_ID" name="BULB_LENGTH_FROM_FP" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BULB_LENGTH_FROM_FP; ?>" /></td>
+			<td class="title">LONGITUDINAL BULKHEADS</td>
+			<td>: <input type="text" id="LONGITUDINAL_BULKHEADS_ID" name="LONGITUDINAL_BULKHEADS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LONGITUDINAL_BULKHEADS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">DEPTH</td>
-			<td>: <input type="text" id="DEPTH_ID" name="DEPTH" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DEPTH; ?>" /></td>
+			<td class="title">LONGITUDINAL FRAMES</td>
+			<td>: <input type="text" id="LONGITUDINAL_FRAMES_ID" name="LONGITUDINAL_FRAMES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LONGITUDINAL_FRAMES; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">DRAUGHT</td>
-			<td>: <input type="text" id="DRAUGHT_ID" name="DRAUGHT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DRAUGHT; ?>" /></td>
+			<td class="title">RO-RO LANES</td>
+			<td>: <input type="text" id="RO_RO_LANES_ID" name="RO_RO_LANES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $RO_RO_LANES; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">FORECASTLE</td>
-			<td>: <input type="text" id="FORECASTLE_ID" name="FORECASTLE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $FORECASTLE; ?>" /></td>
+			<td class="title">RO-RO RAMPS</td>
+			<td>: <input type="text" id="RO_RO_RAMPS_ID" name="RO_RO_RAMPS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $RO_RO_RAMPS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">HEIGHT</td>
-			<td>: <input type="text" id="HEIGHT_ID" name="HEIGHT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HEIGHT; ?>" /></td>
+			<td class="title">SUPERSTRUCTURES</td>
+			<td>: <input type="text" id="SUPERSTRUCTURES_ID" name="SUPERSTRUCTURES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUPERSTRUCTURES; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">KEEL TO MASTHEAD</td>
-			<td>: <input type="text" id="KEEL_TO_MASTHEAD_ID" name="KEEL_TO_MASTHEAD" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $KEEL_TO_MASTHEAD; ?>" /></td>
+			<td class="title">TRANSVERSE BULKHEADS</td>
+			<td>: <input type="text" id="TRANSVERSE_BULKHEADS_ID" name="TRANSVERSE_BULKHEADS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TRANSVERSE_BULKHEADS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LENGTH B/W PERPENDICULARS</td>
-			<td>: <input type="text" id="LENGTH_B_W_PERPENDICULARS_ID" name="LENGTH_B_W_PERPENDICULARS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_B_W_PERPENDICULARS; ?>" /></td>
+			<td class="title">WATERTIGHT BULKHEADS</td>
+			<td>: <input type="text" id="WATERTIGHT_BULKHEADS_ID" name="WATERTIGHT_BULKHEADS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $WATERTIGHT_BULKHEADS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LENGTH ON DECK</td>
-			<td>: <input type="text" id="LENGTH_ON_DECK_ID" name="LENGTH_ON_DECK" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_ON_DECK; ?>" /></td>
+			<td class="title">WATERTIGHT COMPARTMENTS</td>
+			<td>: <input type="text" id="WATERTIGHT_COMPARTMENTS_ID" name="WATERTIGHT_COMPARTMENTS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $WATERTIGHT_COMPARTMENTS; ?>" /></td>
+		  </tr>
+	  </table>
+	</td>
+	<td width="20">&nbsp;</td>
+	<td width="600" valign="top">
+	  <table width="600" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td colspan="2" class="main_title">TONNAGES</td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LENGTH OVERALL</td>
-			<td>: <input type="text" id="LENGTH_OVERALL_ID" name="LENGTH_OVERALL" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_OVERALL; ?>" /></td>
+			<td class="title">NET TONNAGE</td>
+			<td>: <input type="text" id="NET_TONNAGE_ID" name="NET_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $NET_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LENGTH REGISTERED</td>
-			<td>: <input type="text" id="LENGTH_REGISTERED_ID" name="LENGTH_REGISTERED" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_REGISTERED; ?>" /></td>
+			<td class="title">PANAMA GROSS TONNAGE</td>
+			<td>: <input type="text" id="PANAMA_GROSS_TONNAGE_ID" name="PANAMA_GROSS_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PANAMA_GROSS_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LENGTH WATERLINE</td>
-			<td>: <input type="text" id="LENGTH_WATERLINE_ID" name="LENGTH_WATERLINE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_WATERLINE; ?>" /></td>
+			<td class="title">PANAMA NET TONNAGE</td>
+			<td>: <input type="text" id="PANAMA_NET_TONNAGE_ID" name="PANAMA_NET_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PANAMA_NET_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LIGHTSHIP PARALLEL BODY</td>
-			<td>: <input type="text" id="LIGHTSHIP_PARALLEL_BODY_ID" name="LIGHTSHIP_PARALLEL_BODY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LIGHTSHIP_PARALLEL_BODY; ?>" /></td>
+			<td class="title">PANAMA TONNAGE</td>
+			<td>: <input type="text" id="PANAMA_TONNAGE_ID" name="PANAMA_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PANAMA_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">NORMAL BALLAST PARALLEL BODY</td>
-			<td>: <input type="text" id="NORMAL_BALLAST_PARALLEL_BODY_ID" name="NORMAL_BALLAST_PARALLEL_BODY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $NORMAL_BALLAST_PARALLEL_BODY; ?>" /></td>
+			<td class="title">SUEZ GROSS TONNAGE</td>
+			<td>: <input type="text" id="SUEZ_GROSS_TONNAGE_ID" name="SUEZ_GROSS_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUEZ_GROSS_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">PARALLEL BODY LENGTH AT SUMMER DWT</td>
-			<td>: <input type="text" id="PARALLEL_BODY_LENGTH_AT_SUMMER_DWT_ID" name="PARALLEL_BODY_LENGTH_AT_SUMMER_DWT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PARALLEL_BODY_LENGTH_AT_SUMMER_DWT; ?>" /></td>
+			<td class="title">SUEZ NET TONNAGE</td>
+			<td>: <input type="text" id="SUEZ_NET_TONNAGE_ID" name="SUEZ_NET_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUEZ_NET_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">POOP</td>
-			<td>: <input type="text" id="POOP_ID" name="POOP" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $POOP; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">QUARTERDECK</td>
-			<td>: <input type="text" id="QUARTERDECK_ID" name="QUARTERDECK" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $QUARTERDECK; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="20"></td>
-		  </tr>
-		  <tr>
-			<td colspan="2" class="main_title">ENGINE</td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE #</td>
-			<td>: <input type="text" id="ENGINE_NUMBER_ID" name="ENGINE_NUMBER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_NUMBER; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE BORE</td>
-			<td>: <input type="text" id="ENGINE_BORE_ID" name="ENGINE_BORE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_BORE; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE BUILD YEAR</td>
-			<td>: <input type="text" id="ENGINE_BUILD_YEAR_ID" name="ENGINE_BUILD_YEAR" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_BUILD_YEAR; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE BUILDER</td>
-			<td>: <input type="text" id="ENGINE_BUILDER_ID" name="ENGINE_BUILDER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_BUILDER; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE CYLINDERS</td>
-			<td>: <input type="text" id="ENGINE_CYLINDERS_ID" name="ENGINE_CYLINDERS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_CYLINDERS; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE MODEL</td>
-			<td>: <input type="text" id="ENGINE_MODEL_ID" name="ENGINE_MODEL" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_MODEL; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE POWER</td>
-			<td>: <input type="text" id="ENGINE_POWER_ID" name="ENGINE_POWER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_POWER; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE RATIO</td>
-			<td>: <input type="text" id="ENGINE_RATIO_ID" name="ENGINE_RATIO" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_RATIO; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE RPM</td>
-			<td>: <input type="text" id="ENGINE_RPM_ID" name="ENGINE_RPM" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_RPM; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE STROKE</td>
-			<td>: <input type="text" id="ENGINE_STROKE_ID" name="ENGINE_STROKE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_STROKE; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">ENGINE TYPE</td>
-			<td>: <input type="text" id="ENGINE_TYPE_ID" name="ENGINE_TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_TYPE; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">FUEL CONSUMPTION</td>
-			<td>: <input type="text" id="FUEL_CONSUMPTION_ID" name="FUEL_CONSUMPTION" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $FUEL_CONSUMPTION; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">FUEL TYPE</td>
-			<td>: <input type="text" id="FUEL_TYPE_ID" name="FUEL_TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $FUEL_TYPE; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">PROPELLER</td>
-			<td>: <input type="text" id="PROPELLER_ID" name="PROPELLER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PROPELLER; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">PROPELLING TYPE</td>
-			<td>: <input type="text" id="PROPELLING_TYPE_ID" name="PROPELLING_TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PROPELLING_TYPE; ?>" /></td>
+			<td class="title">SUEZ TONNAGE</td>
+			<td>: <input type="text" id="SUEZ_TONNAGE_ID" name="SUEZ_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUEZ_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="20"></td>
@@ -1729,160 +1828,292 @@ if(!trim($_GET['imo'])){
 			<td height="20"></td>
 		  </tr>
 		  <tr>
-			<td colspan="2" class="main_title">STRUCTURES</td>
+			<td colspan="2" class="main_title">DIMENSIONS</td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">BULKHEADS</td>
-			<td>: <input type="text" id="BULKHEADS_ID" name="BULKHEADS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BULKHEADS; ?>" /></td>
+			<td class="title">BOW TO BRIDGE</td>
+			<td>: <input type="text" id="BOW_TO_BRIDGE_ID" name="BOW_TO_BRIDGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BOW_TO_BRIDGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">CONTINUOUS DECKS</td>
-			<td>: <input type="text" id="CONTINUOUS_DECKS_ID" name="CONTINUOUS_DECKS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONTINUOUS_DECKS; ?>" /></td>
+			<td class="title">BOW TO CENTER MANIFOLD</td>
+			<td>: <input type="text" id="BOW_TO_CENTER_MANIFOLD_ID" name="BOW_TO_CENTER_MANIFOLD" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BOW_TO_CENTER_MANIFOLD; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">DECK ERECTIONS</td>
-			<td>: <input type="text" id="DECK_ERECTIONS_ID" name="DECK_ERECTIONS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DECK_ERECTIONS; ?>" /></td>
+			<td class="title">BREADTH EXTREME</td>
+			<td>: <input type="text" id="BREADTH_EXTREME_ID" name="BREADTH_EXTREME" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BREADTH_EXTREME; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">DECKS NUMBER</td>
-			<td>: <input type="text" id="DECKS_NUMBER_ID" name="DECKS_NUMBER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DECKS_NUMBER; ?>" /></td>
+			<td class="title">BREADTH MOULDED</td>
+			<td>: <input type="text" id="BREADTH_MOULDED_ID" name="BREADTH_MOULDED" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BREADTH_MOULDED; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">HULL MATERIAL</td>
-			<td>: <input type="text" id="HULL_MATERIAL_ID" name="HULL_MATERIAL" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HULL_MATERIAL; ?>" /></td>
+			<td class="title">BREADTH REGISTERED</td>
+			<td>: <input type="text" id="BREADTH_REGISTERED_ID" name="BREADTH_REGISTERED" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BREADTH_REGISTERED; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">HULL TYPE</td>
-			<td>: <input type="text" id="HULL_TYPE_ID" name="HULL_TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HULL_TYPE; ?>" /></td>
+			<td class="title">BRIDGE</td>
+			<td>: <input type="text" id="BRIDGE_ID" name="BRIDGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BRIDGE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LONGITUDINAL BULKHEADS</td>
-			<td>: <input type="text" id="LONGITUDINAL_BULKHEADS_ID" name="LONGITUDINAL_BULKHEADS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LONGITUDINAL_BULKHEADS; ?>" /></td>
+			<td class="title">BULB LENGTH FROM FP</td>
+			<td>: <input type="text" id="BULB_LENGTH_FROM_FP_ID" name="BULB_LENGTH_FROM_FP" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $BULB_LENGTH_FROM_FP; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">LONGITUDINAL FRAMES</td>
-			<td>: <input type="text" id="LONGITUDINAL_FRAMES_ID" name="LONGITUDINAL_FRAMES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LONGITUDINAL_FRAMES; ?>" /></td>
+			<td class="title">DEPTH</td>
+			<td>: <input type="text" id="DEPTH_ID" name="DEPTH" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DEPTH; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">RO-RO LANES</td>
-			<td>: <input type="text" id="RO_RO_LANES_ID" name="RO_RO_LANES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $RO_RO_LANES; ?>" /></td>
+			<td class="title">DRAUGHT</td>
+			<td>: <input type="text" id="DRAUGHT_ID" name="DRAUGHT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DRAUGHT; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">RO-RO RAMPS</td>
-			<td>: <input type="text" id="RO_RO_RAMPS_ID" name="RO_RO_RAMPS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $RO_RO_RAMPS; ?>" /></td>
+			<td class="title">FORECASTLE</td>
+			<td>: <input type="text" id="FORECASTLE_ID" name="FORECASTLE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $FORECASTLE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">SUPERSTRUCTURES</td>
-			<td>: <input type="text" id="SUPERSTRUCTURES_ID" name="SUPERSTRUCTURES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUPERSTRUCTURES; ?>" /></td>
+			<td class="title">HEIGHT</td>
+			<td>: <input type="text" id="HEIGHT_ID" name="HEIGHT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HEIGHT; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">TRANSVERSE BULKHEADS</td>
-			<td>: <input type="text" id="TRANSVERSE_BULKHEADS_ID" name="TRANSVERSE_BULKHEADS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TRANSVERSE_BULKHEADS; ?>" /></td>
+			<td class="title">KEEL TO MASTHEAD</td>
+			<td>: <input type="text" id="KEEL_TO_MASTHEAD_ID" name="KEEL_TO_MASTHEAD" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $KEEL_TO_MASTHEAD; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">WATERTIGHT BULKHEADS</td>
-			<td>: <input type="text" id="WATERTIGHT_BULKHEADS_ID" name="WATERTIGHT_BULKHEADS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $WATERTIGHT_BULKHEADS; ?>" /></td>
+			<td class="title">LENGTH B/W PERPENDICULARS</td>
+			<td>: <input type="text" id="LENGTH_B_W_PERPENDICULARS_ID" name="LENGTH_B_W_PERPENDICULARS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_B_W_PERPENDICULARS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">WATERTIGHT COMPARTMENTS</td>
-			<td>: <input type="text" id="WATERTIGHT_COMPARTMENTS_ID" name="WATERTIGHT_COMPARTMENTS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $WATERTIGHT_COMPARTMENTS; ?>" /></td>
+			<td class="title">LENGTH ON DECK</td>
+			<td>: <input type="text" id="LENGTH_ON_DECK_ID" name="LENGTH_ON_DECK" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_ON_DECK; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">LENGTH OVERALL</td>
+			<td>: <input type="text" id="LENGTH_OVERALL_ID" name="LENGTH_OVERALL" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_OVERALL; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">LENGTH REGISTERED</td>
+			<td>: <input type="text" id="LENGTH_REGISTERED_ID" name="LENGTH_REGISTERED" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_REGISTERED; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">LENGTH WATERLINE</td>
+			<td>: <input type="text" id="LENGTH_WATERLINE_ID" name="LENGTH_WATERLINE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LENGTH_WATERLINE; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">LIGHTSHIP PARALLEL BODY</td>
+			<td>: <input type="text" id="LIGHTSHIP_PARALLEL_BODY_ID" name="LIGHTSHIP_PARALLEL_BODY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LIGHTSHIP_PARALLEL_BODY; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">NORMAL BALLAST PARALLEL BODY</td>
+			<td>: <input type="text" id="NORMAL_BALLAST_PARALLEL_BODY_ID" name="NORMAL_BALLAST_PARALLEL_BODY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $NORMAL_BALLAST_PARALLEL_BODY; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">PARALLEL BODY LENGTH AT SUMMER DWT</td>
+			<td>: <input type="text" id="PARALLEL_BODY_LENGTH_AT_SUMMER_DWT_ID" name="PARALLEL_BODY_LENGTH_AT_SUMMER_DWT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PARALLEL_BODY_LENGTH_AT_SUMMER_DWT; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">POOP</td>
+			<td>: <input type="text" id="POOP_ID" name="POOP" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $POOP; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">QUARTERDECK</td>
+			<td>: <input type="text" id="QUARTERDECK_ID" name="QUARTERDECK" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $QUARTERDECK; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="20"></td>
 		  </tr>
 		  <tr>
-			<td colspan="2" class="main_title">TONNAGES</td>
+			<td colspan="2" class="main_title">CARGO</td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">NET TONNAGE</td>
-			<td>: <input type="text" id="NET_TONNAGE_ID" name="NET_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $NET_TONNAGE; ?>" /></td>
+			<td class="title">CARGO HANDLING</td>
+			<td>: <input type="text" id="CARGO_HANDLING_ID" name="CARGO_HANDLING" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CARGO_HANDLING; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">PANAMA GROSS TONNAGE</td>
-			<td>: <input type="text" id="PANAMA_GROSS_TONNAGE_ID" name="PANAMA_GROSS_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PANAMA_GROSS_TONNAGE; ?>" /></td>
+			<td class="title">CARGO PUMPS</td>
+			<td>: <input type="text" id="CARGO_PUMPS_ID" name="CARGO_PUMPS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CARGO_PUMPS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">PANAMA NET TONNAGE</td>
-			<td>: <input type="text" id="PANAMA_NET_TONNAGE_ID" name="PANAMA_NET_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PANAMA_NET_TONNAGE; ?>" /></td>
+			<td class="title">CARGO SPACE</td>
+			<td>: <input type="text" id="CARGO_SPACE_ID" name="CARGO_SPACE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CARGO_SPACE; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">PANAMA TONNAGE</td>
-			<td>: <input type="text" id="PANAMA_TONNAGE_ID" name="PANAMA_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PANAMA_TONNAGE; ?>" /></td>
+			<td class="title">CARGO TANKS</td>
+			<td>: <input type="text" id="CARGO_TANKS_ID" name="CARGO_TANKS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CARGO_TANKS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">SUEZ GROSS TONNAGE</td>
-			<td>: <input type="text" id="SUEZ_GROSS_TONNAGE_ID" name="SUEZ_GROSS_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUEZ_GROSS_TONNAGE; ?>" /></td>
+			<td class="title">CRANES</td>
+			<td>: <input type="text" id="CRANES_ID" name="CRANES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CRANES; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">SUEZ NET TONNAGE</td>
-			<td>: <input type="text" id="SUEZ_NET_TONNAGE_ID" name="SUEZ_NET_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUEZ_NET_TONNAGE; ?>" /></td>
+			<td class="title">DERRICKS</td>
+			<td>: <input type="text" id="DERRICKS_ID" name="DERRICKS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DERRICKS; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">SUEZ TONNAGE</td>
-			<td>: <input type="text" id="SUEZ_TONNAGE_ID" name="SUEZ_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUEZ_TONNAGE; ?>" /></td>
+			<td class="title">HATCHWAYS</td>
+			<td>: <input type="text" id="HATCHWAYS_ID" name="HATCHWAYS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HATCHWAYS; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">HOLDS</td>
+			<td>: <input type="text" id="HOLDS_ID" name="HOLDS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $HOLDS; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">LARGEST HATCH</td>
+			<td>: <input type="text" id="LARGEST_HATCH_ID" name="LARGEST_HATCH" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LARGEST_HATCH; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">LIFTING EQUIPMENT</td>
+			<td>: <input type="text" id="LIFTING_EQUIPMENT_ID" name="LIFTING_EQUIPMENT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LIFTING_EQUIPMENT; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="20"></td>
+		  </tr>
+		  <tr>
+			<td colspan="2" class="main_title">CREW</td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ACTUAL MANNING (OFFICERS)</td>
+			<td>: <input type="text" id="ACTUAL_MANNING_OFFICERS_ID" name="ACTUAL_MANNING_OFFICERS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ACTUAL_MANNING_OFFICERS; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ACTUAL MANNING (RATINGS)</td>
+			<td>: <input type="text" id="ACTUAL_MANNING_RATINGS_ID" name="ACTUAL_MANNING_RATINGS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ACTUAL_MANNING_RATINGS; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">LANGUAGE USED (COMMON)</td>
+			<td>: <input type="text" id="LANGUAGE_USED_COMMON_ID" name="LANGUAGE_USED_COMMON" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LANGUAGE_USED_COMMON; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">LANGUAGE USED (VESSEL OPERATOR)</td>
+			<td>: <input type="text" id="LANGUAGE_USED_VESSEL_OPERATOR_ID" name="LANGUAGE_USED_VESSEL_OPERATOR" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LANGUAGE_USED_VESSEL_OPERATOR; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">MINIMUM MANNING REQUIRED (OFFICERS)</td>
+			<td>: <input type="text" id="MINIMUM_MANNING_REQUIRED_OFFICERS_ID" name="MINIMUM_MANNING_REQUIRED_OFFICERS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $MINIMUM_MANNING_REQUIRED_OFFICERS; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">MINIMUM MANNING REQUIRED (RATINGS)</td>
+			<td>: <input type="text" id="MINIMUM_MANNING_REQUIRED_RATINGS_ID" name="MINIMUM_MANNING_REQUIRED_RATINGS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $MINIMUM_MANNING_REQUIRED_RATINGS; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">TOTAL CREW</td>
+			<td>: <input type="text" id="TOTAL_CREW_ID" name="TOTAL_CREW" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TOTAL_CREW; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="20"></td>
@@ -1906,86 +2137,11 @@ if(!trim($_GET['imo'])){
 		  </tr>
 		  <tr>
 			<td height="5"></td>
+
 		  </tr>
 		  <tr>
 			<td class="title">SATCOM ID</td>
 			<td>: <input type="text" id="SATCOM_ID_ID" name="SATCOM_ID" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SATCOM_ID; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="20"></td>
-		  </tr>
-		  <tr>
-			<td colspan="2" class="main_title">PORT STATE CONTROLS</td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">DATE</td>
-			<td>: <input type="text" id="DATE_ID" name="DATE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DATE; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">TYPE OF INSPECTION</td>
-			<td>: <input type="text" id="TYPE_ID" name="TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TYPE; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">INSPECTING ORGANIZATION</td>
-			<td>: <input type="text" id="ORGANIZATION_ID" name="ORGANIZATION" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ORGANIZATION; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">AUTHORITY</td>
-			<td>: <input type="text" id="AUTHORITY_ID" name="AUTHORITY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $AUTHORITY; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">PLACE</td>
-			<td>: <input type="text" id="PLACE_ID" name="PLACE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PLACE; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">DETENTION DESCRIPTION</td>
-			<td>: <input type="text" id="DETENTION_ID" name="DETENTION" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DETENTION; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">DEFICIENCY DESCRIPTION</td>
-			<td>: <input type="text" id="DEFICIENCY_ID" name="DEFICIENCY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DEFICIENCY; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">START OF PSC DESCRIPTION</td>
-			<td>: <input type="text" id="PSC_ID" name="PSC" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PSC; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">START OF DETENTIONS LIST</td>
-			<td>: <input type="text" id="DETENTIONS_ID" name="DETENTIONS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DETENTIONS; ?>" /></td>
-		  </tr>
-		  <tr>
-			<td height="5"></td>
-		  </tr>
-		  <tr>
-			<td class="title">START OF DEFICIENCIES LIST</td>
-			<td>: <input type="text" id="DEFICIENCIES_ID" name="DEFICIENCIES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DEFICIENCIES; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="20"></td>
@@ -2032,12 +2188,117 @@ if(!trim($_GET['imo'])){
 			<td height="20"></td>
 		  </tr>
 		  <tr>
-			<td><input type="hidden" name="submitok" value="1"><input type="button" id="btn_save_id" name="btn_save" value="save" class="btn_1" onClick="saveForm();" /></td>
+			<td colspan="2" class="main_title">ENGINE</td>
 		  </tr>
-		  <?php } ?>
-		</table>
-		</form>
-		<?php
-	}
-}
-?>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE #</td>
+			<td>: <input type="text" id="ENGINE_NUMBER_ID" name="ENGINE_NUMBER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_NUMBER; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE BORE</td>
+			<td>: <input type="text" id="ENGINE_BORE_ID" name="ENGINE_BORE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_BORE; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE BUILD YEAR</td>
+			<td>: <input type="text" id="ENGINE_BUILD_YEAR_ID" name="ENGINE_BUILD_YEAR" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_BUILD_YEAR; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE BUILDER</td>
+			<td>: <input type="text" id="ENGINE_BUILDER_ID" name="ENGINE_BUILDER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_BUILDER; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE CYLINDERS</td>
+			<td>: <input type="text" id="ENGINE_CYLINDERS_ID" name="ENGINE_CYLINDERS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_CYLINDERS; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE MODEL</td>
+			<td>: <input type="text" id="ENGINE_MODEL_ID" name="ENGINE_MODEL" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_MODEL; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE POWER</td>
+			<td>: <input type="text" id="ENGINE_POWER_ID" name="ENGINE_POWER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_POWER; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE RATIO</td>
+			<td>: <input type="text" id="ENGINE_RATIO_ID" name="ENGINE_RATIO" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_RATIO; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE RPM</td>
+			<td>: <input type="text" id="ENGINE_RPM_ID" name="ENGINE_RPM" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_RPM; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE STROKE</td>
+			<td>: <input type="text" id="ENGINE_STROKE_ID" name="ENGINE_STROKE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_STROKE; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">ENGINE TYPE</td>
+			<td>: <input type="text" id="ENGINE_TYPE_ID" name="ENGINE_TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ENGINE_TYPE; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">FUEL CONSUMPTION</td>
+			<td>: <input type="text" id="FUEL_CONSUMPTION_ID" name="FUEL_CONSUMPTION" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $FUEL_CONSUMPTION; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">FUEL TYPE</td>
+			<td>: <input type="text" id="FUEL_TYPE_ID" name="FUEL_TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $FUEL_TYPE; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">PROPELLER</td>
+			<td>: <input type="text" id="PROPELLER_ID" name="PROPELLER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PROPELLER; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">PROPELLING TYPE</td>
+			<td>: <input type="text" id="PROPELLING_TYPE_ID" name="PROPELLING_TYPE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $PROPELLING_TYPE; ?>" /></td>
+		  </tr>
+	  </table>
+	</td>
+	<td valign="top"><div style="position:fixed;"><input type="hidden" name="submitok" value="1"><input type="button" id="btn_save_id" name="btn_save" value="save" class="btn_1" onClick="saveForm();" /></div></td>
+  </tr>
+  <?php } ?>
+</table>
+</form>

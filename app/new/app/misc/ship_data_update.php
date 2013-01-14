@@ -20,17 +20,19 @@ function saveForm(){
 </script>
 <style>
 *{
-	font-size:11px;
+	font-size:10px;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 }
 
 .main_title{
 	font-weight:bold;
-	font-size:24px;
+	font-size:12px;
+	color:#8596fa;
 }
 
 .title{
 	font-weight:bold;
+	font-size:10px;
 }
 
 .btn_1{
@@ -39,7 +41,7 @@ function saveForm(){
 	color:#CCCCCC;
 	padding:5px 30px;
 	cursor:pointer;
-	font-size:14px;
+	font-size:12px;
 }
 </style>
 <?php
@@ -745,7 +747,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 }
 ?>
 <form id="inputfrm_id" name="inputfrm" method="post" enctype="multipart/form-data">
-<table width="1320" border="0" cellspacing="0" cellpadding="0">
+<table width="1120" border="0" cellspacing="0" cellpadding="0">
   <?php if(isset($_GET['msg'])){ ?>
   <tr>
 	<td style="color:#FF0000; font-weight:bold;"><?php echo $_GET['msg']; ?></td>
@@ -755,8 +757,8 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
     <td colspan="4"><?php if($by_user!=''){ echo '<b>DATE UPDATED: </b>'.$dateupdated.' <i>by: </i>'.$by_user; } ?><hr /></td>
   </tr>
   <tr>
-	<td width="600" valign="top">
-	  <table width="600" border="0" cellspacing="0" cellpadding="0">
+	<td width="460" valign="top">
+	  <table width="460" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td colspan="2" class="main_title">MAIN</td>
 		  </tr>
@@ -764,7 +766,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td width="300" class="title">IMO NUMBER</td>
+			<td width="160" class="title">IMO NUMBER</td>
 			<td>: <input type="text" id="IMO_NUMBER_ID" name="IMO_NUMBER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $IMO_NUMBER; ?>" /></td>
 		  </tr>
 		  <tr>
@@ -1561,8 +1563,8 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 	  </table>
 	</td>
 	<td width="20">&nbsp;</td>
-	<td width="600" valign="top">
-	  <table width="600" border="0" cellspacing="0" cellpadding="0">
+	<td width="540" valign="top">
+	  <table width="540" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td colspan="2" class="main_title">TONNAGES</td>
 		  </tr>
@@ -1570,7 +1572,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td height="5"></td>
 		  </tr>
 		  <tr>
-			<td class="title">NET TONNAGE</td>
+			<td width="240" class="title">NET TONNAGE</td>
 			<td>: <input type="text" id="NET_TONNAGE_ID" name="NET_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $NET_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>

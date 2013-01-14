@@ -145,11 +145,11 @@ for($i=0; $i<$t; $i++){
 	
 	$nmessage = unserialize($broker[0]['message']);
 	
-	$print['BROKER LOAD_PORT'] = strtoupper(trim($nmessage['openport']));
+	$print['BROKER LOAD_PORT'] = strtoupper(trim($nmessage['dely']));
 	$load_portxx = getPortId($print['BROKER LOAD_PORT'], 1);
 	$print['openport_lat'] = $load_portxx['latitude'];
 	$print['openport_lng'] = $load_portxx['longitude'];
-	$print['BROKER ETA TO LOAD PORT (days)'] = $nmessage['opendate'];
+	$print['BROKER ETA TO LOAD PORT (days)'] = $nmessage['delydate_from'];
 	
 	$sql = "SELECT * FROM `_blackbox_vessel` WHERE vessel_name='".$print['Ship Name']."' ORDER BY latest_received DESC LIMIT 0,1";
 	$email = dbQuery($sql, $link);

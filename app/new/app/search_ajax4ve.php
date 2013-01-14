@@ -115,9 +115,12 @@ if(trim($_GET['port_name'])){
 				$print = array();
 				$imoarr = array();
 				
+				$sql_xvas = "SELECT `name` FROM `_xvas_parsed2_dry` WHERE `imo`='".$ships[$i]['xvas_imo']."' ORDER BY dateupdated DESC LIMIT 0,1";
+				$xvas = dbQuery($sql_xvas, $link);
+				
 				$imoarr['imos']     = $ships[$i]['xvas_imo'];
 				$print['id']        = $ships[$i]['id'];
-				$print['Ship Name'] = $ships[$i]['xvas_name'];
+				$print['Ship Name'] = $xvas[0]['name'];
 				$print['IMO #']     = $ships[$i]['xvas_imo'];
 				
 				$imageb          = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$print['IMO #']);

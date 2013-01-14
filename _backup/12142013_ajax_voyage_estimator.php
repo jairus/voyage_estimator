@@ -1782,17 +1782,12 @@ function setupPortInterface(){
 	o35 = uNum(getValue(jQuery(".o35")));
 	setValue(jQuery("#laytime3"), fNum(o35*24));
 	
-	/*laytime1 = uNum(getValue(jQuery("#laytime1")));
-	laytime2 = uNum(getValue(jQuery("#laytime2")));
-	laytime3 = uNum(getValue(jQuery("#laytime3")));
-	
-	c51 = laytime1 + laytime2 + laytime3;*/
-	
+	//c51 = uNum(getValue(jQuery("#c51")));
+	c51 = uNum(getValue(jQuery("#laytime1"))+getValue(jQuery("#laytime2"))+getValue(jQuery("#laytime3")));
 	c52 = uNum(getValue(jQuery("#c52")));
 	c54 = uNum(getValue(jQuery("#c54")));
 
-	//num = (o32 + o33 + o35 - c51) / 24;
-	num = 0;
+	num = (o32 + o33 + o35 - c51) / 24;
 
 	if(num<0){
 		despatch = -1 * num * c54;
@@ -1808,24 +1803,14 @@ function setupPortInterface(){
 	setValue(jQuery("#c67"), fNum(despatch));
 
 	sum = port1+port2+port3;
-	
-	if($('#arrow1').attr('src')=='images/icon_dropdown_warning_shore.png'){
-		sum = 0;
-		
-		da_quick_input1 = uNum(getValue(jQuery("#da_quick_input1")));
-		da_quick_input2 = uNum(getValue(jQuery("#da_quick_input2")));
-		da_quick_input3 = uNum(getValue(jQuery("#da_quick_input3")));
-		
-		sum = da_quick_input1 + da_quick_input2 + da_quick_input3;
-	}
 
 	c67 = 0;
 
 	c68 = sum - c67;
 
 	setValue(jQuery("#c68"), fNum(c68));
-	
-	total = sum + demurrage - despatch;
+
+	total = sum+demurrage-despatch;
 
 	setValue(jQuery("#c68"), fNum(total));
 
@@ -2158,20 +2143,6 @@ function newScenario(){
 	jQuery('#pleasewait').show();
 	
 	self.location = "cargospotter.php?new_search=3";
-}
-
-function expand(){
-	if($('#arrow1').attr('src')=='images/icon_pullup_warning_shore.png'){
-		$('#arrow1').attr('src', 'images/icon_dropdown_warning_shore.png');
-		
-		jQuery('#other_input_table').hide();
-	}else{
-		$('#arrow1').attr('src', 'images/icon_pullup_warning_shore.png');
-		
-		jQuery('#other_input_table').show();
-	}
-	
-	setupPortInterface();
 }
 
 function mailItVe_2(){
@@ -3362,6 +3333,12 @@ if(!trim($e85)){
 				  <tr bgcolor="cddee5">
 					<td class="text_1" colspan="5"><div style="padding:3px;"><b>PORT/S</b></div></td>
 				  </tr>
+				  <!--<tr bgcolor="f5f5f5">
+					<td width="122" style="padding:3px;"><strong>Laytime (hrs)</strong></td>
+					<td width="122" class='input' style="padding:3px;"><input type='text' id='c51' name="c51" value="<?php //echo $c51; ?>" class='input_1 number' style="max-width:100px;" /></td>
+					<td width="123" style="padding:3px;"></td>
+					<td width="123" style="padding:3px;"></td>
+				  </tr>-->
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Dem ($/day)</strong></td>
 					<td class='input' style="padding:3px;"><input type='text' id='c52' name="c52" value="<?php echo $c52; ?>" class='input_1 number' style="max-width:100px;" /></td>
@@ -3433,23 +3410,13 @@ if(!trim($e85)){
 					<td style="padding:3px;"></td>
 					<td style="padding:3px;"></td>
 				  </tr>
-				</table>
-				<table width="490" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="e9e9e9">
-					<td style="padding:3px;" width="133"><strong>Port</strong> <img src='images/icon_dropdown_warning_shore.png' width='20' height='18' style='cursor:pointer;' onclick="expand();" id="arrow1" /></td>
+					<td style="padding:3px;"><strong>Port</strong></td>
 					<td class='port1' id='port1' style="padding:3px;"><strong>Port 1</strong></td>
 					<td class='port2' id='port2' style="padding:3px;"><strong>Port 2</strong></td>
 					<td class='port3' id='port3' style="padding:3px;"><strong>Port 3 </strong></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
-					<td style="padding:3px;"><strong>DA Quick Input ($)</strong></td>
-					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number da_quick_input1' id="da_quick_input1" name="da_quick_input1" value="<?php echo $da_quick_input1; ?>" style="max-width:100px;" /></td>
-					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number da_quick_input2' id="da_quick_input2" name="da_quick_input2" value="<?php echo $da_quick_input2; ?>" style="max-width:100px;" /></td>
-					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number da_quick_input3' id="da_quick_input3" name="da_quick_input3" value="<?php echo $da_quick_input3; ?>" style="max-width:100px;" /></td>
-				  </tr>
-				</table>
-				<table width="490" border="0" cellspacing="0" cellpadding="0" id="other_input_table" style="display:none;">
-				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Laytime (Hrs)</strong></td>
 					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number laytime' id="laytime1" name="laytime1" value="<?php echo $laytime1; ?>" style="max-width:100px;" /></td>
 					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number laytime' id="laytime2" name="laytime2" value="<?php echo $laytime2; ?>" style="max-width:100px;" /></td>
@@ -3509,8 +3476,6 @@ if(!trim($e85)){
 					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' id="miscellaneous2" name="miscellaneous2" value="<?php echo $miscellaneous2; ?>" style="max-width:100px;" /></td>
 					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number miscellaneous' id="miscellaneous3" name="miscellaneous3" value="<?php echo $miscellaneous3; ?>" style="max-width:100px;" /></td>
 				  </tr>
-				</table>
-				<table width="490" border="0" cellspacing="0" cellpadding="0">
 				  <tr>
 					<td class="label" style="padding:3px;"><strong>Demurrage ($)</strong></td>
 					<td colspan="3" class="label calculated" id='c66' style="padding:3px;"><strong>0.00</strong></td>

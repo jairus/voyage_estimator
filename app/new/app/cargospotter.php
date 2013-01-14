@@ -129,6 +129,9 @@ function displayContent(content){
 
 <center>
 <table width="100%" height="100%" id="pleasewait" style="display:none; position:fixed; top:0; left:0; z-index:100; background-image:url('images/overlay.png'); background-position:center; background-attachment:scroll; filter:alpha(opacity=90); opacity:0.9;">
+	<tr>
+        <td height="50" style="border-bottom:none;"></td>
+    </tr>
     <tr>
         <td align="center" valign="middle"><img src="images/loading.gif" /></td>
     </tr>

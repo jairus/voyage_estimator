@@ -54,7 +54,7 @@ function getMessageByImo($imo, $type){
 		$email = $email[0]['email'];
 
 		$sql = "select * from `_messages` where `imo`='".$imo."' and `type`='private' and `user_email` = '".$email."' order by `id` desc  limit 1";
-	}else if(strtolower($type)=='remark'||strtolower($type)=='openport'||strtolower($type)=='opendate'||strtolower($type)=='network'||strtolower($type)=='user_email'){
+	}else if(strtolower($type)=='remarks'||strtolower($type)=='openport'||strtolower($type)=='opendate'||strtolower($type)=='destinationregion'||strtolower($type)=='destinationdate'||strtolower($type)=='charterer'||strtolower($type)=='cargotype'||strtolower($type)=='quantity'||strtolower($type)=='status'||strtolower($type)=='cbm'||strtolower($type)=='rate'||strtolower($type)=='tce'||strtolower($type)=='ws'||strtolower($type)=='dely'||strtolower($type)=='delydate_from'||strtolower($type)=='delydate_to'||strtolower($type)=='redely1'||strtolower($type)=='redelydate1'||strtolower($type)=='redely2'||strtolower($type)=='redelydate2'||strtolower($type)=='redely3'||strtolower($type)=='redelydate3'||strtolower($type)=='redely4'||strtolower($type)=='redelydate4'||strtolower($type)=='rate'||strtolower($type)=='charterer'||strtolower($type)=='preriod'||strtolower($type)=='dur_min'||strtolower($type)=='dur_max'||strtolower($type)=='relet'||strtolower($type)=='network'){
 		$userid = $_SESSION['user']['id'];		
 
 		$sql = "
@@ -534,6 +534,63 @@ if(trim($t)){
 					</table>
 				</td>
 			</tr>";
+			
+			//SELECT BROKER INTELLIGENCE
+			$sql_int = "SELECT * FROM `_messages` WHERE imo='".$ship['IMO #']."' AND type='network' ORDER BY dateadded DESC";
+			$broker_int = dbQuery($sql_int, $link);
+			
+			$t_int = count($broker_int);
+			
+			if($t_int){
+				for($i_int=0; $i_int<$t_int; $i_int++){
+					$bi_data = unserialize($broker_int[$i_int]['message']);
+				
+					echo "<tr style='background:#ffb83a;'>
+						<td colspan='5'><div style='padding:5px;'><b style='font-size:14px; color:white;'>BROKER INTELLIGENCE</b></div></td>
+					</tr>
+					<tr style='background:#e5e5e5;'>
+						<td>
+							<div style='padding:5px;'>
+								<table cellpadding='0' cellspacing='0' width='100%'>
+									<tr>
+										<td width='25' style='border-bottom:none;'><img src='image.php?b=1&mx=20&p=".$imageb."'></td>
+										<td style='border-bottom:none;'><a class='clickable' onclick='return showShipDetails(\"".$ship['IMO #']."\")' >".$ship['Ship Name']."</a></td>
+										<td width='25' style='border-bottom:none; text-align:right;'><a class='clickable' title='Contact' alt='Contact' onclick='contactOwner(\"".$ship['IMO #']."\")'><img src='images/contact_icon.png'></a></td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td><div style='padding:5px;'>".$bi_data['dely']."</div></td>
+						<td style='text-align:right;'><div style='padding:5px;'><a onclick='openMapRegister(\"".$details."\")' class='clickable'><img src='images/map-icon.png' ></a></div></td>
+						<td><div style='padding:5px;'>".$bi_data['delydate_from']."</div></td>
+						<td>
+							<div style='padding:5px;'>
+								<table cellpadding='0' cellspacing='0' width='100%'>
+									<tr>
+										<td width='50%' style='border-bottom:none;'><b>Delivery:</b> <input type='button' style='width:125px; cursor:pointer; background:#f0f0f0; border:1px solid #ccc; font-size:10px; padding:2px;' value='".$bi_data['dely']."' alt='".$bi_data['dely']."' title='".$bi_data['dely']."' id='brokersupdate_".$broker_int[$i_int]['id']."' onclick='openMessageDialog(this.id, \"".$ship['IMO #']."\", \"network\")' /></td>
+										<td width='50%' style='border-bottom:none;'><b>Dely Date:</b> <input type='button' style='width:125px; cursor:pointer; background:#f0f0f0; border:1px solid #ccc; font-size:10px; padding:2px;' value='".$bi_data['delydate_from']."' alt='".$bi_data['delydate_from']."' title='".$bi_data['delydate_from']."' id='brokersupdate_".$broker_int[$i_int]['id']."' onclick='openMessageDialog(this.id, \"".$ship['IMO #']."\", \"network\")' /></td>
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+					<tr style='background:#e5e5e5;'>
+						<td><div style='padding:5px;'><b>".$operator."</b></div></td>
+						<td style='text-align:center;'>
+							<div style='padding:5px;'>";
+								if(trim($updatearr)){
+									echo "<input type='button' class='clickable' style='border:1px solid #c0c0c0; font-weight:normal; height:20px; font-size:10px; color:red;' onclick='oUpdateShipSearch0(".$i2.")' value=\"Operator's Update\">";
+								}else{
+									echo "<input type='button' class='clickable' style='border:1px solid #c0c0c0; font-weight:normal; height:20px; font-size:10px;' onclick='oUpdateShipSearch0(".$i2.")' value=\"Operator's Update\">";
+								}
+							echo "</div>
+						</td>
+						<td colspan='2'><div style='padding:5px;'><b>Private:</b> <input type='button' style='width:144px; cursor:pointer; background:#f0f0f0; border:1px solid #ccc; font-size:10px; padding:2px;' value='".$private."' alt='".$privatealt."' title='".$privatealt."' id='private_".$mid."' onclick='openMessageDialog(this.id, \"".$ship['IMO #']."\", \"private\")' /></div></td>
+						<td><div style='padding:5px;'><b>Remarks:</b> <input type='button' style='width:144px; cursor:pointer; background:#f0f0f0; border:1px solid #ccc; font-size:10px; padding:2px;' value='".$remarks."' alt='".$remarksalt."' title='".$remarksalt."' id='brokersupdate_".$nmid."' onclick='openMessageDialog(this.id, \"".$ship['IMO #']."\", \"network\")' /> <span style='color:red;'>".$broker_int[$i_int]['user_email']."</span></div></td>
+					</tr>";
+				}
+			}
+			//END
 		}
 	}
 }else{

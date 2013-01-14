@@ -237,7 +237,7 @@ if($t||$t2||$t3||$t4||$t5){
 				$load_port = $ships['LOAD_PORT'];
 				$load_port_eta = $ships['ETA TO LOAD PORT (days)'];
 				
-				$destination = $ships['DEST PORT NAME'];
+				$destination = $ships['DESTINATION'];
 				if(!trim($destination)){ $destination = "<img style='height:15px; width:15px;' src='http://".$_SERVER['HTTP_HOST']."/app/images/alert1.png' alt='No AIS Data Available' title='No AIS Data Available' />"; }
 				
 				$destination_eta = $ships['ETA TO DESTINATION (days)'];
@@ -245,7 +245,7 @@ if($t||$t2||$t3||$t4||$t5){
 				$siitech_shippos_data = $ships['siitech_shippos_data'];
 				$siitech_shippos_data = getXMLtoArr($siitech_shippos_data);
 				
-				$heading = $siitech_shippos_data['TrueHeading'].'&deg;';
+				$heading = str_replace(' degrees', '', $ships['TRUE HEADING']).'&deg;';
 				
 				$siitech_shipstat_data = $ships['siitech_shipstat_data'];
 				$siitech_shipstat_data = getXMLtoArr($siitech_shipstat_data);
@@ -472,7 +472,7 @@ if($t||$t2||$t3||$t4||$t5){
 				$load_port = $ships['LOAD_PORT'];
 				$load_port_eta = $ships['ETA TO LOAD PORT (days)'];
 				
-				$destination = $ships['DEST PORT NAME'];
+				$destination = $ships['DESTINATION'];
 				if(!trim($destination)){ $destination = "<img style='height:15px; width:15px;' src='http://".$_SERVER['HTTP_HOST']."/app/images/alert1.png' alt='No AIS Data Available' title='No AIS Data Available' />"; }
 				
 				$destination_eta = $ships['ETA TO DESTINATION (days)'];
@@ -480,7 +480,7 @@ if($t||$t2||$t3||$t4||$t5){
 				$siitech_shippos_data = $ships['siitech_shippos_data'];
 				$siitech_shippos_data = getXMLtoArr($siitech_shippos_data);
 				
-				$heading = $siitech_shippos_data['TrueHeading'].'&deg;';
+				$heading = str_replace(' degrees', '', $ships['TRUE HEADING']).'&deg;';
 				
 				$siitech_shipstat_data = $ships['siitech_shipstat_data'];
 				$siitech_shipstat_data = getXMLtoArr($siitech_shipstat_data);

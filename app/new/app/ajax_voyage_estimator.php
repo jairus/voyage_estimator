@@ -1394,6 +1394,7 @@ function bunkerstopCalc(){
 		ld = valueU(jQuery(tmp+".l33")) / valueU(jQuery(tmp+".m33")) / 24;
 
 		setValue(jQuery(tmp+".o33"), fNum(ld));
+		setValue(jQuery("#laytime2"), fNum(ld*24));
 
 		//seadays
 		seadays += ( valueU(jQuery(tmp+".s33")) + valueU(jQuery(tmp+".t33")) );
@@ -1425,6 +1426,7 @@ function loadingCalc(){
 		ld = valueU(jQuery(tmp+".k32")) / valueU(jQuery(tmp+".m32"));
 
 		setValue(jQuery(tmp+".o32"), fNum(ld));
+		setValue(jQuery("#laytime1"), fNum(ld*24));
 
 		//seadays
 		seadays += ( valueU(jQuery(tmp+".s32")) + valueU(jQuery(tmp+".t32")) );
@@ -1452,6 +1454,7 @@ function dischargingCalc(){
 		ld = valueU(jQuery(tmp+".k35")) / valueU(jQuery(tmp+".m35"));
 
 		setValue(jQuery(tmp+".o35"), fNum(ld));
+		setValue(jQuery("#laytime3"), fNum(ld*24));
 
 		n++;
 	}
@@ -1774,20 +1777,8 @@ function setupPortInterface(){
 	});
 
 	o32 = uNum(getValue(jQuery(".o32")));
-	setValue(jQuery("#laytime1"), fNum(o32*24));
-	
 	o33 = uNum(getValue(jQuery(".o33")));
-	setValue(jQuery("#laytime2"), fNum(o33*24));
-	
 	o35 = uNum(getValue(jQuery(".o35")));
-	setValue(jQuery("#laytime3"), fNum(o35*24));
-	
-	/*laytime1 = uNum(getValue(jQuery("#laytime1")));
-	laytime2 = uNum(getValue(jQuery("#laytime2")));
-	laytime3 = uNum(getValue(jQuery("#laytime3")));
-	
-	c51 = laytime1 + laytime2 + laytime3;*/
-	
 	c52 = uNum(getValue(jQuery("#c52")));
 	c54 = uNum(getValue(jQuery("#c54")));
 
@@ -3449,11 +3440,17 @@ if(!trim($e85)){
 				  </tr>
 				</table>
 				<table width="490" border="0" cellspacing="0" cellpadding="0" id="other_input_table" style="display:none;">
-				  <tr bgcolor="e9e9e9">
+				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Laytime (Hrs)</strong></td>
 					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number laytime' id="laytime1" name="laytime1" value="<?php echo $laytime1; ?>" style="max-width:100px;" /></td>
 					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number laytime' id="laytime2" name="laytime2" value="<?php echo $laytime2; ?>" style="max-width:100px;" /></td>
 					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number laytime' id="laytime3" name="laytime3" value="<?php echo $laytime3; ?>" style="max-width:100px;" /></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td style="padding:3px;"><strong>Disbursments</strong></td>
+					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number disbursments' id="disbursments1" name="disbursments1" value="<?php echo $disbursments1; ?>" style="max-width:100px;" /></td>
+					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number disbursments' id="disbursments2" name="disbursments2" value="<?php echo $disbursments2; ?>" style="max-width:100px;" /></td>
+					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number disbursments' id="disbursments3" name="disbursments3" value="<?php echo $disbursments3; ?>" style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Dues ($)</strong></td>
@@ -3594,10 +3591,10 @@ if(!trim($e85)){
 			
 				<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
 				<div>&nbsp;</div>
-			
-				<table width="490" height='460' border="0" cellspacing="0" cellpadding="0">
+				<!--height='460'-->
+				<table width="490" height='315' border="0" cellspacing="0" cellpadding="0">
 				  <tr>
-					<td bgcolor="#000000"><iframe src='' id="map_iframeve" width='490' height='460' frameborder="0"></iframe></td>
+					<td bgcolor="#000000"><iframe src='' id="map_iframeve" width='490' height='315' frameborder="0"></iframe></td>
 				  </tr>
 				</table>
 			</div>

@@ -408,7 +408,10 @@ $(function(){
 	jQuery("#shipdetails2").dialog("close");
 	
 	jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
-	jQuery("#contactdialog").dialog("close");	
+	jQuery("#contactdialog").dialog("close");
+	
+	jQuery("#portdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+	jQuery("#portdetails").dialog("close");
 
 	//ballast
 	$(".d31, .d32, .d33, .d34, .d35").datepicker({ 
@@ -987,6 +990,15 @@ function showShipDetails2(imo){
 
 	jQuery("#shipdetailiframe")[0].src='misc/ship_data_update.php?imo='+gimo;
 	jQuery("#shipdetails2").dialog("open");
+}
+
+function showPortDetails(portname){
+	var iframe = $("#portdetailsiframe");
+
+	$(iframe).contents().find("body").html("");
+
+	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname;
+	jQuery("#portdetails").dialog("open");
 }
 
 function ownerDetails(owner, owner_id){
@@ -1734,9 +1746,9 @@ function calculateDates(){
 }
 
 function setupPortInterface(){
-	setValue(jQuery("#port1"), getValue(jQuery(".e31")));
-	setValue(jQuery("#port2"), getValue(jQuery(".e33")));
-	setValue(jQuery("#port3"), getValue(jQuery(".e34")));
+	setValue(jQuery("#port1"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e31"))+'\');" class="clickable">'+getValue(jQuery(".e31"))+'</a>');
+	setValue(jQuery("#port2"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e33"))+'\');" class="clickable">'+getValue(jQuery(".e33"))+'</a>');
+	setValue(jQuery("#port3"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e34"))+'\');" class="clickable">'+getValue(jQuery(".e34"))+'</a>');
 
 	jQuery(".port1 input").hide();
 	jQuery(".port2 input").hide();
@@ -1780,19 +1792,23 @@ function setupPortInterface(){
 	o33 = uNum(getValue(jQuery(".o33")));
 	o35 = uNum(getValue(jQuery(".o35")));
 	c52 = uNum(getValue(jQuery("#c52")));
+	c52_2 = uNum(getValue(jQuery("#c52_2")));
+	c52_3 = uNum(getValue(jQuery("#c52_3")));
 	c54 = uNum(getValue(jQuery("#c54")));
+	c54_2 = uNum(getValue(jQuery("#c54_2")));
+	c54_3 = uNum(getValue(jQuery("#c54_3")));
 
 	//num = (o32 + o33 + o35 - c51) / 24;
 	num = 0;
 
 	if(num<0){
-		despatch = -1 * num * c54;
+		despatch = -1 * num * (c54 + c54_2 + c54_3);
 
 		demurrage = 0;
 	}else{
 		despatch = 0;
 
-		demurrage = num * c52;
+		demurrage = num *  (c52 + c52_2 + c52_3);
 	}
 	
 	setValue(jQuery("#c66"), fNum(demurrage));
@@ -1821,8 +1837,12 @@ function setupPortInterface(){
 	setValue(jQuery("#c68"), fNum(total));
 
 	c54 = c52 / 2;
+	c54_2 = c52_2 / 2;
+	c54_3 = c52_3 / 2;
 
 	setValue(jQuery("#c54"), fNum(c54));
+	setValue(jQuery("#c54_2"), fNum(c54_2));
+	setValue(jQuery("#c54_3"), fNum(c54_3));
 	setValue(jQuery("#c74"), fNum(c68));
 }
 
@@ -2574,6 +2594,10 @@ function printItVe(){
 
 <div id="shipdetails2" title="USER'S SHIP DETAILS" style='display:none;'>
 	<iframe id='shipdetailiframe' frameborder="0" height="100%" width="100%"></iframe>
+</div>
+
+<div id="portdetails" title="PORT DETAILS" style='display:none;'>
+	<iframe id='portdetailsiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
 
 <div id="contactdialog" title="CONTACT"  style='display:none'>
@@ -3354,10 +3378,10 @@ if(!trim($e85)){
 					<td class="text_1" colspan="5"><div style="padding:3px;"><b>PORT/S</b></div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
-					<td style="padding:3px;"><strong>Dem ($/day)</strong></td>
+					<td style="padding:3px;" width="133"><strong>Dem ($/day)</strong> <span style="font-size:10px;">Pro Rated</span></td>
 					<td class='input' style="padding:3px;"><input type='text' id='c52' name="c52" value="<?php echo $c52; ?>" class='input_1 number' style="max-width:100px;" /></td>
-					<td style="padding:3px;"><strong>Pro rated</strong></td>
-					<td style="padding:3px;"></td>
+					<td class='input' style="padding:3px;"><input type='text' id='c52_2' name="c52_2" value="<?php echo $c52_2; ?>" class='input_1 number' style="max-width:100px;" /></td>
+					<td class='input' style="padding:3px;"><input type='text' id='c52_3' name="c52_3" value="<?php echo $c52_3; ?>" class='input_1 number' style="max-width:100px;" /></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Term</strong></td>
@@ -3383,14 +3407,56 @@ if(!trim($e85)){
 							?>
 						</select>
 					</td>
-					<td style="padding:3px;"></td>
-					<td style="padding:3px;"></td>
+					<td style="padding:3px;">
+						<?php
+						$termarr = array(
+									1=>"DHDLTSBENDS", 
+									2=>"DHDATSBENDS", 
+									3=>"DHDWTSBENDS"
+								);
+								
+						$termt = count($termarr);
+						?>
+						<select id='term2' name="term2" class="input_1" style="max-width:100px;">
+							<?php
+							for($termi=1; $termi<=$termt; $termi++){
+								if($termarr[$termi]==$term){
+									echo '<option value="'.$termarr[$termi].'" selected="selected">'.$termarr[$termi].'</option>';
+								}else{
+									echo '<option value="'.$termarr[$termi].'">'.$termarr[$termi].'</option>';
+								}
+							}
+							?>
+						</select>
+					</td>
+					<td style="padding:3px;">
+						<?php
+						$termarr = array(
+									1=>"DHDLTSBENDS", 
+									2=>"DHDATSBENDS", 
+									3=>"DHDWTSBENDS"
+								);
+								
+						$termt = count($termarr);
+						?>
+						<select id='term3' name="term3" class="input_1" style="max-width:100px;">
+							<?php
+							for($termi=1; $termi<=$termt; $termi++){
+								if($termarr[$termi]==$term){
+									echo '<option value="'.$termarr[$termi].'" selected="selected">'.$termarr[$termi].'</option>';
+								}else{
+									echo '<option value="'.$termarr[$termi].'">'.$termarr[$termi].'</option>';
+								}
+							}
+							?>
+						</select>
+					</td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td style="padding:3px;"><strong>Des ($/day)</strong></td>
 					<td class="calculated" id='c54' style="padding:3px;">&nbsp;</td>
-					<td style="padding:3px;"></td>
-					<td style="padding:3px;"></td>
+					<td class="calculated" id='c54_2' style="padding:3px;">&nbsp;</td>
+					<td class="calculated" id='c54_3' style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td style="padding:3px;"><strong>Liner Terms</strong></td>
@@ -3421,8 +3487,60 @@ if(!trim($e85)){
 							?>
 						</select>
 					</td>
-					<td style="padding:3px;"></td>
-					<td style="padding:3px;"></td>
+					<td style="padding:3px;">
+						<?php
+						$linertermsarr = array(
+									1=>"FILO", 
+									2=>"FILTD", 
+									3=>"FIOLS",
+									4=>"FIOSLSD",
+									5=>"FIOSPT",
+									6=>"FIOST",
+									7=>"LIFO",
+									8=>"BTBT"
+								);
+								
+						$linertermst = count($linertermsarr);
+						?>
+						<select id='linerterms2' name="linerterms2" class="input_1" style="max-width:100px;">
+							<?php
+							for($linertermsi=1; $linertermsi<=$linertermst; $linertermsi++){
+								if($linertermsarr[$linertermsi]==$linerterms){
+									echo '<option value="'.$linertermsarr[$linertermsi].'" selected="selected">'.$linertermsarr[$linertermsi].'</option>';
+								}else{
+									echo '<option value="'.$linertermsarr[$linertermsi].'">'.$linertermsarr[$linertermsi].'</option>';
+								}
+							}
+							?>
+						</select>
+					</td>
+					<td style="padding:3px;">
+						<?php
+						$linertermsarr = array(
+									1=>"FILO", 
+									2=>"FILTD", 
+									3=>"FIOLS",
+									4=>"FIOSLSD",
+									5=>"FIOSPT",
+									6=>"FIOST",
+									7=>"LIFO",
+									8=>"BTBT"
+								);
+								
+						$linertermst = count($linertermsarr);
+						?>
+						<select id='linerterms3' name="linerterms3" class="input_1" style="max-width:100px;">
+							<?php
+							for($linertermsi=1; $linertermsi<=$linertermst; $linertermsi++){
+								if($linertermsarr[$linertermsi]==$linerterms){
+									echo '<option value="'.$linertermsarr[$linertermsi].'" selected="selected">'.$linertermsarr[$linertermsi].'</option>';
+								}else{
+									echo '<option value="'.$linertermsarr[$linertermsi].'">'.$linertermsarr[$linertermsi].'</option>';
+								}
+							}
+							?>
+						</select>
+					</td>
 				  </tr>
 				</table>
 				<table width="490" border="0" cellspacing="0" cellpadding="0">

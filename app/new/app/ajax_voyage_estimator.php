@@ -2596,7 +2596,7 @@ function printItVe(){
 	<iframe id='shipdetailiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
 
-<div id="portdetails" title="PORT DETAILS" style='display:none;'>
+<div id="portdetails" title="PORTS D/A CHARGES" style='display:none;'>
 	<iframe id='portdetailsiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
 

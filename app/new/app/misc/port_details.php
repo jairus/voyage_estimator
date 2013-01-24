@@ -9,6 +9,7 @@
 <script type='text/javascript' src='../js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
 <script type='text/javascript' src='../js/jquery-autocomplete/jquery.autocomplete.js'></script>
 <script type='text/javascript' src='../js/autoVessel.php'></script>
+<script type='text/javascript' src='../js/autoAgent.php'></script>
 <link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/jquery.autocomplete.css" />
 <link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/lib/thickbox.css" />
 
@@ -158,7 +159,7 @@ function showPortDetails(portname, id){
 	jQuery.ajax({
 		type: 'GET',
 		url: "port_details_ajax.php?portname="+portname+"&id="+id,
-		data:  jQuery("#inputfrm").serialize(),
+		data:  jQuery("#inputfrm_id").serialize(),
 
 		success: function(data) {
 			jQuery("#records_tab_wrapperonly_port_details").html(data);
@@ -169,8 +170,28 @@ function showPortDetails(portname, id){
 	});
 }
 
+function getAgentDetails(){
+	jQuery('#agentresults').hide();
+
+	//jQuery('#pleasewait').show();
+
+	jQuery.ajax({
+		type: 'GET',
+		url: "agent_details_ajax.php",
+		data:  jQuery("#inputfrm_id").serialize(),
+
+		success: function(data) {
+			jQuery("#records_tab_wrapperonly_agent_details").html(data);
+			jQuery('#agentresults').fadeIn(200);
+			
+			//jQuery('#pleasewait').hide();
+		}
+	});
+}
+
 $(document).ready(function() {
 	showPortDetails('<?php echo $_GET['portname']; ?>', 0);
+	jQuery('#ship_agent_id').focus();
 });
 </script>
 <style>
@@ -272,9 +293,12 @@ if(isset($_GET['portname'])){
 				<td width="500" valign="top">
 					<table width="500" border="0" cellspacing="0" cellpadding="0">
 						<tr bgcolor="cddee5">
+							<td colspan="9"><div style="padding:5px; font-weight:bold;"><?php echo $_GET['portname']; ?></div></td>
+						</tr>
+						<tr bgcolor="cddee5">
+							<td><div style="padding:5px; font-weight:bold;"><img src="../images/icon_book.png" /></div></td>
 							<td><div style="padding:5px; font-weight:bold;">AGENT</div></td>
 							<td><div style="padding:5px; font-weight:bold;">OWNER/MANAGER</div></td>
-							<td><div style="padding:5px; font-weight:bold;">PORT NAME</div></td>
 							<td><div style="padding:5px; font-weight:bold;">VESSEL</div></td>
 							<td><div style="padding:5px; font-weight:bold;">NRT</div></td>
 							<td><div style="padding:5px; font-weight:bold;">GRT</div></td>
@@ -294,9 +318,9 @@ if(isset($_GET['portname'])){
 						}
 						?>
 						<tr bgcolor="<?php echo $bgcolor; ?>">
+							<td><div style="padding:5px;"><?php echo '<a style="cursor: pointer; color:#FF0000;" onclick="showPortDetails(\''.$_GET['portname'].'\', \''.$r[$i]['id'].'\');"><img src="../images/icon_book.png" /></a>'; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['ship_agent']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['owner']; ?></div></td>
-							<td><div style="padding:5px;"><?php echo '<a style="cursor: pointer; color:#FF0000;" onclick="showPortDetails(\''.$_GET['portname'].'\', \''.$r[$i]['id'].'\');">'.$r[$i]['port_name'].'</a>'; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['vessel']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['nrt']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['grt']; ?></div></td>
@@ -341,7 +365,15 @@ if(isset($_GET['portname'])){
 									</tr>
 									<tr>
 										<td width="100">Ship Agent</td>
-										<td><input type="text" id="ship_agent_id" name="ship_agent" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td>
+											<input type="text" id="ship_agent_id" name="ship_agent" style="width:150px; border:1px solid #CCCCCC; padding:3px;" onblur="getAgentDetails();" />
+											<script type="text/javascript">
+											jQuery("#ship_agent_id").focus().autocomplete(agent);
+											jQuery("#ship_agent_id").setOptions({
+												scrollHeight: 180
+											});
+											</script>
+										</td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
@@ -644,115 +676,9 @@ if(isset($_GET['portname'])){
 							</td>
 							<td width="20">&nbsp;</td>
 							<td width="280" valign="top">
-								<table width="280" border="0" cellspacing="0" cellpadding="0">
-									<tr bgcolor="cddee5">
-										<td colspan="2"><div style="padding:5px; font-weight:bold;">AGENT'S MAIN DETAILS</div></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td width="100">Company Name</td>
-										<td><input type="text" id="company_name_id" name="company_name" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Business Type</td>
-										<td><input type="text" id="business_type_id" name="business_type" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Address</td>
-										<td><input type="text" id="address_id" name="address" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>City</td>
-										<td><input type="text" id="city_id" name="city" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Postal Code</td>
-										<td><input type="text" id="postal_code_id" name="postal_code" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Country</td>
-										<td><input type="text" id="country_id" name="country" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Fax</td>
-										<td><input type="text" id="fax_id" name="fax" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Website</td>
-										<td><input type="text" id="website_id" name="website" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr bgcolor="cddee5">
-										<td colspan="2"><div style="padding:5px; font-weight:bold;">CONTACT DETAILS</div></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>First Name</td>
-										<td><input type="text" id="first_name_id" name="first_name" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Last Name</td>
-										<td><input type="text" id="last_name_id" name="last_name" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Email Address</td>
-										<td><input type="text" id="email_address_id" name="email_address" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Skype ID</td>
-										<td><input type="text" id="skype_id" name="skype" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Yahoo ID</td>
-										<td><input type="text" id="yahoo_id" name="yahoo" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>MSN ID</td>
-										<td><input type="text" id="msn_id" name="msn" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-								</table>
+								<div id='agentresults'>
+									<div id='records_tab_wrapperonly_agent_details'></div>
+								</div>
 							</td>
 						</tr>
 					</table>

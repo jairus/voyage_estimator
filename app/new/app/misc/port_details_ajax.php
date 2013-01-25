@@ -1,3 +1,7 @@
+<script language="JavaScript">
+$(function() { $('#date_id').datetimepicker(); });
+$(function() { $('#date_hour_id').datetimepicker(); });
+</script>
 <?php
 @session_start();
 include_once(dirname(__FILE__)."/../includes/bootstrap.php");
@@ -542,7 +546,7 @@ if(isset($_GET['id'])){
 						</tr>
 						<tr>
 							<td>Date</td>
-							<td><input type="text" id="date_id" name="date" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $date; ?>" /></td>
+							<td><input type="text" id="date_id" name="date" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $date; ?>" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
@@ -571,7 +575,15 @@ if(isset($_GET['id'])){
 						</tr>
 						<tr>
 							<td>Arrived From</td>
-							<td><input type="text" id="arrived_from_id" name="arrived_from" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $arrived_from; ?>" /></td>
+							<td>
+								<input type="text" id="arrived_from_id" name="arrived_from" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $arrived_from; ?>" />
+								<script type="text/javascript">
+								jQuery("#arrived_from_id").focus().autocomplete(veson_ports);
+								jQuery("#arrived_from_id").setOptions({
+									scrollHeight: 180
+								});
+								</script>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
@@ -585,21 +597,29 @@ if(isset($_GET['id'])){
 						</tr>
 						<tr>
 							<td>NRT</td>
-							<td><input type="text" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $nrt; ?>" /></td>
+							<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $nrt; ?>" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
 							<td>GRT</td>
-							<td><input type="text" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $grt; ?>" /></td>
+							<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $grt; ?>" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
 							<td>Sailed For</td>
-							<td><input type="text" id="sailed_for_id" name="sailed_for" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $sailed_for; ?>" /></td>
+							<td>
+								<input type="text" id="sailed_for_id" name="sailed_for" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $sailed_for; ?>" />
+								<script type="text/javascript">
+								jQuery("#sailed_for_id").focus().autocomplete(veson_ports);
+								jQuery("#sailed_for_id").setOptions({
+									scrollHeight: 180
+								});
+								</script>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>

@@ -1,8 +1,5 @@
 <script type="text/javascript" src="../js/jquery.js"></script>
-
-<script type="text/javascript" src="../js/calendar/xc2_default.js"></script>
-<script type="text/javascript" src="../js/calendar/xc2_inpage.js"></script>
-<link type="text/css" rel="stylesheet" href="../js/calendar/xc2_default.css" />
+<script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
 
 <script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
 <script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
@@ -10,10 +7,19 @@
 <script type='text/javascript' src='../js/jquery-autocomplete/jquery.autocomplete.js'></script>
 <script type='text/javascript' src='../js/autoVessel.php'></script>
 <script type='text/javascript' src='../js/autoAgent.php'></script>
+<script type='text/javascript' src='../js/autoPorts.php'></script>
 <link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/jquery.autocomplete.css" />
 <link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/lib/thickbox.css" />
 
+<link rel="stylesheet" media="all" type="text/css" href="../js/jquery-ui.css" />
+<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="../js/jquery-ui-sliderAccess.js"></script>
+
 <script language="JavaScript">
+$(function() { $('#date_id').datetimepicker(); });
+$(function() { $('#date_hour_id').datetimepicker(); });
+
 function saveForm(){
 	var submitok = 1;
 	
@@ -23,6 +29,7 @@ function saveForm(){
 		alertmsg="Please enter the SHIP AGENT\n"; submitok = 0; 
 		document.inputfrm.submitok.value=0
 	}else{
+		jQuery('#pleasewait').show();
 		document.inputfrm.submitok.value=1
 	}
 	
@@ -105,7 +112,7 @@ function computeForTotal(){
 	var total_port_charges = uNum(harbour_dues) + uNum(light_dues) + uNum(pilotage) + uNum(towage) + uNum(mooring_unmooring) + uNum(shifting) + uNum(customs_charges) + uNum(launch_car_hire) + uNum(agency_remuniration) + uNum(telex_postage_telegrams);
 	
 	jQuery("#total_port_charges_td").text(fNum(total_port_charges));
-	jQuery("#total_port_charges_id").val(total_port_charges);
+	jQuery("#total_port_charges_id").val(fNum(total_port_charges));
 	//END OF PORT CHARGES
 	
 	//CARGO CHARGES
@@ -117,7 +124,7 @@ function computeForTotal(){
 	var total_cargo_charges = uNum(stevedoring_expenses) + uNum(winchmen_cranage) + uNum(tally) + uNum(overtime);
 	
 	jQuery("#total_cargo_charges_td").text(fNum(total_cargo_charges));
-	jQuery("#total_cargo_charges_id").val(total_cargo_charges);
+	jQuery("#total_cargo_charges_id").val(fNum(total_cargo_charges));
 	//END OF CARGO CHARGES
 	
 	//SHIP CHARGES
@@ -130,7 +137,7 @@ function computeForTotal(){
 	var total_ship_charges = uNum(cash_to_master) + uNum(water) + uNum(stores_provisions) + uNum(crew_expenses) + uNum(repairs);
 	
 	jQuery("#total_ship_charges_td").text(fNum(total_ship_charges));
-	jQuery("#total_ship_charges_id").val(total_ship_charges);
+	jQuery("#total_ship_charges_id").val(fNum(total_ship_charges));
 	//END OF SHIP CHARGES
 	
 	//STATEMENT CHARGES
@@ -140,13 +147,13 @@ function computeForTotal(){
 	var total_statement = uNum(credit_to_owners_account) + uNum(balance_due_us_you);
 	
 	jQuery("#total_statement_td").text(fNum(total_statement));
-	jQuery("#total_statement_id").val(total_statement);
+	jQuery("#total_statement_id").val(fNum(total_statement));
 	//END OF STATEMENT CHARGES
 	
 	//TOTAL
 	var total_over_all = uNum(total_port_charges) + uNum(total_cargo_charges) + uNum(total_ship_charges) + uNum(total_statement);
 	jQuery("#total_over_all_td").text(fNum(total_over_all));
-	jQuery("#total_over_all_id").val(total_over_all);
+	jQuery("#total_over_all_id").val(fNum(total_over_all));
 	//END OF TOTAL
 }
 //END OF COMPUTATIONS
@@ -225,6 +232,28 @@ $(document).ready(function() {
 include_once(dirname(__FILE__)."/../includes/bootstrap.php");
 date_default_timezone_set('UTC');
 
+/*function currency($from_Currency, $to_Currency, $amount) {
+	$amount = urlencode($amount);
+	$from_Currency = urlencode($from_Currency);
+	$to_Currency = urlencode($to_Currency);
+	$url = "http://www.google.com/ig/calculator?hl=en&q=$amount$from_Currency=?$to_Currency";
+	$ch = curl_init();
+	$timeout = 0;
+	curl_setopt ($ch, CURLOPT_URL, $url);
+	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch,  CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");
+	curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+	$rawdata = curl_exec($ch);
+	curl_close($ch);
+	$data = explode('"', $rawdata);
+	$data = explode(' ', $data['3']);
+	$var = $data['0'];
+	
+	return round($var,3);
+}
+*/
+//echo currency("USD","INR",1);
+
 if($_POST['submitok']==1){
 	$port_name = $_GET['portname'];
 	
@@ -298,12 +327,11 @@ if(isset($_GET['portname'])){
 						<tr bgcolor="cddee5">
 							<td><div style="padding:5px; font-weight:bold;"><img src="../images/icon_book.png" /></div></td>
 							<td><div style="padding:5px; font-weight:bold;">AGENT</div></td>
-							<td><div style="padding:5px; font-weight:bold;">OWNER/MANAGER</div></td>
+							<td><div style="padding:5px; font-weight:bold;">OWNER</div></td>
 							<td><div style="padding:5px; font-weight:bold;">VESSEL</div></td>
 							<td><div style="padding:5px; font-weight:bold;">NRT</div></td>
 							<td><div style="padding:5px; font-weight:bold;">GRT</div></td>
 							<td><div style="padding:5px; font-weight:bold;">AMOUNT</div></td>
-							<td><div style="padding:5px; font-weight:bold;">CURRENCY</div></td>
 							<td><div style="padding:5px; font-weight:bold;">DATE</div></td>
 						</tr>
 						<?php
@@ -324,8 +352,7 @@ if(isset($_GET['portname'])){
 							<td><div style="padding:5px;"><?php echo $details['vessel']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['nrt']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['grt']; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $details['total_over_all']; ?></div></td>
-							<td><div style="padding:5px;">$</div></td>
+							<td><div style="padding:5px;">US$ <?php echo $details['total_over_all']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['date']; ?></div></td>
 						</tr>
 						<?php } ?>
@@ -387,7 +414,7 @@ if(isset($_GET['portname'])){
 									</tr>
 									<tr>
 										<td>Date</td>
-										<td><input type="text" id="date_id" name="date" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td><input type="text" id="date_id" name="date" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
@@ -416,7 +443,15 @@ if(isset($_GET['portname'])){
 									</tr>
 									<tr>
 										<td>Arrived From</td>
-										<td><input type="text" id="arrived_from_id" name="arrived_from" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td>
+											<input type="text" id="arrived_from_id" name="arrived_from" style="width:150px; border:1px solid #CCCCCC; padding:3px;" />
+											<script type="text/javascript">
+											jQuery("#arrived_from_id").focus().autocomplete(veson_ports);
+											jQuery("#arrived_from_id").setOptions({
+												scrollHeight: 180
+											});
+											</script>
+										</td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
@@ -430,21 +465,29 @@ if(isset($_GET['portname'])){
 									</tr>
 									<tr>
 										<td>NRT</td>
-										<td><input type="text" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
 										<td>GRT</td>
-										<td><input type="text" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
 										<td>Sailed For</td>
-										<td><input type="text" id="sailed_for_id" name="sailed_for" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td>
+											<input type="text" id="sailed_for_id" name="sailed_for" style="width:150px; border:1px solid #CCCCCC; padding:3px;" />
+											<script type="text/javascript">
+											jQuery("#sailed_for_id").focus().autocomplete(veson_ports);
+											jQuery("#sailed_for_id").setOptions({
+												scrollHeight: 180
+											});
+											</script>
+										</td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>

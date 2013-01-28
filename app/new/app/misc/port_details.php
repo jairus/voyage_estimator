@@ -97,6 +97,10 @@ function uNum(num){
 
 //COMPUTATIONS
 function computeForTotal(){
+	//QUICK TOTAL CHARGES
+	var quick_total_charges = uNum(jQuery("#quick_total_charges_id").val());
+	//END OF QUICK TOTAL CHARGES
+
 	//PORT CHARGES
 	var harbour_dues = jQuery("#harbour_dues_id").val();
 	var light_dues = jQuery("#light_dues_id").val();
@@ -128,7 +132,7 @@ function computeForTotal(){
 	//END OF CARGO CHARGES
 	
 	//SHIP CHARGES
-	var cash_to_master = jQuery("#cash_to_master_id").val();
+	/*var cash_to_master = jQuery("#cash_to_master_id").val();
 	var water = jQuery("#water_id").val();
 	var stores_provisions = jQuery("#stores_provisions_id").val();
 	var crew_expenses = jQuery("#crew_expenses_id").val();
@@ -137,21 +141,21 @@ function computeForTotal(){
 	var total_ship_charges = uNum(cash_to_master) + uNum(water) + uNum(stores_provisions) + uNum(crew_expenses) + uNum(repairs);
 	
 	jQuery("#total_ship_charges_td").text(fNum(total_ship_charges));
-	jQuery("#total_ship_charges_id").val(fNum(total_ship_charges));
+	jQuery("#total_ship_charges_id").val(fNum(total_ship_charges));*/
 	//END OF SHIP CHARGES
 	
 	//STATEMENT CHARGES
-	var credit_to_owners_account = jQuery("#credit_to_owners_account_id").val();
+	/*var credit_to_owners_account = jQuery("#credit_to_owners_account_id").val();
 	var balance_due_us_you = jQuery("#balance_due_us_you_id").val();
 
 	var total_statement = uNum(credit_to_owners_account) + uNum(balance_due_us_you);
 	
 	jQuery("#total_statement_td").text(fNum(total_statement));
-	jQuery("#total_statement_id").val(fNum(total_statement));
+	jQuery("#total_statement_id").val(fNum(total_statement));*/
 	//END OF STATEMENT CHARGES
 	
 	//TOTAL
-	var total_over_all = uNum(total_port_charges) + uNum(total_cargo_charges) + uNum(total_ship_charges) + uNum(total_statement);
+	var total_over_all = uNum(total_port_charges) + uNum(total_cargo_charges) + quick_total_charges/* + uNum(total_ship_charges) + uNum(total_statement)*/;
 	jQuery("#total_over_all_td").text(fNum(total_over_all));
 	jQuery("#total_over_all_id").val(fNum(total_over_all));
 	//END OF TOTAL
@@ -265,11 +269,15 @@ if($_POST['submitok']==1){
 	$print['vessel'] = $_POST['vessel'];
 	$print['voyage_number'] = $_POST['voyage_number'];
 	$print['arrived_from'] = $_POST['arrived_from'];
+	$print['loading'] = $_POST['loading'];
+	$print['discharging'] = $_POST['discharging'];
+	$print['bunkering'] = $_POST['bunkering'];
 	$print['date_hour'] = $_POST['date_hour'];
 	$print['nrt'] = $_POST['nrt'];
 	$print['grt'] = $_POST['grt'];
 	$print['sailed_for'] = $_POST['sailed_for'];
 	$print['cargo_discharged'] = $_POST['cargo_discharged'];
+	$print['quick_total_charges'] = $_POST['quick_total_charges'];
 	$print['harbour_dues'] = $_POST['harbour_dues'];
 	$print['light_dues'] = $_POST['light_dues'];
 	$print['pilotage'] = $_POST['pilotage'];
@@ -286,7 +294,7 @@ if($_POST['submitok']==1){
 	$print['tally'] = $_POST['tally'];
 	$print['overtime'] = $_POST['overtime'];
 	$print['total_cargo_charges'] = $_POST['total_cargo_charges'];
-	$print['cash_to_master'] = $_POST['cash_to_master'];
+	/*$print['cash_to_master'] = $_POST['cash_to_master'];
 	$print['water'] = $_POST['water'];
 	$print['stores_provisions'] = $_POST['stores_provisions'];
 	$print['crew_expenses'] = $_POST['crew_expenses'];
@@ -294,7 +302,7 @@ if($_POST['submitok']==1){
 	$print['total_ship_charges'] = $_POST['total_ship_charges'];
 	$print['credit_to_owners_account'] = $_POST['credit_to_owners_account'];
 	$print['balance_due_us_you'] = $_POST['balance_due_us_you'];
-	$print['total_statement'] = $_POST['total_statement'];
+	$print['total_statement'] = $_POST['total_statement'];*/
 	$print['total_over_all'] = $_POST['total_over_all'];
 	
 	$data = serialize($print);
@@ -338,6 +346,8 @@ if(isset($_GET['portname'])){
 						for($i=0; $i<$t; $i++){
 						
 						$details = unserialize($r[$i]['port_details']);
+						$agent = explode(' - ', $details['ship_agent']);
+						$agent_name = $agent[0];
 						
 						if($i%2==0){
 							$bgcolor = 'f5f5f5';
@@ -347,7 +357,7 @@ if(isset($_GET['portname'])){
 						?>
 						<tr bgcolor="<?php echo $bgcolor; ?>">
 							<td><div style="padding:5px;"><?php echo '<a style="cursor: pointer; color:#FF0000;" onclick="showPortDetails(\''.$_GET['portname'].'\', \''.$r[$i]['id'].'\');"><img src="../images/icon_book.png" /></a>'; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $details['ship_agent']; ?></div></td>
+							<td><div style="padding:5px;"><?php echo $agent_name; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['owner']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['vessel']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['nrt']; ?></div></td>
@@ -457,6 +467,27 @@ if(isset($_GET['portname'])){
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
+										<td>Loading</td>
+										<td><input type="radio" id="loading_id" name="loading" value="Yes" /> Yes &nbsp;&nbsp;&nbsp; <input type="radio" id="loading_id" name="loading" value="No" checked="checked" /> No</td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Discharging</td>
+										<td><input type="radio" id="discharging_id" name="discharging" value="Yes" /> Yes &nbsp;&nbsp;&nbsp; <input type="radio" id="discharging_id" name="discharging" value="No" checked="checked" /> No</td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Bunkering</td>
+										<td><input type="radio" id="bunkering_id" name="bunkering" value="Yes" /> Yes &nbsp;&nbsp;&nbsp; <input type="radio" id="bunkering_id" name="bunkering" value="No" checked="checked" /> No</td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
 										<td>Date/Hour</td>
 										<td><input type="text" id="date_hour_id" name="date_hour" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
 									</tr>
@@ -495,6 +526,19 @@ if(isset($_GET['portname'])){
 									<tr>
 										<td>Cargo Discharged</td>
 										<td><input type="text" id="cargo_discharged_id" name="cargo_discharged" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+									</tr>
+									<tr>
+										<td colspan="2">&nbsp;</td>
+									</tr>
+									<tr bgcolor="cddee5">
+										<td colspan="2"><div style="padding:5px; font-weight:bold;">QUICK TOTAL CHARGES</div></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Quick Total Charges</td>
+										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="quick_total_charges_id" name="quick_total_charges" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
 									</tr>
 									<tr>
 										<td colspan="2">&nbsp;</td>
@@ -623,7 +667,7 @@ if(isset($_GET['portname'])){
 									<tr>
 										<td colspan="2">&nbsp;</td>
 									</tr>
-									<tr bgcolor="cddee5">
+									<!--<tr bgcolor="cddee5">
 										<td colspan="2"><div style="padding:5px; font-weight:bold;">SHIP CHARGES</div></td>
 									</tr>
 									<tr>
@@ -697,7 +741,7 @@ if(isset($_GET['portname'])){
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
+									</tr>-->
 									<tr>
 										<td><b>Over All Total</b></td>
 										<td id="total_over_all_td">&nbsp;</td>
@@ -709,8 +753,8 @@ if(isset($_GET['portname'])){
 										<td colspan="2">
 											<input type="hidden" id="total_port_charges_id" name="total_port_charges" />
 											<input type="hidden" id="total_cargo_charges_id" name="total_cargo_charges" />
-											<input type="hidden" id="total_ship_charges_id" name="total_ship_charges" />
-											<input type="hidden" id="total_statement_id" name="total_statement" />
+											<!--<input type="hidden" id="total_ship_charges_id" name="total_ship_charges" />
+											<input type="hidden" id="total_statement_id" name="total_statement" />-->
 											<input type="hidden" id="total_over_all_id" name="total_over_all" />
 											<input type="hidden" name="submitok" value="1"><input type="button" id="btn_save_id" name="btn_save" value="save" class="btn_1" onClick="saveForm();" />
 										</td>

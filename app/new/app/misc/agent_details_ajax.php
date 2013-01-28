@@ -4,7 +4,11 @@ include_once(dirname(__FILE__)."/../includes/bootstrap.php");
 date_default_timezone_set('UTC');
 
 if(isset($_GET['ship_agent'])){
-	$sql = "SELECT * FROM `_port_agents` WHERE `email_address`='".$_GET['ship_agent']."' ORDER BY dateadded DESC LIMIT 0,1";
+	$agent = explode(' - ', $_GET['ship_agent']);
+	
+	$id = $agent[1];
+
+	$sql = "SELECT * FROM `_port_agents` WHERE `id`='".$id."' ORDER BY dateadded DESC LIMIT 0,1";
 	$r = dbQuery($sql);
 	
 	if($r[0]['id']){

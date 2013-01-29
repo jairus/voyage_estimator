@@ -17,6 +17,20 @@
 <script type="text/javascript" src="../js/jquery-ui-sliderAccess.js"></script>
 
 <script language="JavaScript">
+function expand(){
+	if($('#arrow1').attr('src')=='../images/icon_pullup_warning_shore.png'){
+		$('#arrow1').attr('src', '../images/icon_dropdown_warning_shore.png');
+		
+		jQuery('#other_details_table_id').hide();
+	}else{
+		$('#arrow1').attr('src', '../images/icon_pullup_warning_shore.png');
+		
+		jQuery('#other_details_table_id').show();
+	}
+	
+	computeForTotal();
+}
+
 $(function() { $('#date_id').datetimepicker(); });
 $(function() { $('#date_hour_id').datetimepicker(); });
 
@@ -101,64 +115,43 @@ function computeForTotal(){
 	var quick_total_charges = uNum(jQuery("#quick_total_charges_id").val());
 	//END OF QUICK TOTAL CHARGES
 
-	//PORT CHARGES
-	var harbour_dues = jQuery("#harbour_dues_id").val();
-	var light_dues = jQuery("#light_dues_id").val();
-	var pilotage = jQuery("#pilotage_id").val();
-	var towage = jQuery("#towage_id").val();
-	var mooring_unmooring = jQuery("#mooring_unmooring_id").val();
-	var shifting = jQuery("#shifting_id").val();
-	var customs_charges = jQuery("#customs_charges_id").val();
-	var launch_car_hire = jQuery("#launch_car_hire_id").val();
-	var agency_remuniration = jQuery("#agency_remuniration_id").val();
-	var telex_postage_telegrams = jQuery("#telex_postage_telegrams_id").val();
-
-	var total_port_charges = uNum(harbour_dues) + uNum(light_dues) + uNum(pilotage) + uNum(towage) + uNum(mooring_unmooring) + uNum(shifting) + uNum(customs_charges) + uNum(launch_car_hire) + uNum(agency_remuniration) + uNum(telex_postage_telegrams);
+	if($('#arrow1').attr('src')!='../images/icon_dropdown_warning_shore.png'){
+		//PORT CHARGES
+		var harbour_dues = jQuery("#harbour_dues_id").val();
+		var light_dues = jQuery("#light_dues_id").val();
+		var pilotage = jQuery("#pilotage_id").val();
+		var towage = jQuery("#towage_id").val();
+		var mooring_unmooring = jQuery("#mooring_unmooring_id").val();
+		var shifting = jQuery("#shifting_id").val();
+		var customs_charges = jQuery("#customs_charges_id").val();
+		var launch_car_hire = jQuery("#launch_car_hire_id").val();
+		var agency_remuniration = jQuery("#agency_remuniration_id").val();
+		var telex_postage_telegrams = jQuery("#telex_postage_telegrams_id").val();
 	
-	jQuery("#total_port_charges_td").text(fNum(total_port_charges));
-	jQuery("#total_port_charges_id").val(fNum(total_port_charges));
-	//END OF PORT CHARGES
+		var total_port_charges = uNum(harbour_dues) + uNum(light_dues) + uNum(pilotage) + uNum(towage) + uNum(mooring_unmooring) + uNum(shifting) + uNum(customs_charges) + uNum(launch_car_hire) + uNum(agency_remuniration) + uNum(telex_postage_telegrams);
+		
+		jQuery("#total_port_charges_td").text(fNum(total_port_charges));
+		jQuery("#total_port_charges_id").val(fNum(total_port_charges));
+		//END OF PORT CHARGES
+		
+		//CARGO CHARGES
+		var stevedoring_expenses = jQuery("#stevedoring_expenses_id").val();
+		var winchmen_cranage = jQuery("#winchmen_cranage_id").val();
+		var tally = jQuery("#tally_id").val();
+		var overtime = jQuery("#overtime_id").val();
 	
-	//CARGO CHARGES
-	var stevedoring_expenses = jQuery("#stevedoring_expenses_id").val();
-	var winchmen_cranage = jQuery("#winchmen_cranage_id").val();
-	var tally = jQuery("#tally_id").val();
-	var overtime = jQuery("#overtime_id").val();
-
-	var total_cargo_charges = uNum(stevedoring_expenses) + uNum(winchmen_cranage) + uNum(tally) + uNum(overtime);
-	
-	jQuery("#total_cargo_charges_td").text(fNum(total_cargo_charges));
-	jQuery("#total_cargo_charges_id").val(fNum(total_cargo_charges));
-	//END OF CARGO CHARGES
-	
-	//SHIP CHARGES
-	/*var cash_to_master = jQuery("#cash_to_master_id").val();
-	var water = jQuery("#water_id").val();
-	var stores_provisions = jQuery("#stores_provisions_id").val();
-	var crew_expenses = jQuery("#crew_expenses_id").val();
-	var repairs = jQuery("#repairs_id").val();
-
-	var total_ship_charges = uNum(cash_to_master) + uNum(water) + uNum(stores_provisions) + uNum(crew_expenses) + uNum(repairs);
-	
-	jQuery("#total_ship_charges_td").text(fNum(total_ship_charges));
-	jQuery("#total_ship_charges_id").val(fNum(total_ship_charges));*/
-	//END OF SHIP CHARGES
-	
-	//STATEMENT CHARGES
-	/*var credit_to_owners_account = jQuery("#credit_to_owners_account_id").val();
-	var balance_due_us_you = jQuery("#balance_due_us_you_id").val();
-
-	var total_statement = uNum(credit_to_owners_account) + uNum(balance_due_us_you);
-	
-	jQuery("#total_statement_td").text(fNum(total_statement));
-	jQuery("#total_statement_id").val(fNum(total_statement));*/
-	//END OF STATEMENT CHARGES
-	
-	//TOTAL
-	var total_over_all = uNum(total_port_charges) + uNum(total_cargo_charges) + quick_total_charges/* + uNum(total_ship_charges) + uNum(total_statement)*/;
-	jQuery("#total_over_all_td").text(fNum(total_over_all));
-	jQuery("#total_over_all_id").val(fNum(total_over_all));
-	//END OF TOTAL
+		var total_cargo_charges = uNum(stevedoring_expenses) + uNum(winchmen_cranage) + uNum(tally) + uNum(overtime);
+		
+		jQuery("#total_cargo_charges_td").text(fNum(total_cargo_charges));
+		jQuery("#total_cargo_charges_id").val(fNum(total_cargo_charges));
+		//END OF CARGO CHARGES
+		
+		//TOTAL
+		var total_over_all = uNum(total_port_charges) + uNum(total_cargo_charges) + quick_total_charges;
+		jQuery("#total_over_all_td").text(fNum(total_over_all));
+		jQuery("#total_over_all_id").val(fNum(total_over_all));
+		//END OF TOTAL
+	}
 }
 //END OF COMPUTATIONS
 
@@ -170,7 +163,7 @@ function showPortDetails(portname, id){
 	jQuery.ajax({
 		type: 'GET',
 		url: "port_details_ajax.php?portname="+portname+"&id="+id,
-		data:  jQuery("#inputfrm_id").serialize(),
+		data:  '',
 
 		success: function(data) {
 			jQuery("#records_tab_wrapperonly_port_details").html(data);
@@ -236,45 +229,26 @@ $(document).ready(function() {
 include_once(dirname(__FILE__)."/../includes/bootstrap.php");
 date_default_timezone_set('UTC');
 
-/*function currency($from_Currency, $to_Currency, $amount) {
-	$amount = urlencode($amount);
-	$from_Currency = urlencode($from_Currency);
-	$to_Currency = urlencode($to_Currency);
-	$url = "http://www.google.com/ig/calculator?hl=en&q=$amount$from_Currency=?$to_Currency";
-	$ch = curl_init();
-	$timeout = 0;
-	curl_setopt ($ch, CURLOPT_URL, $url);
-	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch,  CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");
-	curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-	$rawdata = curl_exec($ch);
-	curl_close($ch);
-	$data = explode('"', $rawdata);
-	$data = explode(' ', $data['3']);
-	$var = $data['0'];
-	
-	return round($var,3);
-}
-*/
-//echo currency("USD","INR",1);
-
 if($_POST['submitok']==1){
 	$port_name = $_GET['portname'];
 	
 	$print = array();
 	
-	$print['ship_agent'] = $_POST['ship_agent'];
-	$print['owner'] = $_POST['owner'];
 	$print['date'] = $_POST['date'];
+	$print['ship_agent'] = $_POST['ship_agent'];
 	$print['vessel'] = $_POST['vessel'];
+	$print['dwt'] = $_POST['dwt'];
+	$print['grt'] = $_POST['grt'];
+	$print['nrt'] = $_POST['nrt'];
+	$print['owner'] = $_POST['owner'];
+	$print['da_details'] = $_POST['da_details'];
+	$print['quick_total_charges'] = $_POST['quick_total_charges'];
 	$print['voyage_number'] = $_POST['voyage_number'];
 	$print['arrived_from'] = $_POST['arrived_from'];
 	$print['loading'] = $_POST['loading'];
 	$print['discharging'] = $_POST['discharging'];
 	$print['bunkering'] = $_POST['bunkering'];
 	$print['date_hour'] = $_POST['date_hour'];
-	$print['nrt'] = $_POST['nrt'];
-	$print['grt'] = $_POST['grt'];
 	$print['sailed_for'] = $_POST['sailed_for'];
 	$print['cargo_discharged'] = $_POST['cargo_discharged'];
 	$print['quick_total_charges'] = $_POST['quick_total_charges'];
@@ -294,15 +268,6 @@ if($_POST['submitok']==1){
 	$print['tally'] = $_POST['tally'];
 	$print['overtime'] = $_POST['overtime'];
 	$print['total_cargo_charges'] = $_POST['total_cargo_charges'];
-	/*$print['cash_to_master'] = $_POST['cash_to_master'];
-	$print['water'] = $_POST['water'];
-	$print['stores_provisions'] = $_POST['stores_provisions'];
-	$print['crew_expenses'] = $_POST['crew_expenses'];
-	$print['repairs'] = $_POST['repairs'];
-	$print['total_ship_charges'] = $_POST['total_ship_charges'];
-	$print['credit_to_owners_account'] = $_POST['credit_to_owners_account'];
-	$print['balance_due_us_you'] = $_POST['balance_due_us_you'];
-	$print['total_statement'] = $_POST['total_statement'];*/
 	$print['total_over_all'] = $_POST['total_over_all'];
 	
 	$data = serialize($print);
@@ -335,10 +300,10 @@ if(isset($_GET['portname'])){
 						<tr bgcolor="cddee5">
 							<td><div style="padding:5px; font-weight:bold;"><img src="../images/icon_book.png" /></div></td>
 							<td><div style="padding:5px; font-weight:bold;">AGENT</div></td>
-							<td><div style="padding:5px; font-weight:bold;">OWNER</div></td>
 							<td><div style="padding:5px; font-weight:bold;">VESSEL</div></td>
-							<td><div style="padding:5px; font-weight:bold;">NRT</div></td>
+							<td><div style="padding:5px; font-weight:bold;">DWT</div></td>
 							<td><div style="padding:5px; font-weight:bold;">GRT</div></td>
+							<td><div style="padding:5px; font-weight:bold;">NRT</div></td>
 							<td><div style="padding:5px; font-weight:bold;">AMOUNT</div></td>
 							<td><div style="padding:5px; font-weight:bold;">DATE</div></td>
 						</tr>
@@ -349,6 +314,11 @@ if(isset($_GET['portname'])){
 						$agent = explode(' - ', $details['ship_agent']);
 						$agent_name = $agent[0];
 						
+						$total_over_all = $details['total_over_all'];
+						if($total_over_all==0 || $total_over_all==''){
+							$total_over_all = $details['quick_total_charges'];
+						}
+						
 						if($i%2==0){
 							$bgcolor = 'f5f5f5';
 						}else{
@@ -358,11 +328,11 @@ if(isset($_GET['portname'])){
 						<tr bgcolor="<?php echo $bgcolor; ?>">
 							<td><div style="padding:5px;"><?php echo '<a style="cursor: pointer; color:#FF0000;" onclick="showPortDetails(\''.$_GET['portname'].'\', \''.$r[$i]['id'].'\');"><img src="../images/icon_book.png" /></a>'; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $agent_name; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $details['owner']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['vessel']; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $details['nrt']; ?></div></td>
+							<td><div style="padding:5px;"><?php echo $details['dwt']; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['grt']; ?></div></td>
-							<td><div style="padding:5px;">US$ <?php echo $details['total_over_all']; ?></div></td>
+							<td><div style="padding:5px;"><?php echo $details['nrt']; ?></div></td>
+							<td><div style="padding:5px;">US$ <?php echo $total_over_all; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['date']; ?></div></td>
 						</tr>
 						<?php } ?>
@@ -392,7 +362,7 @@ if(isset($_GET['portname'])){
 				<td width="600" valign="top">
 					<table width="600" border="0" cellspacing="0" cellpadding="0">
 						<tr>
-							<td width="300">
+							<td width="300" valign="top">
 								<table width="300" border="0" cellspacing="0" cellpadding="0">
 									<tr bgcolor="cddee5">
 										<td colspan="2"><div style="padding:5px; font-weight:bold; color:#FF0000;"><?php echo $_GET['portname']; ?></div></td>
@@ -401,7 +371,14 @@ if(isset($_GET['portname'])){
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
-										<td width="100">Ship Agent</td>
+										<td width="130">Date</td>
+										<td><input type="text" id="date_id" name="date" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Ship Agent</td>
 										<td>
 											<input type="text" id="ship_agent_id" name="ship_agent" style="width:150px; border:1px solid #CCCCCC; padding:3px;" onblur="getAgentDetails();" />
 											<script type="text/javascript">
@@ -411,20 +388,6 @@ if(isset($_GET['portname'])){
 											});
 											</script>
 										</td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Owner</td>
-										<td><input type="text" id="owner_id" name="owner" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Date</td>
-										<td><input type="text" id="date_id" name="date" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
@@ -445,7 +408,66 @@ if(isset($_GET['portname'])){
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
-										<td>Voyage #</td>
+										<td>DWT</td>
+										<td><input type="text" onblur="this.value=fNum(this.value);" id="dwt_id" name="dwt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>GRT</td>
+										<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>NRT</td>
+										<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Owner</td>
+										<td><input type="text" id="owner_id" name="owner" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td valign="top">D/A Details</td>
+										<td><textarea id="da_details_id" name="da_details" style="width:150px; height:80px; border:1px solid #CCCCCC; padding:3px;"></textarea></td>
+									</tr>
+									<tr>
+										<td colspan="2">&nbsp;</td>
+									</tr>
+									<tr bgcolor="cddee5">
+										<td colspan="2"><div style="padding:5px; font-weight:bold;">QUICK TOTAL CHARGES</div></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Quick Total Charges</td>
+										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="quick_total_charges_id" name="quick_total_charges" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr bgcolor="cddee5">
+										<td colspan="2">
+											<div style="float:left; width:auto; height:auto; padding:5px;"><img src='../images/icon_dropdown_warning_shore.png' width='20' height='18' style='cursor:pointer;' onclick="expand();" id="arrow1" /></div>
+											<div style="float:left; width:auto; height:auto; padding:8px 5px 5px; font-weight:bold;">OTHER DETAILS</div>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+								</table>
+								<table width="300" border="0" cellspacing="0" cellpadding="0" id="other_details_table_id" style="display:none;">
+									<tr>
+										<td width="130">Voyage #</td>
 										<td><input type="text" id="voyage_number_id" name="voyage_number" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
 									</tr>
 									<tr>
@@ -495,20 +517,6 @@ if(isset($_GET['portname'])){
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
-										<td>NRT</td>
-										<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>GRT</td>
-										<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
 										<td>Sailed For</td>
 										<td>
 											<input type="text" id="sailed_for_id" name="sailed_for" style="width:150px; border:1px solid #CCCCCC; padding:3px;" />
@@ -526,19 +534,6 @@ if(isset($_GET['portname'])){
 									<tr>
 										<td>Cargo Discharged</td>
 										<td><input type="text" id="cargo_discharged_id" name="cargo_discharged" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2">&nbsp;</td>
-									</tr>
-									<tr bgcolor="cddee5">
-										<td colspan="2"><div style="padding:5px; font-weight:bold;">QUICK TOTAL CHARGES</div></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Quick Total Charges</td>
-										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="quick_total_charges_id" name="quick_total_charges" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
 									</tr>
 									<tr>
 										<td colspan="2">&nbsp;</td>
@@ -667,81 +662,6 @@ if(isset($_GET['portname'])){
 									<tr>
 										<td colspan="2">&nbsp;</td>
 									</tr>
-									<!--<tr bgcolor="cddee5">
-										<td colspan="2"><div style="padding:5px; font-weight:bold;">SHIP CHARGES</div></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Cash To Master</td>
-										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="cash_to_master_id" name="cash_to_master" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Water</td>
-										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="water_id" name="water" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Stores/Provisions</td>
-										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="stores_provisions_id" name="stores_provisions" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Crew Expenses</td>
-										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="crew_expenses_id" name="crew_expenses" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Repairs</td>
-										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="repairs_id" name="repairs" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td><b>Total</b></td>
-										<td id="total_ship_charges_td">&nbsp;</td>
-									</tr>
-									<tr>
-										<td colspan="2">&nbsp;</td>
-									</tr>
-									<tr bgcolor="cddee5">
-										<td colspan="2"><div style="padding:5px; font-weight:bold;">STATEMENT</div></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Credit To Owners Account</td>
-										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="credit_to_owners_account_id" name="credit_to_owners_account" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td>Balance Due Us/You</td>
-										<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="balance_due_us_you_id" name="balance_due_us_you" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>
-									<tr>
-										<td><b>Total</b></td>
-										<td id="total_statement_td">&nbsp;</td>
-									</tr>
-									<tr>
-										<td colspan="2" height="5">&nbsp;</td>
-									</tr>-->
 									<tr>
 										<td><b>Over All Total</b></td>
 										<td id="total_over_all_td">&nbsp;</td>
@@ -749,12 +669,12 @@ if(isset($_GET['portname'])){
 									<tr>
 										<td colspan="2">&nbsp;</td>
 									</tr>
+								</table>
+								<table width="300" border="0" cellspacing="0" cellpadding="0">
 									<tr>
-										<td colspan="2">
+										<td>
 											<input type="hidden" id="total_port_charges_id" name="total_port_charges" />
 											<input type="hidden" id="total_cargo_charges_id" name="total_cargo_charges" />
-											<!--<input type="hidden" id="total_ship_charges_id" name="total_ship_charges" />
-											<input type="hidden" id="total_statement_id" name="total_statement" />-->
 											<input type="hidden" id="total_over_all_id" name="total_over_all" />
 											<input type="hidden" name="submitok" value="1"><input type="button" id="btn_save_id" name="btn_save" value="save" class="btn_1" onClick="saveForm();" />
 										</td>

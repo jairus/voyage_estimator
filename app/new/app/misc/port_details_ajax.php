@@ -13,19 +13,22 @@ if(isset($_GET['id'])){
 		$r_2 = dbQuery($sql_2);
 		
 		$data = unserialize($r_2[0]['port_details']);
-
-		$ship_agent = $data['ship_agent'];
-		$owner = $data['owner'];
+	
 		$date = $data['date'];
+		$ship_agent = $data['ship_agent'];
 		$vessel = $data['vessel'];
+		$dwt = $data['dwt'];
+		$grt = $data['grt'];
+		$nrt = $data['nrt'];
+		$owner = $data['owner'];
+		$da_details = $data['da_details'];
+		$quick_total_charges = $data['quick_total_charges'];
 		$voyage_number = $data['voyage_number'];
 		$arrived_from = $data['arrived_from'];
 		$loading = $data['loading'];
 		$discharging = $data['discharging'];
 		$bunkering = $data['bunkering'];
 		$date_hour = $data['date_hour'];
-		$nrt = $data['nrt'];
-		$grt = $data['grt'];
 		$sailed_for = $data['sailed_for'];
 		$cargo_discharged = $data['cargo_discharged'];
 		$quick_total_charges = $data['quick_total_charges'];
@@ -39,22 +42,13 @@ if(isset($_GET['id'])){
 		$launch_car_hire = $data['launch_car_hire'];
 		$agency_remuniration = $data['agency_remuniration'];
 		$telex_postage_telegrams = $data['telex_postage_telegrams'];
-		$total_port_charges = number_format($data['total_port_charges'], 2, '.', ',');
+		$total_port_charges = $data['total_port_charges'];
 		$stevedoring_expenses = $data['stevedoring_expenses'];
 		$winchmen_cranage = $data['winchmen_cranage'];
 		$tally = $data['tally'];
 		$overtime = $data['overtime'];
-		$total_cargo_charges = number_format($data['total_cargo_charges'], 2, '.', ',');
-		/*$cash_to_master = $data['cash_to_master'];
-		$water = $data['water'];
-		$stores_provisions = $data['stores_provisions'];
-		$crew_expenses = $data['crew_expenses'];
-		$repairs = $data['repairs'];
-		$total_ship_charges = number_format($data['total_ship_charges'], 2, '.', ',');
-		$credit_to_owners_account = $data['credit_to_owners_account'];
-		$balance_due_us_you = $data['balance_due_us_you'];
-		$total_statement = number_format($data['total_statement'], 2, '.', ',');*/
-		$total_over_all = number_format($data['total_over_all'], 2, '.', ',');
+		$total_cargo_charges = $data['total_cargo_charges'];
+		$total_over_all = $data['total_over_all'];
 		
 		$agent = explode(' - ', $ship_agent);
 		$agent_name = $agent[0];
@@ -85,7 +79,7 @@ if(isset($_GET['id'])){
 		?>
 		<table width="600" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<td width="300">
+				<td width="300" valign="top">
 					<table width="300" border="0" cellspacing="0" cellpadding="0">
 						<tr bgcolor="cddee5">
 							<td colspan="2"><div style="padding:5px; font-weight:bold; color:#FF0000;"><?php echo $_GET['portname']; ?> &nbsp;&nbsp;&nbsp; <input type="button" value="Create New" class="btn_1" onclick="location.href='port_details.php?portname=<?php echo $_GET['portname']; ?>';" /></div></td>
@@ -94,22 +88,15 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td width="100">Ship Agent</td>
-							<td> : <?php echo $agent_name; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Owner</td>
-							<td> : <?php echo $owner; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Date</td>
+							<td width="130">Date</td>
 							<td> : <?php echo $date; ?></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>Ship Agent</td>
+							<td> : <?php echo $agent_name; ?></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
@@ -122,7 +109,66 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td>Voyage #</td>
+							<td>DWT</td>
+							<td> : <?php echo $dwt; ?></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>GRT</td>
+							<td> : <?php echo $grt; ?></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>NRT</td>
+							<td> : <?php echo $nrt; ?></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>Owner</td>
+							<td> : <?php echo $owner; ?></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td valign="top">D/A Details</td>
+							<td> : <?php echo $da_details; ?></td>
+						</tr>
+						<tr>
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						<tr bgcolor="cddee5">
+							<td colspan="2"><div style="padding:5px; font-weight:bold;">QUICK TOTAL CHARGES</div></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>Quick Total Charges</td>
+							<td> : <?php echo $quick_total_charges; ?></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr bgcolor="cddee5">
+							<td colspan="2">
+								<div style="float:left; width:auto; height:auto; padding:5px;"><img src='../images/icon_dropdown_warning_shore.png' width='20' height='18' style='cursor:pointer;' onclick="expand();" id="arrow1" /></div>
+								<div style="float:left; width:auto; height:auto; padding:8px 5px 5px; font-weight:bold;">OTHER DETAILS</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+					</table>
+					<table width="300" border="0" cellspacing="0" cellpadding="0" id="other_details_table_id" style="display:none;">
+						<tr>
+							<td width="130">Voyage #</td>
 							<td> : <?php echo $voyage_number; ?></td>
 						</tr>
 						<tr>
@@ -164,20 +210,6 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td>NRT</td>
-							<td> : <?php echo $nrt; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>GRT</td>
-							<td> : <?php echo $grt; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
 							<td>Sailed For</td>
 							<td> : <?php echo $sailed_for; ?></td>
 						</tr>
@@ -187,19 +219,6 @@ if(isset($_GET['id'])){
 						<tr>
 							<td>Cargo Discharged</td>
 							<td> : <?php echo $cargo_discharged; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr bgcolor="cddee5">
-							<td colspan="2"><div style="padding:5px; font-weight:bold;">QUICK TOTAL CHARGES</div></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Quick Total Charges</td>
-							<td> : <?php echo $quick_total_charges; ?></td>
 						</tr>
 						<tr>
 							<td colspan="2">&nbsp;</td>
@@ -328,81 +347,6 @@ if(isset($_GET['id'])){
 						<tr>
 							<td colspan="2">&nbsp;</td>
 						</tr>
-						<!--<tr bgcolor="cddee5">
-							<td colspan="2"><div style="padding:5px; font-weight:bold;">SHIP CHARGES</div></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Cash To Master</td>
-							<td> : <?php echo $cash_to_master; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Water</td>
-							<td> : <?php echo $water; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Stores/Provisions</td>
-							<td> : <?php echo $stores_provisions; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Crew Expenses</td>
-							<td> : <?php echo $crew_expenses; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Repairs</td>
-							<td> : <?php echo $repairs; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td><b>Total</b></td>
-							<td id="total_ship_charges_td"> : <?php echo $total_ship_charges; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr bgcolor="cddee5">
-							<td colspan="2"><div style="padding:5px; font-weight:bold;">STATEMENT</div></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Credit To Owners Account</td>
-							<td> : <?php echo $credit_to_owners_account; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Balance Due Us/You</td>
-							<td> : <?php echo $balance_due_us_you; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td><b>Total</b></td>
-							<td id="total_statement_td"> : <?php echo $total_statement; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>-->
 						<tr>
 							<td><b>Over All Total</b></td>
 							<td id="total_over_all_td"> : <?php echo $total_over_all; ?></td>
@@ -556,7 +500,7 @@ if(isset($_GET['id'])){
 		?>
 		<table width="600" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<td width="300">
+				<td width="300" valign="top">
 					<table width="300" border="0" cellspacing="0" cellpadding="0">
 						<tr bgcolor="cddee5">
 							<td colspan="2"><div style="padding:5px; font-weight:bold; color:#FF0000;"><?php echo $_GET['portname']; ?> &nbsp;&nbsp;&nbsp; <input type="button" value="Clear Form" class="btn_1" onclick="clearForm();" /></div></td>
@@ -565,7 +509,14 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td width="100">Ship Agent</td>
+							<td width="130">Date</td>
+							<td><input type="text" id="date_id" name="date" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $date; ?>" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>Ship Agent</td>
 							<td>
 								<input type="text" id="ship_agent_id" name="ship_agent" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ship_agent; ?>" onblur="getAgentDetails();" />
 								<script type="text/javascript">
@@ -580,6 +531,27 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
+							<td>DWT</td>
+							<td><input type="text" onblur="this.value=fNum(this.value);" id="dwt_id" name="dwt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $dwt; ?>" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>GRT</td>
+							<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $grt; ?>" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>NRT</td>
+							<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $nrt; ?>" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
 							<td>Owner</td>
 							<td><input type="text" id="owner_id" name="owner" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $owner; ?>" /></td>
 						</tr>
@@ -587,14 +559,38 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td>Date</td>
-							<td><input type="text" id="date_id" name="date" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $date; ?>" /></td>
+							<td valign="top">D/A Details</td>
+							<td><textarea id="da_details_id" name="da_details" style="width:150px; height:80px; border:1px solid #CCCCCC; padding:3px;"><?php echo $da_details; ?></textarea></td>
+						</tr>
+						<tr>
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						<tr bgcolor="cddee5">
+							<td colspan="2"><div style="padding:5px; font-weight:bold;">QUICK TOTAL CHARGES</div></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td>Vessel</td>
+							<td>Quick Total Charges</td>
+							<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="quick_total_charges_id" name="quick_total_charges" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $quick_total_charges; ?>" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr bgcolor="cddee5">
+							<td colspan="2">
+								<div style="float:left; width:auto; height:auto; padding:5px;"><img src='../images/icon_dropdown_warning_shore.png' width='20' height='18' style='cursor:pointer;' onclick="expand();" id="arrow1" /></div>
+								<div style="float:left; width:auto; height:auto; padding:8px 5px 5px; font-weight:bold;">OTHER DETAILS</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+					</table>
+					<table width="300" border="0" cellspacing="0" cellpadding="0" id="other_details_table_id" style="display:none;">
+						<tr>
+							<td width="130">Vessel</td>
 							<td>
 								<input type="text" id="vessel_id" name="vessel" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $vessel; ?>" />
 								<script type="text/javascript">
@@ -677,20 +673,6 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td>NRT</td>
-							<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $nrt; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>GRT</td>
-							<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $grt; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
 							<td>Sailed For</td>
 							<td>
 								<input type="text" id="sailed_for_id" name="sailed_for" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $sailed_for; ?>" />
@@ -708,19 +690,6 @@ if(isset($_GET['id'])){
 						<tr>
 							<td>Cargo Discharged</td>
 							<td><input type="text" id="cargo_discharged_id" name="cargo_discharged" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $cargo_discharged; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr bgcolor="cddee5">
-							<td colspan="2"><div style="padding:5px; font-weight:bold;">QUICK TOTAL CHARGES</div></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Quick Total Charges</td>
-							<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="quick_total_charges_id" name="quick_total_charges" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $quick_total_charges; ?>" /></td>
 						</tr>
 						<tr>
 							<td colspan="2">&nbsp;</td>
@@ -849,81 +818,6 @@ if(isset($_GET['id'])){
 						<tr>
 							<td colspan="2">&nbsp;</td>
 						</tr>
-						<!--<tr bgcolor="cddee5">
-							<td colspan="2"><div style="padding:5px; font-weight:bold;">SHIP CHARGES</div></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Cash To Master</td>
-							<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="cash_to_master_id" name="cash_to_master" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $cash_to_master; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Water</td>
-							<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="water_id" name="water" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $water; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Stores/Provisions</td>
-							<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="stores_provisions_id" name="stores_provisions" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $stores_provisions; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Crew Expenses</td>
-							<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="crew_expenses_id" name="crew_expenses" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $crew_expenses; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Repairs</td>
-							<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="repairs_id" name="repairs" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $repairs; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td><b>Total</b></td>
-							<td id="total_ship_charges_td"><?php echo $total_ship_charges; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr bgcolor="cddee5">
-							<td colspan="2"><div style="padding:5px; font-weight:bold;">STATEMENT</div></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Credit To Owners Account</td>
-							<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="credit_to_owners_account_id" name="credit_to_owners_account" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $credit_to_owners_account; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>Balance Due Us/You</td>
-							<td><input onkeyup="computeForTotal();" onblur="this.value=fNum(this.value);" type="text" id="balance_due_us_you_id" name="balance_due_us_you" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $balance_due_us_you; ?>" /></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
-						<tr>
-							<td><b>Total</b></td>
-							<td id="total_statement_td"><?php echo $total_statement; ?></td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>-->
 						<tr>
 							<td><b>Over All Total</b></td>
 							<td id="total_over_all_td"><?php echo $total_over_all; ?></td>
@@ -931,12 +825,12 @@ if(isset($_GET['id'])){
 						<tr>
 							<td colspan="2">&nbsp;</td>
 						</tr>
+					</table>
+					<table width="300" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td colspan="2">
 								<input type="hidden" id="total_port_charges_id" name="total_port_charges" value="<?php echo $total_port_charges; ?>" />
 								<input type="hidden" id="total_cargo_charges_id" name="total_cargo_charges" value="<?php echo $total_cargo_charges; ?>" />
-								<!--<input type="hidden" id="total_ship_charges_id" name="total_ship_charges" value="<?php echo $total_ship_charges; ?>" />
-								<input type="hidden" id="total_statement_id" name="total_statement" value="<?php echo $total_statement; ?>" />-->
 								<input type="hidden" id="total_over_all_id" name="total_over_all" value="<?php echo $total_over_all; ?>" />
 								<input type="hidden" name="submitok" value="1"><input type="button" id="btn_save_id" name="btn_save" value="save" class="btn_1" onClick="saveForm();" />
 							</td>

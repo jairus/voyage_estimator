@@ -9,7 +9,7 @@ $vessel = dbQuery($sql, $link);
 var vessel = [ <?php
 $t = count($vessel);
 for($i=0; $i<$t; $i++){
-	echo "\"".strtoupper($vessel[$i]['name'])."\"";
+	echo "\"".strtoupper($vessel[$i]['name'])." - ".strtoupper($vessel[$i]['imo'])."\"";
 	if($i%100==0&&$i!=0){
 		echo "\n";
 	}

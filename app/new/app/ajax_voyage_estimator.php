@@ -178,6 +178,17 @@ if($_GET['port']){
 		$item['average_price_ls180_1'] = $r_6[0]['average_price'];
 		$item['average_price_ls380_1'] = $r_7[0]['average_price'];
 		$item['average_price_lsmgo'] = $r_8[0]['average_price'];
+		
+		/*$sql_9 = "select * from _port_details where port_name='".mysql_escape_string($r[$i]['name'])."' order by dateadded desc limit 0,1";
+		$r_9 = dbQuery($sql_9);
+		
+		if($r_9[0]['id']){
+			$details = unserialize($r_9[0]['port_details']);
+			$item['total_over_all'] = $details['total_over_all'];
+			if($item['total_over_all']==0 || $item['total_over_all']==''){
+				$item['total_over_all'] = $details['quick_total_charges'];
+			}
+		}*/
 
 		$items[] = $item;
 	}
@@ -395,6 +406,7 @@ var average_price_mgos = [];
 var average_price_ls180_1s = [];
 var average_price_ls380_1s = [];
 var average_price_lsmgos = [];
+//var total_over_alls = [];
 var dateupdateds = [];
 
 $(function(){
@@ -466,6 +478,7 @@ $(function(){
 				//process response
 				$.each(data, function(i, val){
 					suggestions.push(val.name);
+					//total_over_alls[val.name] = val.total_over_all;
 				});
 
 				//pass array to callback
@@ -479,6 +492,15 @@ $(function(){
 			idx = jQuery(this).parent().parent().attr('id');
 
 			setValue(jQuery("#"+idx+" .e31"), str);
+			
+			/*if(total_over_alls[str]){
+				jQuery("#quick_total_charges1_id").each(function(){
+					setValue(jQuery(this), fNum(total_over_alls[str]));
+				});
+				jQuery('#quick_total_charges_row_id').show();
+			}else{
+				jQuery('#quick_total_charges_row_id').hide();
+			}*/
 
 			ballastCalc(true);
 
@@ -3555,6 +3577,12 @@ if(!trim($e85)){
 					<td class='input port1' style="padding:3px;"><input type='text' class='input_1 number da_quick_input1' id="da_quick_input1" name="da_quick_input1" value="<?php echo $da_quick_input1; ?>" style="max-width:100px;" /></td>
 					<td class='input port2' style="padding:3px;"><input type='text' class='input_1 number da_quick_input2' id="da_quick_input2" name="da_quick_input2" value="<?php echo $da_quick_input2; ?>" style="max-width:100px;" /></td>
 					<td class='input port3' style="padding:3px;"><input type='text' class='input_1 number da_quick_input3' id="da_quick_input3" name="da_quick_input3" value="<?php echo $da_quick_input3; ?>" style="max-width:100px;" /></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9" style="display:none;" id="quick_total_charges_row_id">
+					<td style="padding:3px;"><strong>Quick Total Charges ($)</strong></td>
+					<td class='input' style="padding:3px;" id="quick_total_charges1_id"></td>
+					<td class='input' style="padding:3px;" id="quick_total_charges2_id"></td>
+					<td class='input' style="padding:3px;" id="quick_total_charges3_id"></td>
 				  </tr>
 				</table>
 				<table width="490" border="0" cellspacing="0" cellpadding="0" id="other_input_table" style="display:none;">

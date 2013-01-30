@@ -531,15 +531,22 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
+							<td>Vessel</td>
+							<td><input type="text" id="vessel_id" name="vessel" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $_GET['vessel_name']; ?>" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
 							<td>DWT</td>
-							<td><input type="text" onblur="this.value=fNum(this.value);" id="dwt_id" name="dwt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $dwt; ?>" /></td>
+							<td><input type="text" onblur="this.value=fNum(this.value);" id="dwt_id" name="dwt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo str_replace(' tons', '', $_GET['dwt']); ?>" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
 							<td>GRT</td>
-							<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $grt; ?>" /></td>
+							<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo str_replace(' tons', '', $_GET['gross_tonnage']); ?>" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
@@ -553,14 +560,14 @@ if(isset($_GET['id'])){
 						</tr>
 						<tr>
 							<td>Owner</td>
-							<td><input type="text" id="owner_id" name="owner" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $owner; ?>" /></td>
+							<td><input type="text" id="owner_id" name="owner" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $_GET['owner']; ?>" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
 							<td valign="top">D/A Details</td>
-							<td><textarea id="da_details_id" name="da_details" style="width:150px; height:80px; border:1px solid #CCCCCC; padding:3px;"><?php echo $da_details; ?></textarea></td>
+							<td><textarea id="da_details_id" name="da_details" style="width:150px; height:200px; border:1px solid #CCCCCC; padding:3px;"><?php echo $da_details; ?></textarea></td>
 						</tr>
 						<tr>
 							<td colspan="2">&nbsp;</td>
@@ -589,21 +596,6 @@ if(isset($_GET['id'])){
 						</tr>
 					</table>
 					<table width="300" border="0" cellspacing="0" cellpadding="0" id="other_details_table_id" style="display:none;">
-						<tr>
-							<td width="130">Vessel</td>
-							<td>
-								<input type="text" id="vessel_id" name="vessel" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $vessel; ?>" />
-								<script type="text/javascript">
-								jQuery("#vessel_id").focus().autocomplete(vessel);
-								jQuery("#vessel_id").setOptions({
-									scrollHeight: 180
-								});
-								</script>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" height="5">&nbsp;</td>
-						</tr>
 						<tr>
 							<td>Voyage #</td>
 							<td><input type="text" id="voyage_number_id" name="voyage_number" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $voyage_number; ?>" /></td>

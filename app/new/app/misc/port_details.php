@@ -5,7 +5,6 @@
 <script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
 <script type='text/javascript' src='../js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
 <script type='text/javascript' src='../js/jquery-autocomplete/jquery.autocomplete.js'></script>
-<script type='text/javascript' src='../js/autoVessel.php'></script>
 <script type='text/javascript' src='../js/autoAgent.php'></script>
 <script type='text/javascript' src='../js/autoPorts.php'></script>
 <link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/jquery.autocomplete.css" />
@@ -159,10 +158,15 @@ function showPortDetails(portname, id){
 	jQuery('#portresults').hide();
 
 	jQuery('#pleasewait').show();
+	
+	var vessel_name = '<?php echo $_GET['vessel_name']; ?>';
+	var dwt = '<?php echo $_GET['dwt']; ?>';
+	var gross_tonnage = '<?php echo $_GET['gross_tonnage']; ?>';
+	var owner = '<?php echo $_GET['owner']; ?>';
 
 	jQuery.ajax({
 		type: 'GET',
-		url: "port_details_ajax.php?portname="+portname+"&id="+id,
+		url: "port_details_ajax.php?portname="+portname+'&vessel_name='+vessel_name+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&owner='+owner+"&id="+id,
 		data:  '',
 
 		success: function(data) {
@@ -394,29 +398,21 @@ if(isset($_GET['portname'])){
 									</tr>
 									<tr>
 										<td>Vessel</td>
-										<td>
-											<input type="text" id="vessel_id" name="vessel" style="width:150px; border:1px solid #CCCCCC; padding:3px;" />
-											<script type="text/javascript">
-											jQuery("#vessel_id").focus().autocomplete(vessel);
-											jQuery("#vessel_id").setOptions({
-												scrollHeight: 180
-											});
-											</script>
-										</td>
+										<td><input type="text" id="vessel_id" name="vessel" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $_GET['vessel_name']; ?>" readonly="readonly" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
 										<td>DWT</td>
-										<td><input type="text" onblur="this.value=fNum(this.value);" id="dwt_id" name="dwt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td><input type="text" onblur="this.value=fNum(this.value);" id="dwt_id" name="dwt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo str_replace(' tons', '', $_GET['dwt']); ?>" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
 										<td>GRT</td>
-										<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td><input type="text" onblur="this.value=fNum(this.value);" id="grt_id" name="grt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo str_replace(' tons', '', $_GET['gross_tonnage']); ?>" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
@@ -430,14 +426,14 @@ if(isset($_GET['portname'])){
 									</tr>
 									<tr>
 										<td>Owner</td>
-										<td><input type="text" id="owner_id" name="owner" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td><input type="text" id="owner_id" name="owner" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $_GET['owner']; ?>" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
 										<td valign="top">D/A Details</td>
-										<td><textarea id="da_details_id" name="da_details" style="width:150px; height:80px; border:1px solid #CCCCCC; padding:3px;"></textarea></td>
+										<td><textarea id="da_details_id" name="da_details" style="width:150px; height:200px; border:1px solid #CCCCCC; padding:3px;"></textarea></td>
 									</tr>
 									<tr>
 										<td colspan="2">&nbsp;</td>

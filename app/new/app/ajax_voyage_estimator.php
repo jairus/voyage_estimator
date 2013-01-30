@@ -1015,11 +1015,16 @@ function showShipDetails2(imo){
 }
 
 function showPortDetails(portname){
+	var vessel_name = jQuery("#ship").val();
+	var dwt = jQuery("#ship_summer_dwt").text();
+	var gross_tonnage = jQuery("#ship_gross_tonnage").text();
+	var owner = jQuery("#ship_manager_owner").text();
+
 	var iframe = $("#portdetailsiframe");
 
 	$(iframe).contents().find("body").html("");
 
-	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname;
+	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&owner='+owner;
 	jQuery("#portdetails").dialog("open");
 }
 

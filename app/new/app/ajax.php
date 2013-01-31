@@ -140,4 +140,17 @@ if($_GET['new_search']==3){
 	$sql = "DELETE FROM `_user_tabs` WHERE `id`='".$_GET['tabid']."'";
 	dbQuery($sql, $link);
 }
+
+if($_GET['portname']){
+	$sql = "select * from _port_details where port_name='".mysql_escape_string($_GET['portname'])."' order by dateadded desc limit 0,1";
+	$r = dbQuery($sql);
+	
+	if($r[0]['id']){
+		$details = unserialize($r[0]['port_details']);
+		$total_over_all = $details['total_over_all'];
+		if($total_over_all==0 || $total_over_all==''){
+			echo $details['quick_total_charges'];
+		}
+	}
+}
 ?>

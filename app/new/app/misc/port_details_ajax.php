@@ -553,7 +553,7 @@ if(isset($_GET['id'])){
 						</tr>
 						<tr>
 							<td>NRT</td>
-							<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $nrt; ?>" /></td>
+							<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo str_replace(' tons', '', $_GET['net_tonnage']); ?>" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>

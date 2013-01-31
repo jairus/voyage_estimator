@@ -40,6 +40,7 @@ if($_GET['search']){
 		$ship['imo'] = $r[$i]['imo'];
 		$ship['dwt'] = $r[$i]['summer_dwt'];
 		$ship['gross_tonnage'] = getValue($r2[0]['data'], 'GROSS_TONNAGE');
+		$ship['net_tonnage'] = getValue($r2[0]['data'], 'NET_TONNAGE');
 		$ship['built_year'] = getValue($r2[0]['data'], 'BUILD');
 		
 		$flag = getValue($r2[0]['data'], 'LAST_KNOWN_FLAG');
@@ -178,17 +179,6 @@ if($_GET['port']){
 		$item['average_price_ls180_1'] = $r_6[0]['average_price'];
 		$item['average_price_ls380_1'] = $r_7[0]['average_price'];
 		$item['average_price_lsmgo'] = $r_8[0]['average_price'];
-		
-		/*$sql_9 = "select * from _port_details where port_name='".mysql_escape_string($r[$i]['name'])."' order by dateadded desc limit 0,1";
-		$r_9 = dbQuery($sql_9);
-		
-		if($r_9[0]['id']){
-			$details = unserialize($r_9[0]['port_details']);
-			$item['total_over_all'] = $details['total_over_all'];
-			if($item['total_over_all']==0 || $item['total_over_all']==''){
-				$item['total_over_all'] = $details['quick_total_charges'];
-			}
-		}*/
 
 		$items[] = $item;
 	}
@@ -372,6 +362,7 @@ var suggestions = [];
 var imos = [];
 var dwts = [];
 var gross_tonnages = [];
+var net_tonnages = [];
 var built_years = [];
 var flags = [];
 var flag_images = [];
@@ -406,7 +397,6 @@ var average_price_mgos = [];
 var average_price_ls180_1s = [];
 var average_price_ls380_1s = [];
 var average_price_lsmgos = [];
-//var total_over_alls = [];
 var dateupdateds = [];
 
 $(function(){
@@ -478,7 +468,6 @@ $(function(){
 				//process response
 				$.each(data, function(i, val){
 					suggestions.push(val.name);
-					//total_over_alls[val.name] = val.total_over_all;
 				});
 
 				//pass array to callback
@@ -492,15 +481,6 @@ $(function(){
 			idx = jQuery(this).parent().parent().attr('id');
 
 			setValue(jQuery("#"+idx+" .e31"), str);
-			
-			/*if(total_over_alls[str]){
-				jQuery("#quick_total_charges1_id").each(function(){
-					setValue(jQuery(this), fNum(total_over_alls[str]));
-				});
-				jQuery('#quick_total_charges_row_id').show();
-			}else{
-				jQuery('#quick_total_charges_row_id').hide();
-			}*/
 
 			ballastCalc(true);
 
@@ -838,6 +818,7 @@ $(function(){
 
 					dwts[val.imo] = val.dwt;
 					gross_tonnages[val.imo] = val.gross_tonnage;
+					net_tonnages[val.imo] = val.net_tonnage;
 					built_years[val.imo] = val.built_year;
 					flags[val.imo] = val.flag;
 					flag_images[val.imo] = val.flag_image;
@@ -891,7 +872,9 @@ $(function(){
 			jQuery("#ship_gross_tonnage").each(function(){
 				setValue(jQuery(this), fNum(gross_tonnages[imo]) + ' tons');
 			});
-			
+			jQuery("#ship_net_tonnage").each(function(){
+				setValue(jQuery(this), fNum(net_tonnages[imo]) + ' tons');
+			});
 			jQuery("#ship_built_year").each(function(){
 				setValue(jQuery(this), built_years[imo]);
 			});
@@ -1018,13 +1001,14 @@ function showPortDetails(portname){
 	var vessel_name = jQuery("#ship").val();
 	var dwt = jQuery("#ship_summer_dwt").text();
 	var gross_tonnage = jQuery("#ship_gross_tonnage").text();
+	var net_tonnage = jQuery("#ship_net_tonnage").text();
 	var owner = jQuery("#ship_manager_owner").text();
 
 	var iframe = $("#portdetailsiframe");
 
 	$(iframe).contents().find("body").html("");
 
-	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&owner='+owner;
+	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner;
 	jQuery("#portdetails").dialog("open");
 }
 
@@ -1776,6 +1760,10 @@ function setupPortInterface(){
 	setValue(jQuery("#port1"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e31"))+'\');" class="clickable">'+getValue(jQuery(".e31"))+'</a>');
 	setValue(jQuery("#port2"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e33"))+'\');" class="clickable">'+getValue(jQuery(".e33"))+'</a>');
 	setValue(jQuery("#port3"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e34"))+'\');" class="clickable">'+getValue(jQuery(".e34"))+'</a>');
+	
+	getPortDetails(jQuery(".e31").val(), 1);
+	getPortDetails(jQuery(".e33").val(), 2);
+	getPortDetails(jQuery(".e34").val(), 3);
 
 	jQuery(".port1 input").hide();
 	jQuery(".port2 input").hide();
@@ -2172,6 +2160,24 @@ function saveScenario(){
 	}else{
 		alert("Please select a ship.");
 	}
+}
+
+function getPortDetails(portname, port_num){
+	jQuery.ajax({
+		type: "POST",
+		url: "ajax.php?portname="+portname,
+		data: '',
+
+		success: function(data) {
+			jQuery("#record"+port_num).html(data);
+			
+			if(jQuery("#record1").text()!='' || jQuery("#record2").text()!='' || jQuery("#record3").text()!=''){
+				jQuery('#quick_total_charges_row_id').show();
+			}else{
+				jQuery('#quick_total_charges_row_id').hide();
+			}
+		}
+	});
 }
 
 function deleteScenario(tabid){
@@ -2891,50 +2897,50 @@ if(!trim($e85)){
 			  <tr bgcolor="f5f5f5">
 				<td valign="top"><div style="padding:3px;"><b>Gross Tonnage</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_gross_tonnage"></td>
+				<td valign="top"><div style="padding:3px;"><b>Net Tonnage</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_net_tonnage"></td>
 				<td valign="top"><div style="padding:3px;"><b>Speed</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_speed"></td>
 				<td valign="top"><div style="padding:3px;"><b>Cargo Handling</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_cargo_handling"></td>
-				<td valign="top"><div style="padding:3px;"><b>Fuel</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_fuel"></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
+			  	<td valign="top"><div style="padding:3px;"><b>Fuel</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_fuel"></td>
 				<td valign="top"><div style="padding:3px;"><b>Built Year</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_built_year"></td>
 				<td valign="top"><div style="padding:3px;"><b>Breadth</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_breadth"></td>
 				<td valign="top"><div style="padding:3px;"><b>Decks Number</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_decks_number"></td>
-				<td valign="top"><div style="padding:3px;"><b>Fuel Consumption</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_fuel_consumption"></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
+			  	<td valign="top"><div style="padding:3px;"><b>Fuel Consumption</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_fuel_consumption"></td>
 				<td valign="top"><div style="padding:3px;"><b>Bale</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_bale"></td>
 				<td valign="top"><div style="padding:3px;"><b>Cranes</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_cranes"></td>
 				<td valign="top"><div style="padding:3px;"><b>Bulkheads</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_bulkheads"></td>
-				<td valign="top"><div style="padding:3px;"><b>Fuel Type</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_fuel_type"></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
+			  	<td valign="top"><div style="padding:3px;"><b>Fuel Type</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_fuel_type"></td>
 				<td valign="top"><div style="padding:3px;"><b>Manager Owner</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_manager_owner"></td>
 				<td valign="top"><div style="padding:3px;"><b>Manager Owner Email</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_manager_owner_email"></td>
 				<td valign="top"><div style="padding:3px;"><b>Class Society</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_class_society"></td>
-				<td valign="top"><div style="padding:3px;"><b>Largest Hatch</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_largest_hatch"></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
+			  	<td valign="top"><div style="padding:3px;"><b>Largest Hatch</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_largest_hatch"></td>
 				<td valign="top"><div style="padding:3px;"><b>Holds</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_holds"></td>
 				<td valign="top"><div style="padding:3px;"><b>Flag</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_flag"></td>
-				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
-				<td valign="top" style="padding:3px;"></td>
 				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
 				<td valign="top" style="padding:3px;"></td>
 			  </tr>
@@ -3585,9 +3591,9 @@ if(!trim($e85)){
 				  </tr>
 				  <tr bgcolor="e9e9e9" style="display:none;" id="quick_total_charges_row_id">
 					<td style="padding:3px;"><strong>Quick Total Charges ($)</strong></td>
-					<td class='input' style="padding:3px;" id="quick_total_charges1_id"></td>
-					<td class='input' style="padding:3px;" id="quick_total_charges2_id"></td>
-					<td class='input' style="padding:3px;" id="quick_total_charges3_id"></td>
+					<td class='input' style="padding:3px;" id="quick_total_charges1_id"><div id='record1'></div></td>
+					<td class='input' style="padding:3px;" id="quick_total_charges2_id"><div id='record2'></div></td>
+					<td class='input' style="padding:3px;" id="quick_total_charges3_id"><div id='record3'></div></td>
 				  </tr>
 				</table>
 				<table width="490" border="0" cellspacing="0" cellpadding="0" id="other_input_table" style="display:none;">

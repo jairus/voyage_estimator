@@ -159,14 +159,27 @@ function showPortDetails(portname, id){
 
 	jQuery('#pleasewait').show();
 	
+	var counter = 0;
+	jQuery(".rows").each(function(){
+		if(counter%2==0){
+			jQuery(this).css("background-color", "#f5f5f5");
+		}else{
+			jQuery(this).css("background-color", "#e9e9e9");
+		}
+		
+		counter++;
+	});
+	jQuery('#row_'+id).css("background-color", "#fffdc3");
+	
 	var vessel_name = '<?php echo $_GET['vessel_name']; ?>';
 	var dwt = '<?php echo $_GET['dwt']; ?>';
 	var gross_tonnage = '<?php echo $_GET['gross_tonnage']; ?>';
+	var net_tonnage = '<?php echo $_GET['net_tonnage']; ?>';
 	var owner = '<?php echo $_GET['owner']; ?>';
 
 	jQuery.ajax({
 		type: 'GET',
-		url: "port_details_ajax.php?portname="+portname+'&vessel_name='+vessel_name+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&owner='+owner+"&id="+id,
+		url: "port_details_ajax.php?portname="+portname+'&vessel_name='+vessel_name+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner+"&id="+id,
 		data:  '',
 
 		success: function(data) {
@@ -329,7 +342,7 @@ if(isset($_GET['portname'])){
 							$bgcolor = 'e9e9e9';
 						}
 						?>
-						<tr bgcolor="<?php echo $bgcolor; ?>">
+						<tr bgcolor="<?php echo $bgcolor; ?>" id="row_<?php echo $r[$i]['id']; ?>" class="rows">
 							<td><div style="padding:5px;"><?php echo '<a style="cursor: pointer; color:#FF0000;" onclick="showPortDetails(\''.$_GET['portname'].'\', \''.$r[$i]['id'].'\');"><img src="../images/icon_book.png" /></a>'; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $agent_name; ?></div></td>
 							<td><div style="padding:5px;"><?php echo $details['vessel']; ?></div></td>
@@ -419,7 +432,7 @@ if(isset($_GET['portname'])){
 									</tr>
 									<tr>
 										<td>NRT</td>
-										<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td><input type="text" onblur="this.value=fNum(this.value);" id="nrt_id" name="nrt" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo str_replace(' tons', '', $_GET['net_tonnage']); ?>" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>

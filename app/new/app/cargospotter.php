@@ -18,7 +18,7 @@ $(document).ready(function() {
 	}else if(action=='network' || action=='alerts' || action=='account' || action=='accountview'){
 		displayContent('account');
 	}else{
-		displayContent('voyage_estimator');
+		displayContent('ais_broker');
 	}
 });
 
@@ -30,6 +30,7 @@ function displayContent(content){
 	jQuery('#voyage_estimator_id_link').removeClass('content_link_selected');
 	jQuery('#distance_calculator_id_link').removeClass('content_link_selected');
 	jQuery('#fast_search_id_link').removeClass('content_link_selected');
+	jQuery('#ais_broker_id_link').removeClass('content_link_selected');
 	jQuery('#ship_search_register_id_link').removeClass('content_link_selected');
 	jQuery('#fleet_positions_id_link').removeClass('content_link_selected');
 	jQuery('#ships_coming_into_ports_id_link').removeClass('content_link_selected');
@@ -104,7 +105,8 @@ function displayContent(content){
 <div id="outer">
 	<div id="site_content_1" style="padding-bottom:20px;">
         <div style="float:left; width:1300px; height:40px; padding-top:40px; text-align:center;">
-            <a onclick="displayContent('voyage_estimator');" id='voyage_estimator_id_link' class="content_link_selected">VE</a> &nbsp; 
+			<a onclick="displayContent('ais_broker');" id='ais_broker_id_link' class="content_link_selected">AIS Broker</a> &nbsp; 
+            <a onclick="displayContent('voyage_estimator');" id='voyage_estimator_id_link' class="content_link">VE</a> &nbsp; 
 			<a onclick="displayContent('distance_calculator');" id='distance_calculator_id_link' class="content_link">DC</a> &nbsp; 
             <a onclick="displayContent('fast_search');" id='fast_search_id_link' class="content_link">Search</a> &nbsp; 
             <a onclick="displayContent('ship_search_register');" id='ship_search_register_id_link' class="content_link">Register</a> &nbsp; 

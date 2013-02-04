@@ -77,17 +77,6 @@ function jTabs(d){
 }
 
 function shipSearchx(){
-	/*jQuery.ajax({
-		type: 'GET',
-		url: "didyouknow.php?t="+(new Date()).getTime(),
-		data:  "",
-
-		success: function(data) {
-			jQuery('#didyouknowcontent').html(data);
-			jQuery( "#didyouknowdialog" ).dialog("open"); 
-		}
-	});*/
-
 	jQuery("#container-1").html("");
 
 	globalfetch = false;
@@ -101,7 +90,7 @@ function shipSearchx(){
 
 	jQuery.ajax({
 		type: 'GET',
-		url: "search_ajax1ve.php",
+		url: "search_ajax8ve.php",
 		data: jQuery("#searchform").serialize(),
 
 		success: function(data) {
@@ -128,9 +117,6 @@ function shipSearchx(){
 				toggleParams('up');
 
 				globalfetch = true;
-
-				fetchMessagesCron();
-				fetchMessages();
 			}else{
 				data = data.replace("<b>ERROR</b>:", "");
 
@@ -470,6 +456,88 @@ jQuery( "#messagedialog" ).dialog( { autoOpen: false, width: 920, height: 460,
 	}
 });
 jQuery( "#messagedialog" ).dialog("close");
+
+function expand(tid, imo, type){
+	if(type=='shore'){
+		if($('#'+tid+'_img').attr('src')=='images/icon_pullup_warning_shore.png'){
+			$('#'+tid+'_img').attr('src', 'images/icon_dropdown_warning_shore.png');
+			
+			jQuery('#'+tid).hide();
+			
+			return 0;
+		}else if($('#'+tid+'_img').attr('src')=='images/icon_pullup.png'){
+			$('#'+tid+'_img').attr('src', 'images/icon_dropdown.png');
+			
+			jQuery('#'+tid).hide();
+			
+			return 0;
+		}
+	}else if(type=='broker'){
+		if($('#'+tid+'_img').attr('src')=='images/icon_pullup_warning_broker.png'){
+			$('#'+tid+'_img').attr('src', 'images/icon_dropdown_warning_broker.png');
+			
+			jQuery('#'+tid).hide();
+			
+			return 0;
+		}else if($('#'+tid+'_img').attr('src')=='images/icon_pullup.png'){
+			$('#'+tid+'_img').attr('src', 'images/icon_dropdown.png');
+			
+			jQuery('#'+tid).hide();
+			
+			return 0;
+		}
+	}else if(type=='email'){
+		if($('#'+tid+'_img').attr('src')=='images/icon_pullup_warning_email.png'){
+			$('#'+tid+'_img').attr('src', 'images/icon_dropdown_warning_email.png');
+			
+			jQuery('#'+tid).hide();
+			
+			return 0;
+		}else if($('#'+tid+'_img').attr('src')=='images/icon_pullup.png'){
+			$('#'+tid+'_img').attr('src', 'images/icon_dropdown.png');
+			
+			jQuery('#'+tid).hide();
+			
+			return 0;
+		}
+	}
+	
+	jQuery('#pleasewait').show();
+	
+	jQuery.ajax({
+		type: 'GET',
+		url: 'updates_ajax.php?imo='+imo+'&type='+type,
+		data: '',
+
+		success: function(data) {
+			jQuery('#pleasewait').hide();
+			
+			if(type=='shore'){
+				if($('#'+tid+'_img').attr('src')=='images/icon_dropdown_warning_shore.png'){
+					$('#'+tid+'_img').attr('src', 'images/icon_pullup_warning_shore.png');
+				}else if($('#'+tid+'_img').attr('src')=='images/icon_dropdown.png'){
+					$('#'+tid+'_img').attr('src', 'images/icon_pullup.png');
+				}
+			}else if(type=='broker'){
+				if($('#'+tid+'_img').attr('src')=='images/icon_dropdown_warning_broker.png'){
+					$('#'+tid+'_img').attr('src', 'images/icon_pullup_warning_broker.png');
+				}else if($('#'+tid+'_img').attr('src')=='images/icon_dropdown.png'){
+					$('#'+tid+'_img').attr('src', 'images/icon_pullup.png');
+				}
+			}else if(type=='email'){
+				if($('#'+tid+'_img').attr('src')=='images/icon_dropdown_warning_email.png'){
+					$('#'+tid+'_img').attr('src', 'images/icon_pullup_warning_email.png');
+				}else if($('#'+tid+'_img').attr('src')=='images/icon_dropdown.png'){
+					$('#'+tid+'_img').attr('src', 'images/icon_pullup.png');
+				}
+			}
+			
+			jQuery('#'+tid).html(data);
+			jQuery('#'+tid).show();
+			jQuery('#'+tid).fadeIn(200);
+		}
+	});
+}
 </script>
 
 <center>
@@ -512,6 +580,9 @@ jQuery( "#messagedialog" ).dialog("close");
 		<a class="content_link">Option 2</a>
 	</div>
 	<div>&nbsp;</div>
+	<div>&nbsp;</div>
+	<div style='cursor:pointer;' onclick="jQuery('#searchform').slideToggle('slow', function(){ toggleParams(); })"><a name='params' style='font-size:18px; font-weight:bold;'>PARAMETERS</a> &nbsp; <img src='images/up.png' id='paramicon'></div>
+    <div>&nbsp;</div>
 	<form id='searchform'>
 		<table width="1000" border="0" cellpadding="0" cellspacing="0">
 		  <tr>
@@ -521,69 +592,11 @@ jQuery( "#messagedialog" ).dialog("close");
 				  <td width="90">LOAD PORT</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<input id='suggest1' type="text" name="load_port" value='<?php echo $tabdata['load_port']; ?>' class="input_1" style='width:210px;' />
-					<input type='hidden' name='zone2' value='<?php echo $tabdata['zone']; ?>' >
+					<input id='suggest1' type="text" name="load_port" class="input_1" style='width:210px;' />
 					
 					<script type="text/javascript">
-					function showMinimap(zone){
-						if(!zone){
-							zone = jQuery(".blackzone")[0].value;
-							jQuery(".blackzone")[0].selected = true;
-						}
-		
-						jQuery('#zonedescs div').hide();
-						jQuery("#minimap").show();
-						jQuery("#minimap")[0].src='map/minimaps/'+zone+".jpg";
-						jQuery("#minimap")[0].alt = zone;
-		
-						if(zone)
-							jQuery('.click').show();
-		
-						jQuery('#zonedescs').show();
-						jQuery('#zonedescs #zd'+zone).show();
-					}			
-		
-					function showZones(lp, dwt){
-						jQuery("#minimap").hide();
-		
-						if(!dwt){
-							dwt = jQuery('#dwt_range_id').val();
-						}
-		
-						jQuery("#zones").html('loading zones...');
-		
-						jQuery.ajax({
-							type: 'POST',
-							url: "search_ajax1ve.php?dry=1&load_port="+lp+"&action=getzones&dwt_range="+dwt,
-							data:  '',
-							
-							success: function(data) {
-								if(data!=""&&data.indexOf("<b>ERROR")!=0){
-									jQuery("#zones").html(data);
-								}else{
-									jQuery("#zones").html(data);
-								}
-		
-								jQuery("#zones_id").val('<?php echo $tabdata['zone']; ?>');
-		
-								showMinimap('<?php echo $tabdata['zone']; ?>');
-							}
-						});
-					}
-		
 					jQuery("#suggest1").focus().autocomplete(ports);
 					jQuery("#suggest1").setOptions({
-						scrollHeight: 180
-					});
-		
-					jQuery("#suggest1").result(
-						function(){
-							showZones(jQuery(this).val())
-						}
-					);	
-		
-					jQuery("#suggest2").focus().autocomplete(ports);
-					jQuery("#suggest2").setOptions({
 						scrollHeight: 180
 					});
 					</script>
@@ -596,23 +609,11 @@ jQuery( "#messagedialog" ).dialog("close");
 				  <td>LAYCAN</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<input type="text" name="load_port_from" value="<?php
-					if(!trim($tabdata['load_port_from'])){
-						echo date("M d, Y", time());
-					}else{
-						echo $tabdata['load_port_from'];
-					}
-					?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<input type="text" name="load_port_from" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
 		
 					to 
 		
-					<input type="text" name="load_port_to" value="<?php
-					if(!trim($tabdata['load_port_from'])){
-						echo date("M d, Y", time()+(7*24*60*60));
-					}else{ 
-						echo $tabdata['load_port_to'];
-					}
-					?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<input type="text" name="load_port_to" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
 				  </td>
 				</tr>
 				<tr>
@@ -650,40 +651,6 @@ jQuery( "#messagedialog" ).dialog("close");
 							<option value="RO-RO/PASSENGER SHIP">RO-RO/PASSENGER SHIP</option>
 						</optgroup>
 					</select>
-
-					<script>
-					function resetVT(){
-						arr = jQuery("#vessel_type_id option");
-
-						for(i=0; i<arr.length; i++){
-							arr[i].selected = false;
-						}
-					}
-
-					function setSelectVT(val){
-						arr = jQuery("#vessel_type_id option");
-
-						for(i=0; i<arr.length; i++){
-							if(arr[i].innerHTML==val){
-								arr[i].selected = true;
-							}
-						}
-					}
-
-					<?php 
-						$vts = $tabdata['vessel_type']; 
-
-						if($vts[0]){
-							?>resetVT();<?php
-						}
-
-						if(is_array($vts)){
-							foreach($vts as $value){
-								?>setSelectVT("<?php echo $value; ?>");<?php
-							}
-						}
-					?>
-					</script>
 				  </td>
 				</tr>
 			  </table>
@@ -718,10 +685,6 @@ jQuery( "#messagedialog" ).dialog("close");
 						<option value="110|150">(110,000-150,000) Small Capesize</option>
 						<option value="150|550">(150,000+) Large Capesize</option>
 					</select>
-
-					<?php if($tabdata['dwt_range']!=""){ ?>
-						<script>jQuery("#dwt_range_id").val('<?php echo $tabdata['dwt_range']; ?>');</script>
-					<?php } ?>
 				  </td>
 				</tr>
 			  </table>

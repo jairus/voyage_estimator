@@ -38,7 +38,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 		$ship_img = "<img src='image.php?b=1&mx=20&p=".$imageb."'>";
 		$ship_name = "<a class='clickable' onclick='return showShipDetails(\"".$imo."\")'>".$name."</a>";
 		
-		$load_port = $ships['LOAD_PORT'];
+		$load_port = $ships['siitech_destination'];
 		$load_port_eta = "<a class='clickable2' alt=\"".$load_eta."\" title=\"".$load_eta."\">".substr($load_eta, 0,11)."</a>";
 		
 		$destination = $ships['siitech_destination'];
@@ -49,7 +49,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 		$siitech_shippos_data = $ships['siitech_shippos_data'];
 		$siitech_shippos_data = getXMLtoArr($siitech_shippos_data);
 		
-		$heading = str_replace(' degrees', '', $ships['TRUE HEADING']).'&deg;';
+		$heading = str_replace(' degrees', '', $siitech_shippos_data['TrueHeading']).'&deg;';
 		
 		$siitech_shipstat_data = $ships['siitech_shipstat_data'];
 		$siitech_shipstat_data = getXMLtoArr($siitech_shipstat_data);

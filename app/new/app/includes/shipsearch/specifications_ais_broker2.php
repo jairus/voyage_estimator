@@ -27,11 +27,12 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 	
 		for($i=0; $i<$t; $i++){
 			$ships = $shipsA1print[$i];
+			$_SESSION['shipsA1print'][$i] = $ships;
 			
 			$lat = $ships['siitech_latitude'];
 			$long = $ships['siitech_longitude'];
 			
-			$sql2 = "SELECT * FROM `_sbis_zoneblocks` WHERE `zone_code`='".$zone."' and ".$long.">=`long1` and ".$long."<=`long2` and ".$lat."<=`lat1` and ".$lat.">=`lat4` LIMIT 0, 1";	 
+			$sql2 = "SELECT * FROM `_sbis_zoneblocks` WHERE `zone_code`='".$zone."' and ".$long.">=`long1` and ".$long."<=`long2` and ".$lat."<=`lat1` and ".$lat.">=`lat4` LIMIT 0, 1";
 			$r2 = dbQuery($sql2, $link);
 			
 			if($r2[0]['id']){
@@ -108,7 +109,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 						echo "<tr style='background:#e5e5e5;'>
 							<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 							<td><div style='padding:5px;'><a class='clickable2' alt=\"".$load_eta."\" title=\"".$load_eta."\">".substr($load_eta, 0,11)."</a></div></td>
-							<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe(\"shore\", \"".$details."\", \"SHIPS WITH AIS DESTINATIONS & ETA\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+							<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"".$details."\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 							<td>
 								<div style='padding:5px;'>
 									<table cellpadding='0' cellspacing='0' width='100%'>

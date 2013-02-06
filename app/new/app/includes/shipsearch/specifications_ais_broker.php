@@ -27,6 +27,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 	
 		for($i=0; $i<$t; $i++){
 			$ships = $shipsA1print[$i];
+			$_SESSION['shipsA1print'][$i] = $ships;
 			
 			//CHECK IF EXIST
 			$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$ships['xvas_imo']."'";
@@ -101,7 +102,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 					echo "<tr style='background:#e5e5e5;'>
 						<td style='text-align:center;'><div style='padding:5px;'>".$updates."</div></td>
 						<td><div style='padding:5px;'><a class='clickable2' alt=\"".$load_eta."\" title=\"".$load_eta."\">".substr($load_eta, 0,11)."</a></div></td>
-						<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe(\"shore\", \"".$details."\", \"SHIPS WITH AIS DESTINATIONS & ETA\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
+						<td style='text-align:center;'><div style='padding:5px;'><a class='clickable' onclick='openMapVe2(\"".$details."\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></div></td>
 						<td>
 							<div style='padding:5px;'>
 								<table cellpadding='0' cellspacing='0' width='100%'>

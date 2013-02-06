@@ -40,7 +40,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 		$lat = $ships['siitech_latitude'];
 		$long = $ships['siitech_longitude'];
 		
-		$sql2 = "SELECT * FROM `_sbis_zoneblocks` WHERE `zone_code`='".$zone."' and ".$long.">=`long1` and ".$long."<=`long2` and ".$lat."<=`lat1` and ".$lat.">=`lat4` LIMIT 0, 1";	 
+		$sql2 = "SELECT * FROM `_sbis_zoneblocks` WHERE `zone_code`='".$zone."' and ".$long.">=`long1` and ".$long."<=`long2` and ".$lat."<=`lat1` and ".$lat.">=`lat4` LIMIT 0, 1";
 		$r2 = dbQuery($sql2, $link);
 		
 		if($r2[0]['id']){

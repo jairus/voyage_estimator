@@ -7,12 +7,74 @@ $details = trim(base64_decode($_GET['details']));
 $details = unserialize($details);
 
 $ship = $_SESSION[$details['a']][$details['id']];
+$portid = $details['portid'];
+$port_name = $ship['siitech_destination'];
+$port_latitude = $details['port_latitude'];
+$port_longitude = $details['port_longitude'];
+$eta = $ship['siitech_eta'];
+$destination_eta = date("M j, 'y G:i e", str2time($eta));
 
-$imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$ship['xvas_imo']);
+//DESTINATION PORT
+if(trim($port_name) && trim($port_latitude) && trim($port_longitude)){
+	$string_destination = "
+		<style>
+		.loadport .in td{
+			font-family: verdana; font-size:11px;
+		}
+	
+		.loadport .in td.label{
+			font-weight:bold;
+			width:150px;
+		}
+		</style>
+	
+		<table width='400' class='loadport'>
+			<tr>		
+				<td style='font-family: verdana; font-size:14px; font-weight:bold; background:#c5dc3b; color:black;'>DESTINATION: ".$port_name."</td>
+			</tr>
+			<tr>		
+				<td>
+					<table class='in'>
+						<tr>
+							<td class='label'>Latitude</td>
+							<td valign='top'>".$port_latitude."</td>
+						</tr>
+						<tr>
+							<td class='label'>Longitude</td>
+							<td valign='top'>".$port_longitude."</td>			
+						</tr>
+						<tr>
+							<td class='label'>Destination ETA</td>
+							<td valign='top'>".$destination_eta."</td>			
+						</tr>
+					</table>
+				</td>		
+			</tr>
+		</table>";
+		
+	$string_destination = str_replace("\n", "", $string_destination);
+	$string_destination = str_replace("\r", "", $string_destination);
+}
+//END OF DESTINATION PORT
 
-$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$ship['xvas_imo']."'";
+//SHIP
+if($eta=="" || $eta==0 || $eta=="0000-00-00 00:00:00"){ $eta = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
+else{ $eta = date("M j, 'y G:i e", str2time($eta)); }
+
+$siitech_lastseen = $ship['siitech_lastseen'];
+if($siitech_lastseen=="" || $siitech_lastseen==0 || $siitech_lastseen=="0000-00-00 00:00:00"){ $siitech_lastseen = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
+else{ $siitech_lastseen = date("M j, 'y G:i e", str2time($ship['siitech_lastseen'])); }
+
+$imo = $ship['xvas_imo'];
+$imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$imo);
+
+$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$imo."'";
 $xvas = dbQuery($sql);
 $xvas = $xvas[0];
+
+$ship_name = getValue($xvas['data'], 'NAME');
+$callsign = $ship['xvas_callsign'];
+$mmsi = $ship['xvas_mmsi'];
 
 $xvasflag = getValue($xvas['data'], 'LAST_KNOWN_FLAG');
 if(!trim($xvasflag)){
@@ -20,16 +82,17 @@ if(!trim($xvasflag)){
 }
 $xvasflag_img = getFlagImage($xvasflag);
 
-$siitech_destination = trim($ship['siitech_destination']);
-if($siitech_destination==""){ $siitech_destination = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
+$draught = getValue($ship['siitech_shipstat_data'], 'draught');
+$ship_type = $ship['xvas_vessel_type'];
 
-$siitech_eta = $ship['siitech_eta'];
-if($siitech_eta=="" || $siitech_eta==0 || $siitech_eta=="0000-00-00 00:00:00"){ $siitech_eta = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
-else{ $siitech_eta = "<a class='clickable' alt='".date("M j, 'y G:i e", str2time($ship['siitech_eta']))."' title='".date("M j, 'y G:i e", str2time($ship['siitech_eta']))."'>".substr(date("M j, 'y G:i e", str2time($ship['siitech_eta'])), 0,11)."</a>"; }
+$stern = getValue($ship['siitech_shipstat_data'], 'to_stern');
+if($stern=="" || $stern==0){ $stern = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
 
-$siitech_lastseen = $ship['siitech_lastseen'];
-if($siitech_lastseen=="" || $siitech_lastseen==0 || $siitech_lastseen=="0000-00-00 00:00:00"){ $siitech_lastseen = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
-else{ $siitech_lastseen = "<a class='clickable' alt='".date("M j, 'y G:i e", str2time($ship['siitech_lastseen']))."' title='".date("M j, 'y G:i e", str2time($ship['siitech_lastseen']))."'>".substr(date("M j, 'y G:i e", str2time($ship['siitech_lastseen'])), 0,11)."</a>"; }
+$beam = getValue($ship['siitech_shipstat_data'], 'Beam');
+if($stern=="" || $stern==0){ $stern = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
+
+$ship_latitude = $ship['siitech_latitude'];
+$ship_longitude = $ship['siitech_longitude'];
 
 $speed = $ship['xvas_speed'];
 if(trim($speed)){ $speed = number_format($speed, 2); }
@@ -45,33 +108,26 @@ if(!trim($true_heading)){
 	$true_heading = "N/A";
 }
 
-$ship_type = $ship['xvas_vessel_type'];
-
-$stern = getValue($ship['siitech_shipstat_data'], 'to_stern');
-if($stern=="" || $stern==0){ $stern = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
-
-$beam = getValue($ship['siitech_shipstat_data'], 'Beam');
-if($stern=="" || $stern==0){ $stern = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
-
 $utc = getValue($ship['siitech_shippos_data'], 'UTC');
 if($utc=="" || $utc==0){ $utc = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
+else{ $utc = date("M j, 'y G:i e", str2time($utc)); }
 
 $nav = trim(getValue($ship['siitech_shippos_data'], 'NavigationalStatus'));
 if($nav==""){ $nav = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
 
 $string = "
-	<table width='550'>
+	<table width='600'>
 		<tr>
 			<td style='width:50%; background:#92d050;'>
 				<div style='padding:5px;'>
 					<table style='font-family:verdana; font-size:10px;'>
 						<tr>
 							<td width='100'><b>DESTINATION:</b></td>
-							<td>".$siitech_destination."</td>
+							<td>".$port_name."</td>
 						</tr>
 						<tr>
 							<td><b>ETA:</b></td>
-							<td>".$siitech_eta."</td>
+							<td>".$eta."</td>
 						</tr>
 					</table>
 				</div>
@@ -100,19 +156,19 @@ $string = "
 						<table border='0' cellspacing='0' cellpadding='0' style='font-family:verdana; font-size:10px;'>
 							<tr>
 								<td valign='top' width='130'><b>Name:</b></td>
-								<td valign='top'>".getValue($xvas['data'], 'NAME')."</td>
+								<td valign='top'>".$ship_name."</td>
 							</tr>
 							<tr>
 								<td valign='top'><b>IMO:</b></td>
-								<td valign='top'>".$ship['xvas_imo']."</td>
+								<td valign='top'>".$imo."</td>
 							</tr>
 							<tr>
 								<td valign='top'><b>Call Sign:</b></td>
-								<td valign='top'>".$ship['xvas_callsign']."</td>
+								<td valign='top'>".$callsign."</td>
 							</tr>
 							<tr>
 								<td valign='top'><b>MMSI:</b></td>
-								<td valign='top'>".$ship['xvas_mmsi']."</td>
+								<td valign='top'>".$mmsi."</td>
 							</tr>
 							<tr>
 								<td valign='top'><b>Flag:</b></td>
@@ -120,7 +176,7 @@ $string = "
 							</tr>
 							<tr>
 								<td valign='top'><b>Draught:</b></td>
-								<td valign='top'>".getValue($ship['siitech_shipstat_data'], 'draught')."</td>
+								<td valign='top'>".$draught."</td>
 							</tr>
 							<tr>
 								<td valign='top'><b>Type:</b></td>
@@ -136,11 +192,11 @@ $string = "
 							</tr>
 							<tr>
 								<td valign='top'><b>Latitude:</b></td>
-								<td>".$ship['siitech_latitude']."</td>
+								<td>".$ship_latitude."</td>
 							</tr>
 							<tr>
 								<td valign='top'><b>Longitude:</b></td>
-								<td>".$ship['siitech_longitude']."</td>
+								<td>".$ship_longitude."</td>
 							</tr>
 							<tr>
 								<td valign='top'><b>Current Speed:</b></td>
@@ -172,6 +228,7 @@ $string = "
 	
 $string = str_replace("\n", "", $string);
 $string = str_replace("\r", "", $string);
+//END OF SHIP
 ?>
 <html>
 <head>
@@ -198,18 +255,22 @@ map.addLayer(new OpenLayers.Layer.OSM());
 epsg4326 =  new OpenLayers.Projection("EPSG:4326");
 projectTo = map.getProjectionObject();
 
-<?php
-$details = trim(base64_decode($_GET['details']));
-$details = unserialize($details);
-
-$ship = $_SESSION[$details['a']][$details['id']];
-    
-?> var lonLat = new OpenLayers.LonLat( <?php echo $ship['siitech_longitude']; ?>, <?php echo $ship['siitech_latitude']; ?> ).transform(epsg4326, projectTo);
-
+var lonLat = new OpenLayers.LonLat( <?php echo $ship['siitech_longitude']; ?>, <?php echo $ship['siitech_latitude']; ?> ).transform(epsg4326, projectTo);
 var zoom = 3;
 map.setCenter (lonLat, zoom);
 
 var vectorLayer = new OpenLayers.Layer.Vector("Overlay");
+
+//DESTINATION PORT
+<?php if(trim($port_name) && trim($port_latitude) && trim($port_longitude)){ ?>
+	var feature = new OpenLayers.Feature.Vector(
+		new OpenLayers.Geometry.Point( <?php echo $port_longitude; ?>, <?php echo $port_latitude; ?> ).transform(epsg4326, projectTo),
+		{description:"<?php echo $string_destination; ?>"} ,
+		{externalGraphic: 'openport.png', graphicHeight: 45, graphicWidth: 65, graphicXOffset:-12, graphicYOffset:-25  }
+	);    
+	vectorLayer.addFeatures(feature);
+<?php } ?>
+//END OF DESTINATION PORT
 
 <?php
 if(trim(getValue($ship['siitech_shippos_data'], 'TrueHeading'))){

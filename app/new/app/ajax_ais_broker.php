@@ -421,20 +421,6 @@ function openMessageDialog(mid, imo, type){
 	jQuery("#messagedialog").dialog("open");
 }
 
-function newSearchParam(){
-	jQuery('#pleasewait').show();
-	
-	jQuery.ajax({
-		type: "POST",
-		url: "ajax.php?new_search=1",
-		data: "",
-
-		success: function(data) {
-			self.location = "cargospotter.php?new_search=1";
-		}
-	});
-}
-
 jQuery( "#didyouknowdialog" ).dialog( { autoOpen: false, width: 650, height: 390 });
 jQuery( "#didyouknowdialog" ).dialog("close");
 
@@ -546,8 +532,10 @@ function expand(tid, imo, type){
 }
 
 function showTable(s, h){
-	setTimeout("jQuery('#searchform').slideDown('slow')", 500);
-	toggleParams();
+	if(jQuery('#paramicon').attr('src')=='images/down.png'){
+		setTimeout("jQuery('#searchform').slideDown('slow')", 500);
+		toggleParams();
+	}
 	
 	jQuery('#sresults').hide();
 
@@ -608,10 +596,10 @@ function showTable(s, h){
 			<td width="400" valign="top">
 			  <table width="400" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-				  <td width="90">LOAD PORT</td>
+				  <td width="160">DESTINATION PORT</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<input id='suggest1' type="text" name="load_port" class="input_1" style='width:210px;' />
+					<input id='suggest1' type="text" name="destination_port" class="input_1" style='width:210px;' />
 					
 					<script type="text/javascript">
 					jQuery("#suggest1").focus().autocomplete(ports);
@@ -628,11 +616,11 @@ function showTable(s, h){
 				  <td>LAYCAN</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<input type="text" name="load_port_from" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<input type="text" name="destination_port_from" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
 		
 					to 
 		
-					<input type="text" name="load_port_to" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<input type="text" name="destination_port_to" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
 				  </td>
 				</tr>
 				<tr>
@@ -681,25 +669,10 @@ function showTable(s, h){
 				  <td width="10">&nbsp;</td>
 				  <td>
 					<select class="input_1" name="dwt_range" id='dwt_range_id'>
-						<option value="0|5">(0-5,000) Minibulk 1</option>
-						<option value="5|10">(5,000-10,000) Minibulk 2</option>
-						<option value="0|10">(0-10,000) All Minibulk</option>
-						<option value="10|15">(10,000-15,000) Handy 1</option>
-						<option value="15|20">(15,000-20,000) Handy 2</option>
-						<option value="20|25">(20,000-25,000) Handy 3</option>
-						<option value="25|30">(25,000-30,000) Handy 4</option>
-						<option value="30|35">(30,000-35,000) Handy 5</option>
-						<option value="10|35">(10,000-35,000) All Handy</option>
-						<option value="35|40">(35,000-40,000) Handymax 1</option>
-						<option value="40|45">(40,000-45,000) Handymax 2</option>
-						<option value="45|50">(45,000-50,000) Handymax 3</option>
-						<option value="50|55">(50,000-55,000) Handymax 4</option>
-						<option value="55|60">(55,000-60,000) Handymax 5</option>
-						<option value="35|60">(35,000-60,000) All Handymax</option>
-						<option value="60|65">(60,000-65,000) Handysize 1</option>
-						<option value="65|70">(65,000-70,000) Handysize 2</option>
-						<option value="70|75">(70,000-75,000) Handysize 3</option>
-						<option value="60|75">(60,000-75,000) All Handysize</option>
+						<option value="0|10">(0-10,000) Minibulk</option>
+						<option value="10|35">(10,000-35,000) Handy</option>
+						<option value="35|60">(35,000-60,000) Handymax</option>
+						<option value="60|75">(60,000-75,000) Handysize</option>
 						<option value="75|110">(75,000-110,000) Over Panamax</option>
 						<option value="110|150">(110,000-150,000) Small Capesize</option>
 						<option value="150|550">(150,000+) Large Capesize</option>
@@ -738,11 +711,11 @@ function showTable(s, h){
 				  <td>LAYCAN</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<input type="text" name="load_port_from2" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<input type="text" name="destination_port_from2" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
 		
 					to 
 		
-					<input type="text" name="load_port_to2" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<input type="text" name="destination_port_to2" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
 				  </td>
 				</tr>
 				<tr>
@@ -791,25 +764,10 @@ function showTable(s, h){
 				  <td width="10">&nbsp;</td>
 				  <td>
 					<select class="input_1" name="dwt_range2" id='dwt_range_id2'>
-						<option value="0|5">(0-5,000) Minibulk 1</option>
-						<option value="5|10">(5,000-10,000) Minibulk 2</option>
-						<option value="0|10">(0-10,000) All Minibulk</option>
-						<option value="10|15">(10,000-15,000) Handy 1</option>
-						<option value="15|20">(15,000-20,000) Handy 2</option>
-						<option value="20|25">(20,000-25,000) Handy 3</option>
-						<option value="25|30">(25,000-30,000) Handy 4</option>
-						<option value="30|35">(30,000-35,000) Handy 5</option>
-						<option value="10|35">(10,000-35,000) All Handy</option>
-						<option value="35|40">(35,000-40,000) Handymax 1</option>
-						<option value="40|45">(40,000-45,000) Handymax 2</option>
-						<option value="45|50">(45,000-50,000) Handymax 3</option>
-						<option value="50|55">(50,000-55,000) Handymax 4</option>
-						<option value="55|60">(55,000-60,000) Handymax 5</option>
-						<option value="35|60">(35,000-60,000) All Handymax</option>
-						<option value="60|65">(60,000-65,000) Handysize 1</option>
-						<option value="65|70">(65,000-70,000) Handysize 2</option>
-						<option value="70|75">(70,000-75,000) Handysize 3</option>
-						<option value="60|75">(60,000-75,000) All Handysize</option>
+						<option value="0|10">(0-10,000) Minibulk</option>
+						<option value="10|35">(10,000-35,000) Handy</option>
+						<option value="35|60">(35,000-60,000) Handymax</option>
+						<option value="60|75">(60,000-75,000) Handysize</option>
 						<option value="75|110">(75,000-110,000) Over Panamax</option>
 						<option value="110|150">(110,000-150,000) Small Capesize</option>
 						<option value="150|550">(150,000+) Large Capesize</option>
@@ -861,41 +819,6 @@ function showTable(s, h){
 						<option value='z35'>[z35] WEST AUSTRALIA</option>
 						<option value='z36'>[z36] WEST COAST INDIA</option>
 						<option value='z37'>[z37] WEST COAST SOUTH AMERICA</option>
-						<option value='CT1'>[CT1] C2 CAPESIZE TUBARO (BRAZIL) TO ROTTERDAM (NETHERLANDS) IRON ORE</option>
-						<option value='CT2'>[CT2] C3 CAPESIZE TUBARO (BRAZIL) TO BEILUN - BAOSHAN (CHINA) IRON ORE</option>
-						<option value='NE'>[NE] C5 NEWCASTLE (AUSTRALIA) TO BEILUN - BOASHAN (CHINA) IRON ORE</option>
-						<option value='CB'>[CB] C4 CAPESIZE RICHARDS BAY (SOUTH AFRICA) TO ROTTERDAM (NETHERLANDS) COAL</option>
-						<option value='PG'>[PG] C12 PANAMAX GLADSTONE (AUSTRALIA) TO ROTTERDAM (NETHERLANDS) COAL</option>
-						<option value='PT'>[PT] P1A PANAMAX TRANSATLANTIC (PRIMARILY LATIN AMERICA TO EUROPE) IRON ORE, COAL, GRAIN</option>
-						<option value='PF'>[PF] P2A PANAMAX EUROPE TO FAR EAST (PRIMARILY CHINA) via SUEZ CANAL IRON ORE, COAL, GRAIN</option>
-						<option value='PP'>[PP] PA3A PANAMAX PACIFIC ROUND TRIP (AUSTRALI TO CHINA) IRON ORE, COAL, GRAIN</option>
-						<option value='PV'>[PV] PA4A PANAMAX FAR E. TO EUROPE VIA PANAMA CANAL (Japan eastbound) COAL, IRON ORE, GRAIN</option>
-						<option value='PE'>[PE] PERSIAN GULF, BAY OF BENGAL AND ASIA</option>
-						<option value='UA'>[UA] USA TO ASIA COAL, GRAIN</option>
-						<option value='CO'>[CO] WEST COAST NORTH & SOUTH AMERICAN GRAIN</option>
-						<option value='EU'>[EU] EUROPE TO US EAST COAST</option>
-						<option value='CV'>[CV] C7 CAPESIZE BOLIVAR (VENEZUELA) TO ROTTERDAM (NETHERLANDS) COAL</option>
-						<option value='NS'>[NS] NORTH & SOUTH AMERICA</option>
-						<option value='AF'>[AF] AFRICA, MEG & INDIA</option>
-						<option value='AU'>[AU] AUSTRALIA & ASIA</option>
-						<option value='BA'>[BA] BALTIC TO ASIA</option>
-						<option value='1'>  [A] NORTH EAST ASIA TO WEST COAST OF NORTH AMERICA</option>
-						<option value='3'>  [C] EAST INDIA TO AUSTRALIA TO ASIA TO WEST COAST OF NORTH AMERICA</option>
-						<option value='5'>  [E] EAST AFRICA TO AG/MEG TO ASIA TO AUSTRALIA TO WC OF NORTH AMERICA</option>
-						<option value='5a'>[E1] ALL COASTAL PORT(S) THROUGHOUT THE WORLD (OVER 80K NO PANAMA CANAL)</option>
-						<option value='6'>  [F] WEST AND EAST AFRICA TO AG/MEG TO SEA TO AUSTRALIA</option>
-						<option value='7'>  [G] ALL COASTAL PORT(S) THROUGHOUT THE WORLD (NO CANALS)</option>
-						<option value='8'>  [H] WITHIN EUROPE, BLACK SEA, MEDITERRANEAN SEA, NORTH SEA, BALTIC SEA</option>
-						<option value='9'>  [I] EC OF NORTH AND SOUTH AMERICA TO WC AFRICA AND EUROPE (NO SUEZ)</option>
-						<option value='11'>[K] EAST COAST OF N.AMERICA TO WEST COAST OF EUROPE</option>
-						<option value='12'>[L] EAST AND WEST COAST OF NORTH AND SOUTH AMERICA</option>
-						<option value='12a'>[L1] EAST COAST OF NORTH AND SOUTH AMERICA</option>
-						<option value='13'>[M] WEST COAST OF NORTH AMERICA TO EAST COAST OF RUSSIA</option>
-						<option value='14'>[N] WEST COAST OF NORTH AND SOUTH AMERICA TO EAST COAST OF RUSSIA</option>
-						<option value='15'>[O] WEST COAST OF NORTH AND SOUTH AMERICA AND EAST AUSTRALIA</option>
-						<option value='16'>[P] EC OF AUSTRALIA TO NORTH EAST ASIA TO WC OF NORTH AMERICA</option>
-						<option value='AG'>[AG] AFRICA TO MEDITERRANEAN SEA, BLACK SEA, BALTIC SEA TO ARABIAN GULF</option>
-						<option value='AS'>[AS] INDIA TO ASIA TO AUSTRALIA</option>
 					</select>
 					
 					<script>

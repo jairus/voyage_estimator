@@ -21,8 +21,8 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 		<th width='20px' style='text-align:center; background-color:#ccc;'><div style='padding:5px;'><input type='checkbox' onclick=\"checkAll('pgreens11', this)\" ></div></th>
 		<th width='20px' style='background-color:#ccc; text-align:center;'><div style='padding:5px;'><img src='images/icon_book.png' border='0' /></div></th>
 		<th width='125px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Name</div></th>
-		<th width='100px' style='background:#BCBCBC; color:#333333; text-align:right;'><div style='padding:5px;'>Load Port</div></th>
-		<th width='110px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Load ETA</div></th>
+		<th width='100px' style='background:#BCBCBC; color:#333333; text-align:right;'><div style='padding:5px;'>Destination</div></th>
+		<th width='110px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>ETA</div></th>
 		<th width='50px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Hull</div></th>
 		<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DWT</div></th>
 		<th width='30px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
@@ -34,8 +34,8 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 		<th width='30px' style='background:#BCBCBC; color:#333333; text-align:center;'><div style='padding:5px;'>Flag</div></th>
 	</tr>";
 	
-	for($i=0; $i<$t; $i++){	
-		$ships = $shipsA1print[$i];
+	for($i_ships=0; $i_ships<$t_ships; $i_ships++){
+		$ships = $r_ships[$i_ships];
 		
 		$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$ships['xvas_imo']."'";
 		$xvas = dbQuery($sql);
@@ -61,12 +61,12 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 				
 				if(!empty($bupdate) || !empty($oupdate) || !empty($eupdate)){
 					if((time()-$delydate_to)<(60*60*24*15) || (time()-strtotime(date('M d, Y', strtotime($eupdate[0]['from_time']))))<(60*60*24*15) || !empty($oupdate)){
-						$updates = "<img src='images/icon_dropdown_warning_shore.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('s_drop1_".$i."', '".$ships['xvas_imo']."', 'shore');\" id='s_drop1_".$i."_img' />";
+						$updates = "<img src='images/icon_dropdown_warning_shore.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('s_drop1_".$i_ships."', '".$ships['xvas_imo']."', 'shore');\" id='s_drop1_".$i_ships."_img' />";
 					}else{
-						$updates = "<img src='images/icon_dropdown.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('s_drop1_".$i."', '".$ships['xvas_imo']."', 'shore');\" id='s_drop1_".$i."_img' />";
+						$updates = "<img src='images/icon_dropdown.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('s_drop1_".$i_ships."', '".$ships['xvas_imo']."', 'shore');\" id='s_drop1_".$i_ships."_img' />";
 					}
 				}else{
-					$updates = "<img src='images/icon_dropdown.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('s_drop1_".$i."', '".$ships['xvas_imo']."', 'shore');\" id='s_drop1_".$i."_img' />";
+					$updates = "<img src='images/icon_dropdown.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('s_drop1_".$i_ships."', '".$ships['xvas_imo']."', 'shore');\" id='s_drop1_".$i_ships."_img' />";
 				}
 				//END
 				
@@ -91,7 +91,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 				$flag     = getValue($xvas['data'], "FLAG");
 				$flag_img = getFlagImage($flag);
 				
-				$load_eta = date("M j, 'y G:i e", strtotime($ships['siitech_eta']));
+				$destination_eta = date("M j, 'y G:i e", strtotime($ships['siitech_eta']));
 				$imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$ships['xvas_imo']);
 				//END
 				
@@ -109,7 +109,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 						</div>
 					</td>
 					<td style='text-align:right;' class='z_text01'><div style='padding:5px;'>".$ships['siitech_destination']."</div></td>
-					<td><div style='padding:5px;'><a class='clickable2' alt=\"".$load_eta."\" title=\"".$load_eta."\">".substr($load_eta, 0,11)."</a></div></td>
+					<td><div style='padding:5px;'><a class='clickable2' alt=\"".$destination_eta."\" title=\"".$destination_eta."\">".substr($destination_eta, 0,11)."</a></div></td>
 					<td class='z_text01'><div style='padding:5px;'>".$hull_type."</div></td>
 					<td class='z_text01'><div style='padding:5px;'>".number_format(str_replace("tons", "", getValue($xvas['data'], 'SUMMER_DWT')))."</div></td>
 					<td class='z_text01'><div style='padding:5px;'>".getValue($xvas['data'], 'BUILD')."</div></td>
@@ -121,7 +121,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 					<td style='text-align:center;'><div style='padding:5px;'><img alt=\"".htmlentities($flag)."\" title=\"".htmlentities($flag)."\" src='".$flag_img."' width='22' height='15' ></div></td>
 				</tr>
 				<tr style='width:992px; background:#fff;'>
-					<td colspan='14' id='s_drop1_".$i."' style='display:none;'></td>
+					<td colspan='14' id='s_drop1_".$i_ships."' style='display:none;'></td>
 				</tr>";
 			}
 		}

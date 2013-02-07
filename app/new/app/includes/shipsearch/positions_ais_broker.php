@@ -16,20 +16,18 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 	<tr>
 		<th width='20px' style='text-align:center; background-color:#ccc;'><div style='padding:5px;'><input type='checkbox' onclick=\"checkAll('p_pgreens1', this)\" ></div></th>
 		<th width='20px' style='background-color:#ccc; text-align:center;'><div style='padding:5px;'><img src='images/icon_book.png' border='0' /></div></th>
-		<th width='200px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Name</div></th>
-		<th width='120px' style='background:#BCBCBC; color:#333333; text-align:right;'><div style='padding:5px;'>Load Port</div></th>
-		<th width='110px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>ETA</div></th>
-		<th width='170px' style='background:#BCBCBC; color:#333333; text-align:right;'><div style='padding:5px;'>Destination</div></th>
-		<th width='100px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>ETA</div></th>
-		<th width='80px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Heading</div></th>
-		<th width='75px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>AIS Speed</div></th>
-		<th width='75px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Stated Speed</div></th>
-		<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Private Message</div></th>
+		<th width='220px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Name</div></th>
+		<th width='250px' style='background:#BCBCBC; color:#333333; text-align:right;'><div style='padding:5px;'>Destination</div></th>
+		<th width='130px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>ETA</div></th>
+		<th width='90px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Heading</div></th>
+		<th width='90px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>AIS Speed</div></th>
+		<th width='110px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Stated Speed</div></th>
+		<th width='160px' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Private Message</div></th>
 	</tr>";
 	
-	for($i=0; $i<$t; $i++){
-		$ships = $shipsA1print[$i];
-		$_SESSION['shipsA1print'][$i] = $ships;
+	for($i_ships=0; $i_ships<$t_ships; $i_ships++){
+		$ships = $r_ships[$i_ships];
+		$_SESSION['r_ships'][$i_ships] = $ships;
 		
 		$imo = $ships['xvas_imo'];
 		
@@ -39,19 +37,16 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 		
 		if(trim($xvas['data'])){
 			$name = getValue($xvas['data'], 'NAME');
-			$load_eta = date("M j, 'y G:i e", strtotime($ships['siitech_eta']));
+			$destination_eta = date("M j, 'y G:i e", strtotime($ships['siitech_eta']));
 			$imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$ships['xvas_imo']);
 			
 			$ship_img = "<img src='image.php?b=1&mx=20&p=".$imageb."'>";
 			$ship_name = "<a class='clickable' onclick='return showShipDetails(\"".$imo."\")'>".$name."</a>";
 			
-			$load_port = $ships['siitech_destination'];
-			$load_port_eta = "<a class='clickable2' alt=\"".$load_eta."\" title=\"".$load_eta."\">".substr($load_eta, 0,11)."</a>";
-			
 			$destination = $ships['siitech_destination'];
 			if(!trim($destination)){ $destination = "<img style='height:15px; width:15px;' src='images/alert1.png' alt='No AIS Data Available' title='No AIS Data Available' />"; }
 			
-			$destination_eta = "<a class='clickable2' alt=\"".$load_eta."\" title=\"".$load_eta."\" >".substr($load_eta, 0,11)."</a>";
+			$destination_eta = "<a class='clickable2' alt=\"".$destination_eta."\" title=\"".$destination_eta."\" >".substr($destination_eta, 0,11)."</a>";
 			
 			$siitech_shippos_data = $ships['siitech_shippos_data'];
 			$siitech_shippos_data = getXMLtoArr($siitech_shippos_data);
@@ -84,19 +79,22 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 			
 			if(!empty($bupdate) || !empty($oupdate) || !empty($eupdate)){
 				if((time()-$delydate_to)<(60*60*24*15) || (time()-strtotime(date('M d, Y', strtotime($eupdate[0]['from_time']))))<(60*60*24*15) || !empty($oupdate)){
-					$updates = "<img src='images/icon_dropdown_warning_shore.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('p_drop1_".$i."', '".$imo."', 'shore');\" id='p_drop1_".$i."_img' />";
+					$updates = "<img src='images/icon_dropdown_warning_shore.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('p_drop1_".$i_ships."', '".$imo."', 'shore');\" id='p_drop1_".$i_ships."_img' />";
 				}else{
-					$updates = "<img src='images/icon_dropdown.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('p_drop1_".$i."', '".$imo."', 'shore');\" id='p_drop1_".$i."_img' />";
+					$updates = "<img src='images/icon_dropdown.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('p_drop1_".$i_ships."', '".$imo."', 'shore');\" id='p_drop1_".$i_ships."_img' />";
 				}
 			}else{
-				$updates = "<img src='images/icon_dropdown.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('p_drop1_".$i."', '".$imo."', 'shore');\" id='p_drop1_".$i."_img' />";
+				$updates = "<img src='images/icon_dropdown.png' width='20' height='18' style='cursor:pointer;' onclick=\"expand('p_drop1_".$i_ships."', '".$imo."', 'shore');\" id='p_drop1_".$i_ships."_img' />";
 			}
 			//END
 			
 			//MAP DETAILS
 			$details = array();
-			$details['a'] = 'shipsA1print';
-			$details['id'] = $i;
+			$details['a'] = 'r_ships';
+			$details['id'] = $i_ships;
+			$details['portid'] = $portid;
+			$details['port_latitude'] = $port_latitude;
+			$details['port_longitude'] = $port_longitude;
 			$details = base64_encode(serialize($details));
 			//END
 			
@@ -119,8 +117,6 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 						</table>
 					</div>
 				</td>
-				<td style='text-align:right;' class='z_text01'><div style='padding:5px;'>".$load_port."</div></td>
-				<td><div style='padding:5px;'>".$load_port_eta."</div></td>
 				<td>
 					<div style='padding:5px;'>
 						<table width='100%' cellpadding='0' cellspacing='0'>
@@ -141,7 +137,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 				</td>
 			</tr>
 			<tr style='width:992px; background:#fff;'>
-				<td colspan='15' id='p_drop1_".$i."' style='display:none;'></td>
+				<td colspan='15' id='p_drop1_".$i_ships."' style='display:none;'></td>
 			</tr>";
 		}
 	}

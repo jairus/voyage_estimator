@@ -27,10 +27,9 @@ function displayContent(content){
 	
 	jQuery('#results').hide();
 	
+	jQuery('#ais_broker_id_link').removeClass('content_link_selected');
 	jQuery('#voyage_estimator_id_link').removeClass('content_link_selected');
 	jQuery('#distance_calculator_id_link').removeClass('content_link_selected');
-	jQuery('#fast_search_id_link').removeClass('content_link_selected');
-	jQuery('#ais_broker_id_link').removeClass('content_link_selected');
 	jQuery('#ship_search_register_id_link').removeClass('content_link_selected');
 	jQuery('#fleet_positions_id_link').removeClass('content_link_selected');
 	jQuery('#ships_coming_into_ports_id_link').removeClass('content_link_selected');
@@ -41,7 +40,7 @@ function displayContent(content){
 	jQuery('#weather_id_link').removeClass('content_link_selected');
 	jQuery('#account_id_link').removeClass('content_link_selected');
 	
-	jQuery('#voyage_estimator_id_link').addClass('content_link');
+	jQuery('#ais_broker_id_link').addClass('content_link');
 	
 	var page = '<?php echo $_GET['new_search']; ?>';
 	var action = '<?php echo $_GET['action']; ?>';
@@ -108,7 +107,6 @@ function displayContent(content){
 			<a onclick="displayContent('ais_broker');" id='ais_broker_id_link' class="content_link_selected">AIS Broker</a> &nbsp; 
             <a onclick="displayContent('voyage_estimator');" id='voyage_estimator_id_link' class="content_link">VE</a> &nbsp; 
 			<a onclick="displayContent('distance_calculator');" id='distance_calculator_id_link' class="content_link">DC</a> &nbsp; 
-            <a onclick="displayContent('fast_search');" id='fast_search_id_link' class="content_link">Search</a> &nbsp; 
             <a onclick="displayContent('ship_search_register');" id='ship_search_register_id_link' class="content_link">Register</a> &nbsp; 
             <a onclick="displayContent('fleet_positions');" id='fleet_positions_id_link' class="content_link">Fleet</a> &nbsp; 
             <a onclick="displayContent('ships_coming_into_ports');" id='ships_coming_into_ports_id_link' class="content_link">Ships In Port</a> &nbsp; 

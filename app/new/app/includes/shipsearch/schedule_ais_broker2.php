@@ -8,7 +8,6 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 		<tr>
 			<td><b style='font-size:14px;'>SHIPS WITH AIS DESTINATIONS & ETA</b></td>
 			<td align='right' style='text-align:right; vertical-align:top'>
-				<a class='clickable' onclick=\"csvIt1('fixture')\"><img src='images/csv.jpg'></a>
 				<a class='clickable' onclick=\"printIt1('fixture')\"><img src='images/print.jpg'></a>
 				<a class='clickable' onclick=\"mailIt1('fixture')\"><img src='images/email_small.jpg'></a>
 				<a href='#params'><img style='border:0px' src='images/up_icon.png' alt='back to top' title='back to top'></a>
@@ -36,6 +35,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 	
 	for($i_ships=0; $i_ships<$t_ships; $i_ships++){
 		$ships = $r_ships[$i_ships];
+		$_SESSION['r_ships'][$i_ships] = $ships;
 		
 		$sql_vp = "SELECT * FROM `_veson_ports` WHERE `name`='".$ships['siitech_destination']."' LIMIT 0, 1";
 		$r_vp = dbQuery($sql_vp, $link);

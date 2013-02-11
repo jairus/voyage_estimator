@@ -184,7 +184,7 @@ function csvIt(report){
 	}
 
 	if(g!=""){
-		self.location = "misc/csv.php?"+g+"report="+report;
+		self.location = "misc/csv_ab.php?"+g+"report="+report;
 	}else{
 		alert("You must select ships to download. Check checkboxes to select.")
 	}
@@ -203,7 +203,7 @@ function mailIt(report){
 	}
 
 	if(g!=""){
-		jQuery("#misciframe")[0].src="misc/email.php?"+g+"report="+report;
+		jQuery("#misciframe")[0].src="misc/email_ab.php?"+g+"report="+report;
 		jQuery("#miscdialog").dialog("open");
 	}else{
 		alert("You must select ships to print. Check checkboxes to select.")
@@ -221,7 +221,7 @@ function printIt(report){
 	}
 
 	if(g!=""){
-		jQuery("#misciframe")[0].src="misc/print.php?"+g+"report="+report;
+		jQuery("#misciframe")[0].src="misc/print_ab.php?"+g+"report="+report;
 		jQuery("#miscdialog").dialog("open");
 	}else{
 		alert("You must select ships to print. Check checkboxes to select.")
@@ -239,7 +239,7 @@ function csvIt1(report){
 	}
 
 	if(g!=""){
-		self.location = "misc/csv.php?"+g+"report="+report;
+		self.location = "misc/csv1_ab.php?"+g+"report="+report;
 	}else{
 		alert("You must select ships to download. Check checkboxes to select.")
 	}
@@ -258,7 +258,7 @@ function mailIt1(report){
 	}
 
 	if(g!=""){
-		jQuery("#misciframe")[0].src="misc/email1.php?"+g+"report="+report;
+		jQuery("#misciframe")[0].src="misc/email1_ab.php?"+g+"report="+report;
 		jQuery("#miscdialog").dialog("open");
 	}else{
 		alert("You must select ships to print. Check checkboxes to select.")
@@ -276,11 +276,21 @@ function printIt1(report){
 	}
 
 	if(g!=""){
-		jQuery("#misciframe")[0].src="misc/print1.php?"+g+"report="+report;
+		jQuery("#misciframe")[0].src="misc/print1_ab.php?"+g+"report="+report;
 		jQuery("#miscdialog").dialog("open");
 	}else{
 		alert("You must select ships to print. Check checkboxes to select.")
 	}
+}
+
+function mailItVe_2(imo){
+	jQuery("#misciframe")[0].src="misc/email_ve_2.php?imo="+imo;
+	jQuery("#miscdialog").dialog("open");
+}
+
+function printItVe_2(imo){
+	jQuery("#misciframe")[0].src="misc/print_ve_2.php?imo="+imo;
+	jQuery("#miscdialog").dialog("open");
 }
 
 function checkAll(idx, obj){
@@ -782,43 +792,38 @@ function showTable(s, h){
 				  <td width="10">&nbsp;</td>
 				  <td>
 				  	<select name='zone' id='zones_id' onchange='showMinimap(this.value)' style="width:440px;" class="input_1">
-						<option value='z1'>[z1] ALL AUSTRALIA</option>
-						<option value='z2'>[z2] AUSTRALIA - FAR EAST AND JAPAN</option>
+						<option value='z1'>[z1] AUSTRALIA</option>
+						<option value='z2'>[z2] BALTIC SEA</option>
 						<option value='z3'>[z3] BLACK SEA</option>
-						<option value='z4'>[z4] CARRIBEAN</option>
-						<option value='z5'>[z5] CASPAIN</option>
-						<option value='z6'>[z6] CHINA - JAPAN - KOREA - TAIWAN</option>
-						<option value='z7'>[z7] EAST AUSSIE</option>
-						<option value='z8'>[z8] EAST COAST AFRICA</option>
-						<option value='z9'>[z9] EAST COAST CANADA</option>
-						<option value='z10'>[z10] EAST COAST CARIBBEAN</option>
-						<option value='z11'>[z11] EAST COAST SOUTH AMERICA</option>
-						<option value='z12'>[z12] FAR EAST</option>
-						<option value='z13'>[z13] FRENCH ATLANTIC</option>
-						<option value='z14'>[z14] GREAT LAKES</option>
-						<option value='z15'>[z15] INDIA</option>
-						<option value='z16'>[z16] INDIAN OCEAN</option>
-						<option value='z17'>[z17] MEDITERRANEAN</option>
-						<option value='z18'>[z18] NEW ZEALAND</option>
-						<option value='z19'>[z19] NOPAC - NORTHERN PACIFIC</option>
-						<option value='z20'>[z20] NORTH ATLANTIC OCEAN</option>
-						<option value='z21'>[z21] NORTH COAST SOUTH AMERICA</option>
-						<option value='z22'>[z22] NORTH CONTINENT</option>
-						<option value='z23'>[z23] NORTH SEA</option>
-						<option value='z24'>[z24] NORTHERN PACIFIC</option>
-						<option value='z25'>[z25] NORWEGIAN SEA</option>
-						<option value='z26'>[z26] RED SEA</option>
-						<option value='z27'>[z27] SOUTH AFRICA</option>
-						<option value='z28'>[z28] SOUTH ATLANTIC OCEAN</option>
-						<option value='z29'>[z29] SOUTH EAST ASIA</option>
-						<option value='z30'>[z30] SOUTH WEST AFRICA</option>
-						<option value='z31'>[z31] SPAIN ATLANTIC</option>
-						<option value='z32'>[z32] UK & EIRE</option>
-						<option value='z33'>[z33] UNITED STATES GULF - USG</option>
-						<option value='z34'>[z34] US EAST COAST</option>
-						<option value='z35'>[z35] WEST AUSTRALIA</option>
-						<option value='z36'>[z36] WEST COAST INDIA</option>
-						<option value='z37'>[z37] WEST COAST SOUTH AMERICA</option>
+						<option value='z4'>[z4] CARIB</option>
+						<option value='z5'>[z5] EC CAN</option>
+						<option value='z6'>[z6] ECCA</option>
+						<option value='z7'>[z7] ECEC</option>
+						<option value='z8'>[z8] ECI</option>
+						<option value='z9'>[z9] ECSA</option>
+						<option value='z10'>[z10] FAR EAST</option>
+						<option value='z11'>[z11] FRENCH ATLANTIC</option>
+						<option value='z12'>[z12] MEDITERRANEAN</option>
+						<option value='z13'>[z13] N EUROPE</option>
+						<option value='z14'>[z14] NCSA</option>
+						<option value='z15'>[z15] NEW ZEALAND</option>
+						<option value='z16'>[z16] NOPAC</option>
+						<option value='z17'>[z17] NORTH SEA</option>
+						<option value='z18'>[z18] NORWEGIAN SEA</option>
+						<option value='z19'>[z19] PERSIAN GULF</option>
+						<option value='z20'>[z20] PG +WCI</option>
+						<option value='z21'>[z21] RED SEA</option>
+						<option value='z22'>[z22] SA</option>
+						<option value='z23'>[z23] SE AFRICA</option>
+						<option value='z24'>[z24] SE ASIA</option>
+						<option value='z25'>[z25] SPAIN ATLANTIC</option>
+						<option value='z26'>[z26] ST LAWRENCE</option>
+						<option value='z27'>[z27] SW AFRICA</option>
+						<option value='z28'>[z28] UK AND EIRE</option>
+						<option value='z29'>[z29] USG</option>
+						<option value='z30'>[z30] WCCA</option>
+						<option value='z31'>[z31] WCSA</option>
+						<option value='z32'>[z32] WEST COAST INDIA</option>
 					</select>
 					
 					<script>

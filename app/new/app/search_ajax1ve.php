@@ -1831,8 +1831,8 @@ else if($_GET['imo']){
 	
 	echo '<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="50" style="border-bottom:none;"><a class="clickable" onclick="printItVe_2();"><img src="images/print.jpg"></a></td>
-			<td><a class="clickable" onclick="mailItVe_2();"><img src="images/email_small.jpg"></a></td>
+			<td width="50" style="border-bottom:none;"><a class="clickable" onclick="printItVe_2(\''.$_GET['imo'].'\');"><img src="images/print.jpg"></a></td>
+			<td><a class="clickable" onclick="mailItVe_2(\''.$_GET['imo'].'\');"><img src="images/email_small.jpg"></a></td>
 		</tr>
 	</table>';
 	echo "<div style='text-align:center;' ><img src='image.php?b=1&mx=500&p=".$imageb."'></div><br>";

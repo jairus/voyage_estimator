@@ -65,6 +65,16 @@ function shipSearchOnly(){
 	});
 }
 
+function mailItVe_2(imo){
+	jQuery("#misciframe")[0].src="misc/email_ve_2.php?imo="+imo;
+	jQuery("#miscdialog").dialog("open");
+}
+
+function printItVe_2(imo){
+	jQuery("#misciframe")[0].src="misc/print_ve_2.php?imo="+imo;
+	jQuery("#miscdialog").dialog("open");
+}
+
 jQuery("#shipdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
 jQuery("#shipdetails").dialog("close");
 
@@ -73,6 +83,9 @@ jQuery("#mapdialog").dialog("close");
 
 jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
 jQuery("#contactdialog").dialog("close");
+
+jQuery( "#miscdialog" ).dialog( { autoOpen: false, width: 1100, height: 500 });
+jQuery( "#miscdialog" ).dialog("close");
 </script>
 
 <div id="shipdetails" title="SHIP DETAILS" style='display:none;'>
@@ -89,6 +102,10 @@ jQuery("#contactdialog").dialog("close");
 
 <div id="messagedialogshipsearchonly" title="MESSAGES"  style='display:none'>
 	<iframe id='messageiframeshipsearchonly' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+</div>
+
+<div id="miscdialog" title=""  style='display:none'>
+	<iframe id='misciframe' frameborder='0' height="100%" width="1100px" style='border:0px; height:100%; width:1050px;'></iframe>
 </div>
 
 <form id='shipsearchonly' onsubmit="shipSearchOnly(); return false;">

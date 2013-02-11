@@ -1,10 +1,10 @@
 <?php
+echo "<form id='positions' method='POST' style='margin:0px;'>";
 echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b; color:white; margin-top:5px;'>
 	<table cellpadding='0' cellspacing='0' width='990px'>
 		<tr>
 			<td><b style='font-size:14px;'>SHIPS WITH AIS DESTINATIONS & ETA</b></td>
 			<td align='right' style='text-align:right; vertical-align:top'>
-				<a class='clickable' onclick=\"csvIt('position')\"><img src='images/csv.jpg'></a>
 				<a class='clickable' onclick=\"printIt('position')\"><img src='images/print.jpg'></a>
 				<a class='clickable' onclick=\"mailIt('position')\"><img src='images/email_small.jpg'></a>
 				<a href='#params'><img style='border:0px' src='images/up_icon.png' alt='back to top' title='back to top'></a>
@@ -163,4 +163,5 @@ echo "</table>
 		<td>&nbsp;</td>
 	</tr>
 </table>";
+echo "</form>";
 ?>

@@ -25,11 +25,11 @@ if($siitech_destination==""){ $siitech_destination = "<img style='height:15px; w
 
 $siitech_eta = $xvas_pos['siitech_eta'];
 if($siitech_eta=="" || $siitech_eta==0 || $siitech_eta=="0000-00-00 00:00:00"){ $siitech_eta = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
-else{ $siitech_eta = "<a class='clickable' alt='".date("M j, 'y G:i e", str2time($xvas_pos['siitech_eta']))."' title='".date("M j, 'y G:i e", str2time($xvas_pos['siitech_eta']))."'>".substr(date("M j, 'y G:i e", str2time($xvas_pos['siitech_eta'])), 0,11)."</a>"; }
+else{ $siitech_eta = date("M j, 'y G:i e", str2time($xvas_pos['siitech_eta'])); }
 
 $siitech_lastseen = $xvas_pos['siitech_lastseen'];
 if($siitech_lastseen=="" || $siitech_lastseen==0 || $siitech_lastseen=="0000-00-00 00:00:00"){ $siitech_lastseen = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
-else{ $siitech_lastseen = "<a class='clickable' alt='".date("M j, 'y G:i e", str2time($xvas_pos['siitech_lastseen']))."' title='".date("M j, 'y G:i e", str2time($xvas_pos['siitech_lastseen']))."'>".substr(date("M j, 'y G:i e", str2time($xvas_pos['siitech_lastseen'])), 0,11)."</a>"; }
+else{ $siitech_lastseen = date("M j, 'y G:i e", str2time($xvas_pos['siitech_lastseen'])); }
 
 $speed = $xvas_pos['xvas_speed'];
 if(trim($speed)){ $speed = number_format($speed, 2); }
@@ -55,12 +55,13 @@ if($stern=="" || $stern==0){ $stern = "<img style='height:15px; width:15px;' src
 
 $utc = getValue($xvas_pos['siitech_shippos_data'], 'UTC');
 if($utc=="" || $utc==0){ $utc = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
+else{ $utc = date("M j, 'y G:i e", str2time($utc)); }
 
 $nav = trim(getValue($xvas_pos['siitech_shippos_data'], 'NavigationalStatus'));
 if($nav==""){ $nav = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
 
 $xstring = "
-	<table width='550'>
+	<table width='600'>
 		<tr>
 			<td style='width:50%; background:#92d050;'>
 				<div style='padding:5px;'>

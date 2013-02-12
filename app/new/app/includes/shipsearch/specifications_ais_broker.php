@@ -1,4 +1,5 @@
 <?php
+echo "<div style='text-align:left; padding:5px;'><b>CURRENT DATE/TIME: ".date("M j, Y G:i e", time())."</b></div>";
 echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b; color:white; margin-top:5px;'>
 	<table cellpadding='0' cellspacing='0' width='990px'>
 		<tr>
@@ -19,7 +20,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 		<th width='30' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Built</div></th>
 		<th width='200' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Manager / Owner</div></th>
 		<th width='130' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Category</div></th>
-		<th width='80' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Type</div></th>
+		<th width='80' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>GT</div></th>
 		<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>DRFT</div></th>
 		<th width='50' style='background:#BCBCBC; color:#333333;'><div style='padding:5px;'>Speed</div></th>
 		<th width='30' style='background:#BCBCBC; color:#333333; text-align:center;'><div style='padding:5px;'>Flag</div></th>
@@ -117,7 +118,7 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 						<td class='z_text01'><div style='padding:5px;'>".getValue($xvas['data'], 'BUILD')."</div></td>
 						<td><div style='padding:5px;'><a onclick='ownerDetails(\"".urlencode($operator)."\", \"0\")' class='clickable'>".$operator."</a></div></td>
 						<td class='z_text01'><div style='padding:5px;'>".$ships['xvas_vessel_type']."</div></td>
-						<td class='z_text01'><div style='padding:5px;'>".$ships['xvas_summer_dwt']."</div></td>
+						<td class='z_text01'><div style='padding:5px;'>".number_format(getValue($xvas['data'], 'GROSS_TONNAGE'))."</div></td>
 						<td class='z_text01'><div style='padding:5px;'>".str_replace("m", "", getValue($xvas['data'], 'DRAUGHT'))."</div></td>
 						<td class='z_text01'><div style='padding:5px;'>".$speed."</div></td>
 						<td style='text-align:center;'><div style='padding:5px;'><img alt=\"".htmlentities($flag)."\" title=\"".htmlentities($flag)."\" src='".$flag_img."' width='22' height='15' ></div></td>

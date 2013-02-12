@@ -1,5 +1,6 @@
 <?php
 echo "<form id='positions' method='POST' style='margin:0px;'>";
+echo "<div style='text-align:left; padding:5px;'><b>CURRENT DATE/TIME: ".date("M j, Y G:i e", time())."</b></div>";
 echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b; color:white; margin-top:5px;'>
 	<table cellpadding='0' cellspacing='0' width='990px'>
 		<tr>

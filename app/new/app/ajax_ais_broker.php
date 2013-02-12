@@ -603,8 +603,8 @@ function showTable(s, h){
 	<form id='searchform'>
 		<table width="1000" border="0" cellpadding="0" cellspacing="0" id="table_1">
 		  <tr>
-			<td width="400" valign="top">
-			  <table width="400" border="0" cellpadding="0" cellspacing="0">
+			<td width="450" valign="top">
+			  <table width="450" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 				  <td width="160">DESTINATION PORT</td>
 				  <td width="10">&nbsp;</td>
@@ -637,7 +637,26 @@ function showTable(s, h){
 				  <td height="5" colspan="3"></td>
 				</tr>
 				<tr>
-				  <td valign="top">DRY VESSELS</td>
+				  <td>DWT RANGE</td>
+				  <td width="10">&nbsp;</td>
+				  <td>
+					<select class="input_1" name="dwt_range" id='dwt_range_id'>
+						<option value="0|10">(0-10,000) Minibulk</option>
+						<option value="10|35">(10,000-35,000) Handy</option>
+						<option value="35|60">(35,000-60,000) Handymax</option>
+						<option value="60|75">(60,000-75,000) Handysize</option>
+						<option value="75|110">(75,000-110,000) Over Panamax</option>
+						<option value="110|150">(110,000-150,000) Small Capesize</option>
+						<option value="150|550">(150,000+) Large Capesize</option>
+					</select>
+				  </td>
+				</tr>
+			  </table>
+			</td>
+			<td width="550" valign="top">
+			  <table width="550" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				  <td valign="top" width="80">DRY VESSELS</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
 					<select name="vessel_type[]" multiple="multiple" size="18" id='vessel_type_id' class="input_1" style="width:220px;">
@@ -667,25 +686,6 @@ function showTable(s, h){
 							<option value="RO-RO/CONTAINER CARRIER">RO-RO/CONTAINER CARRIER</option>
 							<option value="RO-RO/PASSENGER SHIP">RO-RO/PASSENGER SHIP</option>
 						</optgroup>
-					</select>
-				  </td>
-				</tr>
-			  </table>
-			</td>
-			<td width="600" valign="top">
-			  <table width="600" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-				  <td width="90">DWT RANGE</td>
-				  <td width="10">&nbsp;</td>
-				  <td>
-					<select class="input_1" name="dwt_range" id='dwt_range_id'>
-						<option value="0|10">(0-10,000) Minibulk</option>
-						<option value="10|35">(10,000-35,000) Handy</option>
-						<option value="35|60">(35,000-60,000) Handymax</option>
-						<option value="60|75">(60,000-75,000) Handysize</option>
-						<option value="75|110">(75,000-110,000) Over Panamax</option>
-						<option value="110|150">(110,000-150,000) Small Capesize</option>
-						<option value="150|550">(150,000+) Large Capesize</option>
 					</select>
 				  </td>
 				</tr>
@@ -732,6 +732,24 @@ function showTable(s, h){
 				  <td height="5" colspan="3"></td>
 				</tr>
 				<tr>
+				  <td>DWT RANGE</td>
+				  <td>&nbsp;</td>
+				  <td>
+					<select class="input_1" name="dwt_range2" id='dwt_range_id2'>
+						<option value="0|10">(0-10,000) Minibulk</option>
+						<option value="10|35">(10,000-35,000) Handy</option>
+						<option value="35|60">(35,000-60,000) Handymax</option>
+						<option value="60|75">(60,000-75,000) Handysize</option>
+						<option value="75|110">(75,000-110,000) Over Panamax</option>
+						<option value="110|150">(110,000-150,000) Small Capesize</option>
+						<option value="150|550">(150,000+) Large Capesize</option>
+					</select>
+				  </td>
+				</tr>
+				<tr>
+				  <td height="5" colspan="3"></td>
+				</tr>
+				<tr>
 				  <td valign="top">DRY VESSELS</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
@@ -770,25 +788,7 @@ function showTable(s, h){
 			<td width="600" valign="top">
 			  <table width="600" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-				  <td width="90">DWT RANGE</td>
-				  <td width="10">&nbsp;</td>
-				  <td>
-					<select class="input_1" name="dwt_range2" id='dwt_range_id2'>
-						<option value="0|10">(0-10,000) Minibulk</option>
-						<option value="10|35">(10,000-35,000) Handy</option>
-						<option value="35|60">(35,000-60,000) Handymax</option>
-						<option value="60|75">(60,000-75,000) Handysize</option>
-						<option value="75|110">(75,000-110,000) Over Panamax</option>
-						<option value="110|150">(110,000-150,000) Small Capesize</option>
-						<option value="150|550">(150,000+) Large Capesize</option>
-					</select>
-				  </td>
-				</tr>
-				<tr>
-				  <td height="5" colspan="3"></td>
-				</tr>
-				<tr>
-				  <td>ZONE</td>
+				  <td width="50">ZONE</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
 				  	<select name='zone' id='zones_id' onchange='showMinimap(this.value)' style="width:440px;" class="input_1">
@@ -865,7 +865,7 @@ function showTable(s, h){
 				  <td width="10">&nbsp;</td>
 				  <td>
 					<div id='minimaps'>
-						<img id='minimap' style='cursor:pointer; display:none' onclick="openZoneMap(this.alt)" width="440" height="264">
+						<img id='minimap' style='cursor:pointer; display:none' onclick="openZoneMap(this.alt)" width="440" />
 						<div style='text-align:center; display:none; margin-bottom:0px' class='click'>Click on the Map to Enlarge</div>
 					</div>
 				  </td>

@@ -1,4 +1,5 @@
-<!--FAST SEARCH-->
+<!--AIS BROKER SEARCH-->
+<?php @include_once(dirname(__FILE__)."/includes/bootstrap.php"); ?>
 <style>
 body{
 	margin-top:10px;
@@ -554,6 +555,52 @@ function showTable(s, h){
 
 	jQuery('#table_'+h).hide();
 	jQuery('#table_'+s).show();
+	
+	jQuery("#option_num_id").val(s);
+}
+
+function saveScenario(){
+	if(jQuery('#suggest1').val()){
+		jQuery('#pleasewait').show();
+	
+		jQuery.ajax({
+			type: "POST",
+			url: "ajax.php?new_search=1",
+			data: jQuery("#searchform").serialize(),
+	
+			success: function(data) {
+				alert("Scenario Saved!");
+			
+				self.location = "cargospotter.php?new_search=1";
+			}
+		});
+	}else{
+		alert("Please select a ship.");
+	}
+}
+
+function deleteScenario(tabid){
+	if (confirm("Are you sure you want to delete?")) {
+		jQuery('#pleasewait').show();
+		
+		jQuery.ajax({
+			type: "POST",
+			url: "ajax.php?new_search=1&tabid="+tabid,
+			data: jQuery("#searchform").serialize(),
+	
+			success: function(data) {
+				alert("Scenario Deleted!");
+			
+				self.location = "cargospotter.php?new_search=1";
+			}
+		});
+	}
+}
+
+function newScenario(){
+	jQuery('#pleasewait').show();
+	
+	self.location = "cargospotter.php?new_search=1";
 }
 </script>
 
@@ -591,17 +638,121 @@ function showTable(s, h){
 </div>
 </center>
 
+<?php
+if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
+	if(isset($_GET['tabid'])){
+		$sql = "SELECT * FROM `_user_tabs` WHERE `id`='".$_GET['tabid']."'";
+		$r = dbQuery($sql, $link);
+	}else{
+		$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' ORDER BY `dateadded` DESC LIMIT 0,1";
+		$r = dbQuery($sql, $link);
+	}
+	
+	if(trim($r)){
+		$tabid = $r[0]['id'];
+		$tabname = $r[0]['tabname'];
+		$tabdata = unserialize($r[0]['tabdata']);
+		
+		$option_num = $tabdata['option_num'];
+		
+		if($option_num==1){
+			?><script>showTable(1, 2);</script><?php
+			$destination_port = $tabdata['destination_port'];
+			$destination_port_from = $tabdata['destination_port_from'];
+			$destination_port_to = $tabdata['destination_port_to'];
+			$dwt_range = $tabdata['dwt_range'];
+		}else if($option_num==2){
+			?><script>showTable(2, 1);</script><?php
+		}
+	}
+}
+?>
+
 <div style="width:1000px; height:auto; margin:0 auto;">
 	<div>
 		<a class="content_link_selected" id="option_1" onclick="showTable(1, 2);">SEARCH USING PORT NAME</a> &nbsp; 
 		<a class="content_link" id="option_2" onclick="showTable(2, 1);">SEARCH USING ZONE/REGION</a>
 	</div>
-	<div>&nbsp;</div>
+	<div style="border-bottom:1px dotted #FFF;">&nbsp;</div>
 	<div>&nbsp;</div>
 	<div style='cursor:pointer;' onclick="jQuery('#searchform').slideToggle('slow', function(){ toggleParams(); })"><a name='params' style='font-size:18px; font-weight:bold;'>PARAMETERS</a> &nbsp; <img src='images/up.png' id='paramicon'></div>
-    <div>&nbsp;</div>
-	<form id='searchform'>
+	<form method="post" id='searchform' name='searchform' enctype="multipart/form-data">
+		<div style="border-bottom:1px dotted #FFF;">&nbsp;</div>
+		<div>
+		&nbsp;
+		<input id='option_num_id' name="option_num" type="hidden" value="1" />
+		<input type="hidden" id="tabid" name="tabid" value="<?php echo $tabid; ?>" />
+		&nbsp;
+		</div>
+		<div><input type="button" value="Save Scenario" onclick="saveScenario();" style="border:1px solid #666666; background-color:#333333; color:#FFFFFF; cursor:pointer; padding:5px 10px;" /></div>
+		<div style="border-bottom:1px dotted #FFF;">&nbsp;</div>
+		<div>&nbsp;</div>
 		<table width="1000" border="0" cellpadding="0" cellspacing="0" id="table_1">
+		  
+			<?php
+			$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' ORDER BY `dateadded` DESC";
+			$r = dbQuery($sql, $link);
+			
+			$t = count($r);
+			
+			if(trim($t)){
+				echo '<tr>';
+				echo '<td colspan="2" style="border-bottom:none; padding-top:10px;">';
+				echo '<div style="float:left; width:auto; height:auto; padding-right:30px;"><input type="button" value="+ New Scenario" onclick="newScenario();" style="border:1px solid #666666; background-color:#333333; color:#FFFFFF; cursor:pointer; padding:5px 10px;" /></div>';
+				
+				for($i=0; $i<$t; $i++){
+					$tabdata = unserialize($r[$i]['tabdata']);
+					
+					if($tabdata['option_num']==1){
+						if($r[$i]['tabname']){
+							if(isset($_GET['tabid'])){
+								if($_GET['tabid']==$r[$i]['id']){
+									echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+									echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+									echo '</div>';
+								}else{
+									echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+									echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+									echo '</div>';
+								}
+							}else{
+								if($i==0){
+									if(isset($_GET['new_search'])){
+										if($_GET['new_search']==3){
+											echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+											echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+											echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+											echo '</div>';
+										}
+									}else{
+										echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+										echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+										echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+										echo '</div>';
+									}
+								}else{
+									echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
+									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+									echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+									echo '</div>';
+								}
+							}
+						}
+					}
+					
+					echo '<div style="float:left; width:auto; height:auto;">&nbsp;&nbsp;</div>';
+				}
+				
+				echo '</td>';
+				echo '</tr>';
+				echo '<tr>';
+				echo '<td colspan="2">&nbsp;</td>';
+				echo '</tr>';
+			}
+			?>
+		  
 		  <tr>
 			<td width="450" valign="top">
 			  <table width="450" border="0" cellpadding="0" cellspacing="0">
@@ -609,7 +760,7 @@ function showTable(s, h){
 				  <td width="160">DESTINATION PORT</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<input id='suggest1' type="text" name="destination_port" class="input_1" style='width:210px;' />
+					<input id='suggest1' type="text" name="destination_port" class="input_1" style='width:210px;' value="<?php echo $destination_port; ?>" />
 					
 					<script type="text/javascript">
 					jQuery("#suggest1").focus().autocomplete(ports);
@@ -626,11 +777,31 @@ function showTable(s, h){
 				  <td>LAYCAN</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
+				  <?php
+				  if($destination_port_from){
+				  	?>
+					<input type="text" name="destination_port_from" value="<?php echo $destination_port_from; ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<?php
+				  }else{
+				  	?>
 					<input type="text" name="destination_port_from" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<?php
+				  }
+				  ?>
 		
 					to 
-		
+					
+				  <?php
+				  if($destination_port_to){
+				  	?>
+					<input type="text" name="destination_port_to" value="<?php echo $destination_port_to; ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<?php
+				  }else{
+				  	?>
 					<input type="text" name="destination_port_to" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					<?php
+				  }
+				  ?>
 				  </td>
 				</tr>
 				<tr>
@@ -640,8 +811,8 @@ function showTable(s, h){
 				  <td>DWT RANGE</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<select class="input_1" name="dwt_range" id='dwt_range_id'>
-						<option value="0|10">(0-10,000) Minibulk</option>
+					<select class="input_1" name="dwt_range" id='dwt_range_id' size="7">
+						<option value="0|10" selected="selected">(0-10,000) Minibulk</option>
 						<option value="10|35">(10,000-35,000) Handy</option>
 						<option value="35|60">(35,000-60,000) Handymax</option>
 						<option value="60|75">(60,000-75,000) Handysize</option>
@@ -659,7 +830,7 @@ function showTable(s, h){
 				  <td valign="top" width="80">DRY VESSELS</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<select name="vessel_type[]" multiple="multiple" size="18" id='vessel_type_id' class="input_1" style="width:220px;">
+					<select name="vessel_type[]" multiple="multiple" size="21" id='vessel_type_id' class="input_1" style="width:220px;">
 						<optgroup label="BULK CARRIER">
 							<option value="BULK CARRIER">BULK CARRIER</option>
 							<option value="ORE CARRIER">ORE CARRIER</option>
@@ -687,6 +858,8 @@ function showTable(s, h){
 							<option value="RO-RO/PASSENGER SHIP">RO-RO/PASSENGER SHIP</option>
 						</optgroup>
 					</select>
+					<br />
+					To add more than one type<br />use the 'Ctrl' key and select
 				  </td>
 				</tr>
 			  </table>
@@ -714,6 +887,71 @@ function showTable(s, h){
 		</table>
 		
 		<table width="1000" border="0" cellpadding="0" cellspacing="0" id="table_2" style="display:none;">
+		
+			<?php
+			$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' ORDER BY `dateadded` DESC";
+			$r = dbQuery($sql, $link);
+			
+			$t = count($r);
+			
+			if(trim($t)){
+				echo '<tr>';
+				echo '<td colspan="2" style="border-bottom:none; padding-top:10px;">';
+				echo '<div style="float:left; width:auto; height:auto; padding-right:30px;"><input type="button" value="+ New Scenario" onclick="newScenario();" style="border:1px solid #666666; background-color:#333333; color:#FFFFFF; cursor:pointer; padding:5px 10px;" /></div>';
+				
+				for($i=0; $i<$t; $i++){
+					$tabdata = unserialize($r[$i]['tabdata']);
+					
+					if($tabdata['option_num']==2){
+						if($r[$i]['tabname']){
+							if(isset($_GET['tabid'])){
+								if($_GET['tabid']==$r[$i]['id']){
+									echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+									echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+									echo '</div>';
+								}else{
+									echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+									echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+									echo '</div>';
+								}
+							}else{
+								if($i==0){
+									if(isset($_GET['new_search'])){
+										if($_GET['new_search']==3){
+											echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+											echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+											echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+											echo '</div>';
+										}
+									}else{
+										echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+										echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+										echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+										echo '</div>';
+									}
+								}else{
+									echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
+									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+									echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+									echo '</div>';
+								}
+							}
+						}
+					}
+					
+					echo '<div style="float:left; width:auto; height:auto;">&nbsp;&nbsp;</div>';
+				}
+				
+				echo '</td>';
+				echo '</tr>';
+				echo '<tr>';
+				echo '<td colspan="2">&nbsp;</td>';
+				echo '</tr>';
+			}
+			?>
+		
 		  <tr>
 			<td width="400" valign="top">
 			  <table width="400" border="0" cellpadding="0" cellspacing="0">
@@ -721,11 +959,31 @@ function showTable(s, h){
 				  <td>LAYCAN</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<input type="text" name="destination_port_from2" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
-		
-					to 
-		
-					<input type="text" name="destination_port_to2" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+					  <?php
+					  if($destination_port_from2){
+						?>
+						<input type="text" name="destination_port_from2" value="<?php echo $destination_port_from2; ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+						<?php
+					  }else{
+						?>
+						<input type="text" name="destination_port_from2" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+						<?php
+					  }
+					  ?>
+			
+						to 
+						
+					  <?php
+					  if($destination_port_to2){
+						?>
+						<input type="text" name="destination_port_to2" value="<?php echo $destination_port_to2; ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+						<?php
+					  }else{
+						?>
+						<input type="text" name="destination_port_to2" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:90px;" />
+						<?php
+					  }
+					  ?>
 				  </td>
 				</tr>
 				<tr>
@@ -735,8 +993,8 @@ function showTable(s, h){
 				  <td>DWT RANGE</td>
 				  <td>&nbsp;</td>
 				  <td>
-					<select class="input_1" name="dwt_range2" id='dwt_range_id2'>
-						<option value="0|10">(0-10,000) Minibulk</option>
+					<select class="input_1" name="dwt_range2" id='dwt_range_id2' size="7">
+						<option value="0|10" selected="selected">(0-10,000) Minibulk</option>
 						<option value="10|35">(10,000-35,000) Handy</option>
 						<option value="35|60">(35,000-60,000) Handymax</option>
 						<option value="60|75">(60,000-75,000) Handysize</option>
@@ -753,7 +1011,7 @@ function showTable(s, h){
 				  <td valign="top">DRY VESSELS</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<select name="vessel_type2[]" multiple="multiple" size="18" id='vessel_type_id2' class="input_1" style="width:220px;">
+					<select name="vessel_type2[]" multiple="multiple" size="21" id='vessel_type_id2' class="input_1" style="width:220px;">
 						<optgroup label="BULK CARRIER">
 							<option value="BULK CARRIER">BULK CARRIER</option>
 							<option value="ORE CARRIER">ORE CARRIER</option>
@@ -781,6 +1039,8 @@ function showTable(s, h){
 							<option value="RO-RO/PASSENGER SHIP">RO-RO/PASSENGER SHIP</option>
 						</optgroup>
 					</select>
+					<br />
+					To add more than one type<br />use the 'Ctrl' key and select
 				  </td>
 				</tr>
 			  </table>
@@ -901,4 +1161,4 @@ function showTable(s, h){
 		</div>
 	</div>
 </div>
-<!--END OF FAST SEARCH-->
+<!--END OF AIS BROKER SEARCH-->

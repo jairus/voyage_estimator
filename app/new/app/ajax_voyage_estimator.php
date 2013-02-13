@@ -2154,12 +2154,36 @@ function saveScenario(){
 			success: function(data) {
 				alert("Scenario Saved!");
 			
-				self.location = "cargospotter.php";
+				self.location = "cargospotter.php?new_search=3";
 			}
 		});
 	}else{
 		alert("Please select a ship.");
 	}
+}
+
+function deleteScenario(tabid){
+	if (confirm("Are you sure you want to delete?")) {
+		jQuery('#pleasewait').show();
+		
+		jQuery.ajax({
+			type: "POST",
+			url: "ajax.php?new_search=3&tabid="+tabid,
+			data: jQuery("#voyageestimatorform").serialize(),
+	
+			success: function(data) {
+				alert("Scenario Deleted!");
+			
+				self.location = "cargospotter.php?new_search=3";
+			}
+		});
+	}
+}
+
+function newScenario(){
+	jQuery('#pleasewait').show();
+	
+	self.location = "cargospotter.php?new_search=3";
 }
 
 function getPortDetails(portname, port_num){
@@ -2178,30 +2202,6 @@ function getPortDetails(portname, port_num){
 			}
 		}
 	});
-}
-
-function deleteScenario(tabid){
-	if (confirm("Are you sure you want to delete?")) {
-		jQuery('#pleasewait').show();
-		
-		jQuery.ajax({
-			type: "POST",
-			url: "ajax.php?new_search=3&tabid="+tabid,
-			data: jQuery("#voyageestimatorform").serialize(),
-	
-			success: function(data) {
-				alert("Scenario Deleted!");
-			
-				self.location = "cargospotter.php";
-			}
-		});
-	}
-}
-
-function newScenario(){
-	jQuery('#pleasewait').show();
-	
-	self.location = "cargospotter.php?new_search=3";
 }
 
 function expand(){

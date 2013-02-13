@@ -13,8 +13,8 @@ $(document).ready(function() {
 	var page = '<?php echo $_GET['new_search']; ?>';
 	var action = '<?php echo $_GET['action']; ?>';
 	
-	if(page=='1'){
-		displayContent('fast_search');
+	if(page=='3'){
+		displayContent('voyage_estimator');
 	}else if(action=='network' || action=='alerts' || action=='account' || action=='accountview'){
 		displayContent('account');
 	}else{

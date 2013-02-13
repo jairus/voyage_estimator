@@ -4,8 +4,46 @@ include_once(dirname(__FILE__)."/includes/bootstrap.php");
 global $user;
 
 if($_GET['new_search']==1){
-	$sql = "INSERT INTO `_user_tabs` (`uid`, `page`, `tabname`, `tabdata`, `dateadded`) VALUES('".$user['uid']."', 'shipsearch', 'New Tab', 'a:0:{}', NOW())";
-	dbQuery($sql, $link);
+	if($_POST['option_num']==1){
+		$tabname = $_POST['destination_port'].'<br />'.date('M d, Y h:s:i');
+		
+		$tabarr = array();
+		$tabarr['option_num'] = $_POST['option_num'];
+		$tabarr['destination_port'] = $_POST['destination_port'];
+		$tabarr['destination_port_from'] = $_POST['destination_port_from'];
+		$tabarr['destination_port_to'] = $_POST['destination_port_to'];
+		$tabarr['dwt_range'] = $_POST['dwt_range'];
+		$tabarr['vessel_type'] = $_POST['vessel_type'];
+		$tabdata = serialize($tabarr);
+	}else if($_POST['option_num']==2){
+		$tabname = $_POST['zone'].'<br />'.date('M d, Y h:s:i');
+		
+		$tabarr = array();
+		$tabarr['option_num'] = $_POST['option_num'];
+		$tabarr['destination_port_from2'] = $_POST['destination_port_from2'];
+		$tabarr['destination_port_to2'] = $_POST['destination_port_to2'];
+		$tabarr['dwt_range2'] = $_POST['dwt_range2'];
+		$tabarr['vessel_type2'] = $_POST['vessel_type2'];
+		$tabarr['zone'] = $_POST['zone'];
+		$tabdata = serialize($tabarr);
+	}
+	
+	if($_GET['tabid']){
+		$sql = "UPDATE `_user_tabs`
+			SET `tabname`='".mysql_escape_string($tabname)."', 
+				`tabdata`='".mysql_escape_string($tabdata)."'
+			WHERE `id`='".$_GET['tabid']."'";
+		dbQuery($sql, $link);
+	}else if($_POST['tabid']){
+		$sql = "UPDATE `_user_tabs`
+			SET `tabname`='".mysql_escape_string($tabname)."', 
+				`tabdata`='".mysql_escape_string($tabdata)."'
+			WHERE `id`='".$_POST['tabid']."'";
+		dbQuery($sql, $link);
+	}else{
+		$sql = "INSERT INTO `_user_tabs` (`uid`, `page`, `tabname`, `tabdata`, `dateadded`) VALUES('".$user['uid']."', 'aisbroker', '".mysql_escape_string($tabname)."', '".mysql_escape_string($tabdata)."', NOW())";
+		dbQuery($sql, $link);
+	}
 }
 
 if($_GET['new_search']==2){
@@ -120,23 +158,23 @@ if($_GET['new_search']==2){
 	
 	if($_GET['tabid']){
 		$sql = "UPDATE `_user_tabs`
-			SET `tabname`='".$tabname."', 
-				`tabdata`='".$tabdata."'
+			SET `tabname`='".mysql_escape_string($tabname)."', 
+				`tabdata`='".mysql_escape_string($tabdata)."'
 			WHERE `id`='".$_GET['tabid']."'";
 		dbQuery($sql, $link);
 	}else if($_POST['tabid']){
 		$sql = "UPDATE `_user_tabs`
-			SET `tabname`='".$tabname."', 
-				`tabdata`='".$tabdata."'
+			SET `tabname`='".mysql_escape_string($tabname)."', 
+				`tabdata`='".mysql_escape_string($tabdata)."'
 			WHERE `id`='".$_POST['tabid']."'";
 		dbQuery($sql, $link);
 	}else{
-		$sql = "INSERT INTO `_user_tabs` (`uid`, `page`, `tabname`, `tabdata`, `dateadded`) VALUES('".$user['uid']."', 'voyageestimator', '".$tabname."', '".$tabdata."', NOW())";
+		$sql = "INSERT INTO `_user_tabs` (`uid`, `page`, `tabname`, `tabdata`, `dateadded`) VALUES('".$user['uid']."', 'voyageestimator', '".mysql_escape_string($tabname)."', '".mysql_escape_string($tabdata)."', NOW())";
 		dbQuery($sql, $link);
 	}
 }
 
-if($_GET['new_search']==3){
+if($_GET['new_search']==1 || $_GET['new_search']==3 && isset($_GET['tabid'])){
 	$sql = "DELETE FROM `_user_tabs` WHERE `id`='".$_GET['tabid']."'";
 	dbQuery($sql, $link);
 }

@@ -300,6 +300,35 @@ if($_POST['submitok']==1){
 if(isset($_GET['portname'])){
 	echo '<form id="inputfrm_id" name="inputfrm" method="post" enctype="multipart/form-data">';
 	
+	$dwt = str_replace(' tons', '', $_GET['dwt']);
+	$dwt = intval(str_replace(',', '', $dwt));
+	
+	if($dwt>=0 && $dwt<=10000){
+		$dwt_low = 0;
+		$dwt_high = 10000;
+	}else if($dwt>=10000 && $dwt<=35000){
+		$dwt_low = 10000;
+		$dwt_high = 35000;
+	}else if($dwt>=35000 && $dwt<=60000){
+		$dwt_low = 35000;
+		$dwt_high = 60000;
+	}else if($dwt>=60000 && $dwt<=75000){
+		$dwt_low = 60000;
+		$dwt_high = 75000;
+	}else if($dwt>=75000 && $dwt<=110000){
+		$dwt_low = 75000;
+		$dwt_high = 110000;
+	}else if($dwt>=110000 && $dwt<=150000){
+		$dwt_low = 110000;
+		$dwt_high = 150000;
+	}else if($dwt>=150000 && $dwt<=555000){
+		$dwt_low = 150000;
+		$dwt_high = 555000;
+	}else{
+		$dwt_low = 0;
+		$dwt_high = 555000;
+	}
+	
 	$sql = "SELECT * FROM `_port_details` WHERE `port_name`='".$_GET['portname']."' ORDER BY dateadded DESC";
 	$r = dbQuery($sql);
 	
@@ -326,33 +355,40 @@ if(isset($_GET['portname'])){
 						</tr>
 						<?php
 						for($i=0; $i<$t; $i++){
-						
-						$details = unserialize($r[$i]['port_details']);
-						$agent = explode(' - ', $details['ship_agent']);
-						$agent_name = $agent[0];
-						
-						$total_over_all = $details['total_over_all'];
-						if($total_over_all==0 || $total_over_all==''){
-							$total_over_all = $details['quick_total_charges'];
-						}
-						
-						if($i%2==0){
-							$bgcolor = 'f5f5f5';
-						}else{
-							$bgcolor = 'e9e9e9';
+							$details = unserialize($r[$i]['port_details']);
+							$agent = explode(' - ', $details['ship_agent']);
+							$agent_name = $agent[0];
+							
+							$total_over_all = $details['total_over_all'];
+							if($total_over_all==0 || $total_over_all==''){
+								$total_over_all = $details['quick_total_charges'];
+							}
+							
+							if($i%2==0){
+								$bgcolor = 'f5f5f5';
+							}else{
+								$bgcolor = 'e9e9e9';
+							}
+							
+							$dwt_rec = str_replace(' tons', '', $details['dwt']);
+							$dwt_rec = intval(str_replace(',', '', $dwt_rec));
+							
+							if($dwt_rec>=$dwt_low && $dwt_rec<=$dwt_high){
+							?>
+							<tr bgcolor="<?php echo $bgcolor; ?>" id="row_<?php echo $r[$i]['id']; ?>" class="rows">
+								<td><div style="padding:5px;"><?php echo '<a style="cursor: pointer; color:#FF0000;" onclick="showPortDetails(\''.$_GET['portname'].'\', \''.$r[$i]['id'].'\');"><img src="../images/icon_book.png" /></a>'; ?></div></td>
+								<td><div style="padding:5px;"><?php echo $agent_name; ?></div></td>
+								<td><div style="padding:5px;"><?php echo $details['vessel']; ?></div></td>
+								<td><div style="padding:5px;"><?php echo $details['dwt']; ?></div></td>
+								<td><div style="padding:5px;"><?php echo $details['grt']; ?></div></td>
+								<td><div style="padding:5px;"><?php echo $details['nrt']; ?></div></td>
+								<td><div style="padding:5px;">US$ <?php echo $total_over_all; ?></div></td>
+								<td><div style="padding:5px;"><?php echo $details['date']; ?></div></td>
+							</tr>
+							<?php
+							}
 						}
 						?>
-						<tr bgcolor="<?php echo $bgcolor; ?>" id="row_<?php echo $r[$i]['id']; ?>" class="rows">
-							<td><div style="padding:5px;"><?php echo '<a style="cursor: pointer; color:#FF0000;" onclick="showPortDetails(\''.$_GET['portname'].'\', \''.$r[$i]['id'].'\');"><img src="../images/icon_book.png" /></a>'; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $agent_name; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $details['vessel']; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $details['dwt']; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $details['grt']; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $details['nrt']; ?></div></td>
-							<td><div style="padding:5px;">US$ <?php echo $total_over_all; ?></div></td>
-							<td><div style="padding:5px;"><?php echo $details['date']; ?></div></td>
-						</tr>
-						<?php } ?>
 					</table>
 				</td>
 				<td width="20">&nbsp;</td>

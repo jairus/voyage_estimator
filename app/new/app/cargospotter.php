@@ -9,10 +9,12 @@
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-	var page = '<?php echo $_GET['new_search']; ?>';
-	var action = '<?php echo $_GET['action']; ?>';
+var page = '<?php echo $_GET['new_search']; ?>';
+var action = '<?php echo $_GET['action']; ?>';
+var tabid = '<?php echo $_GET['tabid']; ?>';
+var condition = '';
 	
+$(document).ready(function() {
 	if(page=='3'){
 		displayContent('voyage_estimator');
 	}else if(action=='network' || action=='alerts' || action=='account' || action=='accountview'){
@@ -42,42 +44,43 @@ function displayContent(content){
 	
 	jQuery('#ais_broker_id_link').addClass('content_link');
 	
-	var page = '<?php echo $_GET['new_search']; ?>';
-	var action = '<?php echo $_GET['action']; ?>';
-	var condition = '';
-	
-	if(page=='1'){
-		var tab = '<?php echo $_GET['tab']; ?>';
-		var deltab = '<?php echo $_GET['deltab']; ?>';
-		
-		if(tab!=''){
-			var condition = '?tab='+tab;
-		}else if(deltab!=''){
-			var condition = '?deltab='+deltab;
-		}
+	//AIS BROKER
+	if(page=='0'){
+		condition = '?new_search='+page+'&action='+action;
 	}
 	
-	if(page=='3'){
-		var tabid = '<?php echo $_GET['tabid']; ?>';
+	if(page=='1'){
+		if(action!=''){
+			condition = '?action='+action;
+		}
 		
+		if(tabid!=''){
+			condition = '?action='+action+'&tabid='+tabid;
+		}
+	}
+	//END OF AIS BROKER
+	
+	if(page=='3'){
 		if(tabid==""){
-			var condition = '?new_search=3';
+			condition = '?new_search=3';
 		}else{
-			var condition = '?new_search=3&tabid='+tabid;
+			condition = '?new_search=3&tabid='+tabid;
 		}
 	}
 	
 	if(page=='4'){
-		var condition = '?new_search=4';
+		condition = '?new_search=4';
 	}
 	
-	if(action!=''){
-		var condition = '?action='+action;
-		
-		var id = '<?php echo $_GET['id']; ?>';
-		
-		if(id!=''){
-			var condition = '?action='+action+'&id='+id;
+	if(page!='0' || page!='1' || page!='3' || page!='4'){
+		if(action!=''){
+			condition = '?action='+action;
+			
+			var id = '<?php echo $_GET['id']; ?>';
+			
+			if(id!=''){
+				condition = '?action='+action+'&id='+id;
+			}
 		}
 	}
 	

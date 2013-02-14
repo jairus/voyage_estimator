@@ -44,6 +44,18 @@ td{
 <link type="text/css" rel="stylesheet" href="js/calendar/xc2_default.css" />
 
 <script>
+$(document).ready(function() {
+	<?php
+	if(isset($_GET['action'])){
+		if($_GET['action']==1){
+			?>showTable(1, 2);<?php
+		}else if($_GET['action']==2){
+			?>showTable(2, 1);<?php
+		}
+	}
+	?>
+});
+
 function jTabs(d){
 	lis = jQuery(d+" li[name|=fragment]");
 	lis.css({"cursor":"pointer"});
@@ -560,7 +572,25 @@ function showTable(s, h){
 }
 
 function saveScenario(){
-	if(jQuery('#suggest1').val()){
+	if(jQuery('#option_num_id').val()==1){
+		if(jQuery('#suggest1').val()){
+			jQuery('#pleasewait').show();
+		
+			jQuery.ajax({
+				type: "POST",
+				url: "ajax.php?new_search=1",
+				data: jQuery("#searchform").serialize(),
+		
+				success: function(data) {
+					alert("Scenario Saved!");
+				
+					self.location = "cargospotter.php?new_search=1&action="+jQuery('#option_num_id').val();
+				}
+			});
+		}else{
+			alert("Please select a destination port.");
+		}
+	}else if(jQuery('#option_num_id').val()==2){
 		jQuery('#pleasewait').show();
 	
 		jQuery.ajax({
@@ -571,11 +601,9 @@ function saveScenario(){
 			success: function(data) {
 				alert("Scenario Saved!");
 			
-				self.location = "cargospotter.php?new_search=1";
+				self.location = "cargospotter.php?new_search=1&action="+jQuery('#option_num_id').val();
 			}
 		});
-	}else{
-		alert("Please select a ship.");
 	}
 }
 
@@ -600,7 +628,7 @@ function deleteScenario(tabid){
 function newScenario(){
 	jQuery('#pleasewait').show();
 	
-	self.location = "cargospotter.php?new_search=1";
+	self.location = "cargospotter.php?new_search=0&action="+jQuery('#option_num_id').val();
 }
 </script>
 
@@ -639,30 +667,64 @@ function newScenario(){
 </center>
 
 <?php
-if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
-	if(isset($_GET['tabid'])){
-		$sql = "SELECT * FROM `_user_tabs` WHERE `id`='".$_GET['tabid']."'";
-		$r = dbQuery($sql, $link);
-	}else{
-		$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' ORDER BY `dateadded` DESC LIMIT 0,1";
-		$r = dbQuery($sql, $link);
+if(isset($_GET['tabid'])){
+	if($_GET['action']==1){
+		$sql1 = "SELECT * FROM `_user_tabs` WHERE `id`='".$_GET['tabid']."'";
+		$r1 = dbQuery($sql1, $link);
+	}else if($_GET['action']==2){
+		$sql2 = "SELECT * FROM `_user_tabs` WHERE `id`='".$_GET['tabid']."'";
+		$r2 = dbQuery($sql2, $link);
 	}
+}else{
+	$sql1 = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' AND `option`='1' ORDER BY `dateadded` DESC LIMIT 0,1";
+	$r1 = dbQuery($sql1, $link);
 	
-	if(trim($r)){
-		$tabid = $r[0]['id'];
-		$tabname = $r[0]['tabname'];
-		$tabdata = unserialize($r[0]['tabdata']);
-		
-		$option_num = $tabdata['option_num'];
-		
-		if($option_num==1){
-			?><script>showTable(1, 2);</script><?php
-			$destination_port = $tabdata['destination_port'];
-			$destination_port_from = $tabdata['destination_port_from'];
-			$destination_port_to = $tabdata['destination_port_to'];
-			$dwt_range = $tabdata['dwt_range'];
-		}else if($option_num==2){
-			?><script>showTable(2, 1);</script><?php
+	$sql2 = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' AND `option`='2' ORDER BY `dateadded` DESC LIMIT 0,1";
+	$r2 = dbQuery($sql2, $link);
+}
+
+if(trim($r1)){
+	$tabid1 = $r1[0]['id'];
+	$tabname1 = $r1[0]['tabname'];
+	$tabdata1 = unserialize($r1[0]['tabdata']);
+	
+	$destination_port = $tabdata1['destination_port'];
+	$destination_port_from = $tabdata1['destination_port_from'];
+	$destination_port_to = $tabdata1['destination_port_to'];
+	$dwt_range = $tabdata1['dwt_range'];
+	$vessel_type = $tabdata1['vessel_type'];
+}
+
+if(trim($r2)){
+	$tabid2 = $r2[0]['id'];
+	$tabname2 = $r2[0]['tabname'];
+	$tabdata2 = unserialize($r2[0]['tabdata']);
+	
+	$destination_port_from2 = $tabdata2['destination_port_from2'];
+	$destination_port_to2 = $tabdata2['destination_port_to2'];
+	$dwt_range2 = $tabdata2['dwt_range2'];
+	$vessel_type2 = $tabdata2['vessel_type2'];
+	$zone = $tabdata2['zone'];
+}
+
+if(isset($_GET['new_search'])){
+	if($_GET['new_search']==0){
+		if($_GET['action']==1){
+			$tabid1 = '';
+			$tabname1 = '';
+			$destination_port = '';
+			$destination_port_from = '';
+			$destination_port_to = '';
+			$dwt_range = '';
+			$vessel_type = '';
+		}else if($_GET['action']==2){
+			$tabid2 = '';
+			$tabname2 = '';
+			$destination_port_from2 = '';
+			$destination_port_to2 = '';
+			$dwt_range2 = '';
+			$vessel_type2 = '';
+			$zone = '';
 		}
 	}
 }
@@ -678,19 +740,14 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 	<div style='cursor:pointer;' onclick="jQuery('#searchform').slideToggle('slow', function(){ toggleParams(); })"><a name='params' style='font-size:18px; font-weight:bold;'>PARAMETERS</a> &nbsp; <img src='images/up.png' id='paramicon'></div>
 	<form method="post" id='searchform' name='searchform' enctype="multipart/form-data">
 		<div style="border-bottom:1px dotted #FFF;">&nbsp;</div>
-		<div>
-		&nbsp;
-		<input id='option_num_id' name="option_num" type="hidden" value="1" />
-		<input type="hidden" id="tabid" name="tabid" value="<?php echo $tabid; ?>" />
-		&nbsp;
-		</div>
+		<div>&nbsp;<input id='option_num_id' name="option_num" type="hidden" value="1" />&nbsp;</div>
 		<div><input type="button" value="Save Scenario" onclick="saveScenario();" style="border:1px solid #666666; background-color:#333333; color:#FFFFFF; cursor:pointer; padding:5px 10px;" /></div>
 		<div style="border-bottom:1px dotted #FFF;">&nbsp;</div>
 		<div>&nbsp;</div>
 		<table width="1000" border="0" cellpadding="0" cellspacing="0" id="table_1">
-		  
+		
 			<?php
-			$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' ORDER BY `dateadded` DESC";
+			$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' AND `option`='1' ORDER BY `dateadded` DESC";
 			$r = dbQuery($sql, $link);
 			
 			$t = count($r);
@@ -703,41 +760,39 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				for($i=0; $i<$t; $i++){
 					$tabdata = unserialize($r[$i]['tabdata']);
 					
-					if($tabdata['option_num']==1){
-						if($r[$i]['tabname']){
-							if(isset($_GET['tabid'])){
-								if($_GET['tabid']==$r[$i]['id']){
+					if($r[$i]['tabname']){
+						if(isset($_GET['tabid'])){
+							if($_GET['tabid']==$r[$i]['id']){
+								echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
+							}else{
+								echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=1&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
+							}
+						}else{
+							if($i==0){
+								if(isset($_GET['new_search'])){
+									if($_GET['new_search']==0){
+										echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+										echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+										echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=1&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+										echo '</div>';
+									}
+								}else{
 									echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
 									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
 									echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
 									echo '</div>';
-								}else{
-									echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
-									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-									echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
-									echo '</div>';
 								}
 							}else{
-								if($i==0){
-									if(isset($_GET['new_search'])){
-										if($_GET['new_search']==3){
-											echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
-											echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-											echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
-											echo '</div>';
-										}
-									}else{
-										echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
-										echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-										echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
-										echo '</div>';
-									}
-								}else{
-									echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
-									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-									echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
-									echo '</div>';
-								}
+								echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=1&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
 							}
 						}
 					}
@@ -748,11 +803,14 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				echo '</td>';
 				echo '</tr>';
 				echo '<tr>';
-				echo '<td colspan="2">&nbsp;</td>';
+				echo '<td colspan="2">
+					<div style="border-bottom:1px dotted #FFF;">&nbsp;</div>
+					<div>&nbsp;</div>
+				</td>';
 				echo '</tr>';
 			}
 			?>
-		  
+		
 		  <tr>
 			<td width="450" valign="top">
 			  <table width="450" border="0" cellpadding="0" cellspacing="0">
@@ -760,6 +818,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				  <td width="160">DESTINATION PORT</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
+				  	<input type="hidden" id="tabid1" name="tabid1" value="<?php echo $tabid1; ?>" />
 					<input id='suggest1' type="text" name="destination_port" class="input_1" style='width:210px;' value="<?php echo $destination_port; ?>" />
 					
 					<script type="text/javascript">
@@ -811,14 +870,30 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				  <td>DWT RANGE</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
+				  	<?php
+					$dwt_ranges = array(
+						0=>array(0=>'0|10', 1=>'(0-10,000) Minibulk'), 
+						1=>array(0=>'10|35', 1=>'(10,000-35,000) Handy'), 
+						2=>array(0=>'35|60', 1=>'(35,000-60,000) Handymax'), 
+						3=>array(0=>'60|75', 1=>'(60,000-75,000) Handysize'), 
+						4=>array(0=>'75|110', 1=>'(75,000-110,000) Over Panamax'), 
+						5=>array(0=>'110|150', 1=>'(110,000-150,000) Small Capesize'), 
+						6=>array(0=>'150|550', 1=>'(150,000+) Large Capesize')
+					);
+					
+					$t_d = count($dwt_ranges);
+					?>
+				  
 					<select class="input_1" name="dwt_range" id='dwt_range_id' size="7">
-						<option value="0|10" selected="selected">(0-10,000) Minibulk</option>
-						<option value="10|35">(10,000-35,000) Handy</option>
-						<option value="35|60">(35,000-60,000) Handymax</option>
-						<option value="60|75">(60,000-75,000) Handysize</option>
-						<option value="75|110">(75,000-110,000) Over Panamax</option>
-						<option value="110|150">(110,000-150,000) Small Capesize</option>
-						<option value="150|550">(150,000+) Large Capesize</option>
+						<?php
+						for($i_d=0; $i_d<$t_d; $i_d++){
+							if($dwt_ranges[$i_d][0]==$dwt_range){
+								echo '<option value="'.$dwt_ranges[$i_d][0].'" selected="selected">'.$dwt_ranges[$i_d][1].'</option>';
+							}else{
+								echo '<option value="'.$dwt_ranges[$i_d][0].'">'.$dwt_ranges[$i_d][1].'</option>';
+							}
+						}
+						?>
 					</select>
 				  </td>
 				</tr>
@@ -830,32 +905,99 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				  <td valign="top" width="80">DRY VESSELS</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
+				  	<?php
+					$bulk_carrier = array(
+						0=>'BULK CARRIER', 
+						1=>'ORE CARRIER', 
+						2=>'WOOD CHIPS CARRIER'
+					);
+					$t1 = count($bulk_carrier);
+					
+					$cargo = array(
+						0=>'BARGE CARRIER', 
+						1=>'CARGO', 
+						2=>'CARGO/PASSENGER SHIP', 
+						3=>'HEAVY LOAD CARRIER', 
+						4=>'LIVESTOCK CARRIER', 
+						5=>'MOTOR HOPPER', 
+						6=>'NUCLEAR FUEL CARRIER', 
+						7=>'SLUDGE CARRIER'
+					);
+					$t2 = count($cargo);
+					
+					$cement_carrier = array(
+						0=>'CEMENT CARRIER'
+					);
+					$t3 = count($cement_carrier);
+					
+					$obo_carrier = array(
+						0=>'OBO CARRIER'
+					);
+					$t4 = count($obo_carrier);
+					
+					$ro_ro_cargo = array(
+						0=>'RO-RO CARGO', 
+						1=>'RO-RO/CONTAINER CARRIER', 
+						2=>'RO-RO/PASSENGER SHIP'
+					);
+					$t5 = count($ro_ro_cargo);
+					?>
+				  
 					<select name="vessel_type[]" multiple="multiple" size="21" id='vessel_type_id' class="input_1" style="width:220px;">
 						<optgroup label="BULK CARRIER">
-							<option value="BULK CARRIER">BULK CARRIER</option>
-							<option value="ORE CARRIER">ORE CARRIER</option>
-							<option value="WOOD CHIPS CARRIER">WOOD CHIPS CARRIER</option>
+							<?php
+							for($i1=0; $i1<$t1; $i1++){
+								if(in_array($bulk_carrier[$i1], $vessel_type)){
+									echo '<option value="'.$bulk_carrier[$i1].'" selected="selected">'.$bulk_carrier[$i1].'</option>';
+								}else{
+									echo '<option value="'.$bulk_carrier[$i1].'">'.$bulk_carrier[$i1].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 						<optgroup label="CARGO">
-							<option value="BARGE CARRIER">BARGE CARRIER</option>
-							<option value="CARGO">CARGO</option>
-							<option value="CARGO/PASSENGER SHIP">CARGO/PASSENGER SHIP</option>
-							<option value="HEAVY LOAD CARRIER">HEAVY LOAD CARRIER</option>
-							<option value="LIVESTOCK CARRIER">LIVESTOCK CARRIER</option>
-							<option value="MOTOR HOPPER">MOTOR HOPPER</option>
-							<option value="NUCLEAR FUEL CARRIER">NUCLEAR FUEL CARRIER</option>
-							<option value="SLUDGE CARRIER">SLUDGE CARRIER</option>
+							<?php
+							for($i2=0; $i2<$t2; $i2++){
+								if(in_array($cargo[$i2], $vessel_type)){
+									echo '<option value="'.$cargo[$i2].'" selected="selected">'.$cargo[$i2].'</option>';
+								}else{
+									echo '<option value="'.$cargo[$i2].'">'.$cargo[$i2].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 						<optgroup label="CEMENT CARRIER">
-							<option value="CEMENT CARRIER">CEMENT CARRIER</option>
+							<?php
+							for($i3=0; $i3<$t3; $i3++){
+								if(in_array($cement_carrier[$i3], $vessel_type)){
+									echo '<option value="'.$cement_carrier[$i3].'" selected="selected">'.$cement_carrier[$i3].'</option>';
+								}else{
+									echo '<option value="'.$cement_carrier[$i3].'">'.$cement_carrier[$i3].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 						<optgroup label="OBO CARRIER">
-							<option value="OBO CARRIER">OBO CARRIER</option>
+							<?php
+							for($i4=0; $i4<$t4; $i4++){
+								if(in_array($obo_carrier[$i4], $vessel_type)){
+									echo '<option value="'.$obo_carrier[$i4].'" selected="selected">'.$obo_carrier[$i4].'</option>';
+								}else{
+									echo '<option value="'.$obo_carrier[$i4].'">'.$obo_carrier[$i4].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 						<optgroup label="RO-RO CARGO">
-							<option value="RO-RO CARGO">RO-RO CARGO</option>
-							<option value="RO-RO/CONTAINER CARRIER">RO-RO/CONTAINER CARRIER</option>
-							<option value="RO-RO/PASSENGER SHIP">RO-RO/PASSENGER SHIP</option>
+							<?php
+							for($i5=0; $i5<$t5; $i5++){
+								if(in_array($ro_ro_cargo[$i5], $vessel_type)){
+									echo '<option value="'.$ro_ro_cargo[$i5].'" selected="selected">'.$ro_ro_cargo[$i5].'</option>';
+								}else{
+									echo '<option value="'.$ro_ro_cargo[$i5].'">'.$ro_ro_cargo[$i5].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 					</select>
 					<br />
@@ -889,7 +1031,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 		<table width="1000" border="0" cellpadding="0" cellspacing="0" id="table_2" style="display:none;">
 		
 			<?php
-			$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' ORDER BY `dateadded` DESC";
+			$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='aisbroker' AND `option`='2' ORDER BY `dateadded` DESC";
 			$r = dbQuery($sql, $link);
 			
 			$t = count($r);
@@ -902,41 +1044,39 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				for($i=0; $i<$t; $i++){
 					$tabdata = unserialize($r[$i]['tabdata']);
 					
-					if($tabdata['option_num']==2){
-						if($r[$i]['tabname']){
-							if(isset($_GET['tabid'])){
-								if($_GET['tabid']==$r[$i]['id']){
+					if($r[$i]['tabname']){
+						if(isset($_GET['tabid'])){
+							if($_GET['tabid']==$r[$i]['id']){
+								echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
+							}else{
+								echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=2&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
+							}
+						}else{
+							if($i==0){
+								if(isset($_GET['new_search'])){
+									if($_GET['new_search']==0){
+										echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+										echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+										echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=2&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+										echo '</div>';
+									}
+								}else{
 									echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
 									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
 									echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
 									echo '</div>';
-								}else{
-									echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
-									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-									echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
-									echo '</div>';
 								}
 							}else{
-								if($i==0){
-									if(isset($_GET['new_search'])){
-										if($_GET['new_search']==3){
-											echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
-											echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-											echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
-											echo '</div>';
-										}
-									}else{
-										echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
-										echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-										echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
-										echo '</div>';
-									}
-								}else{
-									echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
-									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-									echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
-									echo '</div>';
-								}
+								echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=2&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
 							}
 						}
 					}
@@ -947,7 +1087,10 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				echo '</td>';
 				echo '</tr>';
 				echo '<tr>';
-				echo '<td colspan="2">&nbsp;</td>';
+				echo '<td colspan="2">
+					<div style="border-bottom:1px dotted #FFF;">&nbsp;</div>
+					<div>&nbsp;</div>
+				</td>';
 				echo '</tr>';
 			}
 			?>
@@ -959,6 +1102,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				  <td>LAYCAN</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
+				  	  <input type="hidden" id="tabid2" name="tabid2" value="<?php echo $tabid2; ?>" />
 					  <?php
 					  if($destination_port_from2){
 						?>
@@ -993,14 +1137,30 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				  <td>DWT RANGE</td>
 				  <td>&nbsp;</td>
 				  <td>
-					<select class="input_1" name="dwt_range2" id='dwt_range_id2' size="7">
-						<option value="0|10" selected="selected">(0-10,000) Minibulk</option>
-						<option value="10|35">(10,000-35,000) Handy</option>
-						<option value="35|60">(35,000-60,000) Handymax</option>
-						<option value="60|75">(60,000-75,000) Handysize</option>
-						<option value="75|110">(75,000-110,000) Over Panamax</option>
-						<option value="110|150">(110,000-150,000) Small Capesize</option>
-						<option value="150|550">(150,000+) Large Capesize</option>
+				  	<?php
+					$dwt_range2s = array(
+						0=>array(0=>'0|10', 1=>'(0-10,000) Minibulk'), 
+						1=>array(0=>'10|35', 1=>'(10,000-35,000) Handy'), 
+						2=>array(0=>'35|60', 1=>'(35,000-60,000) Handymax'), 
+						3=>array(0=>'60|75', 1=>'(60,000-75,000) Handysize'), 
+						4=>array(0=>'75|110', 1=>'(75,000-110,000) Over Panamax'), 
+						5=>array(0=>'110|150', 1=>'(110,000-150,000) Small Capesize'), 
+						6=>array(0=>'150|550', 1=>'(150,000+) Large Capesize')
+					);
+					
+					$t_d = count($dwt_range2s);
+					?>
+				  
+					<select class="input_1" name="dwt_range2" id='dwt_range2_id' size="7">
+						<?php
+						for($i_d=0; $i_d<$t_d; $i_d++){
+							if($dwt_range2s[$i_d][0]==$dwt_range2){
+								echo '<option value="'.$dwt_range2s[$i_d][0].'" selected="selected">'.$dwt_range2s[$i_d][1].'</option>';
+							}else{
+								echo '<option value="'.$dwt_range2s[$i_d][0].'">'.$dwt_range2s[$i_d][1].'</option>';
+							}
+						}
+						?>
 					</select>
 				  </td>
 				</tr>
@@ -1011,32 +1171,99 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				  <td valign="top">DRY VESSELS</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-					<select name="vessel_type2[]" multiple="multiple" size="21" id='vessel_type_id2' class="input_1" style="width:220px;">
+					<?php
+					$bulk_carrier = array(
+						0=>'BULK CARRIER', 
+						1=>'ORE CARRIER', 
+						2=>'WOOD CHIPS CARRIER'
+					);
+					$t1 = count($bulk_carrier);
+					
+					$cargo = array(
+						0=>'BARGE CARRIER', 
+						1=>'CARGO', 
+						2=>'CARGO/PASSENGER SHIP', 
+						3=>'HEAVY LOAD CARRIER', 
+						4=>'LIVESTOCK CARRIER', 
+						5=>'MOTOR HOPPER', 
+						6=>'NUCLEAR FUEL CARRIER', 
+						7=>'SLUDGE CARRIER'
+					);
+					$t2 = count($cargo);
+					
+					$cement_carrier = array(
+						0=>'CEMENT CARRIER'
+					);
+					$t3 = count($cement_carrier);
+					
+					$obo_carrier = array(
+						0=>'OBO CARRIER'
+					);
+					$t4 = count($obo_carrier);
+					
+					$ro_ro_cargo = array(
+						0=>'RO-RO CARGO', 
+						1=>'RO-RO/CONTAINER CARRIER', 
+						2=>'RO-RO/PASSENGER SHIP'
+					);
+					$t5 = count($ro_ro_cargo);
+					?>
+				  
+					<select name="vessel_type2[]" multiple="multiple" size="21" id='vessel_type2_id' class="input_1" style="width:220px;">
 						<optgroup label="BULK CARRIER">
-							<option value="BULK CARRIER">BULK CARRIER</option>
-							<option value="ORE CARRIER">ORE CARRIER</option>
-							<option value="WOOD CHIPS CARRIER">WOOD CHIPS CARRIER</option>
+							<?php
+							for($i1=0; $i1<$t1; $i1++){
+								if(in_array($bulk_carrier[$i1], $vessel_type2)){
+									echo '<option value="'.$bulk_carrier[$i1].'" selected="selected">'.$bulk_carrier[$i1].'</option>';
+								}else{
+									echo '<option value="'.$bulk_carrier[$i1].'">'.$bulk_carrier[$i1].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 						<optgroup label="CARGO">
-							<option value="BARGE CARRIER">BARGE CARRIER</option>
-							<option value="CARGO">CARGO</option>
-							<option value="CARGO/PASSENGER SHIP">CARGO/PASSENGER SHIP</option>
-							<option value="HEAVY LOAD CARRIER">HEAVY LOAD CARRIER</option>
-							<option value="LIVESTOCK CARRIER">LIVESTOCK CARRIER</option>
-							<option value="MOTOR HOPPER">MOTOR HOPPER</option>
-							<option value="NUCLEAR FUEL CARRIER">NUCLEAR FUEL CARRIER</option>
-							<option value="SLUDGE CARRIER">SLUDGE CARRIER</option>
+							<?php
+							for($i2=0; $i2<$t2; $i2++){
+								if(in_array($cargo[$i2], $vessel_type2)){
+									echo '<option value="'.$cargo[$i2].'" selected="selected">'.$cargo[$i2].'</option>';
+								}else{
+									echo '<option value="'.$cargo[$i2].'">'.$cargo[$i2].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 						<optgroup label="CEMENT CARRIER">
-							<option value="CEMENT CARRIER">CEMENT CARRIER</option>
+							<?php
+							for($i3=0; $i3<$t3; $i3++){
+								if(in_array($cement_carrier[$i3], $vessel_type2)){
+									echo '<option value="'.$cement_carrier[$i3].'" selected="selected">'.$cement_carrier[$i3].'</option>';
+								}else{
+									echo '<option value="'.$cement_carrier[$i3].'">'.$cement_carrier[$i3].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 						<optgroup label="OBO CARRIER">
-							<option value="OBO CARRIER">OBO CARRIER</option>
+							<?php
+							for($i4=0; $i4<$t4; $i4++){
+								if(in_array($obo_carrier[$i4], $vessel_type2)){
+									echo '<option value="'.$obo_carrier[$i4].'" selected="selected">'.$obo_carrier[$i4].'</option>';
+								}else{
+									echo '<option value="'.$obo_carrier[$i4].'">'.$obo_carrier[$i4].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 						<optgroup label="RO-RO CARGO">
-							<option value="RO-RO CARGO">RO-RO CARGO</option>
-							<option value="RO-RO/CONTAINER CARRIER">RO-RO/CONTAINER CARRIER</option>
-							<option value="RO-RO/PASSENGER SHIP">RO-RO/PASSENGER SHIP</option>
+							<?php
+							for($i5=0; $i5<$t5; $i5++){
+								if(in_array($ro_ro_cargo[$i5], $vessel_type2)){
+									echo '<option value="'.$ro_ro_cargo[$i5].'" selected="selected">'.$ro_ro_cargo[$i5].'</option>';
+								}else{
+									echo '<option value="'.$ro_ro_cargo[$i5].'">'.$ro_ro_cargo[$i5].'</option>';
+								}
+							}
+							?>
 						</optgroup>
 					</select>
 					<br />
@@ -1051,39 +1278,55 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 				  <td width="50">ZONE</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
-				  	<select name='zone' id='zones_id' onchange='showMinimap(this.value)' style="width:440px;" class="input_1">
-						<option value='z1'>[z1] AUSTRALIA</option>
-						<option value='z2'>[z2] BALTIC SEA</option>
-						<option value='z3'>[z3] BLACK SEA</option>
-						<option value='z4'>[z4] CARIB</option>
-						<option value='z5'>[z5] EC CAN</option>
-						<option value='z6'>[z6] ECCA</option>
-						<option value='z7'>[z7] ECEC</option>
-						<option value='z8'>[z8] ECI</option>
-						<option value='z9'>[z9] ECSA</option>
-						<option value='z10'>[z10] FAR EAST</option>
-						<option value='z11'>[z11] FRENCH ATLANTIC</option>
-						<option value='z12'>[z12] MEDITERRANEAN</option>
-						<option value='z13'>[z13] N EUROPE</option>
-						<option value='z14'>[z14] NCSA</option>
-						<option value='z15'>[z15] NEW ZEALAND</option>
-						<option value='z16'>[z16] NOPAC</option>
-						<option value='z17'>[z17] NORTH SEA</option>
-						<option value='z18'>[z18] NORWEGIAN SEA</option>
-						<option value='z19'>[z19] PERSIAN GULF</option>
-						<option value='z20'>[z20] PG +WCI</option>
-						<option value='z21'>[z21] RED SEA</option>
-						<option value='z22'>[z22] SA</option>
-						<option value='z23'>[z23] SE AFRICA</option>
-						<option value='z24'>[z24] SE ASIA</option>
-						<option value='z25'>[z25] SPAIN ATLANTIC</option>
-						<option value='z26'>[z26] ST LAWRENCE</option>
-						<option value='z27'>[z27] SW AFRICA</option>
-						<option value='z28'>[z28] UK AND EIRE</option>
-						<option value='z29'>[z29] USG</option>
-						<option value='z30'>[z30] WCCA</option>
-						<option value='z31'>[z31] WCSA</option>
-						<option value='z32'>[z32] WEST COAST INDIA</option>
+				  	<?php
+					$zones = array(
+						0=>array(0=>'z1', 1=>'[z1] AUSTRALIA'), 
+						1=>array(0=>'z2', 1=>'[z2] BALTIC SEA'), 
+						2=>array(0=>'z3', 1=>'[z3] BLACK SEA'), 
+						3=>array(0=>'z4', 1=>'[z4] CARIB'), 
+						4=>array(0=>'z5', 1=>'[z5] EC CAN'), 
+						5=>array(0=>'z6', 1=>'[z6] ECCA'), 
+						6=>array(0=>'z7', 1=>'[z7] ECEC'), 
+						7=>array(0=>'z8', 1=>'[z8] ECI'), 
+						8=>array(0=>'z9', 1=>'[z9] ECSA'), 
+						9=>array(0=>'z10', 1=>'[z10] FAR EAST'), 
+						10=>array(0=>'z11', 1=>'[z11] FRENCH ATLANTIC'), 
+						11=>array(0=>'z12', 1=>'[z12] MEDITERRANEAN'), 
+						12=>array(0=>'z13', 1=>'[z13] N EUROPE'), 
+						13=>array(0=>'z14', 1=>'[z14] NCSA'), 
+						14=>array(0=>'z15', 1=>'[z15] NEW ZEALAND'), 
+						15=>array(0=>'z16', 1=>'[z16] NOPAC'), 
+						16=>array(0=>'z17', 1=>'[z17] NORTH SEA'), 
+						17=>array(0=>'z18', 1=>'[z18] NORWEGIAN SEA'), 
+						18=>array(0=>'z19', 1=>'[z19] PERSIAN GULF'), 
+						19=>array(0=>'z20', 1=>'[z20] PG +WCI'), 
+						20=>array(0=>'z21', 1=>'[z21] RED SEA'), 
+						21=>array(0=>'z22', 1=>'[z22] SA'), 
+						22=>array(0=>'z23', 1=>'[z23] SE AFRICA'), 
+						23=>array(0=>'z24', 1=>'[z24] SE ASIA'), 
+						24=>array(0=>'z25', 1=>'[z25] SPAIN ATLANTIC'), 
+						25=>array(0=>'z26', 1=>'[z26] ST LAWRENCE'), 
+						26=>array(0=>'z27', 1=>'[z27] SW AFRICA'), 
+						27=>array(0=>'z28', 1=>'[z28] UK AND EIRE'), 
+						28=>array(0=>'z29', 1=>'[z29] USG'), 
+						29=>array(0=>'z30', 1=>'[z30] WCCA'), 
+						30=>array(0=>'z31', 1=>'[z31] WCSA'), 
+						31=>array(0=>'z32', 1=>'[z32] WEST COAST INDIA')
+					);
+					
+					$t_z = count($zones);
+					?>
+				  
+					<select name='zone' id='zones_id' onchange='showMinimap(this.value)' style="width:440px;" class="input_1">
+						<?php
+						for($i_z=0; $i_z<$t_z; $i_z++){
+							if($zones[$i_z][0]==$zone){
+								echo '<option value="'.$zones[$i_z][0].'" selected="selected">'.$zones[$i_z][1].'</option>';
+							}else{
+								echo '<option value="'.$zones[$i_z][0].'">'.$zones[$i_z][1].'</option>';
+							}
+						}
+						?>
 					</select>
 					
 					<script>

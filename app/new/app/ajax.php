@@ -4,22 +4,69 @@ include_once(dirname(__FILE__)."/includes/bootstrap.php");
 global $user;
 
 if($_GET['new_search']==1){
-	if($_POST['option_num']==1){
+	$option_num = $_POST['option_num'];
+
+	if($option_num==1){
+		if($_GET['tabid1']){
+			$tabid = $_GET['tabid1'];
+		}else if($_POST['tabid1']){
+			$tabid = $_POST['tabid1'];
+		}
+	
 		$tabname = $_POST['destination_port'].'<br />'.date('M d, Y h:s:i');
 		
 		$tabarr = array();
-		$tabarr['option_num'] = $_POST['option_num'];
 		$tabarr['destination_port'] = $_POST['destination_port'];
 		$tabarr['destination_port_from'] = $_POST['destination_port_from'];
 		$tabarr['destination_port_to'] = $_POST['destination_port_to'];
 		$tabarr['dwt_range'] = $_POST['dwt_range'];
 		$tabarr['vessel_type'] = $_POST['vessel_type'];
 		$tabdata = serialize($tabarr);
-	}else if($_POST['option_num']==2){
-		$tabname = $_POST['zone'].'<br />'.date('M d, Y h:s:i');
+	}else if($option_num==2){
+		if($_GET['tabid2']){
+			$tabid = $_GET['tabid2'];
+		}else if($_POST['tabid2']){
+			$tabid = $_POST['tabid2'];
+		}
+		
+		$zones = array(
+			'z1'=>'[z1] AUSTRALIA', 
+			'z2'=>'[z2] BALTIC SEA', 
+			'z3'=>'[z3] BLACK SEA', 
+			'z4'=>'[z4] CARIB', 
+			'z5'=>'[z5] EC CAN', 
+			'z6'=>'[z6] ECCA', 
+			'z7'=>'[z7] ECEC', 
+			'z8'=>'[z8] ECI', 
+			'z9'=>'[z9] ECSA', 
+			'z10'=>'[z10] FAR EAST', 
+			'z11'=>'[z11] FRENCH ATLANTIC', 
+			'z12'=>'[z12] MEDITERRANEAN', 
+			'z13'=>'[z13] N EUROPE', 
+			'z14'=>'[z14] NCSA', 
+			'z15'=>'[z15] NEW ZEALAND', 
+			'z16'=>'[z16] NOPAC', 
+			'z17'=>'[z17] NORTH SEA', 
+			'z18'=>'[z18] NORWEGIAN SEA', 
+			'z19'=>'[z19] PERSIAN GULF', 
+			'z20'=>'[z20] PG +WCI', 
+			'z21'=>'[z21] RED SEA', 
+			'z22'=>'[z22] SA', 
+			'z23'=>'[z23] SE AFRICA', 
+			'z24'=>'[z24] SE ASIA', 
+			'z25'=>'[z25] SPAIN ATLANTIC', 
+			'z26'=>'[z26] ST LAWRENCE', 
+			'z27'=>'[z27] SW AFRICA', 
+			'z28'=>'[z28] UK AND EIRE', 
+			'z29'=>'[z29] USG', 
+			'z30'=>'[z30] WCCA', 
+			'z31'=>'[z31] WCSA', 
+			'z32'=>'[z32] WEST COAST INDIA'
+		);
+	
+		$tabname = $zones[$_POST['zone']].'<br />'.date('M d, Y h:s:i');
 		
 		$tabarr = array();
-		$tabarr['option_num'] = $_POST['option_num'];
 		$tabarr['destination_port_from2'] = $_POST['destination_port_from2'];
 		$tabarr['destination_port_to2'] = $_POST['destination_port_to2'];
 		$tabarr['dwt_range2'] = $_POST['dwt_range2'];
@@ -28,20 +75,14 @@ if($_GET['new_search']==1){
 		$tabdata = serialize($tabarr);
 	}
 	
-	if($_GET['tabid']){
+	if($tabid){
 		$sql = "UPDATE `_user_tabs`
 			SET `tabname`='".mysql_escape_string($tabname)."', 
 				`tabdata`='".mysql_escape_string($tabdata)."'
-			WHERE `id`='".$_GET['tabid']."'";
-		dbQuery($sql, $link);
-	}else if($_POST['tabid']){
-		$sql = "UPDATE `_user_tabs`
-			SET `tabname`='".mysql_escape_string($tabname)."', 
-				`tabdata`='".mysql_escape_string($tabdata)."'
-			WHERE `id`='".$_POST['tabid']."'";
+			WHERE `id`='".$tabid."'";
 		dbQuery($sql, $link);
 	}else{
-		$sql = "INSERT INTO `_user_tabs` (`uid`, `page`, `tabname`, `tabdata`, `dateadded`) VALUES('".$user['uid']."', 'aisbroker', '".mysql_escape_string($tabname)."', '".mysql_escape_string($tabdata)."', NOW())";
+		$sql = "INSERT INTO `_user_tabs` (`uid`, `page`, `tabname`, `tabdata`, `option`, `dateadded`) VALUES('".$user['uid']."', 'aisbroker', '".mysql_escape_string($tabname)."', '".mysql_escape_string($tabdata)."', '".mysql_escape_string($option_num)."', NOW())";
 		dbQuery($sql, $link);
 	}
 }

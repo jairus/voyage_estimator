@@ -584,7 +584,7 @@ function saveScenario(){
 				success: function(data) {
 					alert("Scenario Saved!");
 				
-					self.location = "cargospotter.php?new_search=1&action="+jQuery('#option_num_id').val();
+					self.location = "s-bis.php?new_search=1&action="+jQuery('#option_num_id').val();
 				}
 			});
 		}else{
@@ -601,7 +601,7 @@ function saveScenario(){
 			success: function(data) {
 				alert("Scenario Saved!");
 			
-				self.location = "cargospotter.php?new_search=1&action="+jQuery('#option_num_id').val();
+				self.location = "s-bis.php?new_search=1&action="+jQuery('#option_num_id').val();
 			}
 		});
 	}
@@ -619,7 +619,7 @@ function deleteScenario(tabid){
 			success: function(data) {
 				alert("Scenario Deleted!");
 			
-				self.location = "cargospotter.php?new_search=1";
+				self.location = "s-bis.php?new_search=1";
 			}
 		});
 	}
@@ -628,7 +628,7 @@ function deleteScenario(tabid){
 function newScenario(){
 	jQuery('#pleasewait').show();
 	
-	self.location = "cargospotter.php?new_search=0&action="+jQuery('#option_num_id').val();
+	self.location = "s-bis.php?new_search=0&action="+jQuery('#option_num_id').val();
 }
 </script>
 
@@ -770,7 +770,7 @@ if(isset($_GET['new_search'])){
 							}else{
 								echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
 								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-								echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=1&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '<div onclick="location.href=\'s-bis.php?new_search=1&action=1&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
 								echo '</div>';
 							}
 						}else{
@@ -779,7 +779,7 @@ if(isset($_GET['new_search'])){
 									if($_GET['new_search']==0){
 										echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
 										echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-										echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=1&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+										echo '<div onclick="location.href=\'s-bis.php?new_search=1&action=1&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
 										echo '</div>';
 									}
 								}else{
@@ -791,7 +791,7 @@ if(isset($_GET['new_search'])){
 							}else{
 								echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
 								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-								echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=1&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '<div onclick="location.href=\'s-bis.php?new_search=1&action=1&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
 								echo '</div>';
 							}
 						}
@@ -1054,7 +1054,7 @@ if(isset($_GET['new_search'])){
 							}else{
 								echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
 								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-								echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=2&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '<div onclick="location.href=\'s-bis.php?new_search=1&action=2&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
 								echo '</div>';
 							}
 						}else{
@@ -1063,7 +1063,7 @@ if(isset($_GET['new_search'])){
 									if($_GET['new_search']==0){
 										echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
 										echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-										echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=2&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+										echo '<div onclick="location.href=\'s-bis.php?new_search=1&action=2&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
 										echo '</div>';
 									}
 								}else{
@@ -1075,7 +1075,7 @@ if(isset($_GET['new_search'])){
 							}else{
 								echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
 								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-								echo '<div onclick="location.href=\'cargospotter.php?new_search=1&action=2&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '<div onclick="location.href=\'s-bis.php?new_search=1&action=2&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
 								echo '</div>';
 							}
 						}
@@ -1292,26 +1292,27 @@ if(isset($_GET['new_search'])){
 						9=>array(0=>'z10', 1=>'[z10] FAR EAST'), 
 						10=>array(0=>'z11', 1=>'[z11] FRENCH ATLANTIC'), 
 						11=>array(0=>'z12', 1=>'[z12] MEDITERRANEAN'), 
-						12=>array(0=>'z13', 1=>'[z13] N EUROPE'), 
-						13=>array(0=>'z14', 1=>'[z14] NCSA'), 
-						14=>array(0=>'z15', 1=>'[z15] NEW ZEALAND'), 
-						15=>array(0=>'z16', 1=>'[z16] NOPAC'), 
-						16=>array(0=>'z17', 1=>'[z17] NORTH SEA'), 
-						17=>array(0=>'z18', 1=>'[z18] NORWEGIAN SEA'), 
-						18=>array(0=>'z19', 1=>'[z19] PERSIAN GULF'), 
-						19=>array(0=>'z20', 1=>'[z20] PG +WCI'), 
-						20=>array(0=>'z21', 1=>'[z21] RED SEA'), 
-						21=>array(0=>'z22', 1=>'[z22] SA'), 
-						22=>array(0=>'z23', 1=>'[z23] SE AFRICA'), 
-						23=>array(0=>'z24', 1=>'[z24] SE ASIA'), 
-						24=>array(0=>'z25', 1=>'[z25] SPAIN ATLANTIC'), 
-						25=>array(0=>'z26', 1=>'[z26] ST LAWRENCE'), 
-						26=>array(0=>'z27', 1=>'[z27] SW AFRICA'), 
-						27=>array(0=>'z28', 1=>'[z28] UK AND EIRE'), 
-						28=>array(0=>'z29', 1=>'[z29] USG'), 
-						29=>array(0=>'z30', 1=>'[z30] WCCA'), 
-						30=>array(0=>'z31', 1=>'[z31] WCSA'), 
-						31=>array(0=>'z32', 1=>'[z32] WEST COAST INDIA')
+						12=>array(0=>'z13', 1=>'[z13] MED-RS-PG-WCI'), 
+						13=>array(0=>'z14', 1=>'[z14] N EUROPE'), 
+						14=>array(0=>'z15', 1=>'[z15] NCSA'), 
+						15=>array(0=>'z16', 1=>'[z16] NEW ZEALAND'), 
+						16=>array(0=>'z17', 1=>'[z17] NOPAC'), 
+						17=>array(0=>'z18', 1=>'[z18] NORTH SEA'), 
+						18=>array(0=>'z19', 1=>'[z19] NORWEGIAN SEA'), 
+						19=>array(0=>'z20', 1=>'[z20] PERSIAN GULF'), 
+						20=>array(0=>'z21', 1=>'[z21] PG +WCI'), 
+						21=>array(0=>'z22', 1=>'[z22] RED SEA'), 
+						22=>array(0=>'z23', 1=>'[z23] SA'), 
+						23=>array(0=>'z24', 1=>'[z24] SE AFRICA'), 
+						24=>array(0=>'z25', 1=>'[z25] SE ASIA'), 
+						25=>array(0=>'z26', 1=>'[z26] SPAIN ATLANTIC'), 
+						26=>array(0=>'z27', 1=>'[z27] ST LAWRENCE'), 
+						27=>array(0=>'z28', 1=>'[z28] SW AFRICA'), 
+						28=>array(0=>'z29', 1=>'[z29] UK AND EIRE'), 
+						29=>array(0=>'z30', 1=>'[z30] USG'), 
+						30=>array(0=>'z31', 1=>'[z31] WCCA'), 
+						31=>array(0=>'z32', 1=>'[z32] WCSA'), 
+						32=>array(0=>'z33', 1=>'[z33] WEST COAST INDIA')
 					);
 					
 					$t_z = count($zones);

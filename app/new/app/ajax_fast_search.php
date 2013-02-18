@@ -448,7 +448,7 @@ function newSearchParam(){
 		data: "",
 
 		success: function(data) {
-			self.location = "cargospotter.php?new_search=1";
+			self.location = "s-bis.php?new_search=1";
 		}
 	});
 }

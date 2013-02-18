@@ -38,7 +38,7 @@ $photo1 = empty($photo1) ? 'default.jpg' : $photo1;
 echo "<div class='landScape'>
 <table width='100%' border='0' cellpadding='0' cellspacing='0'>
 	<tr>
-		<td style='border:0px;' width='460'><img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_cargospotter1.png'></td>
+		<td style='border:0px;' width='460'><img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_ve2.png'></td>
 		<td style='border:0px; text-align:right;' width='540'><img src='http://".$_SERVER['HTTP_HOST']."/app/images/user_images/".$photo1."' width='80' alt='photo' border='0' /><br>Sent by <a href='mailto:".$rows[0]['email']."'>".$rows[0]['email']."</a></td>
 	</tr>
 </table>
@@ -464,7 +464,7 @@ foreach($rdata as $key=>$value){
 
 echo "<table cellpadding='0' cellspacing='0' width='100%'>
 	<tr>
-		<td style='border:0px; text-align:right;'>Powered by <img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_cargospotter1.png' width='20'> <b>CargoSpotter</b></td>
+		<td style='border:0px; text-align:right;'>Powered by <img src='http://".$_SERVER['HTTP_HOST']."/app/images/logo_ve2.png' width='50'></td>
 	</tr>
 </table>
 <div>&nbsp;</div>";

@@ -42,26 +42,27 @@ if($_GET['new_search']==1){
 			'z10'=>'[z10] FAR EAST', 
 			'z11'=>'[z11] FRENCH ATLANTIC', 
 			'z12'=>'[z12] MEDITERRANEAN', 
-			'z13'=>'[z13] N EUROPE', 
-			'z14'=>'[z14] NCSA', 
-			'z15'=>'[z15] NEW ZEALAND', 
-			'z16'=>'[z16] NOPAC', 
-			'z17'=>'[z17] NORTH SEA', 
-			'z18'=>'[z18] NORWEGIAN SEA', 
-			'z19'=>'[z19] PERSIAN GULF', 
-			'z20'=>'[z20] PG +WCI', 
-			'z21'=>'[z21] RED SEA', 
-			'z22'=>'[z22] SA', 
-			'z23'=>'[z23] SE AFRICA', 
-			'z24'=>'[z24] SE ASIA', 
-			'z25'=>'[z25] SPAIN ATLANTIC', 
-			'z26'=>'[z26] ST LAWRENCE', 
-			'z27'=>'[z27] SW AFRICA', 
-			'z28'=>'[z28] UK AND EIRE', 
-			'z29'=>'[z29] USG', 
-			'z30'=>'[z30] WCCA', 
-			'z31'=>'[z31] WCSA', 
-			'z32'=>'[z32] WEST COAST INDIA'
+			'z13'=>'[z13] MED-RS-PG-WCI', 
+			'z14'=>'[z14] N EUROPE', 
+			'z15'=>'[z15] NCSA', 
+			'z16'=>'[z16] NEW ZEALAND', 
+			'z17'=>'[z17] NOPAC', 
+			'z18'=>'[z18] NORTH SEA', 
+			'z19'=>'[z19] NORWEGIAN SEA', 
+			'z20'=>'[z20] PERSIAN GULF', 
+			'z21'=>'[z21] PG +WCI', 
+			'z22'=>'[z22] RED SEA', 
+			'z23'=>'[z23] SA', 
+			'z24'=>'[z24] SE AFRICA', 
+			'z25'=>'[z25] SE ASIA', 
+			'z26'=>'[z26] SPAIN ATLANTIC', 
+			'z27'=>'[z27] ST LAWRENCE', 
+			'z28'=>'[z28] SW AFRICA', 
+			'z29'=>'[z29] UK AND EIRE', 
+			'z30'=>'[z30] USG', 
+			'z31'=>'[z31] WCCA', 
+			'z32'=>'[z32] WCSA', 
+			'z33'=>'[z33] WEST COAST INDIA'
 		);
 	
 		$tabname = $zones[$_POST['zone']].'<br />'.date('M d, Y h:s:i');
@@ -221,14 +222,49 @@ if($_GET['new_search']==1 || $_GET['new_search']==3 && isset($_GET['tabid'])){
 }
 
 if($_GET['portname']){
+	$dwt = str_replace(' tons', '', $_GET['dwt']);
+	$dwt = intval(str_replace(',', '', $dwt));
+	
+	if($dwt>=0 && $dwt<=10000){
+		$dwt_low = 0;
+		$dwt_high = 10000;
+	}else if($dwt>=10000 && $dwt<=35000){
+		$dwt_low = 10000;
+		$dwt_high = 35000;
+	}else if($dwt>=35000 && $dwt<=60000){
+		$dwt_low = 35000;
+		$dwt_high = 60000;
+	}else if($dwt>=60000 && $dwt<=75000){
+		$dwt_low = 60000;
+		$dwt_high = 75000;
+	}else if($dwt>=75000 && $dwt<=110000){
+		$dwt_low = 75000;
+		$dwt_high = 110000;
+	}else if($dwt>=110000 && $dwt<=150000){
+		$dwt_low = 110000;
+		$dwt_high = 150000;
+	}else if($dwt>=150000 && $dwt<=555000){
+		$dwt_low = 150000;
+		$dwt_high = 555000;
+	}else{
+		$dwt_low = 0;
+		$dwt_high = 555000;
+	}
+
 	$sql = "select * from _port_details where port_name='".mysql_escape_string($_GET['portname'])."' order by dateadded desc limit 0,1";
 	$r = dbQuery($sql);
 	
 	if($r[0]['id']){
 		$details = unserialize($r[0]['port_details']);
-		$total_over_all = $details['total_over_all'];
-		if($total_over_all==0 || $total_over_all==''){
-			echo $details['quick_total_charges'];
+	
+		$dwt_rec = str_replace(' tons', '', $details['dwt']);
+		$dwt_rec = intval(str_replace(',', '', $dwt_rec));
+	
+		if($dwt_rec>=$dwt_low && $dwt_rec<=$dwt_high){
+			$total_over_all = $details['total_over_all'];
+			if($total_over_all==0 || $total_over_all==''){
+				echo $details['quick_total_charges'];
+			}
 		}
 	}
 }

@@ -217,7 +217,7 @@ function checklogin(){
 
 		if($user['uid']!=""){
 
-			redirectjs("/app/cargospotter.php");
+			redirectjs("/app/s-bis.php");
 
 		}
 
@@ -229,7 +229,7 @@ function checklogin(){
 
 	if($user['uid']==""){
 
-		redirectjs("/cargospotter.php");
+		redirectjs("/login.php");
 
 	}
 

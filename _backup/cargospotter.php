@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>CargoSpotter</title>
+<title>s-bis - Ship Broker Intelligence Solutions</title>
 <link rel="shortcut icon" href="../images/global/favicon.ico">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style_ve.css">
@@ -72,7 +72,7 @@ function displayContent(content){
 		condition = '?new_search=4';
 	}
 	
-	if(page!='0' || page!='1' || page!='3' || page!='4'){
+	if(page!='0' && page!='1' && page!='3' && page!='4'){
 		if(action!=''){
 			condition = '?action='+action;
 			
@@ -106,7 +106,8 @@ function displayContent(content){
 
 <div id="outer">
 	<div id="site_content_1" style="padding-bottom:20px;">
-        <div style="float:left; width:1300px; height:40px; padding-top:40px; text-align:center;">
+		<div style="float:left; width:120px; height:55px; padding-top:25px;"><img src="images/logo_ve2.png" border="0" alt="s-bis" title="s-bis" /></div>
+        <div style="float:left; width:1180px; height:40px; padding-top:40px;">
 			<a onclick="displayContent('ais_broker');" id='ais_broker_id_link' class="content_link_selected">AIS Broker</a> &nbsp; 
             <a onclick="displayContent('voyage_estimator');" id='voyage_estimator_id_link' class="content_link">VE</a> &nbsp; 
 			<a onclick="displayContent('distance_calculator');" id='distance_calculator_id_link' class="content_link">DC</a> &nbsp; 

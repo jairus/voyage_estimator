@@ -2154,7 +2154,7 @@ function saveScenario(){
 			success: function(data) {
 				alert("Scenario Saved!");
 			
-				self.location = "cargospotter.php?new_search=3";
+				self.location = "s-bis.php?new_search=3";
 			}
 		});
 	}else{
@@ -2174,7 +2174,7 @@ function deleteScenario(tabid){
 			success: function(data) {
 				alert("Scenario Deleted!");
 			
-				self.location = "cargospotter.php?new_search=3";
+				self.location = "s-bis.php?new_search=3";
 			}
 		});
 	}
@@ -2183,13 +2183,15 @@ function deleteScenario(tabid){
 function newScenario(){
 	jQuery('#pleasewait').show();
 	
-	self.location = "cargospotter.php?new_search=3";
+	self.location = "s-bis.php?new_search=3";
 }
 
 function getPortDetails(portname, port_num){
+	var dwt = jQuery("#ship_summer_dwt").text();
+
 	jQuery.ajax({
 		type: "POST",
-		url: "ajax.php?portname="+portname,
+		url: "ajax.php?portname="+portname+"&dwt="+dwt,
 		data: '',
 
 		success: function(data) {
@@ -2822,7 +2824,7 @@ if(!trim($e85)){
 					}else{
 						echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
 						echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-						echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+						echo '<div onclick="location.href=\'s-bis.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
 						echo '</div>';
 					}
 				}else{
@@ -2831,7 +2833,7 @@ if(!trim($e85)){
 							if($_GET['new_search']==3){
 								echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
 								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-								echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '<div onclick="location.href=\'s-bis.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
 								echo '</div>';
 							}
 						}else{
@@ -2843,7 +2845,7 @@ if(!trim($e85)){
 					}else{
 						echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
 						echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
-						echo '<div onclick="location.href=\'cargospotter.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+						echo '<div onclick="location.href=\'s-bis.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
 						echo '</div>';
 					}
 				}
@@ -2868,8 +2870,11 @@ if(!trim($e85)){
   <tr>
   	<td width="1000">
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td class="text_1"><div style="padding:3px;"><span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span> <span style="color:#FF0000; font-size:12px;">- REQUIRED FIELDS</span><br />&nbsp;</div></td>
+		  </tr>
 		  <tr bgcolor="cddee5">
-			<td class="text_1"><div style="padding:3px;"><b>VESSEL NAME / IMO #</b> &nbsp; <input type="hidden" id="tabid" name="tabid" value="<?php echo $tabid; ?>" /><input type="text" id="ship" name="ship" class="input_1" style="max-width:300px; width:300px;" value="<?php echo $ship; ?>" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div></td>
+			<td class="text_1"><div style="padding:3px;"><b>VESSEL NAME / IMO #</b> &nbsp; <input type="hidden" id="tabid" name="tabid" value="<?php echo $tabid; ?>" /><input type="text" id="ship" name="ship" class="input_1" style="max-width:300px; width:300px; border:1px solid #FF0000;" value="<?php echo $ship; ?>" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div></td>
 		  </tr>
 		</table>
 		<div id="ship_info" style="display:none;">
@@ -2955,10 +2960,10 @@ if(!trim($e85)){
 			<td width="120" class="text_1"><div style="padding:3px;"><b>VOYAGE LEGS</b></div></td>
 			<td width="200"></td>
 			<td width="190"></td>
+			<td width="180"></td>
+			<td width="130"></td>
 			<td width="100"></td>
-			<td width="190"></td>
-			<td width="100"></td>
-			<td width="100"></td>
+			<td width="80"></td>
 		  </tr>
 		  <tr>
 			<td class="text_1 label"><div style="padding:3px;"><i><strong>Type</strong></i></div></td>
@@ -2971,11 +2976,11 @@ if(!trim($e85)){
 		  </tr>
 		  <tr id='ballast1' bgcolor="f5f5f5">
 			<td class='general b31' style="padding:3px;"><strong>Ballast</strong></td>
-			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general c31' id="c31" name="c31" value="<?php echo $c31; ?>" style="max-width:190px;" /></div></td>
-			<td class="input"><div style="padding:3px;"><input type='text' class='input_1 general d31' id="d31" name="d31" value="<?php echo $d31; ?>" style="max-width:170px;" /></div></td>
-			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general e31' id="e31" name="e31" value="<?php echo $e31; ?>" style="max-width:190px;" /></div></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general c31' id="c31" name="c31" value="<?php echo $c31; ?>" style="max-width:190px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></div></td>
+			<td class="input"><div style="padding:3px;"><input type='text' class='input_1 general d31' id="d31" name="d31" value="<?php echo $d31; ?>" style="max-width:170px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></div></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general e31' id="e31" name="e31" value="<?php echo $e31; ?>" style="max-width:190px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></div></td>
 			<td class='calculated general f31' id="f31" style="padding:3px;"></td>
-			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number g31' id="g31" name="g31" value="<?php echo $g31; ?>" style="max-width:90px;" /></div></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number g31' id="g31" name="g31" value="<?php echo $g31; ?>" style="max-width:70px;" /></div></td>
 			<td class="calculated number h31" id="h31" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='loading1' bgcolor="e9e9e9">
@@ -2991,18 +2996,18 @@ if(!trim($e85)){
 			<td class='general b33' style="padding:3px;"><strong>Bunker Stop</strong></td>
 			<td id="c33" class='input general c33' style="padding:3px;"></td>
 			<td id="d33" class='general d33' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e33' id="e33" name="e33" value="<?php echo $e33; ?>"  style="max-width:190px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e33' id="e33" name="e33" value="<?php echo $e33; ?>"  style="max-width:190px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td id="f33" class="calculated f33" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g33' id="g33" name="g33" value="<?php echo $g33; ?>"  style="max-width:90px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g33' id="g33" name="g33" value="<?php echo $g33; ?>"  style="max-width:70px;" /></td>
 			<td id="h33" class="calculated h33" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='laden1' bgcolor="e9e9e9">
 			<td class='general b34' style="padding:3px;"><strong>Laden</strong></td>
 			<td id="c34" class='input general c34' style="padding:3px;"></td>
 			<td id="d34" class='general d34' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e34' id="e34" name="e34" value="<?php echo $e34; ?>" style="max-width:190px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e34' id="e34" name="e34" value="<?php echo $e34; ?>" style="max-width:190px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td id="f34" class="calculated f34" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g34' id="g34" name="g34" value="<?php echo $g34; ?>" style="max-width:90px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g34' id="g34" name="g34" value="<?php echo $g34; ?>" style="max-width:70px;" /></td>
 			<td id="h34" class="calculated number h34" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='discharging1' bgcolor="f5f5f5">
@@ -3062,11 +3067,11 @@ if(!trim($e85)){
 		  </tr>
 		  <tr id='loading1' bgcolor="e9e9e9">
 			<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i32' id="i32" name="i32" value="<?php echo $i32; ?>" style="max-width:140px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i32' id="i32" name="i32" value="<?php echo $i32; ?>" style="max-width:100px; border:1px solid #FF0000;" /><!-- <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span>--></td>
 			<td id="j32" class='number j32' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' id="k32" name="k32" value="<?php echo $k32; ?>" style="max-width:70px;" onblur="populatek35(this.value);" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' id="k32" name="k32" value="<?php echo $k32; ?>" style="max-width:50px; border:1px solid #FF0000;" onblur="populatek35(this.value);" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td id="l32" class='calculated number l32' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' id="m32" name="m32" value="<?php echo $m32; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' id="m32" name="m32" value="<?php echo $m32; ?>" style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n32arr = array(
@@ -3081,7 +3086,7 @@ if(!trim($e85)){
 						
 				$n32t = count($n32arr);
 				?>
-				<select class='input_1 general n32' id="n32" name="n32" style="max-width:100px; min-width:100px;">
+				<select class='input_1 general n32' id="n32" name="n32" style="max-width:80px; min-width:80px;">
 					<?php
 					for($n32i=1; $n32i<=$n32t; $n32i++){
 						if($n32arr[$n32i]==$n32){
@@ -3094,8 +3099,8 @@ if(!trim($e85)){
 				</select>
 			</td>
 			<td id="o32" class="calculated number o32" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' id="p32" name="p32" value="<?php echo $p32; ?>" style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number q32' id="q32" name="q32" value="<?php echo $q32; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' id="p32" name="p32" value="<?php echo $p32; ?>" style="max-width:50px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number q32' id="q32" name="q32" value="<?php echo $q32; ?>" style="max-width:50px;" /></td>
 			<td class="number r32" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s32' id="s32" name="s32" value="<?php echo $s32; ?>" style="max-width:50px;" /></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t32' id="t32" name="t32" value="<?php echo $t32; ?>" style="max-width:50px;" /></td>
@@ -3105,8 +3110,8 @@ if(!trim($e85)){
 			<td class='number i33' style="padding:3px;"></td>
 			<td class='number j33' style="padding:3px;"></td>
 			<td class='number k33' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number l33' id="l33" name="l33" value="<?php echo $l33; ?>" style="max-width:70px;"  /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m33' id="m33" name="m33" value="<?php echo $m33; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number l33' id="l33" name="l33" value="<?php echo $l33; ?>" style="max-width:50px;"  /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m33' id="m33" name="m33" value="<?php echo $m33; ?>" style="max-width:50px;" /></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n33arr = array(
@@ -3121,7 +3126,7 @@ if(!trim($e85)){
 						
 				$n33t = count($n33arr);
 				?>
-				<select class='input_1 general n33' id="n33" name="n33" style="max-width:100px; min-width:100px;">
+				<select class='input_1 general n33' id="n33" name="n33" style="max-width:80px; min-width:80px;">
 					<?php
 					for($n33i=1; $n33i<=$n33t; $n33i++){
 						if($n33arr[$n33i]==$n33){
@@ -3134,8 +3139,8 @@ if(!trim($e85)){
 				</select>
 			</td>
 			<td id="o33" class="calculated o33" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' id="p33" name="p33" value="<?php echo $p33; ?>" style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q33' id="q33" name="q33" value="<?php echo $q33; ?>" style="max-width:70px;"  /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' id="p33" name="p33" value="<?php echo $p33; ?>" style="max-width:50px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q33' id="q33" name="q33" value="<?php echo $q33; ?>" style="max-width:50px;"  /></td>
 			<td id="r33" class="calculated number r33" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number s33' id="s33" name="s33" value="<?php echo $s33; ?>" style="max-width:50px;" /></td>
 			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t33' id="t33" name="t33" value="<?php echo $t33; ?>" style="max-width:50px;" /></td>
@@ -3157,11 +3162,11 @@ if(!trim($e85)){
 		  </tr>
 		  <tr id='discharging1' bgcolor="f5f5f5">
 			<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i35' id="i35" name="i35" value="<?php echo $i35; ?>" style="max-width:140px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i35' id="i35" name="i35" value="<?php echo $i35; ?>" style="max-width:100px; border:1px solid #FF0000;" /><!-- <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span>--></td>
 			<td id="j35" class='number j35' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k35' id="k35" name="k35" value="<?php echo $k35; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k35' id="k35" name="k35" value="<?php echo $k35; ?>" style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td id="l35" class='calculated number l35' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number m35' id="m35" name="m35" value="<?php echo $m35; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number m35' id="m35" name="m35" value="<?php echo $m35; ?>" style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n35arr = array(
@@ -3176,7 +3181,7 @@ if(!trim($e85)){
 						
 				$n35t = count($n35arr);
 				?>
-				<select class='input_1 general n35' id="n35" name="n35" style="max-width:100px; min-width:100px;">
+				<select class='input_1 general n35' id="n35" name="n35" style="max-width:80px; min-width:80px;">
 					<?php
 					for($n35i=1; $n35i<=$n35t; $n35i++){
 						if($n35arr[$n35i]==$n35){
@@ -3189,8 +3194,8 @@ if(!trim($e85)){
 				</select>
 			</td>
 			<td id="o35" class="calculated number o35" style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' id="p35" name="p35" value="<?php echo $p35; ?>" style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q35' id="q35" name="q35" value="<?php echo $q35; ?>" style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' id="p35" name="p35" value="<?php echo $p35; ?>" style="max-width:50px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q35' id="q35" name="q35" value="<?php echo $q35; ?>" style="max-width:50px;" /></td>
 			<td class="number r35" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s35' id="s35" name="s35" value="<?php echo $s35; ?>" style="max-width:50px;" /></td>
 			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t35' id="t35" name="t35" value="<?php echo $t35; ?>" style="max-width:50px;" /></td>
@@ -3242,7 +3247,7 @@ if(!trim($e85)){
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td style="padding:3px;"><b>MDO Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;"><input type='text' name="h42" value="<?php echo $h42; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
@@ -3301,13 +3306,13 @@ if(!trim($e85)){
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td style="padding:3px;"><b>Consumption (MT/day)</b></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='c44' name="c44" value="<?php echo $c44; ?>" class='input_1 number' style="max-width:100px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='d44' name="d44" value="<?php echo $d44; ?>" class='input_1 number' style="max-width:100px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='e44' name="e44" value="<?php echo $e44; ?>" class='input_1 number' style="max-width:100px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='c44' name="c44" value="<?php echo $c44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='d44' name="d44" value="<?php echo $d44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='e44' name="e44" value="<?php echo $e44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class="input" style="padding:3px;">&nbsp;</td>
 			<td class="input" style="padding:3px;">&nbsp;</td>
-			<td class='input' style="padding:3px;"><input type='text'  id='g44' name="g44" value="<?php echo $g44; ?>" class='input_1 number' style="max-width:70px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='h44' name="h44" value="<?php echo $h44; ?>" class='input_1 number' style="max-width:70px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='g44' name="g44" value="<?php echo $g44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='h44' name="h44" value="<?php echo $h44; ?>" class='input_1 number' style="max-width:50px;" /></td>
 			<td class='general' id='i44' style="padding:3px;"></td>
 		  </tr>
 		  <tr>
@@ -3315,11 +3320,11 @@ if(!trim($e85)){
 			<td class="label calculated" id='c45' style="padding:3px;"></td>
 			<td class="label calculated" id='d45' style="padding:3px;"></td>
 			<td class="label calculated" id='e45' style="padding:3px;"></td>
-			<td class='label' style="padding:3px;"><input type='text' id='f45' name="f45" value="<?php echo $f45; ?>" class='input_1 number' style="max-width:100px;" /></td>
+			<td class='label' style="padding:3px;"><input type='text' id='f45' name="f45" value="<?php echo $f45; ?>" class='input_1 number' style="max-width:50px;" /></td>
 			<td class="label" style="padding:3px;"></td>
 			<td class="label calculated" id='g45' style="padding:3px;"></td>
 			<td class="label calculated" id='h45' style="padding:3px;"></td>
-			<td class='label input' style="padding:3px;"><input type='text' id='i45' name="i45" value="<?php echo $i45; ?>" class='input_1 number' style="max-width:70px;" /></td>
+			<td class='label input' style="padding:3px;"><input type='text' id='i45' name="i45" value="<?php echo $i45; ?>" class='input_1 number' style="max-width:50px;" /></td>
 		  </tr>
 		</table>
 		
@@ -3813,10 +3818,10 @@ if(!trim($e85)){
 								<td height="5"></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class="label" style="padding:3px;"><strong>Freight Rate ($/MT)</strong></td>
+								<td class="label" style="padding:3px;"><span style="font-size:14px; color:#0066FF; font-weight:bold;">Freight Rate ($/MT)</span></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='b80' name="b80" value="<?php echo $b80; ?>" style="max-width:100px;" /></td>
+								<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='b80' name="b80" value="<?php echo $b80; ?>" style="max-width:100px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>
@@ -3930,10 +3935,10 @@ if(!trim($e85)){
 								<td height="5"></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class="label" style="padding:3px;"><strong>TCE ($/day)</strong></td>
+								<td class="label" style="padding:3px;"><span style="font-size:14px; color:#0066FF; font-weight:bold;">TCE ($/day)</span></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='g85' name='g85' value="<?php echo $g85; ?>" style="max-width:100px;" /></td>
+								<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='g85' name='g85' value="<?php echo $g85; ?>" style="max-width:100px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>

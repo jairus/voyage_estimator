@@ -129,7 +129,7 @@ class account{
 
 		".$r['firstname']." ".$r['lastname']." (".$r['email'].") has confirmed your request you to be in his network.
 		
-		Please login to <a href='http://www.s-bisonline.com/cargospotter.php'>http://www.s-bisonline.com/cargospotter.php</a> to see.
+		Please login to <a href='http://www.s-bisonline.com/s-bis.php'>http://www.s-bisonline.com/s-bis.php</a> to see.
 
 		";
 	
@@ -182,7 +182,7 @@ class account{
 	
 			".$r['firstname']." ".$r['lastname']." (".$r['email'].") has requested you to be in his network.
 			
-			Please login to <a href='http://www.s-bisonline.com/cargospotter.php'>http://www.s-bisonline.com/cargospotter.php</a> to see.
+			Please login to <a href='http://www.s-bisonline.com/s-bis.php'>http://www.s-bisonline.com/s-bis.php</a> to see.
 
 	
 			";

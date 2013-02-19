@@ -925,7 +925,7 @@ $(function(){
 				setValue(jQuery(this), fNum(fuels[imo]) + ' t');
 			});
 			jQuery("#ship_fuel_consumption").each(function(){
-				setValue(jQuery(this), fNum(fuel_consumptions[imo]) + ' kts');
+				setValue(jQuery(this), fuel_consumptions[imo]);
 			});
 			jQuery("#ship_fuel_type").each(function(){
 				setValue(jQuery(this), fuel_types[imo]);

@@ -30,6 +30,7 @@ function displayContent(content){
 	jQuery('#results').hide();
 	
 	jQuery('#ais_broker_id_link').removeClass('content_link_selected');
+	jQuery('#ship_his_id_link').removeClass('content_link_selected');
 	jQuery('#voyage_estimator_id_link').removeClass('content_link_selected');
 	jQuery('#distance_calculator_id_link').removeClass('content_link_selected');
 	jQuery('#ship_search_register_id_link').removeClass('content_link_selected');
@@ -109,6 +110,7 @@ function displayContent(content){
 		<div style="float:left; width:120px; height:55px; padding-top:25px;"><img src="images/logo_ve2.png" border="0" alt="s-bis" title="s-bis" /></div>
         <div style="float:left; width:1180px; height:40px; padding-top:40px;">
 			<a onclick="displayContent('ais_broker');" id='ais_broker_id_link' class="content_link_selected">AIS Broker</a> &nbsp; 
+			<a onclick="displayContent('ship_his');" id='ship_his_id_link' class="content_link">Ship His</a> &nbsp; 
             <a onclick="displayContent('voyage_estimator');" id='voyage_estimator_id_link' class="content_link">VE</a> &nbsp; 
 			<a onclick="displayContent('distance_calculator');" id='distance_calculator_id_link' class="content_link">DC</a> &nbsp; 
             <a onclick="displayContent('ship_search_register');" id='ship_search_register_id_link' class="content_link">Register</a> &nbsp; 

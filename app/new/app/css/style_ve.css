@@ -80,4 +80,14 @@ td{
 .clickable:hover{
 	text-decoration:underline;
 }
+
+.searchbutton {
+    background: url("../images/search.png") no-repeat scroll 2px 4px #E0F4FF;
+    border: 1px solid #3399FF;
+    font-weight: bold;
+    height: 35px;
+    padding-left: 40px;
+    text-align: left;
+    width: 130px;
+}
 /*END OF CLASSES*/

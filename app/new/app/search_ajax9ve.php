@@ -37,8 +37,6 @@ function word_limit($str, $limit){
     return $s;
 }
 
-
-
 $ship = explode(' - ', trim($_GET['ship']));
 $ship_name = $ship[0];
 $ship_imo = $ship[1];
@@ -56,128 +54,113 @@ $sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE name='".mysql_escape_str
 $ships = dbQuery($sql, $link);
 
 $t = count($ships);
-
+//<td><div style='padding:5px;'><img src='image.php?b=1&mx=20&p=".$imageb."'> <a class='clickable' onclick='return showShipDetails(\"".$ship['xvas_imo']."\")' >".$ship['Ship Name']."</a></div></td>
 echo "<table id='pblues' width='1300'>
 	<tr>
-		<th style='background:#BCBCBC; color:#333333; text-align:left; width:200px;'><div style='padding:5px;'>SHIP NAME</div></th>
+		<th style='background:#BCBCBC; color:#333333; text-align:left; width:200px;'><div style='padding:5px;'>ETA</div></th>
+		<th style='background:#BCBCBC; color:#333333; text-align:left; width:200px;'><div style='padding:5px;'>PORT NAME</div></th>
+		<th style='background:#BCBCBC; color:#333333; text-align:left; width:100px;'><div style='padding:5px;'>POSITION</div></th>
+		<th style='background:#BCBCBC; color:#333333; text-align:left;'><div style='padding:5px;'>MAP</div></th>
 	</tr>";
 
 if(trim($t)){
 	$shipsA1print = array();
 	
-	for($i=0; $i<$t; $i++){
-		//CHECK IF SHIP EXIST IN DATABASE
-		$sql = "SELECT * FROM `_xvas_shipdata_dry` WHERE imo='".$ships[$i]['imo']."'";
-		$ship_exist = dbQuery($sql, $link);
-		$ship_exist = $ship_exist[0];
-		//END OF CHECK IF SHIP EXIST IN DATABASE
+	//CHECK IF SHIP EXIST IN DATABASE
+	$sql = "SELECT * FROM `_xvas_shipdata_dry` WHERE imo='".$ships[0]['imo']."'";
+	$ship_exist = dbQuery($sql, $link);
+	$ship_exist = $ship_exist[0];
+	//END OF CHECK IF SHIP EXIST IN DATABASE
+	
+	if(trim($ship_exist['data'])){
+		$status = getValue($ship_exist['data'], 'STATUS');
 		
-		if(trim($ship_exist['data'])){
-			$status = getValue($ship_exist['data'], 'STATUS');
+		if(trim($status)!="DEAD"){
+			//CHECK IF SHIP EXIST IN SIITECH CACHE
+			$sql = "SELECT * FROM `_ship_history` WHERE xvas_imo='".$ship_exist['imo']."' AND `siitech_eta` BETWEEN '".$destination_port_from."' AND '".$destination_port_to."' ORDER BY siitech_eta DESC";
+			$siitech_ships = dbQuery($sql, $link);
 			
-			if(trim($status)!="DEAD"){
-				//CHECK IF SHIP EXIST IN SIITECH CACHE
-				$sql = "SELECT * FROM `_ship_history` WHERE xvas_imo='".$ships[$i]['imo']."' AND `siitech_eta` BETWEEN '".$destination_port_from."' AND '".$destination_port_to."' ORDER BY dateupdated DESC";
-				$siitech_ships = dbQuery($sql, $link);
+			$t1 = count($siitech_ships);
+			//END
+			
+			if(trim($t1)){
+				for($i1=0; $i1<$t1; $i1++){
+					//MAP DETAILS
+					$print = array();
+					
+					$print['id']        = $siitech_ships[$i1]['id'];
+					$print['xvas_name'] = $ships[$i]['xvas_name'];
+					$print['xvas_imo']  = $siitech_ships[$i1]['xvas_imo'];
+					
+					$imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$print['xvas_imo']);
+					$print['imageb'] = $imageb;
+					
+					$print['siitech_latitude'] = $siitech_ships[$i1]['siitech_latitude'];
+					$print['siitech_longitude'] = $siitech_ships[$i1]['siitech_longitude'];
+					$print['xvas_mmsi'] = $siitech_ships[$i1]['xvas_mmsi'];
+					$print['xvas_vessel_type'] = $siitech_ships[$i1]['xvas_vessel_type'];
+					$print['xvas_summer_dwt'] = $siitech_ships[$i1]['xvas_summer_dwt'];
+					$print['xvas_speed'] = $siitech_ships[$i1]['xvas_speed'];
+					$print['siitech_eta'] = $siitech_ships[$i1]['siitech_eta'];
+					$print['siitech_destination'] = $siitech_ships[$i1]['siitech_destination'];
+					$print['siitech_lastseen'] = $siitech_ships[$i1]['siitech_lastseen'];
+					
+					$print['sog'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "SOG");
+					$print['true_heading'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "trueheading");
 				
-				$t1 = count($siitech_ships);
-				//END
-				
-				if(trim($t1)){
-					for($i1=0; $i1<$t1; $i1++){
-						if($siitech_ships[$i1-1]['xvas_name']!=$siitech_ships[$i1]['xvas_name']){
-							//MAP DETAILS
-							$print = array();
-							
-							$print['id']        = $siitech_ships[$i1]['id'];
-							$print['Ship Name'] = $siitech_ships[$i1]['xvas_name'];
-							$print['IMO #']     = $siitech_ships[$i1]['xvas_imo'];
-							
-							$imageb          = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$print['IMO #']);
-							$print['imageb'] = $imageb;
-							
-							$print['LAT']           = $siitech_ships[$i1]['siitech_latitude'];
-							$print['LONG']          = $siitech_ships[$i1]['siitech_longitude'];
-							$print['MMSI']          = $siitech_ships[$i1]['xvas_mmsi'];
-							$print['VESSEL TYPE']   = $siitech_ships[$i1]['xvas_vessel_type'];
-							$print['DWT']           = $siitech_ships[$i1]['xvas_summer_dwt'];
-							$print['SPEED']         = $siitech_ships[$i1]['xvas_speed'];
-							$print['satellite']     = $siitech_ships[$i1]['satellite'];
-							$print['SIITECH_ETA']   = $siitech_ships[$i1]['siitech_eta'];
-							$print['DESTINATION']   = $siitech_ships[$i1]['siitech_destination'];
-							$print['LASTSEEN_DATE'] = $siitech_ships[$i1]['siitech_lastseen'];
-							
-							$print['SOG'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "SOG");
-							$print['TRUE HEADING'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "trueheading");
-						
-							if(trim($print['TRUE HEADING'])){
-								$print['TRUE HEADING'] .= " degrees";
-							}
-							
-							$print['COG'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "COG");
-							$print['B2B'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "to_bow");
-							$print['STERN'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "to_stern");
-							$print['P2P'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "to_port");
-							$print['STARBOARD'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "to_starboard");
-							$print['RADIO'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "radio");
-							$print['MANEUVER'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "maneuver");
-							$print['NAVSTAT'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "NavigationalStatus");
-							$print['ETA'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "ETA");
-							$print['SHIP_TYPE'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "ShipType");
-							$print['UTC'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "UTC");
-							
-							$shipsA1print[] = $print;
-							//END OF MAP DETAILS
-						}
+					if(trim($print['true_heading'])){
+						$print['true_heading'] .= " degrees";
 					}
+					
+					$print['cog'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "COG");
+					$print['b2b'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "to_bow");
+					$print['stern'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "to_stern");
+					$print['p2p'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "to_port");
+					$print['starboard'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "to_starboard");
+					$print['radio'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "radio");
+					$print['maneuver'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "maneuver");
+					$print['navstat'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "NavigationalStatus");
+					$print['eta'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "ETA");
+					$print['ship_type'] = getValue(strtolower($siitech_ships[$i1]['siitech_shipstat_data']), "ShipType");
+					$print['utc'] = getValue(strtolower($siitech_ships[$i1]['siitech_shippos_data']), "UTC");
+					
+					$shipsA1print[] = $print;
+					//END OF MAP DETAILS
 				}
 			}
 		}
 	}
-	
-	$t2 = count($shipsA1print);
-				
+			
 	$_SESSION['shipsReg'] = $shipsA1print;
 	
+	$t2 = count($shipsA1print);
+	
 	if($t2){
-		$shipsA2print = array();
-		
 		for($i2=0; $i2<$t2; $i2++){
-			$print1 = array();
-			
-			$details           = array();
-			$details['a']      = 'shipsReg';
-			$details['id']     = $i2;
-			$print1['details'] = base64_encode(serialize($details));
-			
-			$shipsA2print[] = $print1;
-		}
-	}
-	
-	$t3 = count($shipsA2print);
-				
-	$_SESSION['shipsReg2'] = $shipsA2print;
-	
-	if($t3){
-		for($i3=0; $i3<$t3; $i3++){
-			$ship = $shipsA1print[$i3];
-			
-			$sql = "select * from `_xvas_shipdata_dry` where imo='".$ship['IMO #']."'";
-			$ship_data = dbQuery($sql, $link);
-			
-			//CHECK SHIP IMAGE
-			$imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$ship['IMO #']);
-			//END
+			$ship = $shipsA1print[$i2];
 			
 			echo "<tr style='background:#e5e5e5;'>
-				<td><div style='padding:5px;'><img src='image.php?b=1&mx=20&p=".$imageb."'> <a class='clickable' onclick='return showShipDetails(\"".$ship['IMO #']."\")' >".$ship['Ship Name']."</a></div></td>
-			</tr>";
+				<td><div style='padding:5px;'>".date("M j, 'y G:i e", str2time($ship['siitech_eta']))."</div></td>
+				<td><div style='padding:5px;'>".$ship['siitech_destination']."</div></td>
+				<td><div style='padding:5px;'><a onclick='showMapSHSingle(\"".$ship['id']."\");' class='clickable'>view position</a></div></td>";
+				
+				if($i2==0){
+					echo "<td rowspan='".$t2."' align='center' valign='top'>
+						<div style='padding:5px;'><a onclick='showMapSH();' class='clickable'>view larger map</a></div>
+						<div style='padding:5px;'><iframe src='map/map_ship_his_all.php' width='750' height='700' frameborder='0'></iframe></div>
+					</td>";
+				}
+				
+			echo "</tr>";
 		}
+	}else{
+		echo "<tr>
+			<td colspan='4' style='color:red; text-align:center;' colspan='5'>No Ships</td>
+		</tr>";
 	}
-	
 }else{
 	echo "<tr>
-		<td style='color:red; text-align:center;' colspan='5'>No Ships</td>
+		<td colspan='4' style='color:red; text-align:center;' colspan='5'>No Ships</td>
 	</tr>";
 }
 

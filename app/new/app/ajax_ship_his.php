@@ -16,12 +16,12 @@
 <script type="text/javascript" src="js/calendar/xc2_inpage.js"></script>
 <link type="text/css" rel="stylesheet" href="js/calendar/xc2_default.css" />
 
-<div id="mapdialogfleet" title="MAP" style='display:none;'>
-    <iframe id="mapiframefleet" name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+<div id="mapdialogship" title="MAP" style='display:none;'>
+    <iframe id="mapiframeship" name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
 
-<div id="mapdialogfleetsingle" title="MAP" style='display:none;'>
-    <iframe id="mapiframefleetsingle" name='mapnamesingle' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
+<div id="mapdialogshiphis" title="MAP" style='display:none;'>
+    <iframe id="mapiframeshiphis" name='mapnamesingle' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
 
 <script type="text/javascript">
@@ -55,32 +55,20 @@ function ownerDetails(owner, owner_id){
 	jQuery("#contactdialog").dialog("open");
 }
 
-jQuery("#mapdialogfleet" ).dialog( { autoOpen: false, width: '100%', height: jQuery(window).height()*0.9 });
-jQuery("#mapdialogfleet").dialog("close");
+jQuery("#mapdialogship" ).dialog( { autoOpen: false, width: '100%', height: jQuery(window).height()*0.9 });
+jQuery("#mapdialogship").dialog("close");
 
-jQuery("#mapdialogfleetsingle" ).dialog( { autoOpen: false, width: '100%', height: jQuery(window).height()*0.9 });
-jQuery("#mapdialogfleetsingle").dialog("close");
+jQuery("#mapdialogshiphis" ).dialog( { autoOpen: false, width: '100%', height: jQuery(window).height()*0.9 });
+jQuery("#mapdialogshiphis").dialog("close");
 
-function showMapFP(){
-    jQuery('#pleasewait').show();
-
-    jQuery.ajax({
-        type: 'GET',
-        url: "search_ajax3ve.php",
-        data:  jQuery("#fleetpositions").serialize(),
-
-        success: function(data) {
-            jQuery("#mapiframefleet")[0].src='map/index2.php';
-            jQuery("#mapdialogfleet").dialog("open");
-            
-            jQuery('#pleasewait').hide();
-        }
-    });
+function showMapSH(){
+    jQuery("#mapiframeship")[0].src='map/map_ship_his_all.php';
+    jQuery("#mapdialogship").dialog("open");
 }
 
-function showMapFPSingle(imo_single){
-    jQuery("#mapiframefleetsingle")[0].src='map/map_fleet_position.php?imo='+imo_single;
-    jQuery("#mapdialogfleetsingle").dialog("open");
+function showMapSHSingle(ais_id){
+    jQuery("#mapiframeshiphis")[0].src='map/map_ship_his.php?ais_id='+ais_id;
+    jQuery("#mapdialogshiphis").dialog("open");
 }
 
 function shipHis(){

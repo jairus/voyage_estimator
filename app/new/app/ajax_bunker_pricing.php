@@ -18,6 +18,10 @@ body{
 <link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/jquery.autocomplete.css" />
 <link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/lib/thickbox.css" />
 
+<script type="text/javascript" src="js/calendar/xc2_default.js"></script>
+<script type="text/javascript" src="js/calendar/xc2_inpage.js"></script>
+<link type="text/css" rel="stylesheet" href="js/calendar/xc2_default.css" />
+
 <div id="mapdialogbunkerprice" title="BUNKER PRICE" style='display:none'>
     <iframe id='mapiframebunkerprice' name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
@@ -95,7 +99,27 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
 <center>
 <table>
   <tr>
-    <td style="vertical-align:middle;"><div style="padding:2px;">PORT NAME: <input id='bunkerportname_id' type="text" name="bunkerportname" class="input_1" style='width:200px;' /> &nbsp;&nbsp; <input class='searchbutton' type="button" id='btn_search_bunkerprice_id' name="btn_search_bunkerprice" value="SEARCH" style='cursor:pointer;' onclick='bunkerPriceSubmit();'  /></div></td>
+    <td style="vertical-align:middle; border:0px;">
+		<div style="padding:2px;">
+			PORT NAME: <input id='bunkerportname_id' type="text" name="bunkerportname" class="input_1" style='width:200px;' />
+			
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			
+			or
+			
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			
+			DATE: <input type="text" name="date_from" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:100px;" />
+			
+			to
+			
+			<input type="text" name="date_to" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:100px;" />
+			
+			&nbsp;&nbsp;
+			
+			<input class='searchbutton' type="button" id='btn_search_bunkerprice_id' name="btn_search_bunkerprice" value="SEARCH" style='cursor:pointer;' onclick='bunkerPriceSubmit();'  />
+		</div>
+	</td>
   </tr>
 </table>
 

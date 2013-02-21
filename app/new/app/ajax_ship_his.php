@@ -116,32 +116,30 @@ jQuery("#contactdialog").dialog("close");
         <td align="center">
             <table>
                 <tr>
-                    <td style="border:0px; vertical-align:middle;">SHIP NAME AND IMO&nbsp;&nbsp;</td>
-					<td style="border:0px;">
-						<input type='text' id='ship' name='ship' class='input_1' style='width:200px;'>
-						<script type="text/javascript">
-                        jQuery("#ship").focus().autocomplete(vessel);
-                        jQuery("#ship").setOptions({
-                            scrollHeight: 180
-                        });
-                        </script>
+					<td style="vertical-align:middle; border:0px;">
+						<div style="padding:2px;">
+							SHIP NAME AND IMO: <input type='text' id='ship' name='ship' class='input_1' style='width:200px;'>
+							<script type="text/javascript">
+							jQuery("#ship").focus().autocomplete(vessel);
+							jQuery("#ship").setOptions({
+								scrollHeight: 180
+							});
+							</script>
+							
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							
+							LAYCAN: <input type="text" name="destination_port_from" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:100px;" />
+							
+							to
+							
+							<input type="text" name="destination_port_to" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:100px;" />
+							
+							&nbsp;&nbsp;
+							
+							<input class='searchbutton' type="button" id='sbutton' name="search" value="SEARCH" style='cursor:pointer;' onclick='shipHis();'  />
+						</div>
 					</td>
-					<td width="50" style="border:0px;"></td>
-					<td style="border:0px; vertical-align:middle;">LAYCAN&nbsp;&nbsp;</td>
-					<td style="border:0px;">
-						<input type="text" name="destination_port_from" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:100px;" />
-						
-						to
-						
-						<input type="text" name="destination_port_to" value="<?php echo date("M d, Y", time()+(7*24*60*60)); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="input_1" style="width:100px;" />
-					</td>
-                </tr>
-				<tr>
-                    <td style="border:0px;" colspan="5">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="text-align:center; border-bottom:none;" colspan="5"><div style="padding:2px;"><input class='searchbutton' type="button" id='sbutton' name="search" value="SEARCH" style='cursor:pointer;' onclick='shipHis();'  /></div></td>
-                </tr>
+				  </tr>
             </table>
         </td>
     </tr>

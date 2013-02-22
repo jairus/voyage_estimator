@@ -172,6 +172,7 @@ function showPortDetails(portname, id){
 	jQuery('#row_'+id).css("background-color", "#fffdc3");
 	
 	var vessel_name = '<?php echo $_GET['vessel_name']; ?>';
+	var cargo_type = '<?php echo $_GET['cargo_type']; ?>';
 	var dwt = '<?php echo $_GET['dwt']; ?>';
 	var gross_tonnage = '<?php echo $_GET['gross_tonnage']; ?>';
 	var net_tonnage = '<?php echo $_GET['net_tonnage']; ?>';
@@ -179,7 +180,7 @@ function showPortDetails(portname, id){
 
 	jQuery.ajax({
 		type: 'GET',
-		url: "port_details_ajax.php?portname="+portname+'&vessel_name='+vessel_name+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner+"&id="+id,
+		url: "port_details_ajax.php?portname="+portname+'&vessel_name='+vessel_name+'&cargo_type='+cargo_type+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner+"&id="+id,
 		data:  '',
 
 		success: function(data) {
@@ -254,6 +255,7 @@ if($_POST['submitok']==1){
 	$print['date'] = $_POST['date'];
 	$print['ship_agent'] = $_POST['ship_agent'];
 	$print['vessel'] = $_POST['vessel'];
+	$print['cargo_type'] = $_POST['cargo_type'];
 	$print['dwt'] = $_POST['dwt'];
 	$print['grt'] = $_POST['grt'];
 	$print['nrt'] = $_POST['nrt'];
@@ -448,6 +450,13 @@ if(isset($_GET['portname'])){
 									<tr>
 										<td>Vessel</td>
 										<td><input type="text" id="vessel_id" name="vessel" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $_GET['vessel_name']; ?>" readonly="readonly" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Cargo Type</td>
+										<td><input type="text" id="cargo_type_id" name="cargo_type" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $_GET['cargo_type']; ?>" readonly="readonly" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>

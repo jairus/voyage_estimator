@@ -17,6 +17,7 @@ if(isset($_GET['id'])){
 		$date = $data['date'];
 		$ship_agent = $data['ship_agent'];
 		$vessel = $data['vessel'];
+		$cargo_type = $data['cargo_type'];
 		$dwt = $data['dwt'];
 		$grt = $data['grt'];
 		$nrt = $data['nrt'];
@@ -104,6 +105,13 @@ if(isset($_GET['id'])){
 						<tr>
 							<td>Vessel</td>
 							<td> : <?php echo $vessel; ?></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>Cargo Type</td>
+							<td> : <?php echo $cargo_type; ?></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
@@ -533,6 +541,13 @@ if(isset($_GET['id'])){
 						<tr>
 							<td>Vessel</td>
 							<td><input type="text" id="vessel_id" name="vessel" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $_GET['vessel_name']; ?>" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>Cargo Type</td>
+							<td><input type="text" id="cargo_type_id" name="cargo_type" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $_GET['cargo_type']; ?>" readonly="readonly" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>

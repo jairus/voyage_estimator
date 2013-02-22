@@ -999,6 +999,7 @@ function showShipDetails2(imo){
 
 function showPortDetails(portname){
 	var vessel_name = jQuery("#ship").val();
+	var cargo_type = jQuery("#i32").val();
 	var dwt = jQuery("#ship_summer_dwt").text();
 	var gross_tonnage = jQuery("#ship_gross_tonnage").text();
 	var net_tonnage = jQuery("#ship_net_tonnage").text();
@@ -1008,7 +1009,7 @@ function showPortDetails(portname){
 
 	$(iframe).contents().find("body").html("");
 
-	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner;
+	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&cargo_type='+cargo_type+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner;
 	jQuery("#portdetails").dialog("open");
 }
 

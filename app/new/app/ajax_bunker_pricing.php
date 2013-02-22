@@ -27,12 +27,12 @@ body{
 </div>
 
 <script>
-function getBunkerPriceHistory(port_code){
+function getBunkerPriceHistory(port_code, grade){
 	jQuery('#pleasewait').show();
 	
 	jQuery.ajax({
 		type: 'GET',
-		url: "bunkerpricehistory.php?port_code="+port_code,
+		url: "bunkerpricehistory.php?port_code="+port_code+"&grade="+grade,
 		data:  "",
 
 		success: function(data) {
@@ -56,7 +56,7 @@ function showMapBP(){
         data:  jQuery("#bunkerprice_form").serialize(),
 
         success: function(data) {
-            jQuery("#mapiframebunkerprice")[0].src='map/index12.php';
+            jQuery("#mapiframebunkerprice")[0].src='map/map_bunker_price.php';
             jQuery("#mapdialogbunkerprice").dialog("open");
             
             jQuery('#pleasewait').hide();
@@ -122,10 +122,18 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
 	</td>
   </tr>
 </table>
-
 <div id='bunkerpriceresults'>
     <div id='bunkerprice_tab_wrapperonly'></div>
 </div>
+<div>&nbsp;</div>
+<table width="100%" id="map_bunker_price">
+	<tr style="background:#e5e5e5; padding:10px 0px;">
+		<td><div style="padding:5px; text-align:center;"><a onclick="showMapBP();" class="clickable">view larger map</a></div></td>
+	</tr>
+	<tr style="background:#e5e5e5;">
+		<td><div style="padding:5px; text-align:center;"><iframe src="map/map_bunker_price.php" width="990" height="700"></iframe></div></td>
+	</tr>
+</table>
 </center>
 </form>
 

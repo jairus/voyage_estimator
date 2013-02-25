@@ -68,7 +68,7 @@ if($_GET['search']){
 		$ship['fuel'] = getValue($r2[0]['data'], 'FUEL');
 		$ship['fuel_consumption'] = getValue($r2[0]['data'], 'FUEL_CONSUMPTION');
 		$ship['fuel_type'] = getValue($r2[0]['data'], 'FUEL_TYPE');
-		$ship['manager_owner'] = getValue($r2[0]['data'], 'MANAGER_OWNER');
+		$ship['manager_owner'] = getValue($r2[0]['data'], 'MANAGER');
 		$ship['manager_owner_email'] = getValue($r2[0]['data'], 'MANAGER_OWNER_EMAIL');
 		$ship['class_society'] = htmlentities(getValue($r2[0]['data'], 'CLASS_SOCIETY'));
 		$ship['holds'] = htmlentities(getValue($r2[0]['data'], 'HOLDS'));
@@ -3044,8 +3044,8 @@ if(!trim($e85)){
 			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Volume (M3)</strong></i></div></td>
 			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>L/D Rate (MT/day)</strong></i></div></td>
 			<td width="167" class="text_1 label"><div style="padding:3px;"><i><strong>Working Days</strong></i></div></td>
-			<td width="45" class="text_1 label"><div style="padding:3px;"><i><strong>L/D</strong></i></div></td>
-			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Turn Time</strong></i></div></td>
+			<td width="45" class="text_1 label"><div style="padding:3px;"><i><strong>Load Days</strong></i></div></td>
+			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Turn Time Days</strong></i></div></td>
 			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Idle/Extra Days Sea</strong></i></div></td>
 			<td width="7" class="text_1 label"><div style="padding:3px;"><i><strong>&nbsp;</strong></i></div></td>
 			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Canal Days</strong></i></div></td>
@@ -3099,7 +3099,7 @@ if(!trim($e85)){
 					?>
 				</select>
 			</td>
-			<td id="o32" class="calculated number o32" style="padding:3px;"></td>
+			<td class="input" style="padding:3px;"><input type='text' class='input_1 number o32' id="o32" name="o32" value="<?php echo $o32; ?>" style="max-width:50px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' id="p32" name="p32" value="<?php echo $p32; ?>" style="max-width:50px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number q32' id="q32" name="q32" value="<?php echo $q32; ?>" style="max-width:50px;" /></td>
 			<td class="number r32" style="padding:3px;"></td>
@@ -3139,7 +3139,7 @@ if(!trim($e85)){
 					?>
 				</select>
 			</td>
-			<td id="o33" class="calculated o33" style="padding:3px;"></td>
+			<td class="input " style="padding:3px;"><input type='text' class='input_1 number o33' id="o33" name="o33" value="<?php echo $o33; ?>" style="max-width:50px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' id="p33" name="p33" value="<?php echo $p33; ?>" style="max-width:50px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q33' id="q33" name="q33" value="<?php echo $q33; ?>" style="max-width:50px;"  /></td>
 			<td id="r33" class="calculated number r33" style="padding:3px;"></td>
@@ -3194,7 +3194,7 @@ if(!trim($e85)){
 					?>
 				</select>
 			</td>
-			<td id="o35" class="calculated number o35" style="padding:3px;"></td>
+			<td class="input" style="padding:3px;"><input type='text' class='input_1 number o35' id="o35" name="o35" value="<?php echo $o35; ?>" style="max-width:50px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' id="p35" name="p35" value="<?php echo $p35; ?>" style="max-width:50px;" /></td>
 			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q35' id="q35" name="q35" value="<?php echo $q35; ?>" style="max-width:50px;" /></td>
 			<td class="number r35" style="padding:3px;"></td>

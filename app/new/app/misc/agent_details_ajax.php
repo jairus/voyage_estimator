@@ -4,7 +4,7 @@ include_once(dirname(__FILE__)."/../includes/bootstrap.php");
 date_default_timezone_set('UTC');
 
 if(isset($_GET['ship_agent'])){
-	$agent = explode(' - ', $_GET['ship_agent']);
+	$agent = explode(' = ', $_GET['ship_agent']);
 	
 	$id = $agent[1];
 

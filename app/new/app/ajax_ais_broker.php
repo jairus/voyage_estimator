@@ -1003,24 +1003,19 @@ if(isset($_GET['new_search'])){
 					<br />
 					To add more than one type<br />use the 'Ctrl' key and select
 				  </td>
+				  <td valign="top">
+				  	<input class='searchbutton' type="button" name="search" value="SEARCH"  style='cursor:pointer' id='sbutton'  />
+
+					<script>
+					jQuery("#sbutton").click(
+						function(){
+							shipSearchx(1);
+						}
+					)
+					</script>
+				  </td>
 				</tr>
 			  </table>
-			</td>
-		  </tr>
-		  <tr>
-			<td height="10" colspan="2"></td>
-		  </tr>
-		  <tr>
-			<td colspan="2" align="center">
-				<input class='searchbutton' type="button" name="search" value="SEARCH"  style='cursor:pointer' id='sbutton'  />
-
-				<script>
-				jQuery("#sbutton").click(
-					function(){
-						shipSearchx(1);
-					}
-				)
-				</script>
 			</td>
 		  </tr>
 		  <tr>
@@ -1096,8 +1091,8 @@ if(isset($_GET['new_search'])){
 			?>
 		
 		  <tr>
-			<td width="400" valign="top">
-			  <table width="400" border="0" cellpadding="0" cellspacing="0">
+			<td width="350" valign="top">
+			  <table width="350" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 				  <td>LAYCAN</td>
 				  <td width="10">&nbsp;</td>
@@ -1272,10 +1267,10 @@ if(isset($_GET['new_search'])){
 				</tr>
 			  </table>
 			</td>
-			<td width="600" valign="top">
-			  <table width="600" border="0" cellpadding="0" cellspacing="0">
+			<td width="650" valign="top">
+			  <table width="650" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-				  <td width="50">ZONE</td>
+				  <td width="40">ZONE</td>
 				  <td width="10">&nbsp;</td>
 				  <td>
 				  	<?php
@@ -1360,6 +1355,17 @@ if(isset($_GET['new_search'])){
 					}
 					</script>
 				  </td>
+				  <td rowspan="3" valign="top" align="right">
+				  	<input class='searchbutton' type="button" name="search" value="SEARCH"  style='cursor:pointer' id='sbutton2'  />
+
+					<script>
+					jQuery("#sbutton2").click(
+						function(){
+							shipSearchx(2);
+						}
+					)
+					</script>
+				  </td>
 				</tr>
 				<tr>
 				  <td height="3" colspan="3"></td>
@@ -1375,22 +1381,6 @@ if(isset($_GET['new_search'])){
 				  </td>
 				</tr>
 			  </table>
-			</td>
-		  </tr>
-		  <tr>
-			<td height="10" colspan="2"></td>
-		  </tr>
-		  <tr>
-			<td colspan="2" align="center">
-				<input class='searchbutton' type="button" name="search" value="SEARCH"  style='cursor:pointer' id='sbutton2'  />
-
-				<script>
-				jQuery("#sbutton2").click(
-					function(){
-						shipSearchx(2);
-					}
-				)
-				</script>
 			</td>
 		  </tr>
 		  <tr>

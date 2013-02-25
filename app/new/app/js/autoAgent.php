@@ -9,7 +9,7 @@ $agent = dbQuery($sql, $link);
 var agent = [ <?php
 $t = count($agent);
 for($i=0; $i<$t; $i++){
-	echo "\"".trim($agent[$i]['first_name'])." ".trim($agent[$i]['last_name'])." - ".trim($agent[$i]['id'])."\"";
+	echo "\"".trim($agent[$i]['first_name'])." ".trim($agent[$i]['last_name'])." = ".trim($agent[$i]['id'])."\"";
 	if($i%100==0&&$i!=0){
 		echo "\n";
 	}

@@ -138,7 +138,7 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td>Owner</td>
+							<td>Manager</td>
 							<td> : <?php echo $owner; ?></td>
 						</tr>
 						<tr>
@@ -574,7 +574,7 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td>Owner</td>
+							<td>Manager</td>
 							<td><input type="text" id="owner_id" name="owner" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $_GET['owner']; ?>" /></td>
 						</tr>
 						<tr>

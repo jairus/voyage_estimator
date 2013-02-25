@@ -812,10 +812,13 @@ function aremoveUser(id){
                                                     }
                                                     else
                                                         $img_flag = '&nbsp;';
+														
+													if($value!=''){
                                                     echo '<tr>
                                                             <td width="30" class="field">'.$img_flag.'</td>
                                                             <td>'.$value.'</td>
                                                          </tr>';
+													}
                                                 }
                                                 echo '</table>';
                                             ?>

@@ -726,7 +726,7 @@ $table_memberships .= '</table>';
 				$('#edit-' + this.rel).show();
 			}
 			else{
-				$('#edit-' + this.rel + ' input:lt(3)').each(function(index){
+				$('#edit-' + this.rel + ' input:lt(2)').each(function(index){
 					$(this).val('');
 				});			
 				$('#edit-' + this.rel).show();
@@ -814,7 +814,7 @@ $table_memberships .= '</table>';
 			}
 		});
 		$('#edit-contact-numbers input').blur(function(){
-			arr_phone_fields = ['p_country_code', 'p_area_code', 'phone_number'];
+			arr_phone_fields = ['p_country_code', 'phone_number'];
 			var p_err_count = 0;
 			$.each(arr_phone_fields, function(index, value){
 				if( $('#' + value).val() == '' )
@@ -1681,10 +1681,13 @@ $table_memberships .= '</table>';
 					}
 					else
 						$img_flag = '&nbsp;';
+						
+					if($value!=''){
 					echo '<tr>
 							<td width="30" class="field">'.$img_flag.'</td>
 							<td>'.$value.' (<a class="delete-bt" rel="'.($key+1).'">delete</a>)</td>
 						 </tr>';
+					}
 				}
 				echo '</table>';
 			?>

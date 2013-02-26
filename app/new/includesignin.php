@@ -60,7 +60,7 @@
     	<div style='padding-top:60px;'>
         	<a href="login.php" class="customer_login_link">CUSTOMER LOGIN</a>
             &nbsp;
-            <a href="purchasefree.php" class="free_trial_link">FREE TRIAL</a>
+            <a href="signup.php" class="free_trial_link">FREE TRIAL</a>
             &nbsp;
             <a href="portagents.php" class="live_ship_position_link">PORT AGENTS</a>
         </div>

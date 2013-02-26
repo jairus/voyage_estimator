@@ -14,7 +14,7 @@ $conn   = mysql_connect($dbhost,$dbuser,$dbpass) or die('Error connecting to mys
 mysql_select_db($dbname, $conn);
 
 if( $_GET['trigger'] == 'email_check' ){
-	$sql = mysql_query("SELECT COUNT(id) AS cnt FROM _port_agents WHERE email_address = '".$_GET['email']."' ");
+	$sql = mysql_query("SELECT COUNT(id) AS cnt FROM _sbis_users WHERE email = '".$_GET['email']."' ");
 	$row = mysql_fetch_assoc($sql);
 	if( $row['cnt'] > 0 )
 		echo 'email found';
@@ -36,26 +36,49 @@ if( $_POST['trigger'] == 'validate_captcha' ){
 if( $_POST['trigger'] == 'save_new_user' ){
 	foreach($_POST as $key => $value)
 		$post[$key] = trim($value);	
+		
+	//keys refer to fields in db
+	$phone_nos = $post['p_country_code']."-".$post['phone_number'];
+	$fax_nos = $post['f_country_code']."-".$post['fax_number'];
+	$dob = $post['month']." ".$post['day'].", ".$post['year'];
 	
-	$arr_data = array(	'first_name' => $post['first_name'],
-						'last_name' => $post['last_name'],
-						'office_number' => $post['office_number'],
-						'mobile_number' => $post['mobile_number'],
-						'fax_number' => $post['fax_number1'],
-						'telex' => $post['telex_number'],
-						'email_address' => $post['email'],
-						'skype' => $post['skype'],
-						'yahoo' => $post['yahoo'],
-						'msn' => $post['msn'],
+	if(isset($post['newsletters'])){
+		$newsletters = "Yes";
+	}else{
+		$newsletters = "No";
+	}
+	
+	$arr_data = array(	'firstname' => $post['firstname'],
+						'lastname' => $post['lastname'],
+						'email' => $post['email'],
+						'password' => md5($post['pass1']),
+						'title' => $post['title'],
+						'position' => $post['position'],
+						'department' => $post['department'],
+						'gender' => $post['gender'],
+						'date_of_birth' => $dob,
 						'company_name' => $post['company_name'],
-						'business_type' => 'Port Agents',
-						'address' => $post['address'],
+						'company_name2' => $post['company_name2'],
+						'company_type' => $post['company_type'],
+						'num_of_emp' => $post['num_of_emp'],
+						'purchase_sss' => $post['purchase_sss'],
+						'role_in_purchase' => $post['role_in_purchase'],
+						'address1' => $post['address_1'],
+						'address2' => $post['address_2'],
+						'address3' => $post['address_3'],
 						'city' => $post['city'],
-						'postal_code' => $post['postal_code'],
 						'country' => $post['countryField'],
-						'fax' => $post['fax_number2'],
+						'postal_code' => $post['postal_code'],
+						'contact_nos' => $phone_nos,
+						'fax' => $fax_nos,
+						'subscribe_newsletter' => $newsletters,
+						'licenses' => $post['num_of_license'],
 						'website' => $post['website'],
-						'services' => $post['services'],
+						'work_experience' => $post['work_experience'],
+						'activated' => 1,
+						'dry' => 1,
+						'purchase_type' => '',
+						'purchase' => '',
 						'dateadded' => date('Y-m-d H-i-s'));
 						
 	foreach($arr_data as $field => $data){
@@ -63,10 +86,10 @@ if( $_POST['trigger'] == 'save_new_user' ){
 		$arr_datas[] = $data;
 	}
 	
-	$sql = "INSERT INTO _port_agents(".implode(", ",$arr_fields).") VALUES ('".implode("', '", $arr_datas)."') ";
+	$sql = "INSERT INTO _sbis_users(".implode(", ",$arr_fields).") VALUES ('".implode("', '", $arr_datas)."') ";
 	$result = mysql_query($sql) or die(mysql_error());
 	$row_id = mysql_insert_id();
-	//mail_it($post, $row_id);
+	mail_it($post, $row_id);
 	echo $row_id;
 		
 	exit;	
@@ -77,7 +100,7 @@ function mail_it($post, $id){
 	$fromname_1 = trim($post['lastname']).", ".trim($post['firstname']);	
 	$bouncereturn = "mailer@s-bisonline.com"; //where the email will forward in cases of bounced email
 	$subject_1 = "S-BIS Purchase Request";
-	$emails_1[0]['email'] = "roydevlin@yahoo.com";
+	$emails_1[0]['email'] = "roy@s-bis.com";
 	$emails_1[0]['name'] = "Roy Devlin";
 	$message_1 = "
 	Hello Roy,
@@ -132,7 +155,7 @@ function mail_it($post, $id){
 	emailBlast($from_1, $fromname_1, $subject_1, $message_1, $emails_1, $bouncereturn, 0);
 	
 	
-	$from_2 = "billing@s-bis.com";
+	/*$from_2 = "billing@s-bis.com";
 	$fromname_2 = "S-Bisonline.com";	
 	$bouncereturn = "mailer@s-bisonline.com"; //where the email will forward in cases of bounced email
 	$subject_2 = "Welcom to S-BIS";
@@ -200,7 +223,7 @@ function mail_it($post, $id){
 	Contact me any time roydevlin@s-bis.com</p>";
 
 	$message_2 = stristr($post['purchase'], 'trial') ? nl2br($arr_message_2['trial']) : nl2br($arr_message_2['purchase']);
-	emailBlast($from_2, $fromname_2, $subject_2, $message_2, $emails_2, $bouncereturn, 0);
+	emailBlast($from_2, $fromname_2, $subject_2, $message_2, $emails_2, $bouncereturn, 0);*/
 }
 
 

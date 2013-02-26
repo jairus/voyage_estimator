@@ -5,7 +5,7 @@
 <script type='text/javascript' src='../js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
 <script type='text/javascript' src='../js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
 <script type='text/javascript' src='../js/jquery-autocomplete/jquery.autocomplete.js'></script>
-<script type='text/javascript' src='../js/autoAgent.php'></script>
+<script type='text/javascript' src='../js/autoAgent.php?portname=<?php echo $_GET['portname']; ?>'></script>
 <script type='text/javascript' src='../js/autoPorts.php'></script>
 <link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/jquery.autocomplete.css" />
 <link rel="stylesheet" type="text/css" href="../js/jquery-autocomplete/lib/thickbox.css" />

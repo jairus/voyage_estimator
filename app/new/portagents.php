@@ -438,7 +438,7 @@
 					*/
 					
 					//fields validation
-					arr_fields = ['first_name', 'last_name', 'email', 'company_name', 'address', 'city', 'postal_code', 'countryField', 'agreement'];
+					arr_fields = ['first_name', 'last_name', 'email', 'company_name', 'address', 'city', 'postal_code', 'countryField', 'services'];
 					$.each(arr_fields, function(index, value){
 						if( $('#' + value).val() == '' ){
 							if( value == 'email' )
@@ -450,12 +450,12 @@
 							$('#error_' + value).hide();
 					});
 					
-					if($('input[@name=agreement]:checked').size() == 0){
+					/*if($('input[@name=agreement]:checked').size() == 0){
 						$('#error_agreement').show();
 						error_count++;
 					}else{
 						$('#error_agreement').hide();
-					}
+					}*/
 					
 					//email validation
 					if( $('#email').val() != '' && !(email_pattern.test($('#email').val())) ){
@@ -593,6 +593,13 @@
 				return true;
 			}			
         </script>
+		<script type='text/javascript' src='app/js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
+		<script type='text/javascript' src='app/js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
+		<script type='text/javascript' src='app/js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
+		<script type='text/javascript' src='app/js/jquery-autocomplete/jquery.autocomplete.js'></script>
+		<script type='text/javascript' src='app/js/ports.php'></script>
+		<link rel="stylesheet" type="text/css" href="app/js/jquery-autocomplete/jquery.autocomplete.css" />
+		<link rel="stylesheet" type="text/css" href="app/js/jquery-autocomplete/lib/thickbox.css" />
 	</head>
 	<body>
 		<div id="bodytop">
@@ -702,6 +709,13 @@
                                             <td class='label'><span class="required">*</span>City:</td>
                                             <td class='form'>
                                                 <input class='tbox' type='text' name="city" id="city">
+												
+												<script type="text/javascript">
+												jQuery("#city").focus().autocomplete(ports);
+												jQuery("#city").setOptions({
+													scrollHeight: 180
+												});
+												</script>
                                                 <div class='error' id='error_city'>Please Input City</div></td>
                                         </tr>
                                         <tr>
@@ -724,6 +738,12 @@
                                             <td class='label'>Website</span></td>
                                             <td class='form'><input name='website' type='text' class='tbox155' id="website" /></td>
                                         </tr>
+										<tr>
+                                            <td class='label' valign="top"><span class="required">*</span>Services:</td>
+                                            <td class='form'>
+                                                <textarea class='tbox' name="services" id="services" style="height:50px;"></textarea>
+                                                <div class='error' id='error_services'>Please Input Services</div></td>
+                                        </tr>
                                         <tr>
                                             <td class='label'>&nbsp;</td>
                                             <td class='form'></td>
@@ -741,14 +761,6 @@
                                             <td class='form'>
 												<input class='tbox' type='text' name="captcha_code" id="captcha_code">
                                                 <div class='error' id='error_captcha_code'>Please Input Captcha Code</div></td>
-                                        </tr>
-                                        <tr>
-                                            <td class='signme'>&nbsp;</td>
-                                            <td class='signme'>
-                                                <input type="checkbox" name="agreement" id="agreement" value="1" /> I have read and agreed to the Agreement<br />
-                                                &nbsp; <a href="subscriptionagreement.php" class="z_links" target="_blank">Subscription Agreement</a>
-                                                <div class='error' id='error_agreement'>Please read and agree to the Agreement</div>
-                                             </td>
                                         </tr>									
                                         <tr>
                                             <td class='signme'>&nbsp;</td>

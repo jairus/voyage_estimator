@@ -116,9 +116,9 @@ class account{
 		$r2 = $this->query($sql);
 		$r2 = $r2[0];
 		$from = "mailer@s-bisonline.com";
-		$fromname = "CargoSpotter Mailer";
+		$fromname = "S-BIS Mailer";
 		$bouncereturn = "mailer@s-bisonline.com"; //where the email will forward in cases of bounced email
-		$subject = "CargoSpotter Network Request Confirmation";
+		$subject = "S-BIS Network Request Confirmation";
 		$emails = array();
 		$email = array();
 		$email['email'] = $r2['email'];
@@ -129,7 +129,7 @@ class account{
 
 		".$r['firstname']." ".$r['lastname']." (".$r['email'].") has confirmed your request you to be in his network.
 		
-		Please login to <a href='http://www.s-bisonline.com/s-bis.php'>http://www.s-bisonline.com/s-bis.php</a> to see.
+		Please login to <a href='http://www.s-bisonline.com'>http://www.s-bisonline.com</a> to see.
 
 		";
 	
@@ -169,9 +169,9 @@ class account{
 			$r2 = $this->query($sql);
 			$r2 = $r2[0];
 			$from = "mailer@s-bisonline.com";
-			$fromname = "CargoSpotter Mailer";
+			$fromname = "S-BIS Mailer";
 			$bouncereturn = "mailer@s-bisonline.com"; //where the email will forward in cases of bounced email
-			$subject = "CargoSpotter Network Request";
+			$subject = "S-BIS Network Request";
 			$emails = array();
 			$email = array();
 			$email['email'] = $r2['email'];
@@ -182,7 +182,7 @@ class account{
 	
 			".$r['firstname']." ".$r['lastname']." (".$r['email'].") has requested you to be in his network.
 			
-			Please login to <a href='http://www.s-bisonline.com/s-bis.php'>http://www.s-bisonline.com/s-bis.php</a> to see.
+			Please login to <a href='http://www.s-bisonline.com'>http://www.s-bisonline.com</a> to see.
 
 	
 			";

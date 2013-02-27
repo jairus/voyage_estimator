@@ -424,6 +424,13 @@ $(function(){
             	calculateDates();
         	},
 		});
+		
+	$(".calendar").datepicker({ 
+		dateFormat: "dd/mm/yy, DD",
+		onSelect: function(date) {
+				jQuery(this).val(date);
+        	},
+		});
 
 	$(".c31").autocomplete({
 		//define callback to format results
@@ -1415,10 +1422,12 @@ function bunkerstopCalc(){
 
 		//calculate ld
 		ld = 0;
-		ld = valueU(jQuery(tmp+".l33")) / valueU(jQuery(tmp+".m33")) / 24;
+		//ld = valueU(jQuery(tmp+".l33")) / valueU(jQuery(tmp+".m33")) / 24;
+		ld = valueU(jQuery(tmp+".l33")) / valueU(jQuery(tmp+".m33"));
 
 		setValue(jQuery(tmp+".o33"), fNum(ld));
-		setValue(jQuery("#laytime2"), fNum(ld*24));
+		//setValue(jQuery("#laytime2"), fNum(ld*24));
+		setValue(jQuery("#laytime2"), fNum(ld));
 
 		//seadays
 		seadays += ( valueU(jQuery(tmp+".s33")) + valueU(jQuery(tmp+".t33")) );
@@ -3043,11 +3052,11 @@ if(!trim($e85)){
 			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Quantity (MT)</strong></i></div></td>
 			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Volume (M3)</strong></i></div></td>
 			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>L/D Rate (MT/day)</strong></i></div></td>
-			<td width="167" class="text_1 label"><div style="padding:3px;"><i><strong>Working Days</strong></i></div></td>
 			<td width="45" class="text_1 label"><div style="padding:3px;"><i><strong>Load Days</strong></i></div></td>
-			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Turn Time Days</strong></i></div></td>
-			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Idle/Extra Days Sea</strong></i></div></td>
-			<td width="7" class="text_1 label"><div style="padding:3px;"><i><strong>&nbsp;</strong></i></div></td>
+			<td width="167" class="text_1 label"><div style="padding:3px;"><i><strong>Working Days TERMS</strong></i></div></td>
+			<td width="102" class="text_1 label"><div style="padding:3px; color:#FF0000;"><i><strong>Working Aditional Days TERMS</strong></i></div></td>
+			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Turn/Idle/Extra Days</strong></i></div></td>
+			<td width="7" class="text_1 label"><div style="padding:3px;"><i><strong>Voyage Days</strong></i></div></td>
 			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Canal Days</strong></i></div></td>
 			<td width="108" class="text_1 label"><div style="padding:3px;"><i><strong>Weather/Extra Days</strong></i></div></td>
 		  </tr>
@@ -3059,8 +3068,8 @@ if(!trim($e85)){
 			<td class='number l31' style="padding:3px;"></td>
 			<td class='number m31' style="padding:3px;"></td>
 			<td class='number n31' style="padding:3px;"></td>
-			<td class="number o31" style="padding:3px;"></td>
-			<td class='number p31' style="padding:3px;"></td>
+			<td style="padding:3px; color:#FF0000;"><a title="Please check the WORKING DAYS Calendar to ensure the Working Days TERMS are complied with. ADD additional days to compenate for the TERMS">Working Days Calendar</a></td>
+			<td style="padding:3px;"><input type='text' class='input_1 general calendar' id="calendar" name="calendar" value="<?php echo date('d/m/Y, l'); ?>" style="max-width:50px; border:1px solid #FF0000;" /></td>
 			<td class='number q31' style="padding:3px;"></td>
 			<td id="r31" class="calculated number r31" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s31' id="s31" name="s31" value="<?php echo $s31; ?>" style="max-width:50px;" /></td>
@@ -3073,6 +3082,7 @@ if(!trim($e85)){
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' id="k32" name="k32" value="<?php echo $k32; ?>" style="max-width:50px; border:1px solid #FF0000;" onblur="populatek35(this.value);" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td id="l32" class='calculated number l32' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' id="m32" name="m32" value="<?php echo $m32; ?>" style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td id="o32" class='calculated number o32' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n32arr = array(
@@ -3099,8 +3109,7 @@ if(!trim($e85)){
 					?>
 				</select>
 			</td>
-			<td class="input" style="padding:3px;"><input type='text' class='input_1 number o32' id="o32" name="o32" value="<?php echo $o32; ?>" style="max-width:50px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' id="p32" name="p32" value="<?php echo $p32; ?>" style="max-width:50px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p32' id="p32" name="p32" value="<?php echo $p32; ?>" style="max-width:50px; border:1px solid #FF0000;" /></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number q32' id="q32" name="q32" value="<?php echo $q32; ?>" style="max-width:50px;" /></td>
 			<td class="number r32" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s32' id="s32" name="s32" value="<?php echo $s32; ?>" style="max-width:50px;" /></td>
@@ -3113,6 +3122,7 @@ if(!trim($e85)){
 			<td class='number k33' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number l33' id="l33" name="l33" value="<?php echo $l33; ?>" style="max-width:50px;"  /></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m33' id="m33" name="m33" value="<?php echo $m33; ?>" style="max-width:50px;" /></td>
+			<td id="o33" class='calculated number o33' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n33arr = array(
@@ -3139,8 +3149,7 @@ if(!trim($e85)){
 					?>
 				</select>
 			</td>
-			<td class="input " style="padding:3px;"><input type='text' class='input_1 number o33' id="o33" name="o33" value="<?php echo $o33; ?>" style="max-width:50px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' id="p33" name="p33" value="<?php echo $p33; ?>" style="max-width:50px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p33' id="p33" name="p33" value="<?php echo $p33; ?>" style="max-width:50px; border:1px solid #FF0000;" /></td>
 			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q33' id="q33" name="q33" value="<?php echo $q33; ?>" style="max-width:50px;"  /></td>
 			<td id="r33" class="calculated number r33" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number s33' id="s33" name="s33" value="<?php echo $s33; ?>" style="max-width:50px;" /></td>
@@ -3153,8 +3162,8 @@ if(!trim($e85)){
 			<td class='number k34' style="padding:3px;"></td>
 			<td class='number l34' style="padding:3px;"></td>
 			<td class='number m34' style="padding:3px;"></td>
-			<td class='number n34' style="padding:3px;"></td>
 			<td class="number o34" style="padding:3px;"></td>
+			<td class='number n34' style="padding:3px;"></td>
 			<td class='number p34' style="padding:3px;"></td>
 			<td class='number q34' style="padding:3px;"></td>
 			<td id="r34" class="calculated number r34" style="padding:3px;"></td>
@@ -3168,6 +3177,7 @@ if(!trim($e85)){
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k35' id="k35" name="k35" value="<?php echo $k35; ?>" style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td id="l35" class='calculated number l35' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number m35' id="m35" name="m35" value="<?php echo $m35; ?>" style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td id="o35" class='calculated number o35' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n35arr = array(
@@ -3194,8 +3204,7 @@ if(!trim($e85)){
 					?>
 				</select>
 			</td>
-			<td class="input" style="padding:3px;"><input type='text' class='input_1 number o35' id="o35" name="o35" value="<?php echo $o35; ?>" style="max-width:50px;" /></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' id="p35" name="p35" value="<?php echo $p35; ?>" style="max-width:50px;" /></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number p35' id="p35" name="p35" value="<?php echo $p35; ?>" style="max-width:50px; border:1px solid #FF0000;" /></td>
 			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number q35' id="q35" name="q35" value="<?php echo $q35; ?>" style="max-width:50px;" /></td>
 			<td class="number r35" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s35' id="s35" name="s35" value="<?php echo $s35; ?>" style="max-width:50px;" /></td>
@@ -3223,13 +3232,13 @@ if(!trim($e85)){
 			<td width="38" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
 		  </tr>
 		  <tr>
-			<td colspan="7" class="label" style="padding:3px;"><strong>PORT/SEA DAYS</strong></td>
-			<td colspan="3" class="label calculated" id='o36' style="padding:3px;">&nbsp;</td>
-			<td colspan="3" class="label calculated" id='r36' style="padding:3px;">&nbsp;</td>
+			<td colspan="3" class="label" style="padding:3px;"><strong>PORT/SEA DAYS</strong></td>
+			<td colspan="8" class="label calculated" id='o36' style="padding:3px;">&nbsp;</td>
+			<td colspan="2" class="label calculated" id='r36' style="padding:3px;">&nbsp;</td>
 		  </tr>
 		  <tr>
-			<td colspan="7" class="label" style="padding:3px;"><strong>TOTAL VOYAGE DAYS</strong></td>
-			<td colspan="6" class="label calculated" id='o37' style="padding:3px;">&nbsp;</td>
+			<td colspan="3" class="label" style="padding:3px;"><strong>TOTAL VOYAGE DAYS</strong></td>
+			<td colspan="10" class="label calculated" id='o37' style="padding:3px;">&nbsp;</td>
 		  </tr>
 		</table>
 		

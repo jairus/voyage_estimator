@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>s-bis - Ship Broker Intelligence Solutions</title>
+<title>S-BIS - Ship Broker Intelligence Solutions</title>
 <link rel="shortcut icon" href="../images/global/favicon.ico">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style_ve.css">

@@ -354,6 +354,7 @@ if(isset($_GET['portname'])){
 							<td><div style="padding:5px; font-weight:bold;">NRT</div></td>
 							<td><div style="padding:5px; font-weight:bold;">AMOUNT</div></td>
 							<td><div style="padding:5px; font-weight:bold;">DATE</div></td>
+							<td><div style="padding:5px; font-weight:bold;">CARGO TYPE</div></td>
 						</tr>
 						<?php
 						for($i=0; $i<$t; $i++){
@@ -386,6 +387,7 @@ if(isset($_GET['portname'])){
 								<td><div style="padding:5px;"><?php echo $details['nrt']; ?></div></td>
 								<td><div style="padding:5px;">US$ <?php echo $total_over_all; ?></div></td>
 								<td><div style="padding:5px;"><?php echo $details['date']; ?></div></td>
+								<td><div style="padding:5px;"><?php echo $details['cargo_type']; ?></div></td>
 							</tr>
 							<?php
 							}

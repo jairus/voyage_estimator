@@ -459,14 +459,10 @@ if(trim($t)){
 				<td style='text-align:right;'><div style='padding:5px;'><a onclick='openMapRegister(\"".$details."\")' class='clickable'><img src='images/map-icon.png' ></a></div></td>
 				<td><div style='padding:5px;'>";
 				
-				if(date("M d, 'y", strtotime($siitech_ships[0]['siitech_lastseen']))!="Jan 01, '70"){
-					echo date("M d, 'y", strtotime($siitech_ships[0]['siitech_lastseen']));
+				if(date("M d, 'y", strtotime($siitech_ships[0]['siitech_eta']))!="Jan 01, '70"){
+					echo date("M d, 'y", strtotime($siitech_ships[0]['siitech_eta']));
 				}else{
-					if(date("M d, 'y", strtotime($siitech_ships[0]['siitech_eta']))!="Jan 01, '70"){
-						echo date("M d, 'y", strtotime($siitech_ships[0]['siitech_eta']));
-					}else{
-						echo "&nbsp;";
-					}
+					echo "&nbsp;";
 				}
 				
 				echo "</div></td>

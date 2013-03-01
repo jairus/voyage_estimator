@@ -64,6 +64,7 @@ if($_POST['submitok']==1){
 	$print['MAIN']['FLAG'] = $_POST['FLAG'];
 	$print['MAIN']['HOME_PORT'] = $_POST['HOME_PORT'];
 	$print['MAIN']['MANAGER'] = $_POST['MANAGER'];
+	$print['MAIN']['MANAGER_OWNER'] = $_POST['MANAGER_OWNER'];
 	$print['MAIN']['OWNER'] = $_POST['OWNER'];
 	$print['MAIN']['CLASS_SOCIETY'] = $_POST['CLASS_SOCIETY'];
 	$print['MAIN']['DUAL_CLASS_SOCIETY'] = $_POST['DUAL_CLASS_SOCIETY'];
@@ -316,6 +317,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			
 			$HOME_PORT = getValue($r[0]['data'], 'HOME_PORT');
 			$MANAGER = getValue($r[0]['data'], 'MANAGER');
+			$MANAGER_OWNER = getValue($r[0]['data'], 'MANAGER_OWNER');
 			$OWNER = getValue($r[0]['data'], 'OWNER');
 			$CLASS_SOCIETY = getValue($r[0]['data'], 'CLASS_SOCIETY');
 			$DUAL_CLASS_SOCIETY = getValue($r[0]['data'], 'DUAL_CLASS_SOCIETY');
@@ -549,6 +551,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 		
 		$HOME_PORT = $data['MAIN']['HOME_PORT'];
 		$MANAGER = $data['MAIN']['MANAGER'];
+		$MANAGER_OWNER = $data['MAIN']['MANAGER_OWNER'];
 		$OWNER = $data['MAIN']['OWNER'];
 		$CLASS_SOCIETY = $data['MAIN']['CLASS_SOCIETY'];
 		$DUAL_CLASS_SOCIETY = $data['MAIN']['DUAL_CLASS_SOCIETY'];
@@ -845,6 +848,13 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 		  <tr>
 			<td class="title">MANAGER</td>
 			<td>: <input type="text" id="MANAGER_ID" name="MANAGER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $MANAGER; ?>" /></td>
+		  </tr>
+		  <tr>
+			<td height="5"></td>
+		  </tr>
+		  <tr>
+			<td class="title">MANAGER OWNER</td>
+			<td>: <input type="text" id="MANAGER_OWNER_ID" name="MANAGER_OWNER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $MANAGER_OWNER; ?>" /></td>
 		  </tr>
 		  <tr>
 			<td height="5"></td>

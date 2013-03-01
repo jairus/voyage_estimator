@@ -1,5 +1,6 @@
 <?php
 @include_once(dirname(__FILE__)."/includes/bootstrap.php");
+date_default_timezone_set('UTC');
 
 if($_GET['autosave']){
 	$_SESSION['data'] = $_POST['data'];
@@ -68,7 +69,17 @@ if($_GET['search']){
 		$ship['fuel'] = getValue($r2[0]['data'], 'FUEL');
 		$ship['fuel_consumption'] = getValue($r2[0]['data'], 'FUEL_CONSUMPTION');
 		$ship['fuel_type'] = getValue($r2[0]['data'], 'FUEL_TYPE');
+		
 		$ship['manager_owner'] = getValue($r2[0]['data'], 'MANAGER');
+		if(!trim($ship['manager_owner'])){
+			$ship['manager_owner'] = getValue($r2[0]['data'], 'MANAGER_OWNER');
+		}
+		
+		if(!trim($ship['manager_owner'])){
+			$ship['manager_owner'] = getValue($r2[0]['data'], 'OWNER');
+		}
+		
+		
 		$ship['manager_owner_email'] = getValue($r2[0]['data'], 'MANAGER_OWNER_EMAIL');
 		$ship['class_society'] = htmlentities(getValue($r2[0]['data'], 'CLASS_SOCIETY'));
 		$ship['holds'] = htmlentities(getValue($r2[0]['data'], 'HOLDS'));
@@ -1004,7 +1015,7 @@ function showShipDetails2(imo){
 	jQuery("#shipdetails2").dialog("open");
 }
 
-function showPortDetails(portname){
+function showPortDetails(portname, date_from, date_to, num_of_days){
 	var vessel_name = jQuery("#ship").val();
 	var cargo_type = jQuery("#i32").val();
 	var dwt = jQuery("#ship_summer_dwt").text();
@@ -1016,7 +1027,7 @@ function showPortDetails(portname){
 
 	$(iframe).contents().find("body").html("");
 
-	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&cargo_type='+cargo_type+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner;
+	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&cargo_type='+cargo_type+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner+'&date_from='+date_from+'&date_to='+date_to+'&num_of_days='+num_of_days;
 	jQuery("#portdetails").dialog("open");
 }
 
@@ -1767,9 +1778,11 @@ function calculateDates(){
 }
 
 function setupPortInterface(){
-	setValue(jQuery("#port1"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e31"))+'\');" class="clickable">'+getValue(jQuery(".e31"))+'</a>');
-	setValue(jQuery("#port2"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e33"))+'\');" class="clickable">'+getValue(jQuery(".e33"))+'</a>');
-	setValue(jQuery("#port3"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e34"))+'\');" class="clickable">'+getValue(jQuery(".e34"))+'</a>');
+	var numberOfDaysToAdd = parseInt(jQuery("#p33").val());
+
+	setValue(jQuery("#port1"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e31"))+'\', \''+jQuery("#f31").text()+'\', \''+jQuery("#f32").text()+'\', 0);" class="clickable">'+getValue(jQuery(".e31"))+'</a>');
+	setValue(jQuery("#port2"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e33"))+'\', \''+jQuery("#f33").text()+'\', \''+jQuery("#f33").text()+'\', \''+numberOfDaysToAdd+'\');" class="clickable">'+getValue(jQuery(".e33"))+'</a>');
+	setValue(jQuery("#port3"), '<a onclick="showPortDetails(\''+getValue(jQuery(".e34"))+'\', \''+jQuery("#f34").text()+'\', \''+jQuery("#f35").text()+'\', 0);" class="clickable">'+getValue(jQuery(".e34"))+'</a>');
 	
 	getPortDetails(jQuery(".e31").val(), 1);
 	getPortDetails(jQuery(".e33").val(), 2);

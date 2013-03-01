@@ -15,6 +15,7 @@ if(isset($_GET['id'])){
 		$data = unserialize($r_2[0]['port_details']);
 	
 		$date = $data['date'];
+		$date_to = $data['date_to'];
 		$ship_agent = $data['ship_agent'];
 		$vessel = $data['vessel'];
 		$cargo_type = $data['cargo_type'];
@@ -89,8 +90,15 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td width="130">Date</td>
+							<td width="130">Laycan</td>
 							<td> : <?php echo $date; ?></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td> : <?php echo $date_to; ?></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>
@@ -517,8 +525,15 @@ if(isset($_GET['id'])){
 							<td colspan="2" height="5">&nbsp;</td>
 						</tr>
 						<tr>
-							<td width="130">Date</td>
+							<td width="130">Laycan</td>
 							<td><input type="text" id="date_id" name="date" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $date; ?>" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" height="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td><input type="text" id="date_to_id" name="date_to" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $date_to; ?>" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" height="5">&nbsp;</td>

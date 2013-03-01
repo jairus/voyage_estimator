@@ -177,10 +177,13 @@ function showPortDetails(portname, id){
 	var gross_tonnage = '<?php echo $_GET['gross_tonnage']; ?>';
 	var net_tonnage = '<?php echo $_GET['net_tonnage']; ?>';
 	var owner = '<?php echo $_GET['owner']; ?>';
+	var date_from = '<?php echo $_GET['date_from']; ?>';
+	var date_to = '<?php echo $_GET['date_to']; ?>';
+	var num_of_days = '<?php echo $_GET['num_of_days']; ?>';
 
 	jQuery.ajax({
 		type: 'GET',
-		url: "port_details_ajax.php?portname="+portname+'&vessel_name='+vessel_name+'&cargo_type='+cargo_type+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner+"&id="+id,
+		url: "port_details_ajax.php?portname="+portname+'&vessel_name='+vessel_name+'&cargo_type='+cargo_type+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner+'&date_from='+date_from+'&date_to='+date_to+'&num_of_days='+num_of_days+"&id="+id,
 		data:  '',
 
 		success: function(data) {
@@ -253,6 +256,7 @@ if($_POST['submitok']==1){
 	$print = array();
 	
 	$print['date'] = $_POST['date'];
+	$print['date_to'] = $_POST['date_to'];
 	$print['ship_agent'] = $_POST['ship_agent'];
 	$print['vessel'] = $_POST['vessel'];
 	$print['cargo_type'] = $_POST['cargo_type'];
@@ -405,6 +409,15 @@ if(isset($_GET['portname'])){
 		</table>
 		<?php
 	}else{
+		$date_from = $_GET['date_from'];
+		$date_from = explode('/', $date_from);
+		$date_from = $date_from[1].'/'.$date_from[0].'/'.$date_from[2];
+		
+		
+		$date_to = $_GET['date_to'];
+		$date_to = explode('/', $date_to);
+		$date_to = $date_to[1].'/'.$date_to[0].'/'.$date_to[2];
+		$date_to = date('m/d/Y H:i', strtotime($date_to. ' + '.$_GET['num_of_days'].' days'));
 		?>
 		<table width="1120" border="0" cellspacing="0" cellpadding="0">
 			<tr>
@@ -428,8 +441,15 @@ if(isset($_GET['portname'])){
 										<td colspan="2" height="5">&nbsp;</td>
 									</tr>
 									<tr>
-										<td width="130">Date</td>
-										<td><input type="text" id="date_id" name="date" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" /></td>
+										<td width="130">Laycan</td>
+										<td><input type="text" id="date_id" name="date" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo date('m/d/Y H:i', strtotime($date_from)); ?>" /></td>
+									</tr>
+									<tr>
+										<td colspan="2" height="5">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td><input type="text" id="date_to_id" name="date_to" readonly="readonly" style="width:150px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $date_to; ?>" /></td>
 									</tr>
 									<tr>
 										<td colspan="2" height="5">&nbsp;</td>

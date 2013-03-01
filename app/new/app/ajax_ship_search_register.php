@@ -4,6 +4,15 @@
 <script type="text/javascript" src="js/development-bundle/ui/jquery.ui.core.js"></script>
 <script type="text/javascript" src="js/development-bundle/ui/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="js/development-bundle/ui/jquery.ui.dialog.js"></script>
+
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/jquery.autocomplete.js'></script>
+<script type='text/javascript' src='js/autoVessel2.php'></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/jquery.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/lib/thickbox.css" />
+
 <script>
 function openMessageDialog(mid, imo, type){
 	jQuery("#messageiframeshipsearchonly")[0].src="search_ajax1ve.php?action=getmessages&type="+type+"&mid="+mid+"&imo="+imo+"&t="+(new Date()).getTime();
@@ -115,7 +124,17 @@ jQuery( "#miscdialog" ).dialog("close");
             <table>
                 <tr>
                     <td style="vertical-align:middle;"><div style="padding:2px;">SHIP NAME, IMO, MMSI, CALLSIGN</div></td>
-                    <td><div style="padding:2px;"><input type='text' name='ship' class='input_1' style='width:200px'></div></td>
+                    <td>
+					<div style="padding:2px;">
+					<input type='text' id='ship' name='ship' class='input_1' style='width:200px'>
+					<script type="text/javascript">
+					jQuery("#ship").focus().autocomplete(vessel);
+					jQuery("#ship").setOptions({
+						scrollHeight: 180
+					});
+					</script>
+					</div>
+					</td>
                     <td width="50">&nbsp;</td>
                     <td style="vertical-align:middle;"><div style="padding:2px;">MANAGER / MANAGER OWNER</div></td>
                     <td><div style="padding:2px;"><input type='text' name='operator' class='input_1' style='width:200px'></div></td>

@@ -82,6 +82,11 @@ if(isset($_GET['num'])){
 			$sql = "SELECT * FROM `_veson_ports` WHERE `name`='".$destination_port."' LIMIT 0, 1";
 			$r = dbQuery($sql, $link);
 			
+			if(!trim($r[0]['id'])){
+				$sql = "SELECT * FROM `_other_ports` WHERE `name`='".$destination_port."' LIMIT 0, 1";
+				$r = dbQuery($sql, $link);
+			}
+			
 			if($r[0]['id']){
 				$sqlext = "";
 				

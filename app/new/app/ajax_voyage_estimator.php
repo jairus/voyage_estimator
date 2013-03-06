@@ -568,7 +568,7 @@ $(function(){
 			setValue(jQuery("#"+idx+" .e34"), str);
 
 			ladenCalc(true);
-
+			
 			calculateDates();
 		},
 	});
@@ -1404,7 +1404,7 @@ function ladenCalc(triggerajax){
 
 		//distance calc
 		str = getValue(jQuery(tmp+".c34"));
-
+			
 		if(str){
 			pcs = str.split("-");
 			from = pcs[pcs.length-1];
@@ -1587,8 +1587,8 @@ function calculateDates(){
 		n++;
 	}
 
-	c45 = uNum(getValue(jQuery("#c44")))*days;
-	c46 = c45*(uNum(getValue(jQuery("#d42")))+uNum(getValue(jQuery("#d42_180")))+uNum(getValue(jQuery("#d42_lsifo380")))+uNum(getValue(jQuery("#d42_lsifo180"))));
+	c45 = getValue(jQuery("#c44"))*days;
+	c46 = c45*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
 
 	setValue(jQuery("#c45"), fNum(c45));
 	setValue(jQuery("#c46"), fNum(c46));
@@ -1685,7 +1685,7 @@ function calculateDates(){
 	}
 
 	d45 = uNum(getValue(jQuery("#d44")))*days;
-	d46 = d45*(uNum(getValue(jQuery("#d42")))+uNum(getValue(jQuery("#d42_180")))+uNum(getValue(jQuery("#d42_lsifo380")))+uNum(getValue(jQuery("#d42_lsifo180"))));
+	d46 = d45*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
 
 	setValue(jQuery("#d45"), fNum(d45));
 	setValue(jQuery("#d46"), fNum(d46));
@@ -1724,13 +1724,13 @@ function calculateDates(){
 	portdays = calculatePortDays();
 
 	e45 = uNum(getValue(jQuery("#e44")))*portdays;
-	e46 = e45*(uNum(getValue(jQuery("#d42")))+uNum(getValue(jQuery("#d42_180")))+uNum(getValue(jQuery("#d42_lsifo380")))+uNum(getValue(jQuery("#d42_lsifo180"))));
+	e46 = e45*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
 
 	setValue(jQuery("#e45"), fNum(e45));
 	setValue(jQuery("#e46"), fNum(e46));
 
 	f45 = uNum(getValue(jQuery("#f45")));
-	f46 = f45*(uNum(getValue(jQuery("#d42")))+uNum(getValue(jQuery("#d42_180")))+uNum(getValue(jQuery("#d42_lsifo380")))+uNum(getValue(jQuery("#d42_lsifo180"))));
+	f46 = f45*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
 
 	setValue(jQuery("#f46"), fNum(f46));
 
@@ -1749,16 +1749,16 @@ function calculateDates(){
 	g45 = uNum(getValue(jQuery("#g44")))*seadays;
 
 	setValue(jQuery("#g45"), fNum(g45));
-	g46 = g45 * (uNum(getValue(jQuery("#h42")))+uNum(getValue(jQuery("#h42_mgo")))+uNum(getValue(jQuery("#h42_lsmgo"))));
+	g46 = g45 * (uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))));
 	setValue(jQuery("#g46"), fNum(g46));
 
 	h45 = uNum(getValue(jQuery("#h44")))*(portdays+uNum(getValue(jQuery("#s34"))));
 	setValue(jQuery("#h45"), fNum(h45));
 
-	h46 = h45 * (uNum(getValue(jQuery("#h42")))+uNum(getValue(jQuery("#h42_mgo")))+uNum(getValue(jQuery("#h42_lsmgo"))));
+	h46 = h45 * (uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))));
 	setValue(jQuery("#h46"), fNum(h46));
 
-	i46 = (uNum(getValue(jQuery("#h42")))+uNum(getValue(jQuery("#h42_mgo")))+uNum(getValue(jQuery("#h42_lsmgo"))))*uNum(getValue(jQuery("#i45")));
+	i46 = (uNum(getValue(jQuery("#h42")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))))*uNum(getValue(jQuery("#i45")));
 	setValue(jQuery("#i46"), fNum(i46));
 
 	g47 = g46+h46+i46;
@@ -1934,7 +1934,11 @@ function result1(){
 	setValue(jQuery("#d81"), fNum(d81));
 
 	f80 = uNum(getValue(jQuery("#c80"))) - uNum(getValue(jQuery("#d81"))) - uNum(getValue(jQuery("#b75")));
-	setValue(jQuery("#f80"), fNum(f80));
+	if(f80>0){
+		setValue(jQuery("#f80"), '<span style="color:#006000;">'+fNum(f80)+'</span>');
+	}else{
+		setValue(jQuery("#f80"), '<span style="color:#ff0000;">'+fNum(f80)+'</span>');
+	}
 
 	g80 = uNum(getValue(jQuery("#f80"))) / uNum(getValue(jQuery("#o37")));
 	setValue(jQuery("#g80"), fNum(g80)); 
@@ -3270,9 +3274,9 @@ if(!trim($e85)){
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td colspan="4" class="input" style="padding:3px;"><input type='text' id="d42_input" name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td style="padding:3px;"><b>MDO Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text' name="h42" value="<?php echo $h42; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="3" class="input" style="padding:3px;"><input type='text' id="h42_input" name="h42" value="<?php echo $h42; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
 		  <tr id="bunker_first_row" bgcolor="e9e9e9" style="display:none;">
 			<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
@@ -3282,9 +3286,9 @@ if(!trim($e85)){
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>IFO 180 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42_180" value="<?php echo $d42_180; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="4" class="input" style="padding:3px;"><input type='text' id="d42_180_input" name="d42_180" value="<?php echo $d42_180; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;"><b>MGO Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text' name="h42_mgo" value="<?php echo $h42_mgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="3" class="input" style="padding:3px;"><input type='text' id="h42_mgo_input" name="h42_mgo" value="<?php echo $h42_mgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
 		  <tr id="bunker_second_row" bgcolor="e9e9e9" style="display:none;">
 			<td style="padding:3px;"><b>IFO 180 Price ($)</b></td>
@@ -3294,9 +3298,9 @@ if(!trim($e85)){
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>LS IFO 380 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42_lsifo380" value="<?php echo $d42_lsifo380; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="4" class="input" style="padding:3px;"><input type='text' id="d42_lsifo380_input" name="d42_lsifo380" value="<?php echo $d42_lsifo380; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;"><b>LS MGO 1% Price ($)</b></td>
-			<td colspan="3" class="input" style="padding:3px;"><input type='text' name="h42_lsmgo" value="<?php echo $h42_lsmgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="3" class="input" style="padding:3px;"><input type='text' id="h42_lsmgo_input" name="h42_lsmgo" value="<?php echo $h42_lsmgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
 		  <tr id="bunker_third_row" bgcolor="e9e9e9" style="display:none;">
 			<td style="padding:3px;"><b>LS IFO 380 1% Price ($)</b></td>
@@ -3306,7 +3310,7 @@ if(!trim($e85)){
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>LS IFO 180 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text' name="d42_lsifo180" value="<?php echo $d42_lsifo180; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="4" class="input" style="padding:3px;"><input type='text' id="d42_lsifo180_input" name="d42_lsifo180" value="<?php echo $d42_lsifo180; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;">&nbsp;</td>
 			<td colspan="3" class="input" style="padding:3px;">&nbsp;</td>
 		  </tr>
@@ -3356,7 +3360,14 @@ if(!trim($e85)){
 		
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
-			<td class="text_1" colspan="8"><div style="padding:3px;"><b>VOYAGE EXPENSES</b></div></td>
+			<td class="text_1"><div style="padding:3px;"><b>VOYAGE EXPENSES</b></div></td>
+			<td class="text_1" style="padding:3px;">IFO/Ballast</td>
+			<td class="text_1" style="padding:3px;">IFO/Laden</td>
+			<td class="text_1" style="padding:3px;">IFO/Port</td>
+			<td class="text_1" style="padding:3px;">IFO/Reserve</td>
+			<td class="text_1" style="padding:3px;">MDO/Laden</td>
+			<td class="text_1" style="padding:3px;">MDO/Port</td>
+			<td class="text_1" style="padding:3px;">MDO/Reserve</td>
 		  </tr>
 		  <tr>
 			<td class="label" style="padding:3px;"><strong>Expense ($)</strong></td>
@@ -3877,25 +3888,25 @@ if(!trim($e85)){
 								<td height="5"></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class="label" style="padding:3px;"><strong>Gross Income ($)</strong></td>
+								<td class="label" style="padding:3px; border-left:1px solid #000000; border-top:1px solid #000000; border-right:1px solid #000000;"><strong>Income ($)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class="calculated" id='f80' style="padding:3px;"></td>
-							</tr>
-							<tr bgcolor="f5f5f5">
-								<td height="5"></td>
-							</tr>
-							<tr bgcolor="f5f5f5">
-								<td class="label" style="padding:3px;"><strong>TCE ($/day)</strong></td>
-							</tr>
-							<tr bgcolor="f5f5f5">
-								<td class="calculated" id='g80' style="padding:3px;"></td>
+								<td class="calculated" id='f80' style="padding:3px; border-left:1px solid #000000; border-bottom:1px solid #000000; border-right:1px solid #000000;"></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class="label" style="padding:3px;"><strong>Total</strong></td>
+								<td class="label" style="padding:3px; border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><strong>TCE ($/day)</strong></td>
+							</tr>
+							<tr bgcolor="f5f5f5">
+								<td class="calculated" id='g80' style="padding:3px; border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"></td>
+							</tr>
+							<tr bgcolor="f5f5f5">
+								<td height="5"></td>
+							</tr>
+							<tr bgcolor="f5f5f5">
+								<td class="label" style="padding:3px;"><strong>Broker Commission</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td class="label calculated" id='d81' style="padding:3px;"></td>
@@ -3913,10 +3924,10 @@ if(!trim($e85)){
 								<td height="5"></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td style="padding:3px;"><strong>Freight Rate ($/MT)</strong></td>
+								<td style="padding:3px; border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><strong>Freight Rate ($/MT)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class="calculated" id='b85' style="padding:3px;"></td>
+								<td class="calculated" id='b85' style="padding:3px; border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td height="5"></td>
@@ -3949,7 +3960,7 @@ if(!trim($e85)){
 								<td height="5"></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class="label" style="padding:3px;"><strong>Gross Income ($)</strong></td>
+								<td class="label" style="padding:3px;"><strong>Income ($)</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td class="calculated"  id='f85' style="padding:3px;"></td>
@@ -3967,7 +3978,7 @@ if(!trim($e85)){
 								<td height="5"></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
-								<td class="label" style="padding:3px;"><strong>Total</strong></td>
+								<td class="label" style="padding:3px;"><strong>Broker Commission</strong></td>
 							</tr>
 							<tr bgcolor="f5f5f5">
 								<td class="label calculated"  id='d86' style="padding:3px;"></td>

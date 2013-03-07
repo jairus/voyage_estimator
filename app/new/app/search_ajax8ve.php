@@ -82,13 +82,9 @@ if(isset($_GET['num'])){
 			$sql = "SELECT * FROM `_veson_ports` WHERE `name`='".$destination_port."' LIMIT 0, 1";
 			$r = dbQuery($sql, $link);
 			
-			if(!trim($r[0]['id'])){
-				$sql = "SELECT * FROM `_other_ports` WHERE `name`='".$destination_port."' LIMIT 0, 1";
-				$r = dbQuery($sql, $link);
-			}
-			
 			if($r[0]['id']){
 				$sqlext = "";
+				$sqlext2 = "";
 				
 				$portid = $r[0]['portid'];
 				$port_latitude = $r[0]['latitude'];
@@ -128,25 +124,66 @@ if(isset($_GET['num'])){
 				
 				$sqlext .= " `siitech_destination`='".$destination_port."' AND ";
 				$sqlext .= " (`siitech_eta` BETWEEN '".$destination_port_from."' AND '".$destination_port_to."') and ";
+				$sqlext2 .= " (`siitech_eta` BETWEEN '".$destination_port_from."' AND '".$destination_port_to."') and ";
 				
 				$vtarr = count($vessel_type);
 			
-				if($vtarr){ $sqlext .= " ( "; }
+				if($vtarr){
+					$sqlext .= " ( ";
+					$sqlext2 .= " ( ";
+				}
 				
 				for($vti=0; $vti<$vtarr; $vti++){
 					$sqlext .= " `xvas_vessel_type`='".$vessel_type[$vti]."' ";
+					$sqlext2 .= " `xvas_vessel_type`='".$vessel_type[$vti]."' ";
 			
-					if(($vti+1)<$vtarr){ $sqlext .= " or "; }
+					if(($vti+1)<$vtarr){
+						$sqlext .= " or ";
+						$sqlext2 .= " or ";
+					}
 				}
 				
-				if($vtarr){ $sqlext .= " ) and "; }
+				if($vtarr){
+					$sqlext .= " ) and ";
+					$sqlext2 .= " ) and ";
+				}
 				
 				$sqlext .= " (`xvas_summer_dwt` BETWEEN '".$dwt_low."' AND '".$dwt_high."') ";
+				$sqlext2 .= " (`xvas_summer_dwt` BETWEEN '".$dwt_low."' AND '".$dwt_high."') AND ";
 				
 				$sql_ships = "SELECT * FROM `_xvas_siitech_cache` WHERE ".$sqlext." ORDER BY `dateupdated`";
 				$r_ships = dbQuery($sql_ships, $link);
 				
-				$t_ships = count($r_ships);
+				$sql2 = "SELECT * FROM `_other_ports` WHERE `portid`='".$r[0]['portid']."'";
+				$r2 = dbQuery($sql2, $link);
+				
+				$t_op = count($r2);
+				
+				if($t_op){
+					$sqlext2 .= " ( ";
+					for($i=0; $i<$t_op; $i++){
+						$sqlext2 .= " `siitech_destination`='".$r2[$i]['name']."' ";
+						
+						if(($i+1)<$t_op){
+							$sqlext2 .= " or ";
+						}
+					}
+					$sqlext2 .= " ) ";
+					
+					$sql_ships2 = "SELECT * FROM `_xvas_siitech_cache` WHERE ".$sqlext2." ORDER BY `dateupdated`";
+					$r_ships2 = dbQuery($sql_ships2, $link);
+					
+					if($r_ships){
+						$ships = array_merge($r_ships, $r_ships2);
+						$r_ships = array_values($ships);
+					}else{
+						$r_ships = $r_ships2;
+					}
+					
+					$t_ships = count($r_ships);
+				}else{
+					$t_ships = count($r_ships);
+				}
 				
 				if($t_ships){
 					echo '<ul>

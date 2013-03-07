@@ -1940,15 +1940,11 @@ function result1(){
 		setValue(jQuery("#f80"), '<span style="color:#ff0000;">'+fNum(f80)+'</span>');
 	}
 
-	g80 = uNum(getValue(jQuery("#f80"))) / uNum(getValue(jQuery("#o37")));
+	g80 = f80 / uNum(getValue(jQuery("#o37")));
 	setValue(jQuery("#g80"), fNum(g80)); 
 }
 
 function result2(){
-	//=G85*O37
-	f85 = uNum(getValue(jQuery("#g85"))) * uNum(getValue(jQuery("#o37")));
-	setValue(jQuery("#f85"), fNum(f85));
-
 	//=(F85+B75)/(100-D85-E85)*100
 	c85 = (uNum(getValue(jQuery("#f85"))) + uNum(getValue(jQuery("#b75"))) ) / (100 - uNum(getValue(jQuery("#d85"))) - uNum(getValue(jQuery("#e85")))) * 100;
 	setValue(jQuery("#c85"), fNum(c85));
@@ -1959,6 +1955,10 @@ function result2(){
 	//=(D85+E85)/100*C85
 	d86 = ( uNum(getValue(jQuery("#d85"))) + uNum(getValue(jQuery("#e85"))) ) / 100 * uNum(getValue(jQuery("#c85")));
 	setValue(jQuery("#d86"), fNum(d86));
+	
+	//=G85*O37
+	f85 = (uNum(getValue(jQuery("#g85"))) * uNum(getValue(jQuery("#o37")))) - d86;
+	setValue(jQuery("#f85"), fNum(f85));
 }
 
 var totalseadays = 0;

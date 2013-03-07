@@ -40,6 +40,11 @@ echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b;
 		$sql_vp = "SELECT * FROM `_veson_ports` WHERE `name`='".$ships['siitech_destination']."' LIMIT 0, 1";
 		$r_vp = dbQuery($sql_vp, $link);
 		
+		if(!trim($r_vp[0]['id'])){
+			$sql_vp = "SELECT * FROM `_other_ports` WHERE `name`='".$ships['siitech_destination']."' LIMIT 0, 1";
+			$r_vp = dbQuery($sql_vp, $link);
+		}
+		
 		if($r_vp[0]['id']){
 			$portid = $r_vp[0]['portid'];
 			$port_latitude = $r_vp[0]['latitude'];

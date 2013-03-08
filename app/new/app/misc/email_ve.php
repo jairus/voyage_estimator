@@ -6,6 +6,8 @@ include_once(dirname(__FILE__)."/../includes/bootstrap.php");
 include_once(dirname(__FILE__)."/emailer/email.php");
 date_default_timezone_set('UTC'); 
 ?>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
 <style>
 *{
 	font-size:11px;
@@ -30,6 +32,14 @@ td,th{
 }
 </style>
 <script>
+function setValue(elem, value){
+	if(elem.prop("tagName")=="TD"){
+		elem.html(value);
+	}else{
+		elem.val(value);
+	}
+}
+
 function getValue(elem){
 	if(elem.prop("tagName")=="TD"){
 		return elem.html();
@@ -51,10 +61,14 @@ foreach($ext as $value){
 
 $photo1 = empty($photo1) ? 'default.jpg' : $photo1;
 
-$sql_ship = "SELECT * FROM _xvas_parsed2_dry WHERE imo = '".$_GET['imo']."' LIMIT 0,1";
+$ship = explode(' - ', $_GET['ship']);
+$imo = $ship[0];
+
+//SHIP DETAILS
+$sql_ship = "SELECT * FROM _xvas_parsed2_dry WHERE imo = '".$imo."' LIMIT 0,1";
 $r_ship = dbQuery($sql_ship);
 
-$sql_xvax = "SELECT * FROM _xvas_shipdata_dry WHERE imo = '".$_GET['imo']."' LIMIT 0,1";
+$sql_xvax = "SELECT * FROM _xvas_shipdata_dry WHERE imo = '".$imo."' LIMIT 0,1";
 $r_xvax = dbQuery($sql_xvax);
 
 $name = $r_ship[0]['imo']." - ".$r_ship[0]['name'];
@@ -89,12 +103,24 @@ $fuel_oil = getValue($r_xvax[0]['data'], 'FUEL_OIL');
 $fuel = getValue($r_xvax[0]['data'], 'FUEL');
 $fuel_consumption = getValue($r_xvax[0]['data'], 'FUEL_CONSUMPTION');
 $fuel_type = getValue($r_xvax[0]['data'], 'FUEL_TYPE');
-$manager_owner = getValue($r_xvax[0]['data'], 'MANAGER_OWNER');
+
+$manager_owner = getValue($r_xvax[0]['data'], 'MANAGER');
+if(!trim($manager_owner)){
+	$manager_owner = getValue($r_xvax[0]['data'], 'MANAGER_OWNER');
+}
+
+if(!trim($manager_owner)){
+	$manager_owner = getValue($r_xvax[0]['data'], 'OWNER');
+}
+
+
 $manager_owner_email = getValue($r_xvax[0]['data'], 'MANAGER_OWNER_EMAIL');
 $class_society = htmlentities(getValue($r_xvax[0]['data'], 'CLASS_SOCIETY'));
 $holds = htmlentities(getValue($r_xvax[0]['data'], 'HOLDS'));
 $largest_hatch = htmlentities(getValue($r_xvax[0]['data'], 'LARGEST_HATCH'));
+//END OF SHIP DETAILS
 
+//VOYAGE LEGS
 $c31 = $_GET['c31'];
 $d31 = $_GET['d31'];
 $e31 = $_GET['e31'];
@@ -103,6 +129,10 @@ $e33 = $_GET['e33'];
 $g33 = $_GET['g33'];
 $e34 = $_GET['e34'];
 $g34 = $_GET['g34'];
+//END OF VOYAGE LEGS
+
+//CARGO LEGS
+$calendar = $_GET['calendar'];
 $s31 = $_GET['s31'];
 $t31 = $_GET['t31'];
 $i32 = $_GET['i32'];
@@ -130,14 +160,16 @@ $p35 = $_GET['p35'];
 $q35 = $_GET['q35'];
 $s35 = $_GET['s35'];
 $t35 = $_GET['t35'];
-$bunker_price_dateupdated = $_GET['bunker_price_dateupdated'];
+//END OF CARGO LEGS
+
+//BUNKER PRICING
 $d42 = $_GET['d42'];
-$d42_180 = $_GET['d42_180'];
-$d42_lsifo380 = $_GET['d42_lsifo380'];
-$d42_lsifo180 = $_GET['d42_lsifo180'];
 $h42 = $_GET['h42'];
+$d42_180 = $_GET['d42_180'];
 $h42_mgo = $_GET['h42_mgo'];
+$d42_lsifo380 = $_GET['d42_lsifo380'];
 $h42_lsmgo = $_GET['h42_lsmgo'];
+$d42_lsifo180 = $_GET['d42_lsifo180'];
 $c44 = $_GET['c44'];
 $d44 = $_GET['d44'];
 $e44 = $_GET['e44'];
@@ -145,16 +177,48 @@ $g44 = $_GET['g44'];
 $h44 = $_GET['h44'];
 $f45 = $_GET['f45'];
 $i45 = $_GET['i45'];
+//END OF BUNKER PRICING
+
+//DWCC
 $d19 = $_GET['d19'];
 $d20 = $_GET['d20'];
 $d21 = $_GET['d21'];
 $d22 = $_GET['d22'];
 $d23 = $_GET['d23'];
 $d24 = $_GET['d24'];
-$c51 = $_GET['c51'];
+//END OF DWCC
+
+//CANAL
+$canal = $_GET['canal'];
+$cbook1 = $_GET['cbook1'];
+$cbook2 = $_GET['cbook2'];
+$ctug1 = $_GET['ctug1'];
+$ctug2 = $_GET['ctug2'];
+$cline1 = $_GET['cline1'];
+$cline2 = $_GET['cline2'];
+$cmisc1 = $_GET['cmisc1'];
+$cmisc2 = $_GET['cmisc2'];
+//END OF CANAL
+
+//PORTS
 $c52 = $_GET['c52'];
+$c52_2 = $_GET['c52_2'];
+$c52_3 = $_GET['c52_3'];
 $term = $_GET['term'];
+$term2 = $_GET['term2'];
+$term3 = $_GET['term3'];
 $linerterms = $_GET['linerterms'];
+$linerterms2 = $_GET['linerterms2'];
+$linerterms3 = $_GET['linerterms3'];
+$da_quick_input1 = $_GET['da_quick_input1'];
+$da_quick_input2 = $_GET['da_quick_input2'];
+$da_quick_input3 = $_GET['da_quick_input3'];
+$laytime1 = $_GET['laytime1'];
+$laytime2 = $_GET['laytime2'];
+$laytime3 = $_GET['laytime3'];
+$disbursments1 = $_GET['disbursments1'];
+$disbursments2 = $_GET['disbursments2'];
+$disbursments3 = $_GET['disbursments3'];
 $dues1 = $_GET['dues1'];
 $dues2 = $_GET['dues2'];
 $dues3 = $_GET['dues3'];
@@ -182,105 +246,50 @@ $agencyfee3 = $_GET['agencyfee3'];
 $miscellaneous1 = $_GET['miscellaneous1'];
 $miscellaneous2 = $_GET['miscellaneous2'];
 $miscellaneous3 = $_GET['miscellaneous3'];
-$canal = $_GET['canal'];
-$cbook1 = $_GET['cbook1'];
-$cbook2 = $_GET['cbook2'];
-$ctug1 = $_GET['ctug1'];
-$ctug2 = $_GET['ctug2'];
-$cline1 = $_GET['cline1'];
-$cline2 = $_GET['cline2'];
-$cmisc1 = $_GET['cmisc1'];
-$cmisc2 = $_GET['cmisc2'];
+//END OF PORTS
+
+//VOYAGE DISBURSMENTS
 $e74 = $_GET['e74'];
 $f74 = $_GET['f74'];
 $g74 = $_GET['g74'];
 $h74 = $_GET['h74'];
 $i74 = $_GET['i74'];
 $j74 = $_GET['j74'];
+//END OF VOYAGE DISBURSMENTS
+
+//FREIGHT RATE
 $b80 = $_GET['b80'];
 $d80 = $_GET['d80'];
 $e80 = $_GET['e80'];
+//END OF FREIGHT RATE
+
+//TCE
 $d85 = $_GET['d85'];
 $e85 = $_GET['e85'];
 $g85 = $_GET['g85'];
+//END OF TCE
 
-//CALCULATED
-$f31 = $_GET['f31'];
-$h31 = $_GET['h31'];
-$c32 = $_GET['c32'];
-$d32 = $_GET['d32'];
-$e32 = $_GET['e32'];
-$f32 = $_GET['f32'];
-$g32 = $_GET['g32'];
-$h32 = $_GET['h32'];
-$c33 = $_GET['c33'];
-$d33 = $_GET['d33'];
-$f33 = $_GET['f33'];
-$h33 = $_GET['h33'];
-$c34 = $_GET['c34'];
-$d34 = $_GET['d34'];
-$f34 = $_GET['f34'];
-$h34 = $_GET['h34'];
-$c35 = $_GET['c35'];
-$d35 = $_GET['d35'];
-$e35 = $_GET['e35'];
-$f35 = $_GET['f35'];
-$g35 = $_GET['g35'];
-$h35 = $_GET['h35'];
-$r31 = $_GET['r31'];
-$j32 = $_GET['j32'];
-$l32 = $_GET['l32'];
-$o32 = $_GET['o32'];
-$o33 = $_GET['o33'];
-$r33 = $_GET['r33'];
-$r34 = $_GET['r34'];
-$j35 = $_GET['j35'];
-$l35 = $_GET['l35'];
-$o35 = $_GET['o35'];
-$o36 = $_GET['o36'];
-$r36 = $_GET['r36'];
-$o37 = $_GET['o37'];
-$c45 = $_GET['c45'];
-$d45 = $_GET['d45'];
-$e45 = $_GET['e45'];
-$g45 = $_GET['g45'];
-$h45 = $_GET['h45'];
-$c46 = $_GET['c46'];
-$d46 = $_GET['d46'];
-$e46 = $_GET['e46'];
-$f46 = $_GET['f46'];
-$g46 = $_GET['g46'];
-$h46 = $_GET['h46'];
-$i46 = $_GET['i46'];
-$c47 = $_GET['c47'];
-$g47 = $_GET['g47'];
-$d18 = $_GET['d18'];
-$d19b = $_GET['d19b'];
-$d20b = $_GET['d20b'];
-$d21b = $_GET['d21b'];
-$d22b = $_GET['d22b'];
-$d25 = $_GET['d25'];
-$d26 = $_GET['d26'];
-$ctotal1 = $_GET['ctotal1'];
-$ctotal2 = $_GET['ctotal2'];
-$c54 = $_GET['c54'];
-$c66 = $_GET['c66'];
-$c67 = $_GET['c67'];
-$c68 = $_GET['c68'];
-$b74 = $_GET['b74'];
-$c74 = $_GET['c74'];
-$d74 = $_GET['d74'];
-$b75 = $_GET['b75'];
-$b85 = $_GET['b85'];
-$c85 = $_GET['c85'];
-$f85 = $_GET['f85'];
-$d86 = $_GET['d86'];
-$c80 = $_GET['c80'];
-$f80 = $_GET['f80'];
-$g80 = $_GET['g80'];
-$d81 = $_GET['d81'];
-//END OF CALCULATED
+//CALCULATIONS
+//cargo legs
+$i32_sf = explode(' - ', $i32);
+$i32_sf = $i32_sf[1];
 
+$l32 = $i32_sf*$k32;
+
+$i35_sf = explode(' - ', $i35);
+$i35_sf = $i35_sf[1];
+//end of cargo legs
+//END OF CALCULATIONS
+
+?>
+
+<script>
+$(document).ready(function() {
+	setValue(jQuery('#l32'), '<?php echo $l32; ?>');
+});
+</script>
+
+<?php
 echo "<div class='landScape'>
 <table width='1300' border='0' cellpadding='0' cellspacing='0'>
 	<tr>
@@ -305,80 +314,78 @@ echo "<div class='landScape'>
 					<td class="text_1"><div style="padding:3px;"><b>VESSEL NAME / IMO #</b> &nbsp; <?php echo $name; ?></div></td>
 				  </tr>
 				</table>
-				<div id="ship_info">
-					<table width="1000" border="0" cellspacing="0" cellpadding="0">
-					  <tr bgcolor="f5f5f5">
-						<td width="110" valign="top"><div style="padding:3px;"><b>IMO</b> #</div></td>
-						<td width="160" valign="top" style="padding:3px;" id="ship_imo"><?php echo $imo; ?></td>
-						<td width="105" valign="top"><div style="padding:3px;"><b>LOA</b></div></td>
-						<td width="100" valign="top" style="padding:3px;" id="ship_loa"><?php echo $loa; ?></td>
-						<td width="145" valign="top"><div style="padding:3px;"><b>Grain</b></div></td>
-						<td width="160" valign="top" style="padding:3px;" id="ship_grain"><?php echo $grain; ?></td>
-						<td width="120" valign="top"><div style="padding:3px;"><b>Class Notation</b></div></td>
-						<td width="100" valign="top" style="padding:3px;" id="ship_class_notation"><?php echo $class_notation; ?></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td valign="top"><div style="padding:3px;"><b>Summer DWT</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_summer_dwt"><?php echo $summer_dwt; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Draught</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_draught"><?php echo $draught; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Lifting Equipment</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_lifting_equipment"><?php echo $lifting_equipment; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Fuel Oil</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_fuel_oil"><?php echo $fuel_oil; ?></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td valign="top"><div style="padding:3px;"><b>Gross Tonnage</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_gross_tonnage"><?php echo $gross_tonnage; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Speed</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_speed"><?php echo $speed; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Cargo Handling</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_cargo_handling"><?php echo $cargo_handling; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Fuel</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_fuel"><?php echo $fuel; ?></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td valign="top"><div style="padding:3px;"><b>Built Year</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_built_year"><?php echo $built_year; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Breadth</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_breadth"><?php echo $breadth; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Decks Number</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_decks_number"><?php echo $decks_number; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Fuel Consumption</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_fuel_consumption"><?php echo $fuel_consumption; ?></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td valign="top"><div style="padding:3px;"><b>Bale</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_bale"><?php echo $bale; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Cranes</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_cranes"><?php echo $cranes; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Bulkheads</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_bulkheads"><?php echo $bulkheads; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Fuel Type</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_fuel_type"><?php echo $fuel_type; ?></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td valign="top"><div style="padding:3px;"><b>Manager Owner</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_manager_owner"><?php echo $manager_owner; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Manager Owner Email</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_manager_owner_email"><?php echo $manager_owner_email; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Class Society</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_class_society"><?php echo $class_society; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Largest Hatch</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_largest_hatch"><?php echo $largest_hatch; ?></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td valign="top"><div style="padding:3px;"><b>Holds</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_holds"><?php echo $holds; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>Flag</b></div></td>
-						<td valign="top" style="padding:3px;" id="ship_flag"><?php echo '<img src="../'.$flag_image.'" alt="'.$flag.'" title="'.$flag.'">'; ?></td>
-						<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
-						<td valign="top" style="padding:3px;"></td>
-						<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
-						<td valign="top" style="padding:3px;"></td>
-					  </tr>
-					</table>
-				</div>
+				<table width="1000" border="0" cellspacing="0" cellpadding="0">
+				  <tr bgcolor="f5f5f5">
+					<td width="110" valign="top"><div style="padding:3px;"><b>IMO</b> #</div></td>
+					<td width="160" valign="top" style="padding:3px;" id="ship_imo"><?php echo $imo; ?></td>
+					<td width="105" valign="top"><div style="padding:3px;"><b>LOA</b></div></td>
+					<td width="100" valign="top" style="padding:3px;" id="ship_loa"><?php echo $loa; ?></td>
+					<td width="145" valign="top"><div style="padding:3px;"><b>Grain</b></div></td>
+					<td width="160" valign="top" style="padding:3px;" id="ship_grain"><?php echo $grain; ?></td>
+					<td width="120" valign="top"><div style="padding:3px;"><b>Class Notation</b></div></td>
+					<td width="100" valign="top" style="padding:3px;" id="ship_class_notation"><?php echo $class_notation; ?></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td valign="top"><div style="padding:3px;"><b>Summer DWT</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_summer_dwt"><?php echo $summer_dwt; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Draught</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_draught"><?php echo $draught; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Lifting Equipment</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_lifting_equipment"><?php echo $lifting_equipment; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Fuel Oil</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_fuel_oil"><?php echo $fuel_oil; ?></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td valign="top"><div style="padding:3px;"><b>Gross Tonnage</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_gross_tonnage"><?php echo $gross_tonnage; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Net Tonnage</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_net_tonnage"><?php echo $net_tonnage; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Speed</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_speed"><?php echo $speed; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Cargo Handling</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_cargo_handling"><?php echo $cargo_handling; ?></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td valign="top"><div style="padding:3px;"><b>Fuel</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_fuel"><?php echo $fuel; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Built Year</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_built_year"><?php echo $built_year; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Breadth</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_breadth"><?php echo $breadth; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Decks Number</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_decks_number"><?php echo $decks_number; ?></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td valign="top"><div style="padding:3px;"><b>Fuel Consumption</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_fuel_consumption"><?php echo $fuel_consumption; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Bale</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_bale"><?php echo $bale; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Cranes</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_cranes"><?php echo $cranes; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Bulkheads</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_bulkheads"><?php echo $bulkheads; ?></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td valign="top"><div style="padding:3px;"><b>Fuel Type</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_fuel_type"><?php echo $fuel_type; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Manager Owner</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_manager_owner"><?php echo $manager_owner; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Manager Owner Email</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_manager_owner_email"><?php echo $manager_owner_email; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Class Society</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_class_society"><?php echo $class_society; ?></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td valign="top"><div style="padding:3px;"><b>Largest Hatch</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_largest_hatch"><?php echo $largest_hatch; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Holds</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_holds"><?php echo $holds; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>Flag</b></div></td>
+					<td valign="top" style="padding:3px;" id="ship_flag"><?php echo '<img src="../'.$flag_image.'" alt="'.$flag.'" title="'.$flag.'">'; ?></td>
+					<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
+					<td valign="top" style="padding:3px;"></td>
+				  </tr>
+				</table>
 				
 				<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
 				<div>&nbsp;</div>
@@ -395,9 +402,9 @@ echo "<div class='landScape'>
 				  </tr>
 				  <tr>
 					<td class="text_1 label"><div style="padding:3px;"><i><strong>Type</strong></i></div></td>
-					<td class="text_1 label"><div style="padding:3px;"><i><strong> Port</strong></i></div></td>
+					<td class="text_1 label"><div style="padding:3px;"><i><strong>Port</strong></i></div></td>
 					<td class="text_1 label"><div style="padding:3px;"><i><strong>Date</strong></i></div></td>
-					<td class="text_1 label"><div style="padding:3px;"><i><strong> Port</strong></i></div></td>
+					<td class="text_1 label"><div style="padding:3px;"><i><strong>Port</strong></i></div></td>
 					<td class="text_1 label"><div style="padding:3px;"><i><strong>Date</strong></i></div></td>
 					<td class="text_1 label"><div style="padding:3px;"><i><strong>Speed (knts)</strong></i></div></td>
 					<td class="text_1 label"><div style="padding:3px;"><i><strong>Distance (miles)</strong></i></div></td>
@@ -407,45 +414,45 @@ echo "<div class='landScape'>
 					<td class='input'><div style="padding:3px;"><?php echo $c31; ?></div></td>
 					<td class="input"><div style="padding:3px;"><?php echo $d31; ?></div></td>
 					<td class='input'><div style="padding:3px;"><?php echo $e31; ?></div></td>
-					<td class='calculated general f31' style="padding:3px;"><?php echo $f31; ?></td>
+					<td class='calculated general f31' style="padding:3px;">&nbsp;</td>
 					<td class='input'><div style="padding:3px;"><?php echo $g31; ?></div></td>
-					<td class="calculated number h31" style="padding:3px;"><?php echo $h31; ?></td>
+					<td class="calculated number h31" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr id='loading1' bgcolor="e9e9e9">
 					<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
-					<td class='general c32' style="padding:3px;"><?php echo $c32; ?></td>
-					<td class='general d32' style="padding:3px;"><?php echo $d32; ?></td>
-					<td class='general e32' style="padding:3px;"><?php echo $e32; ?></td>
-					<td class="calculated f32" style="padding:3px;"><?php echo $f32; ?></td>
-					<td class='number g32' style="padding:3px;"><?php echo $g32; ?></td>
-					<td class="number h32" style="padding:3px;"><?php echo $h32; ?></td>
+					<td class='general c32' style="padding:3px;">&nbsp;</td>
+					<td class='general d32' style="padding:3px;">&nbsp;</td>
+					<td class='general e32' style="padding:3px;">&nbsp;</td>
+					<td class="calculated f32" style="padding:3px;">&nbsp;</td>
+					<td class='number g32' style="padding:3px;">&nbsp;</td>
+					<td class="number h32" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr id='bunkerstop1' bgcolor="f5f5f5">
 					<td class='general b33' style="padding:3px;"><strong>Bunker Stop</strong></td>
-					<td class='input general c33' style="padding:3px;"><?php echo $c33; ?></td>
-					<td class='general d33' style="padding:3px;"><?php echo $d33; ?></td>
+					<td class='input general c33' style="padding:3px;">&nbsp;</td>
+					<td class='general d33' style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $e33; ?></td>
-					<td class="calculated f33" style="padding:3px;"><?php echo $f33; ?></td>
+					<td class="calculated f33" style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $g33; ?></td>
-					<td class="calculated h33" style="padding:3px;"><?php echo $h33; ?></td>
+					<td class="calculated h33" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr id='laden1' bgcolor="e9e9e9">
 					<td class='general b34' style="padding:3px;"><strong>Laden</strong></td>
-					<td class='input general c34' style="padding:3px;"><?php echo $c34; ?></td>
-					<td class='general d34' style="padding:3px;"><?php echo $d34; ?></td>
+					<td class='input general c34' style="padding:3px;">&nbsp;</td>
+					<td class='general d34' style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $e34; ?></td>
-					<td class="calculated f34" style="padding:3px;"><?php echo $f34; ?></td>
+					<td class="calculated f34" style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $g34; ?></td>
-					<td class="calculated number h34" style="padding:3px;"><?php echo $h34; ?></td>
+					<td class="calculated number h34" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr id='discharging1' bgcolor="f5f5f5">
 					<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
-					<td class='input general c35' style="padding:3px;"><?php echo $c35; ?></td>
-					<td class='general d35' style="padding:3px;"><?php echo $d35; ?></td>
-					<td class='general e35' style="padding:3px;"><?php echo $e35; ?></td>
-					<td class="calculated f35" style="padding:3px;"><?php echo $f35; ?></td>
-					<td class='number g35' style="padding:3px;"><?php echo $g35; ?></td>
-					<td class="number h35" style="padding:3px;"><?php echo $h35; ?></td>
+					<td class='input general c35' style="padding:3px;">&nbsp;</td>
+					<td class='general d35' style="padding:3px;">&nbsp;</td>
+					<td class='general e35' style="padding:3px;">&nbsp;</td>
+					<td class="calculated f35" style="padding:3px;">&nbsp;</td>
+					<td class='number g35' style="padding:3px;">&nbsp;</td>
+					<td class="number h35" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				</table>
 				
@@ -470,11 +477,11 @@ echo "<div class='landScape'>
 					<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Quantity (MT)</strong></i></div></td>
 					<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Volume (M3)</strong></i></div></td>
 					<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>L/D Rate (MT/day)</strong></i></div></td>
-					<td width="167" class="text_1 label"><div style="padding:3px;"><i><strong>Working Days</strong></i></div></td>
-					<td width="45" class="text_1 label"><div style="padding:3px;"><i><strong>L/D</strong></i></div></td>
-					<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Turn Time</strong></i></div></td>
-					<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Idle/Extra Days Sea</strong></i></div></td>
-					<td width="7" class="text_1 label"><div style="padding:3px;"><i><strong>&nbsp;</strong></i></div></td>
+					<td width="45" class="text_1 label"><div style="padding:3px;"><i><strong>Load Days</strong></i></div></td>
+					<td width="167" class="text_1 label"><div style="padding:3px;"><i><strong>Working Days TERMS</strong></i></div></td>
+					<td width="102" class="text_1 label"><div style="padding:3px; color:#FF0000;"><i><strong>Working Aditional Days TERMS</strong></i></div></td>
+					<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Turn/Idle/Extra Days</strong></i></div></td>
+					<td width="7" class="text_1 label"><div style="padding:3px;"><i><strong>Voyage Days</strong></i></div></td>
 					<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Canal Days</strong></i></div></td>
 					<td width="108" class="text_1 label"><div style="padding:3px;"><i><strong>Weather/Extra Days</strong></i></div></td>
 				  </tr>
@@ -486,25 +493,25 @@ echo "<div class='landScape'>
 					<td class='number l31' style="padding:3px;"></td>
 					<td class='number m31' style="padding:3px;"></td>
 					<td class='number n31' style="padding:3px;"></td>
-					<td class="number o31" style="padding:3px;"></td>
-					<td class='number p31' style="padding:3px;"></td>
+					<td style="padding:3px; color:#FF0000;">Working Days Calendar</td>
+					<td style="padding:3px;"><?php echo $calendar; ?></td>
 					<td class='number q31' style="padding:3px;"></td>
-					<td class="calculated number r31" style="padding:3px;"><?php echo $r31; ?></td>
+					<td id="r31" class="calculated number r31" style="padding:3px;"></td>
 					<td class='empty' style="padding:3px;"><?php echo $s31; ?></td>
 					<td class='empty' style="padding:3px;"><?php echo $t31; ?></td>
 				  </tr>
 				  <tr id='loading1' bgcolor="e9e9e9">
 					<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
 					<td class='input' style="padding:3px;"><?php echo $i32; ?></td>
-					<td class='number j32' style="padding:3px;"><?php echo $j32; ?></td>
+					<td id="j32" class='number j32' style="padding:3px;"><?php echo $i32_sf; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $k32; ?></td>
-					<td class='calculated number l32' style="padding:3px;"><?php echo $l32; ?></td>
+					<td id="l32" class='calculated number l32' style="padding:3px;"></td>
 					<td class='input' style="padding:3px;"><?php echo $m32; ?></td>
+					<td id="o32" class='calculated number o32' style="padding:3px;"></td>
 					<td class='input' style="padding:3px;"><?php echo $n32; ?></td>
-					<td class="calculated number o32" style="padding:3px;"><?php echo $o32; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $p32; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $q32; ?></td>
-					<td class="number r32" style="padding:3px;"><?php echo $r32; ?></td>
+					<td class="number r32" style="padding:3px;"></td>
 					<td class='empty' style="padding:3px;"><?php echo $s32; ?></td>
 					<td class='empty' style="padding:3px;"><?php echo $t32; ?></td>
 				  </tr>
@@ -515,11 +522,11 @@ echo "<div class='landScape'>
 					<td class='number k33' style="padding:3px;"></td>
 					<td class='input' style="padding:3px;"><?php echo $l33; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $m33; ?></td>
+					<td id="o33" class='calculated number o33' style="padding:3px;"></td>
 					<td class='input' style="padding:3px;"><?php echo $n33; ?></td>
-					<td class="calculated o33" style="padding:3px;"><?php echo $o33; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $p33; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $q33; ?></td>
-					<td class="calculated number r33" style="padding:3px;"><?php echo $r33; ?></td>
+					<td id="r33" class="calculated number r33" style="padding:3px;"></td>
 					<td class='empty' style="padding:3px;"><?php echo $s33; ?></td>
 					<td class='empty' style="padding:3px;"><?php echo $t33; ?></td>
 				  </tr>
@@ -530,23 +537,23 @@ echo "<div class='landScape'>
 					<td class='number k34' style="padding:3px;"></td>
 					<td class='number l34' style="padding:3px;"></td>
 					<td class='number m34' style="padding:3px;"></td>
-					<td class='number n34' style="padding:3px;"></td>
 					<td class="number o34" style="padding:3px;"></td>
+					<td class='number n34' style="padding:3px;"></td>
 					<td class='number p34' style="padding:3px;"></td>
 					<td class='number q34' style="padding:3px;"></td>
-					<td class="calculated number r34" style="padding:3px;"><?php echo $r34; ?></td>
+					<td id="r34" class="calculated number r34" style="padding:3px;"></td>
 					<td class='empty' style="padding:3px;"><?php echo $s34; ?></td>
 					<td class='empty' style="padding:3px;"><?php echo $t34; ?></td>
 				  </tr>
 				  <tr id='discharging1' bgcolor="f5f5f5">
 					<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
 					<td class='input' style="padding:3px;"><?php echo $i35; ?></td>
-					<td class='number j35' style="padding:3px;"><?php echo $j35; ?></td>
+					<td id="j35" class='number j35' style="padding:3px;"><?php echo $i35_sf; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $k35; ?></td>
-					<td class='calculated number l35' style="padding:3px;"><?php echo $l35; ?></td>
+					<td id="l35" class='calculated number l35' style="padding:3px;"></td>
 					<td class='input' style="padding:3px;"><?php echo $m35; ?></td>
+					<td id="o35" class='calculated number o35' style="padding:3px;"></td>
 					<td class='input' style="padding:3px;"><?php echo $n35; ?></td>
-					<td class="calculated number o35" style="padding:3px;"><?php echo $o35; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $p35; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $q35; ?></td>
 					<td class="number r35" style="padding:3px;"></td>
@@ -576,12 +583,12 @@ echo "<div class='landScape'>
 				  </tr>
 				  <tr>
 					<td colspan="7" class="label" style="padding:3px;"><strong>PORT/SEA DAYS</strong></td>
-					<td colspan="3" class="label calculated" id='o36' style="padding:3px;"><?php echo $o36; ?></td>
-					<td colspan="3" class="label calculated" id='r36' style="padding:3px;"><?php echo $r36; ?></td>
+					<td colspan="3" class="label calculated" id='o36' style="padding:3px;">&nbsp;</td>
+					<td colspan="3" class="label calculated" id='r36' style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr>
 					<td colspan="7" class="label" style="padding:3px;"><strong>TOTAL VOYAGE DAYS</strong></td>
-					<td colspan="6" class="label calculated" id='o37' style="padding:3px;"><?php echo $o37; ?></td>
+					<td colspan="6" class="label calculated" id='o37' style="padding:3px;">&nbsp;</td>
 				  </tr>
 				</table>
 				
@@ -590,7 +597,7 @@ echo "<div class='landScape'>
 				
 				<table width="1000" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="cddee5">
-					<td class="text_1"><div style="padding:3px;"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated"><?php echo $bunker_price_dateupdated; ?></span></div></td>
+					<td class="text_1"><div style="padding:3px;"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated">&nbsp;</span></div></td>
 				  </tr>
 				</table>
 				<table width="1000" border="0" cellspacing="0" cellpadding="0">
@@ -642,17 +649,17 @@ echo "<div class='landScape'>
 					<td class="input" style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $g44; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $h44; ?></td>
-					<td class='general' id='i44' style="padding:3px;"></td>
+					<td class='general' id='i44' style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr>
 					<td class="label" style="padding:3px;"><strong>Total Consumption (MT)</strong></td>
-					<td class="label calculated" id='c45' style="padding:3px;"><?php echo $c45; ?></td>
-					<td class="label calculated" id='d45' style="padding:3px;"><?php echo $d45; ?></td>
-					<td class="label calculated" id='e45' style="padding:3px;"><?php echo $e45; ?></td>
+					<td class="label calculated" id='c45' style="padding:3px;">&nbsp;</td>
+					<td class="label calculated" id='d45' style="padding:3px;">&nbsp;</td>
+					<td class="label calculated" id='e45' style="padding:3px;">&nbsp;</td>
 					<td class='label' style="padding:3px;"><?php echo $f45; ?></td>
 					<td class="label" style="padding:3px;"></td>
-					<td class="label calculated" id='g45' style="padding:3px;"><?php echo $g45; ?></td>
-					<td class="label calculated" id='h45' style="padding:3px;"><?php echo $h45; ?></td>
+					<td class="label calculated" id='g45' style="padding:3px;">&nbsp;</td>
+					<td class="label calculated" id='h45' style="padding:3px;">&nbsp;</td>
 					<td class='label input' style="padding:3px;"><?php echo $i45; ?></td>
 				  </tr>
 				</table>
@@ -662,22 +669,29 @@ echo "<div class='landScape'>
 				
 				<table width="1000" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="cddee5">
-					<td class="text_1" colspan="8"><div style="padding:3px;"><b>VOYAGE EXPENSES</b></div></td>
+					<td class="text_1"><div style="padding:3px;"><b>VOYAGE EXPENSES</b></div></td>
+					<td class="text_1" style="padding:3px;">IFO/Ballast</td>
+					<td class="text_1" style="padding:3px;">IFO/Laden</td>
+					<td class="text_1" style="padding:3px;">IFO/Port</td>
+					<td class="text_1" style="padding:3px;">IFO/Reserve</td>
+					<td class="text_1" style="padding:3px;">MDO/Laden</td>
+					<td class="text_1" style="padding:3px;">MDO/Port</td>
+					<td class="text_1" style="padding:3px;">MDO/Reserve</td>
 				  </tr>
 				  <tr>
 					<td class="label" style="padding:3px;"><strong>Expense ($)</strong></td>
-					<td class="label calculated" id='c46' style="padding:3px;"><?php echo $c46; ?></td>
-					<td class="label calculated" id='d46' style="padding:3px;"><?php echo $d46; ?></td>
-					<td class="label calculated" id='e46' style="padding:3px;"><?php echo $e46; ?></td>
-					<td class="label calculated" id='f46' style="padding:3px;"><?php echo $f46; ?></td>
-					<td class="label calculated" id='g46' style="padding:3px;"><?php echo $g46; ?></td>
-					<td class="label calculated" id='h46' style="padding:3px;"><?php echo $h46; ?></td>
-					<td class="label calculated" id='i46' style="padding:3px;"><?php echo $i46; ?></td>
+					<td class="label calculated" id='c46' style="padding:3px;">&nbsp;</td>
+					<td class="label calculated" id='d46' style="padding:3px;">&nbsp;</td>
+					<td class="label calculated" id='e46' style="padding:3px;">&nbsp;</td>
+					<td class="label calculated" id='f46' style="padding:3px;">&nbsp;</td>
+					<td class="label calculated" id='g46' style="padding:3px;">&nbsp;</td>
+					<td class="label calculated" id='h46' style="padding:3px;">&nbsp;</td>
+					<td class="label calculated" id='i46' style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr>
 					<td class="label" style="padding:3px;"><strong>Total ($)</strong></td>
-					<td colspan="4" class="label calculated" id='c47' style="padding:3px;"><?php echo $c47; ?></td>
-					<td colspan="4" class="label calculated" id='g47' style="padding:3px;"><?php echo $g47; ?></td>
+					<td colspan="4" class="label calculated" id='c47' style="padding:3px;">&nbsp;</td>
+					<td colspan="4" class="label calculated" id='g47' style="padding:3px;">&nbsp;</td>
 				  </tr>
 				</table>
 				
@@ -744,35 +758,29 @@ echo "<div class='landScape'>
 						  <tr bgcolor="cddee5">
 							<td class="text_1" colspan="5"><div style="padding:3px;"><b>PORT/S</b></div></td>
 						  </tr>
-						  <tr bgcolor="f5f5f5">
-							<td width="122" style="padding:3px;"><strong>Laytime (hrs)</strong></td>
-							<td width="122" class='input' style="padding:3px;"><?php echo $c51; ?></td>
-							<td width="123" style="padding:3px;"></td>
-							<td width="123" style="padding:3px;"></td>
-						  </tr>
 						  <tr bgcolor="e9e9e9">
-							<td style="padding:3px;"><strong>Dem ($/day)</strong></td>
+							<td style="padding:3px;" width="133"><strong>Dem ($/day)</strong> <span style="font-size:10px;">Pro Rated</span></td>
 							<td class='input' style="padding:3px;"><?php echo $c52; ?></td>
-							<td style="padding:3px;"><strong>Pro rated</strong></td>
-							<td style="padding:3px;"></td>
+							<td class='input' style="padding:3px;"><?php echo $c52_2; ?></td>
+							<td class='input' style="padding:3px;"><?php echo $c52_3; ?></td>
 						  </tr>
 						  <tr bgcolor="f5f5f5">
 							<td style="padding:3px;"><strong>Term</strong></td>
 							<td style="padding:3px;"><?php echo $term; ?></td>
-							<td style="padding:3px;"></td>
-							<td style="padding:3px;"></td>
+							<td style="padding:3px;"><?php echo $term2; ?></td>
+							<td style="padding:3px;"><?php echo $term3; ?></td>
 						  </tr>
 						  <tr bgcolor="e9e9e9">
 							<td style="padding:3px;"><strong>Des ($/day)</strong></td>
-							<td class="calculated" id='c54' style="padding:3px;"><?php echo $c54; ?></td>
-							<td style="padding:3px;"></td>
-							<td style="padding:3px;"></td>
+							<td class="calculated" id='c54' style="padding:3px;">&nbsp;</td>
+							<td class="calculated" id='c54_2' style="padding:3px;">&nbsp;</td>
+							<td class="calculated" id='c54_3' style="padding:3px;">&nbsp;</td>
 						  </tr>
 						  <tr bgcolor="f5f5f5">
 							<td style="padding:3px;"><strong>Liner Terms</strong></td>
 							<td style="padding:3px;"><?php echo $linerterms; ?></td>
-							<td style="padding:3px;"></td>
-							<td style="padding:3px;"></td>
+							<td style="padding:3px;"><?php echo $linerterms2; ?></td>
+							<td style="padding:3px;"><?php echo $linerterms3; ?></td>
 						  </tr>
 						  <tr bgcolor="e9e9e9">
 							<td style="padding:3px;"><strong>Port</strong></td>
@@ -836,15 +844,15 @@ echo "<div class='landScape'>
 						  </tr>
 						  <tr>
 							<td class="label" style="padding:3px;"><strong>Demurrage ($)</strong></td>
-							<td colspan="3" class="label calculated" id='c66' style="padding:3px;"><strong><?php echo $c66; ?></strong></td>
+							<td colspan="3" class="label calculated" id='c66' style="padding:3px;"><strong>&nbsp;</strong></td>
 						  </tr>
 						  <tr>
 							<td class="label" style="padding:3px;"><strong>Despatch ($)</strong></td>
-							<td colspan="3" class="label calculated" id='c67' style="padding:3px;"><strong><?php echo $c67; ?></strong></td>
+							<td colspan="3" class="label calculated" id='c67' style="padding:3px;"><strong>&nbsp;</strong></td>
 						  </tr>
 						  <tr>
 							<td class="label" style="padding:3px;"><strong>Total ($)</strong></td>
-							<td colspan="3" class="label calculated" id='c68' style="padding:3px;"><?php echo $c68; ?></td>
+							<td colspan="3" class="label calculated" id='c68' style="padding:3px;">&nbsp;</td>
 						  </tr>
 						</table>
 					</div>
@@ -880,8 +888,8 @@ echo "<div class='landScape'>
 						  </tr>
 						  <tr bgcolor="e9e9e9">
 							<td class="label" style="padding:3px;"><strong>Total ($)</strong></td>
-							<td class="label calculated" id='ctotal1' style="padding:3px;"><?php echo $ctotal1; ?></td>
-							<td class="label calculated" id='ctotal2' style="padding:3px;"><?php echo $ctotal2; ?></td>
+							<td class="label calculated" id='ctotal1' style="padding:3px;">&nbsp;</td>
+							<td class="label calculated" id='ctotal2' style="padding:3px;">&nbsp;</td>
 						  </tr>
 						</table>
 					
@@ -926,8 +934,8 @@ echo "<div class='landScape'>
 					<td class="label" style="padding:3px;"><strong>Miscellaneous</strong></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
-					<td class="calculated" id='b74' style="padding:3px;"><?php echo $b74; ?></td>
-					<td class="calculated" id='c74' style="padding:3px;"><strong><?php echo $c74; ?></strong></td>
+					<td class="calculated" id='b74' style="padding:3px;">&nbsp;</td>
+					<td class="calculated" id='c74' style="padding:3px;"><strong>&nbsp;</strong></td>
 					<td class="calculated" id='d74' style="padding:3px;"><strong><?php echo $d74; ?></strong></td>
 					<td class='input' style="padding:3px;"><?php echo $e74; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $f74; ?></td>
@@ -937,7 +945,7 @@ echo "<div class='landScape'>
 					<td class='input' style="padding:3px;"><?php echo $j74; ?></td>
 				  </tr>
 				  <tr>
-					<td colspan="9" class="label calculated" id='b75' style="padding:3px;"><?php echo $b75; ?></td>
+					<td colspan="9" class="label calculated" id='b75' style="padding:3px;">&nbsp;</td>
 				  </tr>
 				</table>
 			</td>
@@ -954,7 +962,7 @@ echo "<div class='landScape'>
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Freight Rate ($/MT)</strong></td>
+									<td class="label" style="padding:3px;"><span style="font-size:14px; color:#0066FF; font-weight:bold;">Freight Rate ($/MT)</span></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td class='empty' style="padding:3px;"><?php echo $b80; ?></td>
@@ -966,7 +974,7 @@ echo "<div class='landScape'>
 									<td class="label" style="padding:3px;"><strong>Gross Freight ($)</strong></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="calculated" id='c80' style="padding:3px;"><?php echo $c80; ?></td>
+									<td class="calculated" id='c80' style="padding:3px;">&nbsp;</td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
@@ -975,7 +983,7 @@ echo "<div class='landScape'>
 									<td class="label" style="padding:3px;"><strong>Brok. Comm ($)</strong></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td style="padding:3px;"><?php echo $b80; ?></td>
+									<td style="padding:3px;"><?php echo $d80; ?></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
@@ -990,28 +998,28 @@ echo "<div class='landScape'>
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Gross Income ($)</strong></td>
+									<td class="label" style="padding:3px; border-left:1px solid #000000; border-top:1px solid #000000; border-right:1px solid #000000;"><strong>Income ($)</strong></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="calculated" id='f80' style="padding:3px;"><?php echo $f80; ?></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>TCE ($/day)</strong></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="calculated" id='g80' style="padding:3px;"><?php echo $g80; ?></td>
+									<td class="calculated" id='f80' style="padding:3px; border-left:1px solid #000000; border-bottom:1px solid #000000; border-right:1px solid #000000;">&nbsp;</td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Total</strong></td>
+									<td class="label" style="padding:3px; border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><strong>TCE ($/day)</strong></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label calculated" id='d81' style="padding:3px;"><?php echo $d81; ?></td>
+									<td class="calculated" id='g80' style="padding:3px; border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;">&nbsp;</td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Broker Commission</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label calculated" id='d81' style="padding:3px;">&nbsp;</td>
 								</tr>
 							</table>
 						</div>
@@ -1026,10 +1034,10 @@ echo "<div class='landScape'>
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td style="padding:3px;"><strong>Freight Rate ($/MT)</strong></td>
+									<td style="padding:3px; border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><strong>Freight Rate ($/MT)</strong></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="calculated" id='b85' style="padding:3px;"><?php echo $b85; ?></td>
+									<td class="calculated" id='b85' style="padding:3px; border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;">&nbsp;</td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
@@ -1038,7 +1046,7 @@ echo "<div class='landScape'>
 									<td class="label" style="padding:3px;"><strong>Gross Freight ($)</strong></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="calculated"  id='c85' style="padding:3px;"><?php echo $c85; ?></td>
+									<td class="calculated"  id='c85' style="padding:3px;">&nbsp;</td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
@@ -1062,16 +1070,16 @@ echo "<div class='landScape'>
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Gross Income ($)</strong></td>
+									<td class="label" style="padding:3px;"><strong>Income ($)</strong></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="calculated"  id='f85' style="padding:3px;"><?php echo $f85; ?></td>
+									<td class="calculated"  id='f85' style="padding:3px;">&nbsp;</td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>TCE ($/day)</strong></td>
+									<td class="label" style="padding:3px;"><span style="font-size:14px; color:#0066FF; font-weight:bold;">TCE ($/day)</span></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td class='empty' style="padding:3px;"><?php echo $g85; ?></td>
@@ -1080,10 +1088,10 @@ echo "<div class='landScape'>
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Total</strong></td>
+									<td class="label" style="padding:3px;"><strong>Broker Commission</strong></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label calculated"  id='d86' style="padding:3px;"><?php echo $d86; ?></td>
+									<td class="label calculated"  id='d86' style="padding:3px;">&nbsp;</td>
 								</tr>
 							</table>
 						</div>

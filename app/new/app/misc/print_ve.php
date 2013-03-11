@@ -256,6 +256,230 @@ $e85 = $_GET['e85'];
 $g85 = $_GET['g85'];
 //END OF TCE
 
+//TEXTS
+//VOYAGE LEGS
+$f31 = $_GET['f31'];
+$h31 = $_GET['h31'];
+$c32 = $_GET['c32'];
+$d32 = $_GET['d32'];
+$e32 = $_GET['e32'];
+$f32 = $_GET['f32'];
+$g32 = $_GET['g32'];
+$h32 = $_GET['h32'];
+$c33 = $_GET['c33'];
+$d33 = $_GET['d33'];
+$f33 = $_GET['f33'];
+$h33 = $_GET['h33'];
+$c34 = $_GET['c34'];
+$d34 = $_GET['d34'];
+$f34 = $_GET['f34'];
+$h34 = $_GET['h34'];
+$c35 = $_GET['c35'];
+$d35 = $_GET['d35'];
+$e35 = $_GET['e35'];
+$f35 = $_GET['f35'];
+$g35 = $_GET['g35'];
+$h35 = $_GET['h35'];
+//END OF VOYAGE LEGS
+
+//CARGO LEGS
+$r31 = $_GET['r31'];
+$j32 = $_GET['j32'];
+$l32 = $_GET['l32'];
+$o32 = $_GET['o32'];
+$o33 = $_GET['o33'];
+$r34 = $_GET['r34'];
+$j35 = $_GET['j35'];
+$l35 = $_GET['l35'];
+$o35 = $_GET['o35'];
+//END OF CARGO LEGS
+
+//VOYAGE TIME
+$o36 = $_GET['o36'];
+$r36 = $_GET['r36'];
+$o37 = $_GET['o37'];
+//END OF VOYAGE TIME
+
+//BUNKER PRICING
+$c45 = $_GET['c45'];
+$d45 = $_GET['d45'];
+$e45 = $_GET['e45'];
+$g45 = $_GET['g45'];
+$h45 = $_GET['h45'];
+//END OF BUNKER PRICING
+
+//VOYAGE EXPENSES
+$c46 = $_GET['c46'];
+$d46 = $_GET['d46'];
+$e46 = $_GET['e46'];
+$f46 = $_GET['f46'];
+$g46 = $_GET['g46'];
+$h46 = $_GET['h46'];
+$i46 = $_GET['i46'];
+$c47 = $_GET['c47'];
+$g47 = $_GET['g47'];
+//END OF VOYAGE EXPENSES
+
+//DWCC
+$d19b = $_GET['d19b'];
+$d20b = $_GET['d20b'];
+$d21b = $_GET['d21b'];
+$d22b = $_GET['d22b'];
+$d25 = $_GET['d25'];
+$d26 = $_GET['d26'];
+//END OF DWCC
+
+//CANAL
+$ctotal1 = $_GET['ctotal1'];
+$ctotal2 = $_GET['ctotal2'];
+//END OF CANAL
+
+//PORTS
+$c54 = $_GET['c54'];
+$c54_2 = $_GET['c54_2'];
+$c54_3 = $_GET['c54_3'];
+$port1 = $_GET['port1'];
+$port2 = $_GET['port2'];
+$port3 = $_GET['port3'];
+$c66 = $_GET['c66'];
+$c67 = $_GET['c67'];
+$c68 = $_GET['c68'];
+//END OF PORTS
+
+//VOYAGE DISBURSMENTS
+$b74 = $_GET['b74'];
+$c74 = $_GET['c74'];
+$d74 = $_GET['d74'];
+$b75 = $_GET['b75'];
+//END OF VOYAGE DISBURSMENTS
+
+//FRIEGHT RATE
+$c80 = $_GET['c80'];
+$f80 = $_GET['f80'];
+$g80 = $_GET['g80'];
+$d81 = $_GET['d81'];
+$b85 = $_GET['b85'];
+$c85 = $_GET['c85'];
+$f85 = $_GET['f85'];
+$d86 = $_GET['d86'];
+//END OF FRIEGHT RATE
+//END OF TEXTS
+
+
+?>
+
+<script>
+$(document).ready(function() {
+	//VOYAGE LEGS
+	setValue(jQuery('#f31'), '<?php echo $f31; ?>');
+	setValue(jQuery('#h31'), '<?php echo $h31; ?>');
+	setValue(jQuery('#c32'), '<?php echo $c32; ?>');
+	setValue(jQuery('#d32'), '<?php echo $d32; ?>');
+	setValue(jQuery('#e32'), '<?php echo $e32; ?>');
+	setValue(jQuery('#f32'), '<?php echo $f32; ?>');
+	setValue(jQuery('#g32'), '<?php echo $g32; ?>');
+	setValue(jQuery('#h32'), '<?php echo $h32; ?>');
+	setValue(jQuery('#c33'), '<?php echo $c33; ?>');
+	setValue(jQuery('#d33'), '<?php echo $d33; ?>');
+	setValue(jQuery('#f33'), '<?php echo $f33; ?>');
+	setValue(jQuery('#h33'), '<?php echo $h33; ?>');
+	setValue(jQuery('#c34'), '<?php echo $c34; ?>');
+	setValue(jQuery('#d34'), '<?php echo $d34; ?>');
+	setValue(jQuery('#f34'), '<?php echo $f34; ?>');
+	setValue(jQuery('#h34'), '<?php echo $h34; ?>');
+	setValue(jQuery('#c35'), '<?php echo $c35; ?>');
+	setValue(jQuery('#d35'), '<?php echo $d35; ?>');
+	setValue(jQuery('#e35'), '<?php echo $e35; ?>');
+	setValue(jQuery('#f35'), '<?php echo $f35; ?>');
+	setValue(jQuery('#g35'), '<?php echo $g35; ?>');
+	setValue(jQuery('#h35'), '<?php echo $h35; ?>');
+	//END OF VOYAGE LEGS
+	
+	//CARGO LEGS
+	setValue(jQuery('#r31'), '<?php echo $r31; ?>');
+	setValue(jQuery('#j32'), '<?php echo $j32; ?>');
+	setValue(jQuery('#l32'), '<?php echo $l32; ?>');
+	setValue(jQuery('#o32'), '<?php echo $o32; ?>');
+	setValue(jQuery('#o33'), '<?php echo $o33; ?>');
+	setValue(jQuery('#r34'), '<?php echo $r34; ?>');
+	setValue(jQuery('#j35'), '<?php echo $j35; ?>');
+	setValue(jQuery('#l35'), '<?php echo $l35; ?>');
+	setValue(jQuery('#o35'), '<?php echo $o35; ?>');
+	//END OF CARGO LEGS
+	
+	//VOYAGE TIME
+	setValue(jQuery('#o36'), '<?php echo $o36; ?>');
+	setValue(jQuery('#r36'), '<?php echo $r36; ?>');
+	setValue(jQuery('#o37'), '<?php echo $o37; ?>');
+	//END OF VOYAGE TIME
+	
+	//BUNKER PRICING
+	setValue(jQuery('#c45'), '<?php echo $c45; ?>');
+	setValue(jQuery('#d45'), '<?php echo $d45; ?>');
+	setValue(jQuery('#e45'), '<?php echo $e45; ?>');
+	setValue(jQuery('#g45'), '<?php echo $g45; ?>');
+	setValue(jQuery('#h45'), '<?php echo $h45; ?>');
+	//END OF BUNKER PRICING
+	
+	//VOYAGE EXPENSES
+	setValue(jQuery('#c46'), '<?php echo $c46; ?>');
+	setValue(jQuery('#d46'), '<?php echo $d46; ?>');
+	setValue(jQuery('#e46'), '<?php echo $e46; ?>');
+	setValue(jQuery('#f46'), '<?php echo $f46; ?>');
+	setValue(jQuery('#g46'), '<?php echo $g46; ?>');
+	setValue(jQuery('#h46'), '<?php echo $h46; ?>');
+	setValue(jQuery('#i46'), '<?php echo $i46; ?>');
+	setValue(jQuery('#c47'), '<?php echo $c47; ?>');
+	setValue(jQuery('#g47'), '<?php echo $g47; ?>');
+	//END OF VOYAGE EXPENSES
+	
+	//DWCC
+	setValue(jQuery('#d19b'), '<?php echo $d19b; ?>');
+	setValue(jQuery('#d20b'), '<?php echo $d20b; ?>');
+	setValue(jQuery('#d21b'), '<?php echo $d21b; ?>');
+	setValue(jQuery('#d22b'), '<?php echo $d22b; ?>');
+	setValue(jQuery('#d25'), '<?php echo $d25; ?>');
+	setValue(jQuery('#d26'), '<?php echo $d26; ?>');
+	//END OF DWCC
+	
+	//CANAL
+	setValue(jQuery('#ctotal1'), '<?php echo $ctotal1; ?>');
+	setValue(jQuery('#ctotal2'), '<?php echo $ctotal2; ?>');
+	//END OF CANAL
+	
+	//PORTS
+	setValue(jQuery('#c54'), '<?php echo $c54; ?>');
+	setValue(jQuery('#c54_2'), '<?php echo $c54_2; ?>');
+	setValue(jQuery('#c54_3'), '<?php echo $c54_3; ?>');
+	setValue(jQuery('#port1'), '<?php echo $port1; ?>');
+	setValue(jQuery('#port2'), '<?php echo $port2; ?>');
+	setValue(jQuery('#port3'), '<?php echo $port3; ?>');
+	setValue(jQuery('#c66'), '<?php echo $c66; ?>');
+	setValue(jQuery('#c67'), '<?php echo $c67; ?>');
+	setValue(jQuery('#c68'), '<?php echo $c68; ?>');
+	//END OF PORTS
+	
+	//VOYAGE DISBURSMENTS
+	setValue(jQuery('#b74'), '<?php echo $b74; ?>');
+	setValue(jQuery('#c74'), '<?php echo $c74; ?>');
+	setValue(jQuery('#d74'), '<?php echo $d74; ?>');
+	setValue(jQuery('#b75'), '<?php echo $b75; ?>');
+	//END OF VOYAGE DISBURSMENTS
+	
+	//FRIEGHT RATE
+	setValue(jQuery('#c80'), '<?php echo $c80; ?>');
+	setValue(jQuery('#f80'), '<?php echo $f80; ?>');
+	setValue(jQuery('#g80'), '<?php echo $g80; ?>');
+	setValue(jQuery('#d81'), '<?php echo $d81; ?>');
+	setValue(jQuery('#b85'), '<?php echo $b85; ?>');
+	setValue(jQuery('#c85'), '<?php echo $c85; ?>');
+	setValue(jQuery('#f85'), '<?php echo $f85; ?>');
+	setValue(jQuery('#d86'), '<?php echo $d86; ?>');
+	//END OF FRIEGHT RATE
+});
+</script>
+
+<?php
 echo "<div class='landScape'>
 <table width='1300' border='0' cellpadding='0' cellspacing='0'>
 	<tr>
@@ -380,45 +604,45 @@ echo "<div class='landScape'>
 					<td class='input'><div style="padding:3px;"><?php echo $c31; ?></div></td>
 					<td class="input"><div style="padding:3px;"><?php echo $d31; ?></div></td>
 					<td class='input'><div style="padding:3px;"><?php echo $e31; ?></div></td>
-					<td class='calculated general f31' style="padding:3px;">&nbsp;</td>
+					<td id="f31" class='calculated general f31' style="padding:3px;">&nbsp;</td>
 					<td class='input'><div style="padding:3px;"><?php echo $g31; ?></div></td>
-					<td class="calculated number h31" style="padding:3px;">&nbsp;</td>
+					<td id="h31" class="calculated number h31" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr id='loading1' bgcolor="e9e9e9">
 					<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
-					<td class='general c32' style="padding:3px;">&nbsp;</td>
-					<td class='general d32' style="padding:3px;">&nbsp;</td>
-					<td class='general e32' style="padding:3px;">&nbsp;</td>
-					<td class="calculated f32" style="padding:3px;">&nbsp;</td>
-					<td class='number g32' style="padding:3px;">&nbsp;</td>
-					<td class="number h32" style="padding:3px;">&nbsp;</td>
+					<td id="c32" class='general c32' style="padding:3px;">&nbsp;</td>
+					<td id="d32" class='general d32' style="padding:3px;">&nbsp;</td>
+					<td id="e32" class='general e32' style="padding:3px;">&nbsp;</td>
+					<td id="f32" class="calculated f32" style="padding:3px;">&nbsp;</td>
+					<td id="g32" class='number g32' style="padding:3px;">&nbsp;</td>
+					<td id="h32" class="number h32" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr id='bunkerstop1' bgcolor="f5f5f5">
 					<td class='general b33' style="padding:3px;"><strong>Bunker Stop</strong></td>
-					<td class='input general c33' style="padding:3px;">&nbsp;</td>
-					<td class='general d33' style="padding:3px;">&nbsp;</td>
+					<td id="c33" class='input general c33' style="padding:3px;">&nbsp;</td>
+					<td id="d33" class='general d33' style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $e33; ?></td>
-					<td class="calculated f33" style="padding:3px;">&nbsp;</td>
+					<td id="f33" class="calculated f33" style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $g33; ?></td>
-					<td class="calculated h33" style="padding:3px;">&nbsp;</td>
+					<td id="h33" class="calculated h33" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr id='laden1' bgcolor="e9e9e9">
 					<td class='general b34' style="padding:3px;"><strong>Laden</strong></td>
-					<td class='input general c34' style="padding:3px;">&nbsp;</td>
-					<td class='general d34' style="padding:3px;">&nbsp;</td>
+					<td id="c34" class='input general c34' style="padding:3px;">&nbsp;</td>
+					<td id="d34" class='general d34' style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $e34; ?></td>
-					<td class="calculated f34" style="padding:3px;">&nbsp;</td>
+					<td id="f34" class="calculated f34" style="padding:3px;">&nbsp;</td>
 					<td class='input' style="padding:3px;"><?php echo $g34; ?></td>
-					<td class="calculated number h34" style="padding:3px;">&nbsp;</td>
+					<td id="h34" class="calculated number h34" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				  <tr id='discharging1' bgcolor="f5f5f5">
 					<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
-					<td class='input general c35' style="padding:3px;">&nbsp;</td>
-					<td class='general d35' style="padding:3px;">&nbsp;</td>
-					<td class='general e35' style="padding:3px;">&nbsp;</td>
-					<td class="calculated f35" style="padding:3px;">&nbsp;</td>
-					<td class='number g35' style="padding:3px;">&nbsp;</td>
-					<td class="number h35" style="padding:3px;">&nbsp;</td>
+					<td id="c35" class='input general c35' style="padding:3px;">&nbsp;</td>
+					<td id="d35" class='general d35' style="padding:3px;">&nbsp;</td>
+					<td id="e35" class='general e35' style="padding:3px;">&nbsp;</td>
+					<td id="f35" class="calculated f35" style="padding:3px;">&nbsp;</td>
+					<td id="g35" class='number g35' style="padding:3px;">&nbsp;</td>
+					<td id="h35" class="number h35" style="padding:3px;">&nbsp;</td>
 				  </tr>
 				</table>
 				
@@ -469,7 +693,7 @@ echo "<div class='landScape'>
 				  <tr id='loading1' bgcolor="e9e9e9">
 					<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
 					<td class='input' style="padding:3px;"><?php echo $i32; ?></td>
-					<td id="j32" class='number j32' style="padding:3px;"></td>
+					<td id="j32" class='number j32' style="padding:3px;"><?php echo $i32_sf; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $k32; ?></td>
 					<td id="l32" class='calculated number l32' style="padding:3px;"></td>
 					<td class='input' style="padding:3px;"><?php echo $m32; ?></td>
@@ -514,7 +738,7 @@ echo "<div class='landScape'>
 				  <tr id='discharging1' bgcolor="f5f5f5">
 					<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
 					<td class='input' style="padding:3px;"><?php echo $i35; ?></td>
-					<td id="j35" class='number j35' style="padding:3px;"></td>
+					<td id="j35" class='number j35' style="padding:3px;"><?php echo $i35_sf; ?></td>
 					<td class='input' style="padding:3px;"><?php echo $k35; ?></td>
 					<td id="l35" class='calculated number l35' style="padding:3px;"></td>
 					<td class='input' style="padding:3px;"><?php echo $m35; ?></td>

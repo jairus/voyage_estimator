@@ -14,7 +14,7 @@ body{
 <script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
 <script type='text/javascript' src='js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
 <script type='text/javascript' src='js/jquery-autocomplete/jquery.autocomplete.js'></script>
-<script type='text/javascript' src='js/ports.php'></script>
+
 <link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/jquery.autocomplete.css" />
 <link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/lib/thickbox.css" />
 
@@ -91,11 +91,11 @@ jQuery( "#bunkerpricedialog" ).dialog( { autoOpen: false, width: 700, height: 60
 jQuery( "#bunkerpricedialog" ).dialog("close");
 </script>
 
-<div id="bunkerpricedialog" title="BUNKER PRICE HISTORY"  style='display:none'>
+<div id="bunkerpricedialog" title="BUNKER PRICE HISTORY" style='display:none'>
 	<div id='bunkerpricecontent'></div>
 </div>
 
-<form id='bunkerprice_form' onsubmit="bunkerPriceSubmit(); return false;">
+<form id='bunkerprice_form'>
 <center>
 <table>
   <tr>
@@ -122,10 +122,16 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
 	</td>
   </tr>
 </table>
-<div id='bunkerpriceresults'>
-    <div id='bunkerprice_tab_wrapperonly'></div>
-</div>
-<div>&nbsp;</div>
+<table width="100%">
+	<tr>
+		<td>
+			<div id='bunkerpriceresults'>
+				<div id='bunkerprice_tab_wrapperonly'></div>
+			</div>
+			<div>&nbsp;</div>
+		</td>
+	</tr>
+</table>
 <table width="100%" id="map_bunker_price">
 	<tr style="background:#e5e5e5; padding:10px 0px;">
 		<td><div style="padding:5px; text-align:center;"><a onclick="showMapBP();" class="clickable">view larger map</a></div></td>

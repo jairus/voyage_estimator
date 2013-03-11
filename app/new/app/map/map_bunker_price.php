@@ -3,13 +3,13 @@
 include_once(dirname(__FILE__)."/../includes/database.php");
 
 $sql1 = "SELECT DISTINCT(`port_name`) FROM `bunker_price` ORDER BY `dateupdated` DESC";
-$ports = dbQuery($sql1, $link);
+$all_ports = dbQuery($sql1, $link);
 
-$t = count($ports);
+$t_bp = count($all_ports);
 
 $bunker_ports = array();
-for($i=0; $i<$t; $i++){
-	$sql2 = "SELECT name, latitude, longitude FROM `_veson_ports` WHERE name='".trim($ports[$i]['port_name'])."' ORDER BY `id` DESC LIMIT 0,1";
+for($i_bp=0; $i_bp<$t_bp; $i_bp++){
+	$sql2 = "SELECT name, latitude, longitude FROM `_veson_ports` WHERE name='".trim($all_ports[$i_bp]['port_name'])."' ORDER BY `id` DESC LIMIT 0,1";
 	$sbis_port = dbQuery($sql2, $link);
 	
 	if(trim($sbis_port[0]['name']) && trim($sbis_port[0]['latitude']) && trim($sbis_port[0]['longitude'])){
@@ -39,12 +39,12 @@ for($i=0; $i<$t; $i++){
 				<td valign='top'>".number_format($port_longitude, 2, '.', '')."</td>
 			</tr>";
 			
-			$t1 = count($r1); 
+			$t_bp1 = count($r1); 
 			
-			for($i1=0; $i1<$t1; $i1++){
+			for($i_bp1=0; $i_bp1<$t_bp1; $i_bp1++){
 				$xstring .= "<tr>
-					<td valign='top'><b>".$r1[$i1]['grade'].":</b></td>
-					<td valign='top'>".$r1[$i1]['average_price']."</td>
+					<td valign='top'><b>".$r1[$i_bp1]['grade'].":</b></td>
+					<td valign='top'>".$r1[$i_bp1]['average_price']."</td>
 				</tr>";
 			}
 			
@@ -86,9 +86,9 @@ epsg4326 =  new OpenLayers.Projection("EPSG:4326");
 projectTo = map.getProjectionObject();
 
 <?php
-$t1 = count($bunker_ports);
+$t_bp1 = count($bunker_ports);
 
-for($i1=0; $i1<$t1; $i1++){
+for($i_bp1=0; $i_bp1<$t_bp1; $i_bp1++){
     ?> var lonLat = new OpenLayers.LonLat( <?php echo $bunker_ports[0]['port_longitude']; ?>, <?php echo $bunker_ports[0]['port_latitude']; ?> ).transform(epsg4326, projectTo); <?php
 }
 ?>
@@ -99,11 +99,11 @@ map.setCenter (lonLat, zoom);
 var vectorLayer = new OpenLayers.Layer.Vector("Overlay");
 
 <?php
-for($i1=0; $i1<$t1; $i1++){
+for($i_bp1=0; $i_bp1<$t_bp1; $i_bp1++){
     ?>
 	var feature = new OpenLayers.Feature.Vector(
-		new OpenLayers.Geometry.Point( <?php echo $bunker_ports[$i1]['port_longitude']; ?>, <?php echo $bunker_ports[$i1]['port_latitude']; ?> ).transform(epsg4326, projectTo),
-		{description:"<?php echo $bunker_ports[$i1]['xstring']; ?>"} ,
+		new OpenLayers.Geometry.Point( <?php echo $bunker_ports[$i_bp1]['port_longitude']; ?>, <?php echo $bunker_ports[$i_bp1]['port_latitude']; ?> ).transform(epsg4326, projectTo),
+		{description:"<?php echo $bunker_ports[$i_bp1]['xstring']; ?>"} ,
 		{externalGraphic: 'icon_oilbarrel.png', graphicHeight: 30, graphicWidth: 30, graphicXOffset:-12, graphicYOffset:-25  }
 	);
 	vectorLayer.addFeatures(feature);

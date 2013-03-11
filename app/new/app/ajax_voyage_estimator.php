@@ -2267,14 +2267,228 @@ function printItVe_2(){
 function mailItVe(){
 	var data = jQuery('form').serialize();
 	
-	jQuery("#misciframe")[0].src="misc/email_ve.php?"+data;
+	//VOYAGE LEGS
+	var f31 = jQuery("#f31").text();
+	var h31 = jQuery("#h31").text();
+	var c32 = jQuery("#c32").text();
+	var d32 = jQuery("#d32").text();
+	var e32 = jQuery("#e32").text();
+	var f32 = jQuery("#f32").text();
+	var g32 = jQuery("#g32").text();
+	var h32 = jQuery("#h32").text();
+	var c33 = jQuery("#c33").text();
+	var d33 = jQuery("#d33").text();
+	var f33 = jQuery("#f33").text();
+	var h33 = jQuery("#h33").text();
+	var c34 = jQuery("#c34").text();
+	var d34 = jQuery("#d34").text();
+	var f34 = jQuery("#f34").text();
+	var h34 = jQuery("#h34").text();
+	var c35 = jQuery("#c35").text();
+	var d35 = jQuery("#d35").text();
+	var e35 = jQuery("#e35").text();
+	var f35 = jQuery("#f35").text();
+	var g35 = jQuery("#g35").text();
+	var h35 = jQuery("#h35").text();
+	//END OF VOYAGE LEGS
+	
+	//CARGO LEGS
+	var r31 = jQuery("#r31").text();
+	var j32 = jQuery("#j32").text();
+	var l32 = jQuery("#l32").text();
+	var o32 = jQuery("#o32").text();
+	var o33 = jQuery("#o33").text();
+	var r34 = jQuery("#r34").text();
+	var j35 = jQuery("#j35").text();
+	var l35 = jQuery("#l35").text();
+	var o35 = jQuery("#o35").text();
+	//END OF CARGO LEGS
+	
+	//VOYAGE TIME
+	var o36 = jQuery("#o36").text();
+	var r36 = jQuery("#r36").text();
+	var o37 = jQuery("#o37").text();
+	//END OF VOYAGE TIME
+	
+	//BUNKER PRICING
+	var c45 = jQuery("#c45").text();
+	var d45 = jQuery("#d45").text();
+	var e45 = jQuery("#e45").text();
+	var g45 = jQuery("#g45").text();
+	var h45 = jQuery("#h45").text();
+	//END OF BUNKER PRICING
+	
+	//VOYAGE EXPENSES
+	var c46 = jQuery("#c46").text();
+	var d46 = jQuery("#d46").text();
+	var e46 = jQuery("#e46").text();
+	var f46 = jQuery("#f46").text();
+	var g46 = jQuery("#g46").text();
+	var h46 = jQuery("#h46").text();
+	var i46 = jQuery("#i46").text();
+	var c47 = jQuery("#c47").text();
+	var g47 = jQuery("#g47").text();
+	//END OF VOYAGE EXPENSES
+	
+	//DWCC
+	var d19b = jQuery("#d19b").text();
+	var d20b = jQuery("#d20b").text();
+	var d21b = jQuery("#d21b").text();
+	var d22b = jQuery("#d22b").text();
+	var d25 = jQuery("#d25").text();
+	var d26 = jQuery("#d26").text();
+	//END OF DWCC
+	
+	//CANAL
+	var ctotal1 = jQuery("#ctotal1").text();
+	var ctotal2 = jQuery("#ctotal2").text();
+	//END OF CANAL
+	
+	//PORTS
+	var c54 = jQuery("#c54").text();
+	var c54_2 = jQuery("#c54_2").text();
+	var c54_3 = jQuery("#c54_3").text();
+	var port1 = jQuery("#port1").text();
+	var port2 = jQuery("#port2").text();
+	var port3 = jQuery("#port3").text();
+	var c66 = jQuery("#c66").text();
+	var c67 = jQuery("#c67").text();
+	var c68 = jQuery("#c68").text();
+	//END OF PORTS
+	
+	//VOYAGE DISBURSMENTS
+	var b74 = jQuery("#b74").text();
+	var c74 = jQuery("#c74").text();
+	var d74 = jQuery("#d74").text();
+	var b75 = jQuery("#b75").text();
+	//END OF VOYAGE DISBURSMENTS
+	
+	//FRIEGHT RATE
+	var c80 = jQuery("#c80").text();
+	var f80 = jQuery("#f80").text();
+	var g80 = jQuery("#g80").text();
+	var d81 = jQuery("#d81").text();
+	var b85 = jQuery("#b85").text();
+	var c85 = jQuery("#c85").text();
+	var f85 = jQuery("#f85").text();
+	var d86 = jQuery("#d86").text();
+	//END OF FRIEGHT RATE
+	
+	jQuery("#misciframe")[0].src="misc/email_ve.php?"+data+'&f31='+f31+'&h31='+h31+'&c32='+c32+'&d32='+d32+'&e32='+e32+'&f32='+f32+'&g32='+g32+'&h32='+h32+'&c33='+c33+'&d33='+d33+'&f33='+f33+'&h33='+h33+'&c34='+c34+'&d34='+d34+'&f34='+f34+'&h34='+h34+'&c35='+c35+'&d35='+d35+'&e35='+e35+'&f35='+f35+'&g35='+g35+'&h35='+h35+'&r31='+r31+'&j32='+j32+'&l32='+l32+'&o32='+o32+'&o33='+o33+'&r34='+r34+'&j35='+j35+'&l35='+l35+'&o35='+o35+'&o36='+o36+'&r36='+r36+'&o37='+o37+'&c45='+c45+'&d45='+d45+'&e45='+e45+'&g45='+g45+'&h45='+h45+'&c46='+c46+'&d46='+d46+'&e46='+e46+'&f46='+f46+'&g46='+g46+'&h46='+h46+'&i46='+i46+'&c47='+c47+'&g47='+g47+'&d19b='+d19b+'&d20b='+d20b+'&d21b='+d21b+'&d22b='+d22b+'&d25='+d25+'&d26='+d26+'&ctotal1='+ctotal1+'&ctotal2='+ctotal2+'&c54='+c54+'&c54_2='+c54_2+'&c54_3='+c54_3+'&port1='+port1+'&port2='+port2+'&port3='+port3+'&c66='+c66+'&c67='+c67+'&c68='+c68+'&b74='+b74+'&c74='+c74+'&d74='+d74+'&b75='+b75+'&c80='+c80+'&f80='+f80+'&g80='+g80+'&d81='+d81+'&b85='+b85+'&c85='+c85+'&f85='+f85+'&d86='+d86;
 	jQuery("#miscdialog").dialog("open");
 }
 
 function printItVe(){
 	var data = jQuery('form').serialize();
 	
-	jQuery("#misciframe")[0].src="misc/print_ve.php?"+data;
+	//VOYAGE LEGS
+	var f31 = jQuery("#f31").text();
+	var h31 = jQuery("#h31").text();
+	var c32 = jQuery("#c32").text();
+	var d32 = jQuery("#d32").text();
+	var e32 = jQuery("#e32").text();
+	var f32 = jQuery("#f32").text();
+	var g32 = jQuery("#g32").text();
+	var h32 = jQuery("#h32").text();
+	var c33 = jQuery("#c33").text();
+	var d33 = jQuery("#d33").text();
+	var f33 = jQuery("#f33").text();
+	var h33 = jQuery("#h33").text();
+	var c34 = jQuery("#c34").text();
+	var d34 = jQuery("#d34").text();
+	var f34 = jQuery("#f34").text();
+	var h34 = jQuery("#h34").text();
+	var c35 = jQuery("#c35").text();
+	var d35 = jQuery("#d35").text();
+	var e35 = jQuery("#e35").text();
+	var f35 = jQuery("#f35").text();
+	var g35 = jQuery("#g35").text();
+	var h35 = jQuery("#h35").text();
+	//END OF VOYAGE LEGS
+	
+	//CARGO LEGS
+	var r31 = jQuery("#r31").text();
+	var j32 = jQuery("#j32").text();
+	var l32 = jQuery("#l32").text();
+	var o32 = jQuery("#o32").text();
+	var o33 = jQuery("#o33").text();
+	var r34 = jQuery("#r34").text();
+	var j35 = jQuery("#j35").text();
+	var l35 = jQuery("#l35").text();
+	var o35 = jQuery("#o35").text();
+	//END OF CARGO LEGS
+	
+	//VOYAGE TIME
+	var o36 = jQuery("#o36").text();
+	var r36 = jQuery("#r36").text();
+	var o37 = jQuery("#o37").text();
+	//END OF VOYAGE TIME
+	
+	//BUNKER PRICING
+	var c45 = jQuery("#c45").text();
+	var d45 = jQuery("#d45").text();
+	var e45 = jQuery("#e45").text();
+	var g45 = jQuery("#g45").text();
+	var h45 = jQuery("#h45").text();
+	//END OF BUNKER PRICING
+	
+	//VOYAGE EXPENSES
+	var c46 = jQuery("#c46").text();
+	var d46 = jQuery("#d46").text();
+	var e46 = jQuery("#e46").text();
+	var f46 = jQuery("#f46").text();
+	var g46 = jQuery("#g46").text();
+	var h46 = jQuery("#h46").text();
+	var i46 = jQuery("#i46").text();
+	var c47 = jQuery("#c47").text();
+	var g47 = jQuery("#g47").text();
+	//END OF VOYAGE EXPENSES
+	
+	//DWCC
+	var d19b = jQuery("#d19b").text();
+	var d20b = jQuery("#d20b").text();
+	var d21b = jQuery("#d21b").text();
+	var d22b = jQuery("#d22b").text();
+	var d25 = jQuery("#d25").text();
+	var d26 = jQuery("#d26").text();
+	//END OF DWCC
+	
+	//CANAL
+	var ctotal1 = jQuery("#ctotal1").text();
+	var ctotal2 = jQuery("#ctotal2").text();
+	//END OF CANAL
+	
+	//PORTS
+	var c54 = jQuery("#c54").text();
+	var c54_2 = jQuery("#c54_2").text();
+	var c54_3 = jQuery("#c54_3").text();
+	var port1 = jQuery("#port1").text();
+	var port2 = jQuery("#port2").text();
+	var port3 = jQuery("#port3").text();
+	var c66 = jQuery("#c66").text();
+	var c67 = jQuery("#c67").text();
+	var c68 = jQuery("#c68").text();
+	//END OF PORTS
+	
+	//VOYAGE DISBURSMENTS
+	var b74 = jQuery("#b74").text();
+	var c74 = jQuery("#c74").text();
+	var d74 = jQuery("#d74").text();
+	var b75 = jQuery("#b75").text();
+	//END OF VOYAGE DISBURSMENTS
+	
+	//FRIEGHT RATE
+	var c80 = jQuery("#c80").text();
+	var f80 = jQuery("#f80").text();
+	var g80 = jQuery("#g80").text();
+	var d81 = jQuery("#d81").text();
+	var b85 = jQuery("#b85").text();
+	var c85 = jQuery("#c85").text();
+	var f85 = jQuery("#f85").text();
+	var d86 = jQuery("#d86").text();
+	//END OF FRIEGHT RATE
+	
+	jQuery("#misciframe")[0].src="misc/print_ve.php?"+data+'&f31='+f31+'&h31='+h31+'&c32='+c32+'&d32='+d32+'&e32='+e32+'&f32='+f32+'&g32='+g32+'&h32='+h32+'&c33='+c33+'&d33='+d33+'&f33='+f33+'&h33='+h33+'&c34='+c34+'&d34='+d34+'&f34='+f34+'&h34='+h34+'&c35='+c35+'&d35='+d35+'&e35='+e35+'&f35='+f35+'&g35='+g35+'&h35='+h35+'&r31='+r31+'&j32='+j32+'&l32='+l32+'&o32='+o32+'&o33='+o33+'&r34='+r34+'&j35='+j35+'&l35='+l35+'&o35='+o35+'&o36='+o36+'&r36='+r36+'&o37='+o37+'&c45='+c45+'&d45='+d45+'&e45='+e45+'&g45='+g45+'&h45='+h45+'&c46='+c46+'&d46='+d46+'&e46='+e46+'&f46='+f46+'&g46='+g46+'&h46='+h46+'&i46='+i46+'&c47='+c47+'&g47='+g47+'&d19b='+d19b+'&d20b='+d20b+'&d21b='+d21b+'&d22b='+d22b+'&d25='+d25+'&d26='+d26+'&ctotal1='+ctotal1+'&ctotal2='+ctotal2+'&c54='+c54+'&c54_2='+c54_2+'&c54_3='+c54_3+'&port1='+port1+'&port2='+port2+'&port3='+port3+'&c66='+c66+'&c67='+c67+'&c68='+c68+'&b74='+b74+'&c74='+c74+'&d74='+d74+'&b75='+b75+'&c80='+c80+'&f80='+f80+'&g80='+g80+'&d81='+d81+'&b85='+b85+'&c85='+c85+'&f85='+f85+'&d86='+d86;
 	jQuery("#miscdialog").dialog("open");
 }
 </script>

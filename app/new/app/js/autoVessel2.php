@@ -1,10 +1,14 @@
 <?php
 include_once(dirname(__FILE__)."/../includes/database.php");
 $link = dbConnect();
-$sql = "select `imo`, `name` from `_xvas_parsed2_dry` where 1";
-$vessel = dbQuery($sql, $link);
 
-
+if($user['dry']==1){
+	$sql = "select `imo`, `name` from `_xvas_parsed2_dry` where 1";
+	$vessel = dbQuery($sql, $link);
+}elseif($user['dry']==0){
+	$sql = "select `imo`, `name` from `_xvas_parsed2` where 1";
+	$vessel = dbQuery($sql, $link);
+}
 ?>
 var vessel = [ <?php
 $t = count($vessel);

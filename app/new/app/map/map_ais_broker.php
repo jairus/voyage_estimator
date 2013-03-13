@@ -68,9 +68,15 @@ else{ $siitech_lastseen = date("M j, 'y G:i e", str2time($ship['siitech_lastseen
 $imo = $ship['xvas_imo'];
 $imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$imo);
 
-$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$imo."'";
-$xvas = dbQuery($sql);
-$xvas = $xvas[0];
+if($user['dry']==1){
+	$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$imo."'";
+	$xvas = dbQuery($sql);
+	$xvas = $xvas[0];
+}elseif($user['dry']==0){
+	$sql  = "SELECT * FROM `_xvas_shipdata` WHERE `imo`='".$imo."'";
+	$xvas = dbQuery($sql);
+	$xvas = $xvas[0];
+}
 
 $ship_name = getValue($xvas['data'], 'NAME');
 $callsign = $ship['xvas_callsign'];

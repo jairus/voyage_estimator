@@ -10,9 +10,15 @@ $ais = $ais[0];
 
 $imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$ais['xvas_imo']);
 
-$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$ais['xvas_imo']."'";
-$xvas = dbQuery($sql);
-$xvas = $xvas[0];
+if($user['dry']==1){
+	$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$ais['xvas_imo']."'";
+	$xvas = dbQuery($sql);
+	$xvas = $xvas[0];
+}elseif($user['dry']==0){
+	$sql  = "SELECT * FROM `_xvas_shipdata` WHERE `imo`='".$ais['xvas_imo']."'";
+	$xvas = dbQuery($sql);
+	$xvas = $xvas[0];
+}
 
 $xvasflag = getValue($xvas['data'], 'LAST_KNOWN_FLAG');
 if(!trim($xvasflag)){

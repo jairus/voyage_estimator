@@ -3,9 +3,15 @@
 
 $imageb = base64_encode("http://dataservice.grosstonnage.com/S-Bisphoto.php?imo=".$_GET['imo']);
 
-$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$_GET['imo']."'";
-$xvas = dbQuery($sql);
-$xvas = $xvas[0];
+if($user['dry']==1){
+	$sql  = "SELECT * FROM `_xvas_shipdata_dry` WHERE `imo`='".$_GET['imo']."'";
+	$xvas = dbQuery($sql);
+	$xvas = $xvas[0];
+}elseif($user['dry']==0){
+	$sql  = "SELECT * FROM `_xvas_shipdata` WHERE `imo`='".$_GET['imo']."'";
+	$xvas = dbQuery($sql);
+	$xvas = $xvas[0];
+}
 
 $xvasflag = getValue($xvas['data'], 'LAST_KNOWN_FLAG');
 if(!trim($xvasflag)){
@@ -13,9 +19,15 @@ if(!trim($xvasflag)){
 }
 $xvasflag_img = getFlagImage($xvasflag);
 
-$sql_pos  = "SELECT * FROM `_xvas_siitech_cache` WHERE `xvas_imo`='".$_GET['imo']."' ORDER BY `dateupdated` DESC LIMIT 0,1";
-$xvas_pos = dbQuery($sql_pos);
-$xvas_pos = $xvas_pos[0];
+if($user['dry']==1){
+	$sql_pos  = "SELECT * FROM `_xvas_siitech_cache` WHERE `xvas_imo`='".$_GET['imo']."' ORDER BY `dateupdated` DESC LIMIT 0,1";
+	$xvas_pos = dbQuery($sql_pos);
+	$xvas_pos = $xvas_pos[0];
+}elseif($user['dry']==0){
+	$sql_pos  = "SELECT * FROM `_xvas_siitech_cache_wet` WHERE `xvas_imo`='".$_GET['imo']."' ORDER BY `dateupdated` DESC LIMIT 0,1";
+	$xvas_pos = dbQuery($sql_pos);
+	$xvas_pos = $xvas_pos[0];
+}
 
 $siitech_destination = trim($xvas_pos['siitech_destination']);
 if($siitech_destination==""){ $siitech_destination = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }

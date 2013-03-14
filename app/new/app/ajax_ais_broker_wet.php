@@ -887,7 +887,7 @@ if(isset($_GET['new_search'])){
 					$t_d = count($dwt_ranges);
 					?>
 				  
-					<select class="input_1" name="dwt_range" id='dwt_range_id' size="7">
+					<select class="input_1" name="dwt_range" id='dwt_range_id' size="10">
 						<?php
 						for($i_d=0; $i_d<$t_d; $i_d++){
 							if($dwt_ranges[$i_d][0]==$dwt_range){
@@ -1087,7 +1087,7 @@ if(isset($_GET['new_search'])){
 					$t_d = count($dwt_range2s);
 					?>
 				  
-					<select class="input_1" name="dwt_range2" id='dwt_range2_id' size="7">
+					<select class="input_1" name="dwt_range2" id='dwt_range2_id' size="10">
 						<?php
 						for($i_d=0; $i_d<$t_d; $i_d++){
 							if($dwt_range2s[$i_d][0]==$dwt_range2){
@@ -1151,39 +1151,49 @@ if(isset($_GET['new_search'])){
 				  <td>
 				  	<?php
 					$zones = array(
-						0=>array(0=>'z1', 1=>'[z1] AUSTRALIA'), 
-						1=>array(0=>'z2', 1=>'[z2] BALTIC SEA'), 
-						2=>array(0=>'z3', 1=>'[z3] BLACK SEA'), 
-						3=>array(0=>'z4', 1=>'[z4] CARIB'), 
-						4=>array(0=>'z5', 1=>'[z5] EC CAN'), 
-						5=>array(0=>'z6', 1=>'[z6] ECCA'), 
-						6=>array(0=>'z7', 1=>'[z7] ECEC'), 
-						7=>array(0=>'z8', 1=>'[z8] ECI'), 
-						8=>array(0=>'z9', 1=>'[z9] ECSA'), 
-						9=>array(0=>'z10', 1=>'[z10] FAR EAST'), 
-						10=>array(0=>'z11', 1=>'[z11] FRENCH ATLANTIC'), 
-						11=>array(0=>'z12', 1=>'[z12] MEDITERRANEAN'), 
-						12=>array(0=>'z13', 1=>'[z13] MED-RS-PG-WCI'), 
-						13=>array(0=>'z14', 1=>'[z14] N EUROPE'), 
-						14=>array(0=>'z15', 1=>'[z15] NCSA'), 
-						15=>array(0=>'z16', 1=>'[z16] NEW ZEALAND'), 
-						16=>array(0=>'z17', 1=>'[z17] NOPAC'), 
-						17=>array(0=>'z18', 1=>'[z18] NORTH SEA'), 
-						18=>array(0=>'z19', 1=>'[z19] NORWEGIAN SEA'), 
-						19=>array(0=>'z20', 1=>'[z20] PERSIAN GULF'), 
-						20=>array(0=>'z21', 1=>'[z21] PG +WCI'), 
-						21=>array(0=>'z22', 1=>'[z22] RED SEA'), 
-						22=>array(0=>'z23', 1=>'[z23] SA'), 
-						23=>array(0=>'z24', 1=>'[z24] SE AFRICA'), 
-						24=>array(0=>'z25', 1=>'[z25] SE ASIA'), 
-						25=>array(0=>'z26', 1=>'[z26] SPAIN ATLANTIC'), 
-						26=>array(0=>'z27', 1=>'[z27] ST LAWRENCE'), 
-						27=>array(0=>'z28', 1=>'[z28] SW AFRICA'), 
-						28=>array(0=>'z29', 1=>'[z29] UK AND EIRE'), 
-						29=>array(0=>'z30', 1=>'[z30] USG'), 
-						30=>array(0=>'z31', 1=>'[z31] WCCA'), 
-						31=>array(0=>'z32', 1=>'[z32] WCSA'), 
-						32=>array(0=>'z33', 1=>'[z33] WEST COAST INDIA')
+						0=>array(0=>'IA', 1=>'[IA] INDIA & ASIA'), 
+						1=>array(0=>'IM', 1=>'[IM] INDIA & MEG'), 
+						2=>array(0=>'AG1', 1=>'[AG1] TD1 VLCC AG TO US GULF RAS TANURA TO LOOP - NO SUEZ'), 
+						3=>array(0=>'AG2', 1=>'[AG2] TD1 VLCC AG TO US GULF RAS TANURA TO LOOP VIA SUEZ CANAL'), 
+						4=>array(0=>'AG3', 1=>'[AG3] TD2 VLCC AG TO SINGAPORE RAS TANURA TO SINGAPORE'), 
+						5=>array(0=>'AG4', 1=>'[AG4] TD3 VLCC AG TO JAPAN RAS TANURA TO CHIBA'), 
+						6=>array(0=>'WE', 1=>'[WE] TD4 VLCC WEST AFRICA TO US GULF BONNY TO LOOP'), 
+						7=>array(0=>'BL', 1=>'[BL] TD6 SUEZMAX BLACK SEA TO MEDITERRANEAN NOVOROSSIYSK TO AUGUSTA'), 
+						8=>array(0=>'KW', 1=>'[KW] TD8 AFRAMAX KUWAIT TO SINGAPORE MENA AL AHMADI TO SINGAPORE'), 
+						9=>array(0=>'CA1', 1=>'[CA1] TD9 PANAMAX CARRIBEAN TO US GULF PUERTO LA CRUZ TO CORPUS CHRISTI'), 
+						10=>array(0=>'CA2', 1=>'[CA2] TD10D PANAMAX CARRIBEAN TO USAC ARUBA TO NEW YORK'), 
+						11=>array(0=>'CR', 1=>'[CR] TD11 AFRAMAX CROSS MEDITERRANEAN BANAIS TO LAVERA'), 
+						12=>array(0=>'AR', 1=>'[AR] TD12 PANAMAX ARA TO US GULF ANTWERP TO HOUSTON'), 
+						13=>array(0=>'SE', 1=>'[SE] TD14 AFRAMAX SE ASIA TO EC AUSTRALIA SERIA TO SYDNEY'), 
+						14=>array(0=>'WA', 1=>'[WA] TD 15 VLCC WEST AFRICA TO CHINA BONNY TO NINGBO'), 
+						15=>array(0=>'BS', 1=>'[BS] TD 16 HANDYMAX BLACK SEA TO MEDITERRANEAN ODESSA TO AUGUSTA'), 
+						16=>array(0=>'PA', 1=>'[PA] TC1 PANAMAX MEG TO JAPAN RAS TANURA TO YOKOHAMA'), 
+						17=>array(0=>'MR1', 1=>'[MR1] TC2 MR CONTINENT TO USAC ROTTERDAM TO NEW YORK'), 
+						18=>array(0=>'MR2', 1=>'[MR2] TC3 MR2 CARIBBEAN TO USAC ARUBA TO NEW YORK'), 
+						19=>array(0=>'SI', 1=>'[SI] TC4 SINGAPORE TO JAPAN SINGAPORE TO CHIBA'), 
+						20=>array(0=>'ME', 1=>'[ME] TC5 MEG TO JAPAN RAS TANURS TO YOKOHAMA'), 
+						21=>array(0=>'MA', 1=>'[MA] TC6 MR ALGERIA TO EUROMED SKIKDA TO LAVERA'), 
+						22=>array(0=>'MH', 1=>'[MH] TC6 MR AND HANDY ALGERIA TO EUROMED SKIKDA TO LAVERA'), 
+						23=>array(0=>'MS', 1=>'[MS] TC7 MR OR HANDY SINGAPORE TO EC AUSTRALIA'), 
+						24=>array(0=>'PU', 1=>'[PU] TC8 PANAMAX AG TO UK AND CONTINENT JUBAIL TO ROTTERDAM'), 
+						25=>array(0=>'HA', 1=>'[HA] TC9 HANDY BALTIC TO UK AND CONTINENT VENTSPILS TO LE HAVRE'), 
+						26=>array(0=>'1', 1=>'[A] NORTH EAST ASIA TO WEST COAST OF NORTH AMERICA'), 
+						27=>array(0=>'3', 1=>'[C] EAST INDIA TO AUSTRALIA TO ASIA TO WEST COAST OF NORTH AMERICA'), 
+						28=>array(0=>'5', 1=>'[E] EAST AFRICA TO AG/MEG TO ASIA TO AUSTRALIA TO WC OF NORTH AMERICA'), 
+						29=>array(0=>'5a', 1=>'[E1] ALL COASTAL PORT(S) THROUGHOUT THE WORLD (OVER 80K NO PANAMA CANAL)'), 
+						30=>array(0=>'6', 1=>'[F] WEST AND EAST AFRICA TO AG/MEG TO SEA TO AUSTRALIA'), 
+						31=>array(0=>'7', 1=>'[G] ALL COASTAL PORT(S) THROUGHOUT THE WORLD (NO CANALS)'), 
+						32=>array(0=>'8', 1=>'[H] WITHIN EUROPE, BLACK SEA, MEDITERRANEAN SEA, NORTH SEA, BALTIC SEA'), 
+						33=>array(0=>'9', 1=>'[I] EC OF NORTH AND SOUTH AMERICA TO WC AFRICA AND EUROPE (NO SUEZ)'), 
+						34=>array(0=>'11', 1=>'[K] EAST COAST OF N.AMERICA TO WEST COAST OF EUROPE'), 
+						35=>array(0=>'12', 1=>'[L] EAST AND WEST COAST OF NORTH AND SOUTH AMERICA'), 
+						36=>array(0=>'12a', 1=>'[L1] EAST COAST OF NORTH AND SOUTH AMERICA'), 
+						37=>array(0=>'13', 1=>'[M] WEST COAST OF NORTH AMERICA TO EAST COAST OF RUSSIA'), 
+						38=>array(0=>'14', 1=>'[N] WEST COAST OF NORTH AND SOUTH AMERICA TO EAST COAST OF RUSSIA'), 
+						39=>array(0=>'15', 1=>'[O] WEST COAST OF NORTH AND SOUTH AMERICA AND EAST AUSTRALIA'), 
+						40=>array(0=>'16', 1=>'[P] EC OF AUSTRALIA TO NORTH EAST ASIA TO WC OF NORTH AMERICA'), 
+						41=>array(0=>'AG', 1=>'[AG] AFRICA TO MEDITERRANEAN SEA, BLACK SEA, BALTIC SEA TO ARABIAN GULF'), 
+						42=>array(0=>'AS', 1=>'[AS] INDIA TO ASIA TO AUSTRALIA')
 					);
 					
 					$t_z = count($zones);
@@ -1203,7 +1213,7 @@ if(isset($_GET['new_search'])){
 					
 					<script>
 					$(document).ready(function() {
-						showMinimap('z1');
+						showMinimap('IA');
 					});
 					
 					function showMinimap(zone){

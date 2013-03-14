@@ -13,6 +13,8 @@ if($user['dry']==1){
 	$xvas = $xvas[0];
 }
 
+$shipname = getValue($xvas['data'], 'NAME');
+
 $xvasflag = getValue($xvas['data'], 'LAST_KNOWN_FLAG');
 if(!trim($xvasflag)){
 	$xvasflag = getValue($xvas['data'], 'FLAG');
@@ -110,7 +112,7 @@ $xstring = "
 						<table border='0' cellspacing='0' cellpadding='0' style='font-family:verdana; font-size:10px;'>
 							<tr>
 								<td valign='top' width='130'><b>Name:</b></td>
-								<td valign='top'>".$xvas_pos['xvas_name']."</td>
+								<td valign='top'>".$shipname."</td>
 							</tr>
 							<tr>
 								<td valign='top'><b>IMO:</b></td>

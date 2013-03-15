@@ -438,7 +438,7 @@
 					*/
 					
 					//fields validation
-					arr_fields = ['first_name', 'last_name', 'email', 'company_name', 'address', 'city', 'postal_code', 'countryField', 'services'];
+					arr_fields = ['first_name', 'last_name', 'email', 'pass1', 'pass2', 'company_name', 'address', 'city', 'postal_code', 'countryField', 'services'];
 					$.each(arr_fields, function(index, value){
 						if( $('#' + value).val() == '' ){
 							if( value == 'email' )
@@ -672,6 +672,18 @@
                                             <td class='form'>
 												<input class='tbox' type='text' name='email' id="email" />
 												<div class='error' id='error_email'>Please Input Email</div></td>
+                                        </tr>
+										<tr>
+                                            <td class='label'><span class="required">*</span>Password</td>
+                                            <td class='form'>
+                                                <input class='tbox' type='password' name='pass1' id="pass1" />
+                                                <div class='error' id='error_pass1'>Please Input Password</div></td>
+                                        </tr>
+										<tr>
+                                            <td class='label'><span class="required">*</span>Confirm Password</td>
+                                            <td class='form'>
+                                                <input class='tbox' type='password' name='pass2' id="pass2" />
+                                                <div class='error' id='error_pass2'>Please Confirm Password</div></td>
                                         </tr>
 										<tr>
                                             <td class='label'>Skype:</td>

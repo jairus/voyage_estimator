@@ -14,7 +14,7 @@ $conn   = mysql_connect($dbhost,$dbuser,$dbpass) or die('Error connecting to mys
 mysql_select_db($dbname, $conn);
 
 if( $_GET['trigger'] == 'email_check' ){
-	$sql = mysql_query("SELECT COUNT(id) AS cnt FROM _port_agents WHERE email_address = '".$_GET['email']."' ");
+	$sql = mysql_query("SELECT COUNT(id) AS cnt FROM _port_agents WHERE email= '".$_GET['email']."' ");
 	$row = mysql_fetch_assoc($sql);
 	if( $row['cnt'] > 0 )
 		echo 'email found';

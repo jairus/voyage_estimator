@@ -34,6 +34,9 @@ if($_GET['search']){
 		$sql2 = "select * from _xvas_shipdata_dry where imo <> '' and imo='".trim($r[$i]['imo'])."' limit 1";
 		$r2 = dbQuery($sql2);
 		
+		$sql3 = "select * from _xvas_siitech_cache where xvas_imo <> '' and xvas_imo='".trim($r[$i]['imo'])."' limit 1";
+		$r3 = dbQuery($sql3);
+		
 		$ship = array();
 
 		$ship['name'] = $r[$i]['imo']." - ".$r[$i]['name'];
@@ -84,6 +87,14 @@ if($_GET['search']){
 		$ship['class_society'] = htmlentities(getValue($r2[0]['data'], 'CLASS_SOCIETY'));
 		$ship['holds'] = htmlentities(getValue($r2[0]['data'], 'HOLDS'));
 		$ship['largest_hatch'] = htmlentities(getValue($r2[0]['data'], 'LARGEST_HATCH'));
+		
+		//AIS DATA
+		if($r3[0]){
+			$ship['speed_ais'] = getValue($r3[0]['siitech_shipstat_data'], 'speed_ais');
+			$ship['NavigationalStatus'] = getValue($r3[0]['siitech_shippos_data'], 'NavigationalStatus');
+			$ship['aisdateupdated'] = $r3[0]['dateupdated'];
+		}
+		//END OF AIS DATA
 
 		$ships[] = $ship;
 	}
@@ -398,6 +409,11 @@ var manager_owner_emails = [];
 var class_societys = [];
 var holdss = [];
 var largest_hatchs = [];
+			
+var speed_aiss = [];
+var NavigationalStatuss = [];
+var aisdateupdateds = [];
+
 var sfs = [];
 var gimo = "";
 
@@ -419,6 +435,9 @@ $(function(){
 	
 	jQuery("#shipdetails2").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
 	jQuery("#shipdetails2").dialog("close");
+	
+	jQuery("#shipspeedhistory").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+	jQuery("#shipspeedhistory").dialog("close");
 	
 	jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
 	jQuery("#contactdialog").dialog("close");
@@ -864,6 +883,10 @@ $(function(){
 					class_societys[val.imo] = val.class_society;
 					holdss[val.imo] = val.holds;
 					largest_hatchs[val.imo] = val.largest_hatch;
+					
+					speed_aiss[val.imo] = val.speed_ais;
+					NavigationalStatuss[val.imo] = val.NavigationalStatus;
+					aisdateupdateds[val.imo] = val.aisdateupdated;
 				});
 
 				//pass array to callback
@@ -879,7 +902,7 @@ $(function(){
 			imo = jQuery.trim(imo);
 			gimo = imo;
 
-			jQuery("#shipdetailshref").html("<a style='cursor:pointer;' onclick='showShipDetails()'><u>Click here for full specs</u></a> | <a style='cursor:pointer;' onclick='showShipDetails2()'><u>Click for your ships info</u></a>");
+			jQuery("#shipdetailshref").html("<a style='cursor:pointer;' onclick='showShipDetails()'><u>Click here for full specs</u></a> | <a style='cursor:pointer;' onclick='showShipDetails2()'><u>Click for your ships info</u></a> | <a style='cursor:pointer;' onclick='showShipSpeedHistory(\""+imo+"\")'><u>Click for ships speed history</u></a>");
 			setValue(jQuery("#d18"), fNum(dwts[imo]));
 			
 			//Zoi's Code
@@ -966,6 +989,15 @@ $(function(){
 			jQuery("#ship_largest_hatch").each(function(){
 				setValue(jQuery(this), largest_hatchs[imo]);
 			});
+			jQuery("#ship_speed_ais").each(function(){
+				setValue(jQuery(this), speed_aiss[imo]);
+			});
+			jQuery("#ship_NavigationalStatus").each(function(){
+				setValue(jQuery(this), NavigationalStatuss[imo]);
+			});
+			jQuery("#ship_aisdateupdated").each(function(){
+				setValue(jQuery(this), aisdateupdateds[imo]);
+			});
 			//End of Zoi's Code
 
 			jQuery(".g31").each(function(){
@@ -1016,6 +1048,15 @@ function showShipDetails2(imo){
 
 	jQuery("#shipdetailiframe")[0].src='misc/ship_data_update.php?imo='+gimo;
 	jQuery("#shipdetails2").dialog("open");
+}
+
+function showShipSpeedHistory(imo){
+	var iframe2 = $("#shipspeedhistoryiframe");
+
+	$(iframe2).contents().find("body").html("");
+
+	jQuery("#shipspeedhistoryiframe")[0].src='misc/shipspeedhistory.php?imo='+imo;
+	jQuery("#shipspeedhistory").dialog("open");
 }
 
 function showPortDetails(portname, date_from, date_to, num_of_days){
@@ -2505,6 +2546,10 @@ function printItVe(){
 	<iframe id='shipdetailiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
 
+<div id="shipspeedhistory" title="SHIP SPEED HISTORY" style='display:none;'>
+	<iframe id='shipspeedhistoryiframe' frameborder="0" height="100%" width="100%"></iframe>
+</div>
+
 <div id="portdetails" title="PORTS D/A CHARGES" style='display:none;'>
 	<iframe id='portdetailsiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
@@ -2819,8 +2864,8 @@ if(!trim($e85)){
 				<td valign="top" style="padding:3px;" id="ship_gross_tonnage"></td>
 				<td valign="top"><div style="padding:3px;"><b>Net Tonnage</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_net_tonnage"></td>
-				<td valign="top"><div style="padding:3px;"><b>Speed</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_speed"></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Speed</b></div></td>
+				<td valign="top" style="padding:3px; color:#FF0000;" id="ship_speed"></td>
 				<td valign="top"><div style="padding:3px;"><b>Cargo Handling</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_cargo_handling"></td>
 			  </tr>
@@ -2829,40 +2874,52 @@ if(!trim($e85)){
 				<td valign="top" style="padding:3px;" id="ship_fuel"></td>
 				<td valign="top"><div style="padding:3px;"><b>Built Year</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_built_year"></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Speed AIS</b></div></td>
+				<td valign="top" style="padding:3px; color:#FF0000;" id="ship_speed_ais"></td>
 				<td valign="top"><div style="padding:3px;"><b>Breadth</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_breadth"></td>
-				<td valign="top"><div style="padding:3px;"><b>Decks Number</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_decks_number"></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
+			  	<td valign="top"><div style="padding:3px;"><b>Decks Number</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_decks_number"></td>
 			  	<td valign="top"><div style="padding:3px;"><b>Fuel Consumption</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_fuel_consumption"></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Movement Status</b></div></td>
+				<td valign="top" style="padding:3px; color:#FF0000;" id="ship_NavigationalStatus"></td>
 				<td valign="top"><div style="padding:3px;"><b>Bale</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_bale"></td>
-				<td valign="top"><div style="padding:3px;"><b>Cranes</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_cranes"></td>
-				<td valign="top"><div style="padding:3px;"><b>Bulkheads</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_bulkheads"></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
+			  	<td valign="top"><div style="padding:3px;"><b>Cranes</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_cranes"></td>
+			  	<td valign="top"><div style="padding:3px;"><b>Bulkheads</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_bulkheads"></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>AIS Date Updated</b></div></td>
+				<td valign="top" style="padding:3px; color:#FF0000;" id="ship_aisdateupdated"></td>
 			  	<td valign="top"><div style="padding:3px;"><b>Fuel Type</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_fuel_type"></td>
-				<td valign="top"><div style="padding:3px;"><b>Manager Owner</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_manager_owner"></td>
-				<td valign="top"><div style="padding:3px;"><b>Manager Owner Email</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_manager_owner_email"></td>
-				<td valign="top"><div style="padding:3px;"><b>Class Society</b></div></td>
-				<td valign="top" style="padding:3px;" id="ship_class_society"></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
+			  	<td valign="top"><div style="padding:3px;"><b>Manager Owner</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_manager_owner"></td>
+			  	<td valign="top"><div style="padding:3px;"><b>Manager Owner Email</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_manager_owner_email"></td>
+			  	<td valign="top"><div style="padding:3px;"><b>Class Society</b></div></td>
+				<td valign="top" style="padding:3px;" id="ship_class_society"></td>
 			  	<td valign="top"><div style="padding:3px;"><b>Largest Hatch</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_largest_hatch"></td>
-				<td valign="top"><div style="padding:3px;"><b>Holds</b></div></td>
+			  </tr>
+			  <tr bgcolor="e9e9e9">
+			  	<td valign="top"><div style="padding:3px;"><b>Holds</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_holds"></td>
-				<td valign="top"><div style="padding:3px;"><b>Flag</b></div></td>
+			  	<td valign="top"><div style="padding:3px;"><b>Flag</b></div></td>
 				<td valign="top" style="padding:3px;" id="ship_flag"></td>
+			  	<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
+				<td valign="top" style="padding:3px;">&nbsp;</td>
 				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
-				<td valign="top" style="padding:3px;"></td>
+				<td valign="top" style="padding:3px;">&nbsp;</td>
+				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
+				<td valign="top" style="padding:3px;">&nbsp;</td>
 			  </tr>
 			</table>
 		</div>

@@ -3,8 +3,11 @@
 include_once(dirname(__FILE__)."/includes/bootstrap.php");
 date_default_timezone_set('UTC');
 
+$page = '';
 if($user['dry']==0){
 	$page = '_wet';
+}else if($user['dry']==9){
+	$page = 'agent';
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -18,6 +21,7 @@ if($user['dry']==0){
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
+var agentpage = '<?php echo $page; ?>';
 var page = '<?php echo $_GET['new_search']; ?>';
 var action = '<?php echo $_GET['action']; ?>';
 var tabid = '<?php echo $_GET['tabid']; ?>';
@@ -26,6 +30,8 @@ var condition = '';
 $(document).ready(function() {
 	if(page=='3'){
 		displayContent('voyage_estimator'+'<?php echo $page; ?>');
+	}else if(agentpage=='agent'){
+		displayContent('cargo');
 	}else if(action=='network' || action=='alerts' || action=='account' || action=='accountview'){
 		displayContent('account');
 	}else{
@@ -56,6 +62,13 @@ function displayContent(content){
 		jQuery('#account_id_link').removeClass('content_link_selected');
 		
 		jQuery('#ais_broker_id_link').addClass('content_link');
+		<?php
+	}elseif($user['dry']==9){
+		?>
+		jQuery('#cargo_id_link').removeClass('content_link_selected');
+		jQuery('#agentaccount_id_link').removeClass('content_link_selected');
+		
+		jQuery('#cargo_id_link').addClass('content_link');
 		<?php
 	}elseif($user['dry']==0){
 		?>
@@ -141,6 +154,8 @@ function displayContent(content){
 <?php
 if($user['dry']==1){
 	include_once(dirname(__FILE__)."/ext_dry.php");
+}else if($user['dry']==9){
+	include_once(dirname(__FILE__)."/ext_agent.php");
 }elseif($user['dry']==0){
 	include_once(dirname(__FILE__)."/ext_wet.php");
 }

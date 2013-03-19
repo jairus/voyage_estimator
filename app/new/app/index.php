@@ -7,12 +7,6 @@ if($_POST['email']){
 	and `password`='".md5($_POST['password'])."'";
 	$r = dbQuery($sql);
 	
-	if(!trim($r[0]['email'])){
-		$sql = "select * from `_port_agents` where `email`='".mysql_escape_string($_POST['email'])."'
-		and `password`='".md5($_POST['password'])."'";
-		$r = dbQuery($sql);
-	}
-	
 	if( !is_array($r) || count($r) == 0 ){
 		$result = mysql_query($sql);
 		$r = array();
@@ -30,7 +24,7 @@ if($_POST['email']){
       			setcookie("cookie_password", $r[0]['password'], time()+60*60*24*100, "/");
 			}
 
-			redirectjs("s-bis.php");
+			redirectjs("search.php");
 			exit();
 		}else{
 			$from = "mailer@s-bisonline.com";
@@ -76,7 +70,7 @@ if($_POST['email']){
 			
 			$_SESSION['loginerror'] = "Account is not activated. Please see your email and click the activation link.";
 			$_SESSION['emaillogin'] = $_POST['email'];
-			redirectjs("/s-bis.php");
+			redirectjs("/login.php");
 			exit();
 		}
 	}else{
@@ -86,6 +80,6 @@ if($_POST['email']){
 		exit();
 	}
 }else{
-	redirectjs("login.php");
+	redirectjs("search.php");
 }
 ?>

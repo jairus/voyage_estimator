@@ -126,7 +126,7 @@ if(isset($_GET['ship_agent'])){
 			</tr>
 			<tr>
 				<td>Email Address</td>
-				<td> : <?php echo $r[0]['email_address']; ?></td>
+				<td> : <?php echo $r[0]['email']; ?></td>
 			</tr>
 			<tr>
 				<td colspan="2" height="5">&nbsp;</td>

@@ -2944,7 +2944,7 @@ if(!trim($e85)){
 			<td class="text_1" colspan="2"><div style="padding:3px;"><b>CARGO LEGS</b></div></td>
 			<td></td>
 			<td></td>
-			<td></td>
+			<td style="display:none;"></td>
 			<td></td>
 			<td class="text_1" colspan="2"><div style="padding:3px;"><b>* Option to Load &amp; Bunker concurrently</b></div></td>
 			<td class="text_1" colspan="3"><div style="padding:3px;"><b>Port Days</b></div></td>
@@ -2952,11 +2952,11 @@ if(!trim($e85)){
 		  </tr>
 		  <tr>
 			<td width="71" class="text_1 label"><div style="padding:3px;"><i><strong>Type</strong></i></div></td>
-			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Cargo</strong></i></div></td>
+			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Cargo Type</strong></i></div></td>
 			<td width="18" class="text_1 label"><div style="padding:3px;"><i><strong>SF</strong></i></div></td>
 			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Quantity (MT)</strong></i></div></td>
-			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Volume (M3)</strong></i></div></td>
-			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>L/D Rate (MT/day)</strong></i></div></td>
+			<td style="display:none;" width="102" class="text_1 label"><div style="padding:3px;"><i><strong>Volume (M3)</strong></i></div></td>
+			<td width="102" class="text_1 label"><div style="padding:3px;"><i><strong>WS Terms User (MT/day)</strong></i></div></td>
 			<td width="45" class="text_1 label"><div style="padding:3px;"><i><strong>Load Days</strong></i></div></td>
 			<td width="167" class="text_1 label"><div style="padding:3px;"><i><strong>Working Days TERMS</strong></i></div></td>
 			<td width="102" class="text_1 label"><div style="padding:3px; color:#FF0000;"><i><strong>Working Aditional Days TERMS</strong></i></div></td>
@@ -2970,19 +2970,11 @@ if(!trim($e85)){
 			<td class='number i31' style="padding:3px;"></td>
 			<td class='number j31' style="padding:3px;"></td>	
 			<td class='number k31' style="padding:3px;"></td>
-			<td class='number l31' style="padding:3px;"></td>
+			<td class='number l31' style="padding:3px; display:none;"></td>
 			<td class='number m31' style="padding:3px;"></td>
 			<td class='number n31' style="padding:3px;"></td>
-			<td style="padding:3px; color:#FF0000;"><a title="Please check the WORKING DAYS Calendar to ensure the Working Days TERMS are complied with. ADD additional days to compensate for the TERMS">Working Days Calendar</a></td>
-			<td style="padding:3px;">
-				<?php
-				if($calendar){
-					?><input type='text' class='input_1 general calendar' id="calendar" name="calendar" value="<?php echo $calendar; ?>" style="max-width:50px; border:1px solid #FF0000;" /><?php
-				}else{
-					?><input type='text' class='input_1 general calendar' id="calendar" name="calendar" value="<?php echo date('d/m/Y, l'); ?>" style="max-width:50px; border:1px solid #FF0000;" /><?php
-				}
-				?>
-			</td>
+			<td style="padding:3px;">&nbsp;</td>
+			<td style="padding:3px;"><input type='hidden' class='input_1 general calendar' id="calendar" name="calendar" value="<?php echo date('d/m/Y, l'); ?>" style="max-width:50px; border:1px solid #FF0000;" /></td>
 			<td class='number q31' style="padding:3px;"></td>
 			<td id="r31" class="calculated number r31" style="padding:3px;"></td>
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s31' id="s31" name="s31" value="<?php echo $s31; ?>" style="max-width:50px;" /></td>
@@ -2993,19 +2985,14 @@ if(!trim($e85)){
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i32' id="i32" name="i32" value="<?php echo $i32; ?>" style="max-width:100px; border:1px solid #FF0000;" /><!-- <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span>--></td>
 			<td id="j32" class='number j32' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k32' id="k32" name="k32" value="<?php echo $k32; ?>" style="max-width:50px; border:1px solid #FF0000;" onblur="populatek35(this.value);" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
-			<td id="l32" class='calculated number l32' style="padding:3px;"></td>
+			<td id="l32" class='calculated number l32' style="padding:3px; display:none;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m32' id="m32" name="m32" value="<?php echo $m32; ?>" style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td id="o32" class='calculated number o32' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n32arr = array(
 							1=>"SHINC", 
-							2=>"SATSHINC or SSHINC", 
-							3=>"SHEX", 
-							4=>"SA/SHEX or SATPMSHEX", 
-							5=>"SHEXEIU or SHEXEIUBE or SHEXUU", 
-							6=>"FHINC", 
-							7=>"FHEX"
+							2=>"FHINC"
 						);
 						
 				$n32t = count($n32arr);
@@ -3033,19 +3020,14 @@ if(!trim($e85)){
 			<td class='number i33' style="padding:3px;"></td>
 			<td class='number j33' style="padding:3px;"></td>
 			<td class='number k33' style="padding:3px;"></td>
-			<td class='input' style="padding:3px;"><input type='text' class='input_1 number l33' id="l33" name="l33" value="<?php echo $l33; ?>" style="max-width:50px;"  /></td>
+			<td class='input' style="padding:3px; display:none;"><input type='text' class='input_1 number l33' id="l33" name="l33" value="<?php echo $l33; ?>" style="max-width:50px;"  /></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number m33' id="m33" name="m33" value="<?php echo $m33; ?>" style="max-width:50px;" /></td>
 			<td id="o33" class='calculated number o33' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n33arr = array(
 							1=>"SHINC", 
-							2=>"SATSHINC or SSHINC", 
-							3=>"SHEX", 
-							4=>"SA/SHEX or SATPMSHEX", 
-							5=>"SHEXEIU or SHEXEIUBE or SHEXUU", 
-							6=>"FHINC", 
-							7=>"FHEX"
+							2=>"FHINC"
 						);
 						
 				$n33t = count($n33arr);
@@ -3073,7 +3055,7 @@ if(!trim($e85)){
 			<td class='number i34' style="padding:3px;"></td>
 			<td class='number j34' style="padding:3px;"></td>
 			<td class='number k34' style="padding:3px;"></td>
-			<td class='number l34' style="padding:3px;"></td>
+			<td class='number l34' style="padding:3px; display:none;"></td>
 			<td class='number m34' style="padding:3px;"></td>
 			<td class="number o34" style="padding:3px;"></td>
 			<td class='number n34' style="padding:3px;"></td>
@@ -3088,19 +3070,14 @@ if(!trim($e85)){
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 general i35' id="i35" name="i35" value="<?php echo $i35; ?>" style="max-width:100px; border:1px solid #FF0000;" /><!-- <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span>--></td>
 			<td id="j35" class='number j35' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number k35' id="k35" name="k35" value="<?php echo $k35; ?>" style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
-			<td id="l35" class='calculated number l35' style="padding:3px;"></td>
+			<td id="l35" class='calculated number l35' style="padding:3px; display:none;"></td>
 			<td class='input' style="padding:3px;"><input type='text'  class='input_1 number m35' id="m35" name="m35" value="<?php echo $m35; ?>" style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td id="o35" class='calculated number o35' style="padding:3px;"></td>
 			<td class='input' style="padding:3px;">
 				<?php
 				$n35arr = array(
 							1=>"SHINC", 
-							2=>"SATSHINC or SSHINC", 
-							3=>"SHEX", 
-							4=>"SA/SHEX or SATPMSHEX", 
-							5=>"SHEXEIU or SHEXEIUBE or SHEXUU", 
-							6=>"FHINC", 
-							7=>"FHEX"
+							2=>"FHINC"
 						);
 						
 				$n35t = count($n35arr);
@@ -3356,9 +3333,8 @@ if(!trim($e85)){
 					<td style="padding:3px;">
 						<?php
 						$termarr = array(
-									1=>"DHDLTSBENDS", 
-									2=>"DHDATSBENDS", 
-									3=>"DHDWTSBENDS"
+									1=>"FIOS", 
+									2=>"FIOST"
 								);
 								
 						$termt = count($termarr);
@@ -3378,9 +3354,8 @@ if(!trim($e85)){
 					<td style="padding:3px;">
 						<?php
 						$termarr = array(
-									1=>"DHDLTSBENDS", 
-									2=>"DHDATSBENDS", 
-									3=>"DHDWTSBENDS"
+									1=>"FIOS", 
+									2=>"FIOST"
 								);
 								
 						$termt = count($termarr);
@@ -3400,9 +3375,8 @@ if(!trim($e85)){
 					<td style="padding:3px;">
 						<?php
 						$termarr = array(
-									1=>"DHDLTSBENDS", 
-									2=>"DHDATSBENDS", 
-									3=>"DHDWTSBENDS"
+									1=>"FIOS", 
+									2=>"FIOST"
 								);
 								
 						$termt = count($termarr);
@@ -3426,7 +3400,7 @@ if(!trim($e85)){
 					<td class="calculated" id='c54_2' style="padding:3px;">&nbsp;</td>
 					<td class="calculated" id='c54_3' style="padding:3px;">&nbsp;</td>
 				  </tr>
-				  <tr bgcolor="f5f5f5">
+				  <tr bgcolor="f5f5f5" style="display:none;">
 					<td style="padding:3px;"><strong>Liner Terms</strong></td>
 					<td style="padding:3px;">
 						<?php

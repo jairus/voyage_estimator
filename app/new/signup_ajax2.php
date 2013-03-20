@@ -43,7 +43,7 @@ if( $_POST['trigger'] == 'save_new_user' ){
 						'mobile_number' => $post['mobile_number'],
 						'fax_number' => $post['fax_number1'],
 						'telex' => $post['telex_number'],
-						'email_address' => $post['email'],
+						'email' => $post['email'],
 						'password' => md5($post['pass1']),
 						'skype' => $post['skype'],
 						'yahoo' => $post['yahoo'],

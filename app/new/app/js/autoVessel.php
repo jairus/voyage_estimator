@@ -1,5 +1,5 @@
 <?php
-include_once(dirname(__FILE__)."/../includes/database.php");
+include_once(dirname(__FILE__)."/../includes/bootstrap.php");
 $link = dbConnect();
 
 if($user['dry']==1){

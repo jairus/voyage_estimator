@@ -2,22 +2,15 @@
 @include_once(dirname(__FILE__)."/includes/bootstrap.php");
 date_default_timezone_set('UTC');
 
+//SAVE SESSION
 if($_GET['autosave']){
 	$_SESSION['data'] = $_POST['data'];
 
 	exit();
 }
+//END OF SAVE SESSION
 
-if($_GET['dc']){
-	$dc = new distanceCalc();
-	$from = $_GET['from'];
-	$to = $_GET['to'];
-
-	echo $dc->getDistancePortToPort($from, $to);
-
-	exit();
-}
-
+//GET SHIP DATA
 if($_GET['search']){
 	$search = $_GET['term'];
 
@@ -74,14 +67,8 @@ if($_GET['search']){
 		$ship['fuel_type'] = getValue($r2[0]['data'], 'FUEL_TYPE');
 		
 		$ship['manager_owner'] = getValue($r2[0]['data'], 'MANAGER');
-		if(!trim($ship['manager_owner'])){
-			$ship['manager_owner'] = getValue($r2[0]['data'], 'MANAGER_OWNER');
-		}
-		
-		if(!trim($ship['manager_owner'])){
-			$ship['manager_owner'] = getValue($r2[0]['data'], 'OWNER');
-		}
-		
+		if(!trim($ship['manager_owner'])){ $ship['manager_owner'] = getValue($r2[0]['data'], 'MANAGER_OWNER'); }
+		if(!trim($ship['manager_owner'])){ $ship['manager_owner'] = getValue($r2[0]['data'], 'OWNER'); }
 		
 		$ship['manager_owner_email'] = getValue($r2[0]['data'], 'MANAGER_OWNER_EMAIL');
 		$ship['class_society'] = htmlentities(getValue($r2[0]['data'], 'CLASS_SOCIETY'));
@@ -103,70 +90,21 @@ if($_GET['search']){
 
 	exit();
 }
+//END OF GET SHIP DATA
 
-if($_GET['sf']){
-	$search = $_GET['term'];
-
-	$sql = "select * from  ve_sf where cargo_name like '%".mysql_escape_string($search)."%' limit 20";
-
-	$items = array();
-
-	$r = dbQuery($sql);
-
-	$t = count($r);
-
-	for($i=0; $i<$t; $i++){
-		$item = array();
-
-		$item['cargo_name'] = $r[$i]['cargo_name']." - ".$r[$i]['sf'];
-
-		$items[] = $item;
-	}
-
-	echo json_encode($items);
-
-	exit();
-}
-
-if($_GET['wd']){
-	$search = $_GET['term'];
-
-	$sql = "select * from  ve_wd where working_day like '%' limit 20";
-
-	$items = array();
-
-	$r = dbQuery($sql);
-
-	$t = count($r);
-
-	for($i=0; $i<$t; $i++){
-		$item = array();
-
-		$item['working_day'] = $r[$i]['working_day'];
-
-		$items[] = $item;
-	}
-
-	echo json_encode($items);
-
-	exit();
-}
-
+//GET PORT DATA
 if($_GET['port']){
 	$search = $_GET['term'];
 
 	$sql = "select * from _veson_ports where name like '%".mysql_escape_string($search)."%' limit 20";
-	
-	$items = array();
-
 	$r = dbQuery($sql);
 
 	$t = count($r);
-
+	
+	$items = array();
 	for($i=0; $i<$t; $i++){
 		$item = array();
 
-		//$item['name'] = $r[$i]['name']." - ".$r[$i]['portid'];
 		$item['name'] = $r[$i]['name'];
 		$item['latitude'] = $r[$i]['latitude'];
 		$item['longitude'] = $r[$i]['longitude'];
@@ -209,6 +147,43 @@ if($_GET['port']){
 
 	exit();
 }
+//END OF GET PORT DATA
+
+//GET DISTANCE MILES
+if($_GET['dc']){
+	$dc = new distanceCalc();
+	$from = $_GET['from'];
+	$to = $_GET['to'];
+
+	echo $dc->getDistancePortToPort($from, $to);
+
+	exit();
+}
+//END OF GET DISTANCE MILES
+
+//GET CARGO
+if($_GET['sf']){
+	$search = $_GET['term'];
+
+	$sql = "select * from  ve_sf where cargo_name like '%".mysql_escape_string($search)."%' limit 20";
+	$r = dbQuery($sql);
+
+	$t = count($r);
+	
+	$items = array();
+	for($i=0; $i<$t; $i++){
+		$item = array();
+
+		$item['cargo_name'] = $r[$i]['cargo_name']." - ".$r[$i]['sf'];
+
+		$items[] = $item;
+	}
+
+	echo json_encode($items);
+
+	exit();
+}
+//END OF GET CARGO
 ?>
 
 <link rel="stylesheet" href="js/development-bundle/themes/base/jquery.ui.all.css">
@@ -222,13 +197,791 @@ if($_GET['port']){
 <script src="js/development-bundle/ui/jquery.ui.resizable.js"></script>
 <script src="js/development-bundle/ui/jquery.ui.dialog.js"></script>
 <script src="js/development-bundle/ui/jquery.ui.datepicker.js"></script>
-
 <script type="text/javascript">
-function populatek35(val){
-	setValue(jQuery("#k35"), fNum(val));
-	setValue(jQuery("#l35"), jQuery("#l32").text());
+//SAVE SESSION
+setTimeout(function(){ autoSave(); }, 1000*10);
+
+function autoSave(){
+	str = "";
+
+	jQuery('input[type="text"]').each(function(){
+		str+=jQuery(this).val()+"\n";
+	});
+
+	jQuery.ajax({
+		type: 'POST',
+		url: "ajax_voyage_estimator.php?autosave=1",
+		data: 'data='+str,
+		success: function(data) { }
+	});	
+
+	setTimeout(function(){ autoSave(); }, 6000*10);
+}
+//END OF SAVE SESSION
+
+//OTHER FUNCTIONS
+function addCommas(nStr){
+	nStr += '';
+
+	x = nStr.split('.');
+	x1 = x[0];
+	x2 = x.length > 1 ? '.' + x[1] : '';
+
+	var rgx = /(\d+)(\d{3})/;
+
+	while (rgx.test(x1)) {
+		x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	}
+
+	return x1 + x2;
 }
 
+function fNum(num){
+	num = uNum(num);
+
+	if(num==0){ return ""; }
+
+	num = num.toFixed(2);
+
+	return addCommas(num);
+}
+
+function uNum(num){
+	if(!num){
+		num = 0;
+	}else if(isNaN(num)){
+		num = num.replace(/[^0-9\.]/g, "");
+
+		if(isNaN(num)){ num = 0; }
+	}
+
+	return num*1;
+}
+
+function valueF(elem){
+	if(elem.prop("tagName")=="TD"){
+		return fNum(elem.html());
+	}else{
+		return fNum(elem.val());
+	}
+}
+
+function valueU(elem){
+	if(elem.prop("tagName")=="TD"){
+		return uNum(elem.html());
+	}else{
+		return uNum(elem.val());
+	}
+}
+
+function setValue(elem, value){
+	if(elem.prop("tagName")=="TD"){
+		elem.html(value);
+	}else{
+		elem.val(value);
+	}
+}
+
+function getValue(elem){
+	if(elem.prop("tagName")=="TD"){
+		return elem.html();
+	}else{
+		return elem.val();
+	}
+}
+
+function sumF(id1, id2){
+	alpha = id1.replace(/[0-9]/ig, "");
+	num1 = id1.replace(/[a-z]/ig, "")*1;
+	num2 = id2.replace(/[a-z]/ig, "")*1;
+	sum = 0;
+
+	for(i=num1; i<=num2; i++){ sum += valueU(jQuery("#"+alpha+i)); }
+
+	return fNum(sum);
+}
+
+function thread(skip){
+	totalseadays = 0;
+	totalportdays = 0;
+
+	setValue(jQuery("#e3"), valueF(jQuery("#o37")));
+	setValue(jQuery("#e6"), valueF(jQuery("#b75")));
+	setValue(jQuery("#e13"), valueF(jQuery("#g80")));
+	setValue(jQuery("#e14"), valueF(jQuery("#b85")));
+	setValue(jQuery("#d25"), sumF("d19", "d24"));
+	setValue(jQuery("#d26"), fNum(valueU(jQuery("#d18")) - valueU(jQuery("#d25"))));
+
+	if(skip!="seacalc"){
+		ballastCalc();
+		ladenCalc();
+		repositioningCalc();
+	}
+
+	loadingCalc();
+	dischargingCalc();
+	bunkerstopCalc();
+
+	if(skip!="sf"){
+		jQuery(".i32").each(function(){
+			str = jQuery(this).val();
+			pcs = str.split("-");
+			cargo = pcs[0];
+			cargo = jQuery.trim(cargo);
+			sf = pcs[1];
+			sf = jQuery.trim(sf);
+			idx = jQuery(this).parent().parent().attr('id');
+
+			if(sf){ setValue(jQuery("#"+idx+" .j32"), fNum(sf)); }
+		});
+
+		jQuery(".i35").each(function(){
+			str = jQuery(this).val();
+			pcs = str.split("-");
+			cargo = pcs[0];
+			cargo = jQuery.trim(cargo);
+			sf = pcs[1];
+			sf = jQuery.trim(sf);
+			idx = jQuery(this).parent().parent().attr('id');
+
+			if(sf){ setValue(jQuery("#"+idx+" .j35"), fNum(sf)); }
+		});
+	}
+
+	calculateSeaPortDays();
+	calculateDates();
+	setupPortInterface();
+	canalTotal();
+	voyageDisbursement();
+	result1();
+	result2();
+}
+
+jQuery(function(){
+	jQuery('.number').keyup(function(){
+		thread();
+	});
+
+	jQuery('.number').blur(function(){
+		fnum = fNum(jQuery(this).val());
+		setValue(jQuery(this), fnum);
+
+		w = jQuery(this).val().length * 8;
+	});
+
+	jQuery('.general').blur(function(){
+		w = jQuery(this).val().length * 8;
+
+		thread();
+	});
+
+	jQuery('.number').each(function(){
+		fnum = valueF(jQuery(this));
+		setValue(jQuery(this), fnum);
+	});
+
+	jQuery('.number').each(function(){
+		fnum = fNum(jQuery(this).val());
+		setValue(jQuery(this), fnum);
+
+		w = jQuery(this).val().length * 8;
+
+		if(w > jQuery(this).parent().width()){ jQuery(this).width(w); }
+	});
+
+	jQuery('.general').each(function(){
+		w = jQuery(this).val().length * 8;
+
+		if(w > jQuery(this).parent().width()){ jQuery(this).width(w); }
+	});
+
+	thread();
+});
+
+$(".calendar").datepicker({ 
+	dateFormat: "dd/mm/yy, DD",
+	onSelect: function(date) {
+		jQuery(this).val(date);
+	},
+});
+//END OF OTHER FUNCTIONS
+
+//SHIP DETAIL VARIABLES
+var suggestions = [];
+var imos = [];
+var dwts = [];
+var gross_tonnages = [];
+var net_tonnages = [];
+var built_years = [];
+var flags = [];
+var flag_images = [];
+var loas = [];
+var draughts = [];
+var speeds = [];
+var breadths = [];
+var craness = [];
+var grains = [];
+var cargo_handlings = [];
+var decks_numbers = [];
+var bulkheadss = [];
+var class_notations = [];
+var lifting_equipments = [];
+var bales = [];
+var fuel_oils = [];
+var fuels = [];
+var fuel_consumptions = [];
+var fuel_types = [];
+var manager_owners = [];
+var manager_owner_emails = [];
+var class_societys = [];
+var holdss = [];
+var largest_hatchs = [];
+var speed_aiss = [];
+var NavigationalStatuss = [];
+var aisdateupdateds = [];
+//END OF SHIP DETAIL VARIABLES
+
+//PORT DETAIL VARIABLES
+var average_price_ifo380s = [];
+var average_price_mdos = [];
+var average_price_ifo180s = [];
+var average_price_mgos = [];
+var average_price_ls180_1s = [];
+var average_price_ls380_1s = [];
+var average_price_lsmgos = [];
+var dateupdateds = [];
+//END OF PORT DETAIL VARIABLES
+
+$(function(){
+	//DETAILS COMING FROM SHIP NAME
+	$("#ship").autocomplete({
+		source: function(req, add){
+			jQuery("#shipdetailshref").html("");
+
+			$.getJSON("ajax_voyage_estimator.php?search=1", req, function(data) {
+				var suggestions = [];
+				var imos = [];
+
+				$.each(data, function(i, val){
+					suggestions.push(val.name);
+					imos.push(val.imo);
+
+					dwts[val.imo] = val.dwt;
+					gross_tonnages[val.imo] = val.gross_tonnage;
+					net_tonnages[val.imo] = val.net_tonnage;
+					built_years[val.imo] = val.built_year;
+					flags[val.imo] = val.flag;
+					flag_images[val.imo] = val.flag_image;
+					loas[val.imo] = val.loa;
+					draughts[val.imo] = val.draught;
+					speeds[val.imo] = val.speed;
+					breadths[val.imo] = val.breadth;
+					craness[val.imo] = val.cranes;
+					grains[val.imo] = val.grain;
+					cargo_handlings[val.imo] = val.cargo_handling;
+					decks_numbers[val.imo] = val.decks_number;
+					bulkheadss[val.imo] = val.bulkheads;
+					class_notations[val.imo] = val.class_notation;
+					lifting_equipments[val.imo] = val.lifting_equipment;
+					bales[val.imo] = val.bale;
+					fuel_oils[val.imo] = val.fuel_oil;
+					fuels[val.imo] = val.fuel;
+					fuel_consumptions[val.imo] = val.fuel_consumption;
+					fuel_types[val.imo] = val.fuel_type;
+					manager_owners[val.imo] = val.manager_owner;
+					manager_owner_emails[val.imo] = val.manager_owner_email;
+					class_societys[val.imo] = val.class_society;
+					holdss[val.imo] = val.holds;
+					largest_hatchs[val.imo] = val.largest_hatch;
+					speed_aiss[val.imo] = val.speed_ais;
+					NavigationalStatuss[val.imo] = val.NavigationalStatus;
+					aisdateupdateds[val.imo] = val.aisdateupdated;
+				});
+
+				add(suggestions);
+			});
+		},
+		select: function(e, ui) {
+			str = ui.item.value;
+			pcs = str.split("-");
+			imo = pcs[0];
+			imo = jQuery.trim(imo);
+			gimo = imo;
+			
+			//SHIP DETAILS
+			jQuery("#shipdetailshref").html("<a style='cursor:pointer;' onclick='showShipDetails()'><u>Click here for full specs</u></a> | <a style='cursor:pointer;' onclick='showShipDetails2()'><u>Click for your ships info</u></a> | <a style='cursor:pointer;' onclick='showShipSpeedHistory(\""+imo+"\")'><u>Click for ships speed history</u></a>");
+			
+			jQuery("#ship_info").show();
+			jQuery("#ship_imo").each(function(){
+				setValue(jQuery(this), imo);
+			});
+			jQuery("#ship_summer_dwt").each(function(){
+				setValue(jQuery(this), fNum(dwts[imo]) + ' tons');
+			});
+			jQuery("#ship_gross_tonnage").each(function(){
+				setValue(jQuery(this), fNum(gross_tonnages[imo]) + ' tons');
+			});
+			jQuery("#ship_net_tonnage").each(function(){
+				setValue(jQuery(this), fNum(net_tonnages[imo]) + ' tons');
+			});
+			jQuery("#ship_built_year").each(function(){
+				setValue(jQuery(this), built_years[imo]);
+			});
+			jQuery("#ship_flag").each(function(){
+				setValue(jQuery(this), '<img src="'+ flag_images[imo] +'" alt="'+ flags[imo] +'" title="'+ flags[imo] +'">');
+			});
+			jQuery("#ship_loa").each(function(){
+				setValue(jQuery(this), fNum(loas[imo]) + ' m');
+			});
+			jQuery("#ship_draught").each(function(){
+				setValue(jQuery(this), fNum(draughts[imo]) + ' m');
+			});
+			jQuery("#ship_speed").each(function(){
+				setValue(jQuery(this), fNum(speeds[imo]) + ' knts');
+			});
+			jQuery("#ship_breadth").each(function(){
+				setValue(jQuery(this), fNum(breadths[imo]) + ' m');
+			});
+			jQuery("#ship_cranes").each(function(){
+				setValue(jQuery(this), craness[imo]);
+			});
+			jQuery("#ship_grain").each(function(){
+				setValue(jQuery(this), fNum(grains[imo]));
+			});
+			jQuery("#ship_cargo_handling").each(function(){
+				setValue(jQuery(this), cargo_handlings[imo]);
+			});
+			jQuery("#ship_decks_number").each(function(){
+				setValue(jQuery(this), decks_numbers[imo]);
+			});
+			jQuery("#ship_bulkheads").each(function(){
+				setValue(jQuery(this), bulkheadss[imo]);
+			});
+			jQuery("#ship_class_notation").each(function(){
+				setValue(jQuery(this), class_notations[imo]);
+			});
+			jQuery("#ship_lifting_equipment").each(function(){
+				setValue(jQuery(this), lifting_equipments[imo]);
+			});
+			jQuery("#ship_bale").each(function(){
+				setValue(jQuery(this), fNum(bales[imo]));
+			});
+			jQuery("#ship_fuel_oil").each(function(){
+				setValue(jQuery(this), fNum(fuel_oils[imo]) + ' m');
+			});
+			jQuery("#ship_fuel").each(function(){
+				setValue(jQuery(this), fNum(fuels[imo]) + ' t');
+			});
+			jQuery("#ship_fuel_consumption").each(function(){
+				setValue(jQuery(this), fuel_consumptions[imo]);
+			});
+			jQuery("#ship_fuel_type").each(function(){
+				setValue(jQuery(this), fuel_types[imo]);
+			});
+			jQuery("#ship_manager_owner").each(function(){
+				setValue(jQuery(this), manager_owners[imo]);
+			});
+			jQuery("#ship_manager_owner_email").each(function(){
+				setValue(jQuery(this), manager_owner_emails[imo]);
+			});
+			jQuery("#ship_class_society").each(function(){
+				setValue(jQuery(this), class_societys[imo]);
+			});
+			jQuery("#ship_holds").each(function(){
+				setValue(jQuery(this), holdss[imo]);
+			});
+			jQuery("#ship_largest_hatch").each(function(){
+				setValue(jQuery(this), largest_hatchs[imo]);
+			});
+			jQuery("#ship_speed_ais").each(function(){
+				setValue(jQuery(this), speed_aiss[imo]);
+			});
+			jQuery("#ship_NavigationalStatus").each(function(){
+				setValue(jQuery(this), NavigationalStatuss[imo]);
+			});
+			jQuery("#ship_aisdateupdated").each(function(){
+				setValue(jQuery(this), aisdateupdateds[imo]);
+			});
+			//END OF SHIP DETAILS
+			
+			//SPEED FOR VOYAGE LEGS
+			jQuery(".g31").each(function(){
+				setValue(jQuery(this), fNum(speeds[imo]));
+			});
+
+			jQuery(".g33").each(function(){
+				setValue(jQuery(this), fNum(speeds[imo]));
+			});
+
+			jQuery(".g34").each(function(){
+				setValue(jQuery(this), fNum(speeds[imo]));
+			});
+			
+			jQuery(".g36").each(function(){
+				setValue(jQuery(this), fNum(speeds[imo]));
+			});
+			//END OF SPEED FOR VOYAGE LEGS
+			
+			iframeve = document.getElementById('map_iframeve');
+  			iframeve.src = "map/map_voyage_estimator.php?imo="+imo;
+			
+			setValue(jQuery("#d18"), fNum(dwts[imo]));
+			
+			thread();
+		},
+	});
+	//END OF DETAILS COMING FROM SHIP NAME
+	
+	//FROM PORT BALLAST VOYAGE LEGS
+	$(".c31").autocomplete({
+		source: function(req, add){
+			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
+				var suggestions = [];
+
+				$.each(data, function(i, val){		
+					suggestions.push(val.name);
+				});
+
+				add(suggestions);
+			});
+		},
+		select: function(e, ui) {
+			str = ui.item.value;
+			idx = jQuery(this).parent().parent().attr('id');
+
+			setValue(jQuery("#"+idx+" .c31"), str);
+
+			ballastCalc(true);
+			calculateDates();
+		},
+	});
+	//END OF FROM PORT BALLAST VOYAGE LEGS
+	
+	//DATE BALLAST VOYAGE LEGS
+	$(".d31").datepicker({ 
+		dateFormat: "dd/mm/yy, DD",
+		onSelect: function(date) {
+			jQuery(this).val(date);
+
+			calculateDates();
+        },
+	});
+	//END OF DATE BALLAST VOYAGE LEGS
+	
+	//TO PORT BALLAST VOYAGE LEGS
+	$(".e31").autocomplete({
+		source: function(req, add){
+			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
+				var suggestions = [];
+
+				$.each(data, function(i, val){
+					suggestions.push(val.name);
+				});
+
+				add(suggestions);
+			});
+		},
+		select: function(e, ui) {
+			str = ui.item.value;
+			idx = jQuery(this).parent().parent().attr('id');
+
+			setValue(jQuery("#"+idx+" .e31"), str);
+			setValue(jQuery(".e33"), str);
+
+			ballastCalc(true);
+			calculateDates();
+		},
+	});
+	//END OF TO PORT BALLAST VOYAGE LEGS
+	
+	//TO PORT BANKER STOP VOYAGE LEGS
+	$(".e33").autocomplete({
+		source: function(req, add){
+			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
+				var suggestions = [];
+
+				$.each(data, function(i, val){
+					suggestions.push(val.name);
+					
+					average_price_ifo380s[val.name] = val.average_price_ifo380;
+					average_price_mdos[val.name] = val.average_price_mdo;
+					average_price_ifo180s[val.name] = val.average_price_ifo180;
+					average_price_mgos[val.name] = val.average_price_mgo;
+					average_price_ls180_1s[val.name] = val.average_price_ls180_1;
+					average_price_ls380_1s[val.name] = val.average_price_ls380_1;
+					average_price_lsmgos[val.name] = val.average_price_lsmgo;
+					dateupdateds[val.name] = val.dateupdated;
+				});
+
+				add(suggestions);
+			});
+		},
+		select: function(e, ui) {
+			str = ui.item.value;
+			idx = jQuery(this).parent().parent().attr('id');
+
+			setValue(jQuery("#"+idx+" .e33"), str);
+			
+			//1st ROW
+			if(average_price_ifo380s[str] || average_price_mdos[str]){
+				jQuery("#d42").each(function(){
+					setValue(jQuery(this), fNum(average_price_ifo380s[str]));
+				});
+				
+				jQuery("#h42").each(function(){
+					setValue(jQuery(this), fNum(average_price_mdos[str]));
+				});
+				jQuery('#bunker_first_row').show();
+			}else{
+				jQuery('#bunker_first_row').hide();
+			}
+			//1st ROW
+			
+			//2nd ROW
+			if(average_price_ifo180s[str] || average_price_mgos[str]){
+				jQuery("#d42_180").each(function(){
+					setValue(jQuery(this), fNum(average_price_ifo180s[str]));
+				});
+				jQuery("#h42_mgo").each(function(){
+					setValue(jQuery(this), fNum(average_price_mgos[str]));
+				});
+				jQuery('#bunker_second_row').show();
+			}else{
+				jQuery('#bunker_second_row').hide();
+			}
+			//2nd ROW
+			
+			//3rd ROW
+			if(average_price_ls380_1s[str] || average_price_lsmgos[str]){
+				jQuery("#d42_lsifo380").each(function(){
+					setValue(jQuery(this), fNum(average_price_ls380_1s[str]));
+				});
+				jQuery("#h42_lsmgo").each(function(){
+					setValue(jQuery(this), fNum(average_price_lsmgos[str]));
+				});
+				jQuery('#bunker_third_row').show();
+			}else{
+				jQuery('#bunker_third_row').hide();
+			}
+			//3rd ROW
+			
+			//4th ROW
+			if(average_price_ls180_1s[str]){
+				jQuery("#d42_lsifo180").each(function(){
+					setValue(jQuery(this), fNum(average_price_ls180_1s[str]));
+				});
+				jQuery('#bunker_fourth_row').show();
+			}else{
+				jQuery('#bunker_fourth_row').hide();
+			}
+			//4th ROW
+			
+			if(dateupdateds[str]){
+				jQuery('#bunker_price_dateupdated').text('Correct as of '+dateupdateds[str]);
+			}else{
+				jQuery('#bunker_price_dateupdated').text('');
+			}
+
+			bunkerstopCalc2(true);
+			ladenCalc(true);
+			repositioningCalc(true);
+			calculateDates();
+		},
+	});
+	//END OF TO PORT BANKER STOP VOYAGE LEGS
+	
+	//TO PORT LADEN VOYAGE LEGS
+	$(".e34").autocomplete({
+		source: function(req, add){
+			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
+				var suggestions = [];
+
+				$.each(data, function(i, val){
+					suggestions.push(val.name);
+				});
+
+				add(suggestions);
+			});
+		},
+		select: function(e, ui) {
+			str = ui.item.value;
+			idx = jQuery(this).parent().parent().attr('id');
+
+			setValue(jQuery("#"+idx+" .e34"), str);
+			setValue(jQuery("#c36"), str);
+
+			ballastCalc(true);
+			ladenCalc(true);
+			repositioningCalc(true);
+			calculateDates();
+		},
+	});
+	//END OF TO PORT LADEN VOYAGE LEGS
+	
+	//TO PORT REPOSITIONING VOYAGE LEGS
+	$(".e36").autocomplete({
+		source: function(req, add){
+			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
+				var suggestions = [];
+
+				$.each(data, function(i, val){
+					suggestions.push(val.name);
+				});
+
+				add(suggestions);
+			});
+		},
+		select: function(e, ui) {
+			str = ui.item.value;
+			idx = jQuery(this).parent().parent().attr('id');
+
+			setValue(jQuery("#"+idx+" .e36"), str);
+
+			ballastCalc(true);
+			ladenCalc(true);
+			repositioningCalc(true);
+			calculateDates();
+		},
+	});
+	//END OF TO PORT REPOSITIONING VOYAGE LEGS
+	
+	//LOADING CARGO CARGO LEGS
+	$(".i32").autocomplete({
+		source: function(req, add){
+			$.getJSON("ajax_voyage_estimator.php?sf=1", req, function(data) {
+				var suggestions = [];
+				var sfs = [];
+
+				$.each(data, function(i, val){
+					suggestions.push(val.cargo_name);
+					sfs[val.cargo_name] = val.sf;
+				});
+
+				add(suggestions);
+			});
+		},
+		select: function(e, ui) {
+			str = ui.item.value;
+			pcs = str.split("-");
+			cargo = pcs[0];
+			cargo = jQuery.trim(cargo);
+			sf = pcs[1];
+			sf = jQuery.trim(sf);
+			idx = jQuery(this).parent().parent().attr('id');
+
+			if(sf){
+				setValue(jQuery("#"+idx+" .j32"), fNum(sf));
+				setValue(jQuery("#i35"), str);
+				setValue(jQuery("#j35"), fNum(sf));
+			}
+
+			thread("sf");
+		},
+	});
+	//END OF LOADING CARGO CARGO LEGS
+	
+	//DISCHARGING CARGO CARGO LEGS
+	$(".i35").autocomplete({
+		source: function(req, add){
+			$.getJSON("ajax_voyage_estimator.php?sf=1", req, function(data) {
+				var suggestions = [];
+				var sfs = [];
+
+				$.each(data, function(i, val){
+					suggestions.push(val.cargo_name);
+
+					sfs[val.cargo_name] = val.sf;
+				});
+
+				add(suggestions);
+			});
+		},
+		select: function(e, ui) {
+			str = ui.item.value;
+			pcs = str.split("-");
+			cargo = pcs[0];
+			cargo = jQuery.trim(cargo);
+			sf = pcs[1];
+			sf = jQuery.trim(sf);
+			idx = jQuery(this).parent().parent().attr('id');
+
+			if(sf){ setValue(jQuery("#"+idx+" .j35"), fNum(sf)); }
+
+			thread("sf");
+		},
+	});
+	//END OF DISCHARGING CARGO CARGO LEGS
+});
+
+//SHOW SHIP DETAILS
+function showShipDetails(imo){
+	jQuery("#shipdetails").dialog("close")
+	jQuery('#pleasewait').show();
+
+	jQuery.ajax({
+		type: 'POST',
+		url: "search_ajax1ve.php?imo="+gimo,
+		data: '',
+
+		success: function(data) {
+			if(data.indexOf("<b>ERROR")!=0){
+				jQuery("#shipdetails_in").html(data);
+				jQuery("#shipdetails").dialog("open")
+				jQuery('#pleasewait').hide();
+			}else{
+				alert(data)
+			}
+		}
+	});	
+}
+
+jQuery("#shipdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#shipdetails").dialog("close");
+//END OF SHOW SHIP DETAILS
+
+//SHOW EDITABLE SHIP DETAILS
+function showShipDetails2(imo){
+	var iframe = $("#shipdetailiframe");
+
+	$(iframe).contents().find("body").html("");
+
+	jQuery("#shipdetailiframe")[0].src='misc/ship_data_update.php?imo='+gimo;
+	jQuery("#shipdetails2").dialog("open");
+}
+
+jQuery("#shipdetails2").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#shipdetails2").dialog("close");
+//END OF SHOW EDITABLE SHIP DETAILS
+
+//SHOW SHIP SPEED HISTORY
+function showShipSpeedHistory(imo){
+	var iframe2 = $("#shipspeedhistoryiframe");
+
+	$(iframe2).contents().find("body").html("");
+
+	jQuery("#shipspeedhistoryiframe")[0].src='misc/shipspeedhistory.php?imo='+imo;
+	jQuery("#shipspeedhistory").dialog("open");
+}
+
+jQuery("#shipspeedhistory").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#shipspeedhistory").dialog("close");
+//END OF SHOW SHIP SPEED HISTORY
+
+//SHOW OWNER'S CONTACT DETAILS
+function ownerDetails(owner, owner_id){
+	var iframe = $("#contactiframe");
+
+	$(iframe).contents().find("body").html("");
+
+	jQuery("#contactiframe")[0].src='search_ajax1ve.php?contact=1&owner='+owner+'&owner_id='+owner_id;
+	jQuery("#contactdialog").dialog("open");
+}
+
+jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
+jQuery("#contactdialog").dialog("close");
+//END OF SHOW OWNER'S CONTACT DETAILS
+
+//FORMAT DAYS
 var dateFormat = function () {
 	var	token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
 
@@ -356,9 +1109,7 @@ Date.prototype.format = function (mask, utc) {
 };
 
 function addDays(date, daystoadd){
-	if(daystoadd==""){
-		daystoadd = 0;
-	}
+	if(daystoadd==""){ daystoadd = 0; }
 
 	daystoadd = Math.ceil(daystoadd);
 
@@ -372,1182 +1123,12 @@ function addDays(date, daystoadd){
 			thedate.setDate(thedate.getDate()+daystoadd);
 			
 			return dateFormat(thedate, "dd/mm/yyyy, dddd");
-		}catch(e){
-
-		}
+		}catch(e){ }
 	}
 }
+//END OF FORMAT DAYS
 
-/***************************************************************************************************************************************************/
-
-var suggestions = [];
-var imos = [];
-var dwts = [];
-var gross_tonnages = [];
-var net_tonnages = [];
-var built_years = [];
-var flags = [];
-var flag_images = [];
-var loas = [];
-var draughts = [];
-var speeds = [];
-var breadths = [];
-var craness = [];
-var grains = [];
-var cargo_handlings = [];
-var decks_numbers = [];
-var bulkheadss = [];
-var class_notations = [];
-var lifting_equipments = [];
-var bales = [];
-var fuel_oils = [];
-var fuels = [];
-var fuel_consumptions = [];
-var fuel_types = [];
-var manager_owners = [];
-var manager_owner_emails = [];
-var class_societys = [];
-var holdss = [];
-var largest_hatchs = [];
-			
-var speed_aiss = [];
-var NavigationalStatuss = [];
-var aisdateupdateds = [];
-
-var sfs = [];
-var gimo = "";
-
-var average_price_ifo380s = [];
-var average_price_mdos = [];
-var average_price_ifo180s = [];
-var average_price_mgos = [];
-var average_price_ls180_1s = [];
-var average_price_ls380_1s = [];
-var average_price_lsmgos = [];
-var dateupdateds = [];
-
-$(function(){
-	jQuery( "#miscdialog" ).dialog( { autoOpen: false, width: 1100, height: 500 });
-	jQuery( "#miscdialog" ).dialog("close");
-	
-	jQuery("#shipdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
-	jQuery("#shipdetails").dialog("close");
-	
-	jQuery("#shipdetails2").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
-	jQuery("#shipdetails2").dialog("close");
-	
-	jQuery("#shipspeedhistory").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
-	jQuery("#shipspeedhistory").dialog("close");
-	
-	jQuery("#contactdialog").dialog( { autoOpen: false, width: 900, height: 460 });
-	jQuery("#contactdialog").dialog("close");
-	
-	jQuery("#portdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
-	jQuery("#portdetails").dialog("close");
-
-	//ballast
-	$(".d31, .d32, .d33, .d34, .d35").datepicker({ 
-		dateFormat: "dd/mm/yy, DD",
-		onSelect: function(date) {
-				jQuery(this).val(date);
-
-            	calculateDates();
-        	},
-		});
-		
-	$(".calendar").datepicker({ 
-		dateFormat: "dd/mm/yy, DD",
-		onSelect: function(date) {
-				jQuery(this).val(date);
-        	},
-		});
-
-	$(".c31").autocomplete({
-		//define callback to format results
-		source: function(req, add){
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
-				//create array for response objects
-				var suggestions = [];
-
-				//process response
-				$.each(data, function(i, val){		
-					suggestions.push(val.name);
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			str = ui.item.value;
-			idx = jQuery(this).parent().parent().attr('id');
-
-			setValue(jQuery("#"+idx+" .c31"), str);
-
-			ballastCalc(true);
-
-			calculateDates();
-		},
-	});
-
-	$(".e31").autocomplete({
-		//define callback to format results
-		source: function(req, add){
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
-
-				//create array for response objects
-				var suggestions = [];
-
-				//process response
-				$.each(data, function(i, val){
-					suggestions.push(val.name);
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			str = ui.item.value;
-			idx = jQuery(this).parent().parent().attr('id');
-
-			setValue(jQuery("#"+idx+" .e31"), str);
-			setValue(jQuery(".e33"), str);
-
-			ballastCalc(true);
-
-			calculateDates();
-		},
-	});
-
-	//laden
-	$(".c34").autocomplete({
-
-		//define callback to format results
-		source: function(req, add){
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
-
-				//create array for response objects
-				var suggestions = [];
-
-				//process response
-				$.each(data, function(i, val){
-					suggestions.push(val.name);
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			str = ui.item.value;
-			idx = jQuery(this).parent().parent().attr('id');
-
-			setValue(jQuery("#"+idx+" .c34"), str);
-
-			ladenCalc(true);
-
-			calculateDates();
-		},
-	});
-
-	$(".e34").autocomplete({
-		//define callback to format results
-		source: function(req, add){
-
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
-
-				//create array for response objects
-				var suggestions = [];
-
-				//process response
-				$.each(data, function(i, val){
-					suggestions.push(val.name);
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			str = ui.item.value;
-			idx = jQuery(this).parent().parent().attr('id');
-
-			setValue(jQuery("#"+idx+" .e34"), str);
-
-			ballastCalc(true);
-			ladenCalc(true);
-			
-			calculateDates();
-		},
-	});
-
-	//bunkerstop
-	$(".c33").autocomplete({
-		//define callback to format results
-		source: function(req, add){
-
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
-
-				//create array for response objects
-				var suggestions = [];
-
-				//process response
-				$.each(data, function(i, val){
-					suggestions.push(val.name);
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			str = ui.item.value;
-			idx = jQuery(this).parent().parent().attr('id');
-
-			setValue(jQuery("#"+idx+" .c33"), str);
-
-			bunkerstopCalc2(true);
-
-			calculateDates();
-		},
-	});
-
-	$(".e33").autocomplete({
-		//define callback to format results
-		source: function(req, add){
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
-				//create array for response objects
-				var suggestions = [];
-
-				//process response
-				$.each(data, function(i, val){
-					suggestions.push(val.name);
-					
-					average_price_ifo380s[val.name] = val.average_price_ifo380;
-					average_price_mdos[val.name] = val.average_price_mdo;
-					average_price_ifo180s[val.name] = val.average_price_ifo180;
-					
-					average_price_mgos[val.name] = val.average_price_mgo;
-					average_price_ls180_1s[val.name] = val.average_price_ls180_1;
-					average_price_ls380_1s[val.name] = val.average_price_ls380_1;
-					average_price_lsmgos[val.name] = val.average_price_lsmgo;
-					dateupdateds[val.name] = val.dateupdated;
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			str = ui.item.value;
-			idx = jQuery(this).parent().parent().attr('id');
-
-			setValue(jQuery("#"+idx+" .e33"), str);
-			
-			//1st ROW
-			if(average_price_ifo380s[str] || average_price_mdos[str]){
-				jQuery("#d42").each(function(){
-					setValue(jQuery(this), fNum(average_price_ifo380s[str]));
-				});
-				
-				jQuery("#h42").each(function(){
-					setValue(jQuery(this), fNum(average_price_mdos[str]));
-				});
-				jQuery('#bunker_first_row').show();
-			}else{
-				jQuery('#bunker_first_row').hide();
-			}
-			//1st ROW
-			
-			//2nd ROW
-			if(average_price_ifo180s[str] || average_price_mgos[str]){
-				jQuery("#d42_180").each(function(){
-					setValue(jQuery(this), fNum(average_price_ifo180s[str]));
-				});
-				jQuery("#h42_mgo").each(function(){
-					setValue(jQuery(this), fNum(average_price_mgos[str]));
-				});
-				jQuery('#bunker_second_row').show();
-			}else{
-				jQuery('#bunker_second_row').hide();
-			}
-			//2nd ROW
-			
-			//3rd ROW
-			if(average_price_ls380_1s[str] || average_price_lsmgos[str]){
-				jQuery("#d42_lsifo380").each(function(){
-					setValue(jQuery(this), fNum(average_price_ls380_1s[str]));
-				});
-				jQuery("#h42_lsmgo").each(function(){
-					setValue(jQuery(this), fNum(average_price_lsmgos[str]));
-				});
-				jQuery('#bunker_third_row').show();
-			}else{
-				jQuery('#bunker_third_row').hide();
-			}
-			//3rd ROW
-			
-			//4th ROW
-			if(average_price_ls180_1s[str]){
-				jQuery("#d42_lsifo180").each(function(){
-					setValue(jQuery(this), fNum(average_price_ls180_1s[str]));
-				});
-				jQuery('#bunker_fourth_row').show();
-			}else{
-				jQuery('#bunker_fourth_row').hide();
-			}
-			//4th ROW
-			
-			if(dateupdateds[str]){
-				jQuery('#bunker_price_dateupdated').text('Correct as of '+dateupdateds[str]);
-			}else{
-				jQuery('#bunker_price_dateupdated').text('');
-			}
-
-			bunkerstopCalc2(true);
-			ladenCalc(true);
-
-			calculateDates();
-		},
-	});
-
-	//loading, Bunker Stop, discharging
-	$(".c32, .e32, .c35, .e35").autocomplete({
-		//define callback to format results
-		source: function(req, add){
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?port=1", req, function(data) {
-
-				//create array for response objects
-				var suggestions = [];
-
-				//process response
-				$.each(data, function(i, val){
-					suggestions.push(val.name);
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			calculateDates();
-		},
-	});
-
-	$(".i35").autocomplete({
-
-		//define callback to format results
-		source: function(req, add){
-
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?sf=1", req, function(data) {
-
-				//create array for response objects
-				var suggestions = [];
-				var sfs = [];
-
-				//process response
-				$.each(data, function(i, val){
-					suggestions.push(val.cargo_name);
-
-					sfs[val.cargo_name] = val.sf;
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			str = ui.item.value;
-			pcs = str.split("-");
-			cargo = pcs[0];
-			cargo = jQuery.trim(cargo);
-			sf = pcs[1];
-			sf = jQuery.trim(sf);
-			idx = jQuery(this).parent().parent().attr('id');
-
-			if(sf){
-				setValue(jQuery("#"+idx+" .j35"), fNum(sf));
-			}
-
-			thread("sf");
-		},
-	});
-
-	$(".i32").autocomplete({
-		//define callback to format results
-		source: function(req, add){
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?sf=1", req, function(data) {
-				//create array for response objects
-				var suggestions = [];
-				var sfs = [];
-
-				//process response
-				$.each(data, function(i, val){
-					suggestions.push(val.cargo_name);
-					sfs[val.cargo_name] = val.sf;
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			str = ui.item.value;
-			pcs = str.split("-");
-			cargo = pcs[0];
-			cargo = jQuery.trim(cargo);
-			sf = pcs[1];
-			sf = jQuery.trim(sf);
-			idx = jQuery(this).parent().parent().attr('id');
-
-			if(sf){
-				setValue(jQuery("#"+idx+" .j32"), fNum(sf));
-				setValue(jQuery("#i35"), str);
-				setValue(jQuery("#j35"), fNum(sf));
-			}
-
-			thread("sf");
-		},
-	});
-
-	$("#ship").autocomplete({
-		//define callback to format results
-
-		source: function(req, add){
-			jQuery("#shipdetailshref").html("");
-
-			//pass request to server
-			$.getJSON("ajax_voyage_estimator.php?search=1", req, function(data) {
-				//create array for response objects
-				var suggestions = [];
-				var imos = [];
-
-				//process response
-				$.each(data, function(i, val){
-					suggestions.push(val.name);
-
-					imos.push(val.imo);
-
-					dwts[val.imo] = val.dwt;
-					gross_tonnages[val.imo] = val.gross_tonnage;
-					net_tonnages[val.imo] = val.net_tonnage;
-					built_years[val.imo] = val.built_year;
-					flags[val.imo] = val.flag;
-					flag_images[val.imo] = val.flag_image;
-					loas[val.imo] = val.loa;
-					draughts[val.imo] = val.draught;
-					speeds[val.imo] = val.speed;
-					breadths[val.imo] = val.breadth;
-					craness[val.imo] = val.cranes;
-					grains[val.imo] = val.grain;
-					cargo_handlings[val.imo] = val.cargo_handling;
-					decks_numbers[val.imo] = val.decks_number;
-					bulkheadss[val.imo] = val.bulkheads;
-					class_notations[val.imo] = val.class_notation;
-					lifting_equipments[val.imo] = val.lifting_equipment;
-					bales[val.imo] = val.bale;
-					fuel_oils[val.imo] = val.fuel_oil;
-					fuels[val.imo] = val.fuel;
-					fuel_consumptions[val.imo] = val.fuel_consumption;
-					fuel_types[val.imo] = val.fuel_type;
-					manager_owners[val.imo] = val.manager_owner;
-					manager_owner_emails[val.imo] = val.manager_owner_email;
-					class_societys[val.imo] = val.class_society;
-					holdss[val.imo] = val.holds;
-					largest_hatchs[val.imo] = val.largest_hatch;
-					
-					speed_aiss[val.imo] = val.speed_ais;
-					NavigationalStatuss[val.imo] = val.NavigationalStatus;
-					aisdateupdateds[val.imo] = val.aisdateupdated;
-				});
-
-				//pass array to callback
-				add(suggestions);
-			});
-		},
-
-		//define select handler
-		select: function(e, ui) {
-			str = ui.item.value;
-			pcs = str.split("-");
-			imo = pcs[0];
-			imo = jQuery.trim(imo);
-			gimo = imo;
-
-			jQuery("#shipdetailshref").html("<a style='cursor:pointer;' onclick='showShipDetails()'><u>Click here for full specs</u></a> | <a style='cursor:pointer;' onclick='showShipDetails2()'><u>Click for your ships info</u></a> | <a style='cursor:pointer;' onclick='showShipSpeedHistory(\""+imo+"\")'><u>Click for ships speed history</u></a>");
-			setValue(jQuery("#d18"), fNum(dwts[imo]));
-			
-			//Zoi's Code
-			jQuery("#ship_info").show();
-			jQuery("#ship_imo").each(function(){
-				setValue(jQuery(this), imo);
-			});
-			jQuery("#ship_summer_dwt").each(function(){
-				setValue(jQuery(this), fNum(dwts[imo]) + ' tons');
-			});
-			jQuery("#ship_gross_tonnage").each(function(){
-				setValue(jQuery(this), fNum(gross_tonnages[imo]) + ' tons');
-			});
-			jQuery("#ship_net_tonnage").each(function(){
-				setValue(jQuery(this), fNum(net_tonnages[imo]) + ' tons');
-			});
-			jQuery("#ship_built_year").each(function(){
-				setValue(jQuery(this), built_years[imo]);
-			});
-			jQuery("#ship_flag").each(function(){
-				setValue(jQuery(this), '<img src="'+ flag_images[imo] +'" alt="'+ flags[imo] +'" title="'+ flags[imo] +'">');
-			});
-			jQuery("#ship_loa").each(function(){
-				setValue(jQuery(this), fNum(loas[imo]) + ' m');
-			});
-			jQuery("#ship_draught").each(function(){
-				setValue(jQuery(this), fNum(draughts[imo]) + ' m');
-			});
-			jQuery("#ship_speed").each(function(){
-				setValue(jQuery(this), fNum(speeds[imo]) + ' knts');
-			});
-			
-			jQuery("#ship_breadth").each(function(){
-				setValue(jQuery(this), fNum(breadths[imo]) + ' m');
-			});
-			jQuery("#ship_cranes").each(function(){
-				setValue(jQuery(this), craness[imo]);
-			});
-			jQuery("#ship_grain").each(function(){
-				setValue(jQuery(this), fNum(grains[imo]));
-			});
-			jQuery("#ship_cargo_handling").each(function(){
-				setValue(jQuery(this), cargo_handlings[imo]);
-			});
-			jQuery("#ship_decks_number").each(function(){
-				setValue(jQuery(this), decks_numbers[imo]);
-			});
-			jQuery("#ship_bulkheads").each(function(){
-				setValue(jQuery(this), bulkheadss[imo]);
-			});
-			jQuery("#ship_class_notation").each(function(){
-				setValue(jQuery(this), class_notations[imo]);
-			});
-			jQuery("#ship_lifting_equipment").each(function(){
-				setValue(jQuery(this), lifting_equipments[imo]);
-			});
-			jQuery("#ship_bale").each(function(){
-				setValue(jQuery(this), fNum(bales[imo]));
-			});
-			jQuery("#ship_fuel_oil").each(function(){
-				setValue(jQuery(this), fNum(fuel_oils[imo]) + ' m');
-			});
-			jQuery("#ship_fuel").each(function(){
-				setValue(jQuery(this), fNum(fuels[imo]) + ' t');
-			});
-			jQuery("#ship_fuel_consumption").each(function(){
-				setValue(jQuery(this), fuel_consumptions[imo]);
-			});
-			jQuery("#ship_fuel_type").each(function(){
-				setValue(jQuery(this), fuel_types[imo]);
-			});
-			jQuery("#ship_manager_owner").each(function(){
-				setValue(jQuery(this), manager_owners[imo]);
-			});
-			jQuery("#ship_manager_owner_email").each(function(){
-				setValue(jQuery(this), manager_owner_emails[imo]);
-			});
-			jQuery("#ship_class_society").each(function(){
-				setValue(jQuery(this), class_societys[imo]);
-			});
-			jQuery("#ship_holds").each(function(){
-				setValue(jQuery(this), holdss[imo]);
-			});
-			jQuery("#ship_largest_hatch").each(function(){
-				setValue(jQuery(this), largest_hatchs[imo]);
-			});
-			jQuery("#ship_speed_ais").each(function(){
-				setValue(jQuery(this), speed_aiss[imo]);
-			});
-			jQuery("#ship_NavigationalStatus").each(function(){
-				setValue(jQuery(this), NavigationalStatuss[imo]);
-			});
-			jQuery("#ship_aisdateupdated").each(function(){
-				setValue(jQuery(this), aisdateupdateds[imo]);
-			});
-			//End of Zoi's Code
-
-			jQuery(".g31").each(function(){
-				setValue(jQuery(this), fNum(speeds[imo]));
-			});
-
-			jQuery(".g33").each(function(){
-				setValue(jQuery(this), fNum(speeds[imo]));
-			});
-
-			jQuery(".g34").each(function(){
-				setValue(jQuery(this), fNum(speeds[imo]));
-			});
-			
-			iframeve = document.getElementById('map_iframeve');
-  			iframeve.src = "map/map_voyage_estimator.php?imo="+imo;
-			
-			thread();
-		},
-	});
-});
-
-function showShipDetails(imo){
-	jQuery("#shipdetails").dialog("close")
-	jQuery('#pleasewait').show();
-
-	jQuery.ajax({
-		type: 'POST',
-		url: "search_ajax1ve.php?imo="+gimo,
-		data:  '',
-
-		success: function(data) {
-			if(data.indexOf("<b>ERROR")!=0){
-				jQuery("#shipdetails_in").html(data);
-				jQuery("#shipdetails").dialog("open")
-				jQuery('#pleasewait').hide();
-			}else{
-				alert(data)
-			}
-		}
-	});	
-}
-
-function showShipDetails2(imo){
-	var iframe = $("#shipdetailiframe");
-
-	$(iframe).contents().find("body").html("");
-
-	jQuery("#shipdetailiframe")[0].src='misc/ship_data_update.php?imo='+gimo;
-	jQuery("#shipdetails2").dialog("open");
-}
-
-function showShipSpeedHistory(imo){
-	var iframe2 = $("#shipspeedhistoryiframe");
-
-	$(iframe2).contents().find("body").html("");
-
-	jQuery("#shipspeedhistoryiframe")[0].src='misc/shipspeedhistory.php?imo='+imo;
-	jQuery("#shipspeedhistory").dialog("open");
-}
-
-function showPortDetails(portname, date_from, date_to, num_of_days){
-	var vessel_name = jQuery("#ship").val();
-	var cargo_type = jQuery("#i32").val();
-	var dwt = jQuery("#ship_summer_dwt").text();
-	var gross_tonnage = jQuery("#ship_gross_tonnage").text();
-	var net_tonnage = jQuery("#ship_net_tonnage").text();
-	var owner = jQuery("#ship_manager_owner").text();
-
-	var iframe = $("#portdetailsiframe");
-
-	$(iframe).contents().find("body").html("");
-
-	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&cargo_type='+cargo_type+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner+'&date_from='+date_from+'&date_to='+date_to+'&num_of_days='+num_of_days;
-	jQuery("#portdetails").dialog("open");
-}
-
-function ownerDetails(owner, owner_id){
-	var iframe = $("#contactiframe");
-
-	$(iframe).contents().find("body").html("");
-
-	jQuery("#contactiframe")[0].src='search_ajax1ve.php?contact=1&owner='+owner+'&owner_id='+owner_id;
-	jQuery("#contactdialog").dialog("open");
-}
-
-function addCommas(nStr){
-	nStr += '';
-
-	x = nStr.split('.');
-	x1 = x[0];
-	x2 = x.length > 1 ? '.' + x[1] : '';
-
-	var rgx = /(\d+)(\d{3})/;
-
-	while (rgx.test(x1)) {
-		x1 = x1.replace(rgx, '$1' + ',' + '$2');
-	}
-
-	return x1 + x2;
-}
-
-function fNum(num){
-	num = uNum(num);
-
-	if(num==0){
-		return "";
-	}
-
-	num = num.toFixed(2);
-
-	return addCommas(num);
-}
-
-function uNum(num){
-	if(!num){
-		num = 0;
-	}else if(isNaN(num)){
-		num = num.replace(/[^0-9\.]/g, "");
-
-		if(isNaN(num)){
-			num = 0;
-		}
-	}
-
-	return num*1;
-}
-
-function valueF(elem){
-	if(elem.prop("tagName")=="TD"){
-		return fNum(elem.html());
-	}else{
-		return fNum(elem.val());
-	}
-}
-
-function valueU(elem){
-	if(elem.prop("tagName")=="TD"){
-		return uNum(elem.html());
-	}else{
-		return uNum(elem.val());
-	}
-}
-
-function setValue(elem, value){
-	if(elem.prop("tagName")=="TD"){
-		elem.html(value);
-	}else{
-		elem.val(value);
-	}
-}
-
-function getValue(elem){
-	if(elem.prop("tagName")=="TD"){
-		return elem.html();
-	}else{
-		return elem.val();
-	}
-}
-
-function sumF(id1, id2){
-	alpha = id1.replace(/[0-9]/ig, "");
-	num1 = id1.replace(/[a-z]/ig, "")*1;
-	num2 = id2.replace(/[a-z]/ig, "")*1;
-	sum = 0;
-
-	for(i=num1; i<=num2; i++){
-		sum += valueU(jQuery("#"+alpha+i));
-	}
-
-	return fNum(sum);
-}
-
-function ballastDistCalc(tmp, to, from, triggerajax){
-	fromx = getValue(jQuery(tmp+".c31"));
-	pcs = fromx.split("-");
-	fromx = pcs[pcs.length-1];
-	fromx = jQuery.trim(fromx);
-	tox = getValue(jQuery(tmp+".e31")); 
-	pcs = str.split("-");
-	tox = pcs[pcs.length-1];
-	tox = jQuery.trim(tox);
-
-	distance = valueU(jQuery(tmp+".h31"));
-
-	if(to!=tox||from!=fromx||!distance||triggerajax){
-		setValue(jQuery(tmp+".h31"), 'calculating...');
-
-		jQuery.ajax({
-			type: 'POST',
-			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
-			data:  '',
-
-			success: function(data) {
-				setValue(jQuery(tmp+".h31"), fNum(data));
-
-				distance = valueU(jQuery(tmp+".h31"));
-				speed = valueU(jQuery(tmp+".g31"));
-
-				if(speed == 0){
-					speed = 13; //default speed is 13knots
-					
-					setValue(jQuery(tmp+".g31"), fNum(speed));
-				}
-
-				//seadays
-
-				//jQuery(tmp+".h31") is distance
-
-				sea = ( distance / valueU(jQuery(tmp+".g31")) / 24);
-
-				setValue(
-					jQuery(tmp+".r31"), 
-
-					fNum(sea)
-				);
-
-				calculateSeaPortDays();
-				calculateDates();
-			}
-		});
-	}else{
-		distance = valueU(jQuery(tmp+".h31"));
-		speed = valueU(jQuery(tmp+".g31"));
-
-		if(speed == 0){
-			speed = 13; //default speed is 13knots
-
-			setValue(jQuery(tmp+".g31"), fNum(speed));
-		}
-
-		//seadays
-		//jQuery(tmp+".h31") is distance
-		sea = ( distance / valueU(jQuery(tmp+".g31")) / 24);
-
-		setValue(
-			jQuery(tmp+".r31"), 
-
-			fNum(sea)
-		);
-
-		calculateSeaPortDays();
-		calculateDates();
-	}
-}
-
-function bunkerstopDistCalc(tmp, to, from, triggerajax){
-	fromx = getValue(jQuery(tmp+".c33"));
-	pcs = fromx.split("-");
-	fromx = pcs[pcs.length-1];
-	fromx = jQuery.trim(fromx);
-	tox = getValue(jQuery(tmp+".e33")); 
-	pcs = str.split("-");
-	tox = pcs[pcs.length-1];
-	tox = jQuery.trim(tox);
-	distance = valueU(jQuery(tmp+".h33"));
-
-	if(to!=tox||from!=fromx||!distance||triggerajax){
-		setValue(jQuery(tmp+".h33"), 'calculating...');
-
-		jQuery.ajax({
-			type: 'POST',
-			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
-			data:  '',
-
-			success: function(data) {
-				setValue(jQuery(tmp+".h33"), fNum(data));
-
-				distance = valueU(jQuery(tmp+".h33"));
-				speed = valueU(jQuery(tmp+".g33"));
-
-				if(speed == 0){
-					speed = 13; //default speed is 13knots
-
-					setValue(jQuery(tmp+".g33"), fNum(speed));
-				}
-
-				//seadays
-				//jQuery(tmp+".h31") is distance
-				sea = ( distance / valueU(jQuery(tmp+".g33")) / 24);
-
-				setValue(
-					jQuery(tmp+".r33"), 
-
-					fNum(sea)
-				);
-
-				calculateSeaPortDays();
-				calculateDates();
-			}
-		});
-	}else{
-		distance = valueU(jQuery(tmp+".h33"));
-		speed = valueU(jQuery(tmp+".g33"));
-
-		if(speed == 0){
-			speed = 13; //default speed is 13knots
-
-			setValue(jQuery(tmp+".g33"), fNum(speed));
-		}
-
-		//seadays
-		//jQuery(tmp+".h31") is distance
-		sea = ( distance / valueU(jQuery(tmp+".g33")) / 24);
-
-		setValue(
-			jQuery(tmp+".r33"), 
-
-			fNum(sea)
-		);
-
-		calculateSeaPortDays();
-		calculateDates();
-	}
-}
-
-function ladenDistCalc(tmp, to, from, triggerajax){
-	fromx = getValue(jQuery(tmp+".c34"));
-	pcs = fromx.split("-");
-	fromx = pcs[pcs.length-1];
-	fromx = jQuery.trim(fromx);
-	tox = getValue(jQuery(tmp+".e34")); 
-	pcs = str.split("-");
-	tox = pcs[pcs.length-1];
-	tox = jQuery.trim(tox);
-	distance = valueU(jQuery(tmp+".h34"));
-
-	//alert("triggerajax = "+triggerajax);
-
-	if(to!=tox||from!=fromx||!distance||triggerajax){
-		setValue(jQuery(tmp+".h34"), 'calculating...');
-
-		jQuery.ajax({
-			type: 'POST',
-			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
-			data:  '',
-
-			success: function(data) {
-				setValue(jQuery(tmp+".h34"), fNum(data));
-
-				distance = valueU(jQuery(tmp+".h34"));
-				speed = valueU(jQuery(tmp+".g34"));
-
-				if(speed == 0){
-					speed = 13; //default speed is 13knots
-
-					setValue(jQuery(tmp+".g34"), fNum(speed));
-				}
-
-				//seadays
-				//jQuery(tmp+".h31") is distance
-				sea = ( distance / valueU(jQuery(tmp+".g34")) / 24);
-
-				setValue(
-					jQuery(tmp+".r34"), 
-
-					fNum(sea)
-				);
-
-				calculateSeaPortDays();
-				calculateDates();
-			}
-		});
-	}else{
-		distance = valueU(jQuery(tmp+".h34"));
-		speed = valueU(jQuery(tmp+".g34"));
-
-		if(speed == 0){
-			speed = 13; //default speed is 13knots
-
-			setValue(jQuery(tmp+".g34"), fNum(speed));
-		}
-
-		//seadays
-		//jQuery(tmp+".h31") is distance
-		sea = ( distance / valueU(jQuery(tmp+".g34")) / 24);
-
-		setValue(
-			jQuery(tmp+".r34"), 
-
-			fNum(sea)
-		);
-
-		calculateSeaPortDays();
-		calculateDates();
-	}
-}
-
-function ballastCalc(triggerajax){
-	n = 1;
-
-	while(jQuery("#ballast"+n)[0]){
-		tmp = "#ballast"+n+" ";
-
-		//distance calc
-		str = getValue(jQuery(tmp+".c31"));
-
-		if(str){
-			pcs = str.split("-");
-			from = pcs[pcs.length-1];
-			from = jQuery.trim(from);
-			str = getValue(jQuery(tmp+".e31")); 
-			pcs = str.split("-");
-			to = pcs[pcs.length-1];
-			to = jQuery.trim(to);
-
-			if(from&&to){
-				ballastDistCalc(tmp, to, from, triggerajax);
-			}
-		}
-
-		n++;
-	}
-}
-
-function bunkerstopCalc2(triggerajax){
-	n = 1;
-
-	while(jQuery("#bunkerstop"+n)[0]){
-		tmp = "#bunkerstop"+n+" ";
-
-		//distance calc
-		str = getValue(jQuery(tmp+".c33"));
-
-		if(str){
-			pcs = str.split("-");
-			from = pcs[pcs.length-1];
-			from = jQuery.trim(from);
-			str = getValue(jQuery(tmp+".e33")); 
-			pcs = str.split("-");
-			to = pcs[pcs.length-1];
-			to = jQuery.trim(to);
-
-			if(from&&to){
-				bunkerstopDistCalc(tmp, to, from, triggerajax);	
-			}
-		}
-
-		n++;
-	}
-}
-
-function ladenCalc(triggerajax){
-	n = 1;
-
-	while(jQuery("#laden"+n)[0]){
-		tmp = "#laden"+n+" ";
-
-		//distance calc
-		str = getValue(jQuery(tmp+".c34"));
-			
-		if(str){
-			pcs = str.split("-");
-			from = pcs[pcs.length-1];
-			from = jQuery.trim(from);
-			str = getValue(jQuery(tmp+".e34")); 
-			pcs = str.split("-");
-			to = pcs[pcs.length-1];
-			to = jQuery.trim(to);
-
-			if(from&&to){
-				ladenDistCalc(tmp, to, from, triggerajax);	
-			}
-		}
-
-		n++;
-	}
-}
-
-function bunkerstopCalc(){
-	n = 1;
-	seadays = 0;
-	portdays = 0;
-
-	while(jQuery("#bunkerstop"+n)[0]){
-		tmp = "#bunkerstop"+n+" ";
-
-		//calculate ld
-		ld = 0;
-		//ld = valueU(jQuery(tmp+".l33")) / valueU(jQuery(tmp+".m33")) / 24;
-		ld = valueU(jQuery(tmp+".l33")) / valueU(jQuery(tmp+".m33"));
-
-		setValue(jQuery(tmp+".o33"), fNum(ld));
-		//setValue(jQuery("#laytime2"), fNum(ld*24));
-		setValue(jQuery("#laytime2"), fNum(ld));
-
-		//seadays
-		seadays += ( valueU(jQuery(tmp+".s33")) + valueU(jQuery(tmp+".t33")) );
-
-		//portdays
-		portdays += ( ld + valueU(jQuery(tmp+".p33")) + valueU(jQuery(tmp+".q33")) );
-
-		n++;
-	}
-
-	bunkerstopCalc2();
-}
-
-function loadingCalc(){
-	n = 1;
-	seadays = 0;
-	portdays = 0;
-
-	while(jQuery("#loading"+n)[0]){
-		tmp = "#loading"+n+" ";
-
-		//calculate volume
-		volume = valueU(jQuery(tmp+".k32")) * valueU(jQuery(tmp+".j32"));
-
-		setValue(jQuery(tmp+".l32"), fNum(volume));
-
-		//calculate ld
-		ld = 0;
-		ld = valueU(jQuery(tmp+".k32")) / valueU(jQuery(tmp+".m32"));
-
-		setValue(jQuery(tmp+".o32"), fNum(ld));
-		setValue(jQuery("#laytime1"), fNum(ld*24));
-
-		//seadays
-		seadays += ( valueU(jQuery(tmp+".s32")) + valueU(jQuery(tmp+".t32")) );
-
-		//portdays
-		portdays += ( ld + valueU(jQuery(tmp+".p32")) + valueU(jQuery(tmp+".q32")) );
-
-		n++;
-	}
-}
-
-function dischargingCalc(){
-	n = 1;
-
-	while(jQuery("#discharging"+n)[0]){
-		tmp = "#discharging"+n+" ";
-
-		//calculate volume
-		volume = valueU(jQuery(tmp+".k35")) * valueU(jQuery(tmp+".j35"));
-
-		setValue(jQuery(tmp+".l35"), fNum(volume));
-
-		//calculate ld
-		ld = 0;
-		ld = valueU(jQuery(tmp+".k35")) / valueU(jQuery(tmp+".m35"));
-
-		setValue(jQuery(tmp+".o35"), fNum(ld));
-		setValue(jQuery("#laytime3"), fNum(ld*24));
-
-		n++;
-	}
-}
-
+//SUM OF CLASS
 function sumClass(clas){
 	sum = 0;
 
@@ -1557,16 +1138,16 @@ function sumClass(clas){
 
 	return sum;
 }
+//END OF SUM OF CLASS
 
+//CALCULATE PORT DAYS
 function calculatePortDays(){
 	sum = 0;
 
-	sum += sumClass("o31");
 	sum += sumClass("o32");
 	sum += sumClass("o33");
 	sum += sumClass("o34");
 	sum += sumClass("o35");
-	sum += sumClass("p31");
 	sum += sumClass("p32");
 	sum += sumClass("p33");
 	sum += sumClass("p34");
@@ -1579,7 +1160,9 @@ function calculatePortDays(){
 
 	return sum;
 }
+//END OF CALCULATE PORT DAYS
 
+//CALCULATE SEA DAYS
 function calculateSeaDays(){
 	sum = 0;
 
@@ -1588,41 +1171,34 @@ function calculateSeaDays(){
 	sum += sumClass("r33");
 	sum += sumClass("r34");
 	sum += sumClass("r35");
+	sum += sumClass("r36");
 	sum += sumClass("s31");
 	sum += sumClass("s32");
 	sum += sumClass("s33");
 	sum += sumClass("s34");
 	sum += sumClass("s35");
+	sum += sumClass("s36");
 	sum += sumClass("t31");
 	sum += sumClass("t32");
 	sum += sumClass("t33");
 	sum += sumClass("t34");
 	sum += sumClass("t35");
+	sum += sumClass("t36");
 
 	return sum;
 }
+//END OF CALCULATE SEA DAYS
 
-function calculateSeaPortDays(){
-	totalportdays = calculatePortDays();
-	totalseadays = calculateSeaDays();
-
-	setValue(jQuery("#r36"), fNum(totalseadays));
-	setValue(jQuery("#o36"), fNum(totalportdays));
-	setValue(jQuery("#o37"), fNum(totalseadays+totalportdays));
-}
-
+//CALCULATE DATES
 function calculateDates(){
-	//ballast
+	//BALLAST
 	n = 1;
 
 	while(jQuery("#ballast"+n)[0]){
 		tmp = "#ballast"+n+" ";
 
-		//initial date
 		date = getValue(jQuery(tmp+".d31"));
-
-		//port days and sea days
-		days = valueU(jQuery(tmp+".o31")) + valueU(jQuery(tmp+".p31")) + valueU(jQuery(tmp+".q31")) + valueU(jQuery(tmp+".r31")) + valueU(jQuery(tmp+".s31")) + valueU(jQuery(tmp+".t31"));
+		days = valueU(jQuery(tmp+".p31")) + valueU(jQuery(tmp+".q31")) + valueU(jQuery(tmp+".r31")) + valueU(jQuery(tmp+".s31")) + valueU(jQuery(tmp+".t31"));
 
 		adate = addDays(date, days);
 
@@ -1636,8 +1212,9 @@ function calculateDates(){
 
 	setValue(jQuery("#c45"), fNum(c45));
 	setValue(jQuery("#c46"), fNum(c46));
-
-	//loading
+	//END OF BALLAST
+	
+	//LOADING
 	n = 1;
 
 	while(jQuery("#loading"+n)[0]){
@@ -1649,16 +1226,11 @@ function calculateDates(){
 		
 		tmp = "#loading"+n+" ";
 
-		//ports
 		setValue(jQuery(tmp+".c"+num), portto);
 		setValue(jQuery(tmp+".e"+num), portto);
-
-		//dates
 		setValue(jQuery(tmp+".d"+num), date);
 
 		date = getValue(jQuery(tmp+".d"+num));
-
-		//port days and sea days
 		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
 
 		adate = addDays(date, days);
@@ -1667,8 +1239,9 @@ function calculateDates(){
 
 		n++;
 	}
+	//END OF LOADING
 	
-	//bunkerstop
+	//BUNKER STOP
 	n = 1;
 
 	while(jQuery("#bunkerstop"+n)[0]){
@@ -1679,16 +1252,10 @@ function calculateDates(){
 		portto = getValue(jQuery(tmp+".e"+(num-1)));
 
 		tmp = "#bunkerstop"+n+" ";
-
-		//ports
 		setValue(jQuery(tmp+".c"+num), portto);
-
-		//dates
 		setValue(jQuery(tmp+".d"+num), date);
 
 		date = getValue(jQuery(tmp+".d"+num));
-
-		//port days and sea days
 		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
 
 		adate = addDays(date, days);
@@ -1697,8 +1264,9 @@ function calculateDates(){
 		
 		n++;
 	}
-
-	//laden
+	//END OF BUNKER STOP
+	
+	//LADEN
 	n = 1;
 
 	while(jQuery("#laden"+n)[0]){
@@ -1709,16 +1277,11 @@ function calculateDates(){
 		portto = getValue(jQuery(tmp+".e"+(num-1)));
 
 		tmp = "#laden"+n+" ";
-
-		//ports
+		
 		setValue(jQuery(tmp+".c"+num), portto);
-
-		//dates
 		setValue(jQuery(tmp+".d"+num), date);
 
 		date = getValue(jQuery(tmp+".d"+num));
-
-		//port days and sea days
 		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
 
 		adate = addDays(date, days);
@@ -1733,8 +1296,9 @@ function calculateDates(){
 
 	setValue(jQuery("#d45"), fNum(d45));
 	setValue(jQuery("#d46"), fNum(d46));
-
-	//discharging
+	//END OF LADEN
+	
+	//DISCHARGING
 	n = 1;
 
 	while(jQuery("#discharging"+n)[0]){
@@ -1746,16 +1310,11 @@ function calculateDates(){
 
 		tmp = "#discharging"+n+" ";
 
-		//ports
 		setValue(jQuery(tmp+".c"+num), portto);
 		setValue(jQuery(tmp+".e"+num), portto);
-		
-		//dates
 		setValue(jQuery(tmp+".d"+num), date);
 
 		date = getValue(jQuery(tmp+".d"+num));
-
-		//port days and sea days
 		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
 
 		adate = addDays(date, days);
@@ -1764,9 +1323,36 @@ function calculateDates(){
 
 		n++;
 	}
+	//END OF DISCHARGING
+	
+	//REPOSITIONING
+	n = 1;
 
+	while(jQuery("#repositioning"+n)[0]){
+		num = 36;
+
+		tmp = "#discharging"+n+" ";
+		date = getValue(jQuery(tmp+".f"+(num-1)));
+		portto = getValue(jQuery(tmp+".e"+(num-1)));
+
+		tmp = "#repositioning"+n+" ";
+
+		setValue(jQuery(tmp+".c"+num), portto);
+		setValue(jQuery(tmp+".d"+num), date);
+
+		date = getValue(jQuery(tmp+".d"+num));
+		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
+
+		adate = addDays(date, days);
+
+		setValue(jQuery(tmp+".f"+num), adate);
+
+		n++;
+	}
+	//END OF REPOSITIONING
+	
 	portdays = calculatePortDays();
-
+	
 	e45 = uNum(getValue(jQuery("#e44")))*portdays;
 	e46 = e45*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
 
@@ -1816,11 +1402,482 @@ function calculateDates(){
 	setValue(jQuery("#d22b"), fNum(d22b));
 	setValue(jQuery("#d22"), fNum(d22b));	
 
-	//b74
 	b74 = c47 + g47
 	setValue(jQuery("#b74"), fNum(b74));
 }
+//END OF CALCULATE DATES
 
+//BALLAST CALCULATIONS
+function ballastCalc(triggerajax){
+	n = 1;
+
+	while(jQuery("#ballast"+n)[0]){
+		tmp = "#ballast"+n+" ";
+		str = getValue(jQuery(tmp+".c31"));
+
+		if(str){
+			pcs = str.split("-");
+			from = pcs[pcs.length-1];
+			from = jQuery.trim(from);
+			str = getValue(jQuery(tmp+".e31")); 
+			pcs = str.split("-");
+			to = pcs[pcs.length-1];
+			to = jQuery.trim(to);
+
+			if(from&&to){ ballastDistCalc(tmp, to, from, triggerajax); }
+		}
+
+		n++;
+	}
+}
+
+function ballastDistCalc(tmp, to, from, triggerajax){
+	fromx = getValue(jQuery(tmp+".c31"));
+	pcs = fromx.split("-");
+	fromx = pcs[pcs.length-1];
+	fromx = jQuery.trim(fromx);
+	tox = getValue(jQuery(tmp+".e31")); 
+	pcs = str.split("-");
+	tox = pcs[pcs.length-1];
+	tox = jQuery.trim(tox);
+
+	distance = valueU(jQuery(tmp+".h31"));
+
+	if(to!=tox||from!=fromx||!distance||triggerajax){
+		setValue(jQuery(tmp+".h31"), 'calculating...');
+
+		jQuery.ajax({
+			type: 'POST',
+			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
+			data:  '',
+
+			success: function(data) {
+				setValue(jQuery(tmp+".h31"), fNum(data));
+
+				distance = valueU(jQuery(tmp+".h31"));
+				speed = valueU(jQuery(tmp+".g31"));
+
+				if(speed == 0){
+					speed = 13;
+					setValue(jQuery(tmp+".g31"), fNum(speed));
+				}
+				
+				sea = ( distance / valueU(jQuery(tmp+".g31")) / 24);
+
+				setValue(
+					jQuery(tmp+".r31"), 
+					fNum(sea)
+				);
+
+				calculateSeaPortDays();
+				calculateDates();
+			}
+		});
+	}else{
+		distance = valueU(jQuery(tmp+".h31"));
+		speed = valueU(jQuery(tmp+".g31"));
+
+		if(speed == 0){
+			speed = 13;
+			setValue(jQuery(tmp+".g31"), fNum(speed));
+		}
+
+		sea = ( distance / valueU(jQuery(tmp+".g31")) / 24);
+
+		setValue(
+			jQuery(tmp+".r31"), 
+			fNum(sea)
+		);
+
+		calculateSeaPortDays();
+		calculateDates();
+	}
+}
+//END OF BALLAST CALCULATIONS
+
+//BUNKER STOP CALCULATIONS 2
+function bunkerstopCalc2(triggerajax){
+	n = 1;
+
+	while(jQuery("#bunkerstop"+n)[0]){
+		tmp = "#bunkerstop"+n+" ";
+		str = getValue(jQuery(tmp+".c33"));
+
+		if(str){
+			pcs = str.split("-");
+			from = pcs[pcs.length-1];
+			from = jQuery.trim(from);
+			str = getValue(jQuery(tmp+".e33")); 
+			pcs = str.split("-");
+			to = pcs[pcs.length-1];
+			to = jQuery.trim(to);
+
+			if(from&&to){ bunkerstopDistCalc(tmp, to, from, triggerajax); }
+		}
+
+		n++;
+	}
+}
+
+function bunkerstopDistCalc(tmp, to, from, triggerajax){
+	fromx = getValue(jQuery(tmp+".c33"));
+	pcs = fromx.split("-");
+	fromx = pcs[pcs.length-1];
+	fromx = jQuery.trim(fromx);
+	tox = getValue(jQuery(tmp+".e33")); 
+	pcs = str.split("-");
+	tox = pcs[pcs.length-1];
+	tox = jQuery.trim(tox);
+	distance = valueU(jQuery(tmp+".h33"));
+
+	if(to!=tox||from!=fromx||!distance||triggerajax){
+		setValue(jQuery(tmp+".h33"), 'calculating...');
+
+		jQuery.ajax({
+			type: 'POST',
+			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
+			data:  '',
+
+			success: function(data) {
+				setValue(jQuery(tmp+".h33"), fNum(data));
+
+				distance = valueU(jQuery(tmp+".h33"));
+				speed = valueU(jQuery(tmp+".g33"));
+
+				if(speed == 0){
+					speed = 13;
+					setValue(jQuery(tmp+".g33"), fNum(speed));
+				}
+
+				sea = ( distance / valueU(jQuery(tmp+".g33")) / 24);
+
+				setValue(
+					jQuery(tmp+".r33"), 
+					fNum(sea)
+				);
+
+				calculateSeaPortDays();
+				calculateDates();
+			}
+		});
+	}else{
+		distance = valueU(jQuery(tmp+".h33"));
+		speed = valueU(jQuery(tmp+".g33"));
+
+		if(speed == 0){
+			speed = 13;
+			setValue(jQuery(tmp+".g33"), fNum(speed));
+		}
+
+		sea = ( distance / valueU(jQuery(tmp+".g33")) / 24);
+
+		setValue(
+			jQuery(tmp+".r33"), 
+			fNum(sea)
+		);
+
+		calculateSeaPortDays();
+		calculateDates();
+	}
+}
+//END OF BUNKER STOP CALCULATIONS 2
+
+//LADEN CALCULATIONS
+function ladenCalc(triggerajax){
+	n = 1;
+
+	while(jQuery("#laden"+n)[0]){
+		tmp = "#laden"+n+" ";
+		str = getValue(jQuery(tmp+".c34"));
+			
+		if(str){
+			pcs = str.split("-");
+			from = pcs[pcs.length-1];
+			from = jQuery.trim(from);
+			str = getValue(jQuery(tmp+".e34")); 
+			pcs = str.split("-");
+			to = pcs[pcs.length-1];
+			to = jQuery.trim(to);
+
+			if(from&&to){ ladenDistCalc(tmp, to, from, triggerajax); }
+		}
+
+		n++;
+	}
+}
+
+function ladenDistCalc(tmp, to, from, triggerajax){
+	fromx = getValue(jQuery(tmp+".c34"));
+	pcs = fromx.split("-");
+	fromx = pcs[pcs.length-1];
+	fromx = jQuery.trim(fromx);
+	tox = getValue(jQuery(tmp+".e34")); 
+	pcs = str.split("-");
+	tox = pcs[pcs.length-1];
+	tox = jQuery.trim(tox);
+	distance = valueU(jQuery(tmp+".h34"));
+
+	if(to!=tox||from!=fromx||!distance||triggerajax){
+		setValue(jQuery(tmp+".h34"), 'calculating...');
+
+		jQuery.ajax({
+			type: 'POST',
+			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
+			data:  '',
+
+			success: function(data) {
+				setValue(jQuery(tmp+".h34"), fNum(data));
+
+				distance = valueU(jQuery(tmp+".h34"));
+				speed = valueU(jQuery(tmp+".g34"));
+
+				if(speed == 0){
+					speed = 13;
+					setValue(jQuery(tmp+".g34"), fNum(speed));
+				}
+
+				sea = ( distance / valueU(jQuery(tmp+".g34")) / 24);
+
+				setValue(
+					jQuery(tmp+".r34"), 
+
+					fNum(sea)
+				);
+
+				calculateSeaPortDays();
+				calculateDates();
+			}
+		});
+	}else{
+		distance = valueU(jQuery(tmp+".h34"));
+		speed = valueU(jQuery(tmp+".g34"));
+
+		if(speed == 0){
+			speed = 13;
+			setValue(jQuery(tmp+".g34"), fNum(speed));
+		}
+
+		sea = ( distance / valueU(jQuery(tmp+".g34")) / 24);
+
+		setValue(
+			jQuery(tmp+".r34"), 
+			fNum(sea)
+		);
+
+		calculateSeaPortDays();
+		calculateDates();
+	}
+}
+//END OF LADEN CALCULATIONS
+
+//REPOSITIONING CALCULATIONS
+function repositioningCalc(triggerajax){
+	n = 1;
+
+	while(jQuery("#repositioning"+n)[0]){
+		tmp = "#repositioning"+n+" ";
+		str = getValue(jQuery(tmp+".c36"));
+			
+		if(str){
+			pcs = str.split("-");
+			from = pcs[pcs.length-1];
+			from = jQuery.trim(from);
+			str = getValue(jQuery(tmp+".e36")); 
+			pcs = str.split("-");
+			to = pcs[pcs.length-1];
+			to = jQuery.trim(to);
+
+			if(from&&to){ repositioningDistCalc(tmp, to, from, triggerajax); }
+		}
+
+		n++;
+	}
+}
+
+function repositioningDistCalc(tmp, to, from, triggerajax){
+	fromx = getValue(jQuery(tmp+".c36"));
+	pcs = fromx.split("-");
+	fromx = pcs[pcs.length-1];
+	fromx = jQuery.trim(fromx);
+	tox = getValue(jQuery(tmp+".e36")); 
+	pcs = str.split("-");
+	tox = pcs[pcs.length-1];
+	tox = jQuery.trim(tox);
+	distance = valueU(jQuery(tmp+".h36"));
+
+	if(to!=tox||from!=fromx||!distance||triggerajax){
+		setValue(jQuery(tmp+".h36"), 'calculating...');
+
+		jQuery.ajax({
+			type: 'POST',
+			url: "ajax_voyage_estimator.php?dc=1&from="+from+"&to="+to,
+			data:  '',
+
+			success: function(data) {
+				setValue(jQuery(tmp+".h36"), fNum(data));
+
+				distance = valueU(jQuery(tmp+".h36"));
+				speed = valueU(jQuery(tmp+".g36"));
+
+				if(speed == 0){
+					speed = 13;
+					setValue(jQuery(tmp+".g36"), fNum(speed));
+				}
+
+				sea = ( distance / valueU(jQuery(tmp+".g36")) / 24);
+
+				setValue(
+					jQuery(tmp+".r36"), 
+					fNum(sea)
+				);
+
+				calculateSeaPortDays();
+				calculateDates();
+			}
+		});
+	}else{
+		distance = valueU(jQuery(tmp+".h36"));
+		speed = valueU(jQuery(tmp+".g36"));
+
+		if(speed == 0){
+			speed = 13;
+			setValue(jQuery(tmp+".g36"), fNum(speed));
+		}
+
+		sea = ( distance / valueU(jQuery(tmp+".g36")) / 24);
+
+		setValue(
+			jQuery(tmp+".r36"), 
+			fNum(sea)
+		);
+
+		calculateSeaPortDays();
+		calculateDates();
+	}
+}
+//END OF REPOSITIONING CALCULATIONS
+
+//BUNKER CALCULATIONS
+function bunkerstopCalc(){
+	n = 1;
+	seadays = 0;
+	portdays = 0;
+
+	while(jQuery("#bunkerstop"+n)[0]){
+		tmp = "#bunkerstop"+n+" ";
+
+		ld = 0;
+		ld = valueU(jQuery(tmp+".l33")) / valueU(jQuery(tmp+".m33"));
+
+		setValue(jQuery(tmp+".o33"), fNum(ld));
+		setValue(jQuery("#laytime2"), fNum(ld));
+
+		seadays += ( valueU(jQuery(tmp+".s33")) + valueU(jQuery(tmp+".t33")) );
+		portdays += ( ld + valueU(jQuery(tmp+".p33")) + valueU(jQuery(tmp+".q33")) );
+
+		n++;
+	}
+
+	bunkerstopCalc2();
+}
+//END OF BUNKER CALCULATIONS
+
+//LOADING CARGO CALCULATIONS
+function loadingCalc(){
+	n = 1;
+	seadays = 0;
+	portdays = 0;
+
+	while(jQuery("#loading"+n)[0]){
+		tmp = "#loading"+n+" ";
+
+		volume = valueU(jQuery(tmp+".k32")) * valueU(jQuery(tmp+".j32"));
+
+		setValue(jQuery(tmp+".l32"), fNum(volume));
+
+		ld = 0;
+		ld = valueU(jQuery(tmp+".k32")) / valueU(jQuery(tmp+".m32"));
+
+		setValue(jQuery(tmp+".o32"), fNum(ld));
+		setValue(jQuery("#laytime1"), fNum(ld*24));
+
+		seadays += ( valueU(jQuery(tmp+".s32")) + valueU(jQuery(tmp+".t32")) );
+		portdays += ( ld + valueU(jQuery(tmp+".p32")) + valueU(jQuery(tmp+".q32")) );
+
+		n++;
+	}
+}
+//END OF LOADING CARGO CALCULATIONS
+
+//DISCHARGING CARGO CALCULATIONS
+function dischargingCalc(){
+	n = 1;
+
+	while(jQuery("#discharging"+n)[0]){
+		tmp = "#discharging"+n+" ";
+
+		volume = valueU(jQuery(tmp+".k35")) * valueU(jQuery(tmp+".j35"));
+
+		setValue(jQuery(tmp+".l35"), fNum(volume));
+
+		ld = 0;
+		ld = valueU(jQuery(tmp+".k35")) / valueU(jQuery(tmp+".m35"));
+
+		setValue(jQuery(tmp+".o35"), fNum(ld));
+		setValue(jQuery("#laytime3"), fNum(ld*24));
+
+		n++;
+	}
+}
+//END OF DISCHARGING CARGO CALCULATIONS
+
+//CALCULATE SEA PORT DAYS
+function calculateSeaPortDays(){
+	totalportdays = calculatePortDays();
+	totalseadays = calculateSeaDays();
+	
+	setValue(jQuery("#o36"), fNum(totalportdays));
+	setValue(jQuery("#t37"), fNum(totalseadays));
+	setValue(jQuery("#o37"), fNum(totalseadays+totalportdays));
+}
+//END OF CALCULATE SEA PORTDAYS
+
+//COPY LOADING QUANTITY TO DISCHARGING QUANTITY
+function populatek35(val){
+	setValue(jQuery("#k35"), fNum(val));
+	setValue(jQuery("#l35"), jQuery("#l32").text());
+}
+//END OF COPY LOADING QUANTITY TO DISCHARGING QUANTITY
+
+//CANAL CALCULATIONS
+function canalTotal(){
+	ctoll1 = uNum(getValue(jQuery("#ctoll1")));
+	cbook1 = uNum(getValue(jQuery("#cbook1")));
+	ctug1 = uNum(getValue(jQuery("#ctug1")));
+	cline1 = uNum(getValue(jQuery("#cline1")));
+	cmisc1 = uNum(getValue(jQuery("#cmisc1")));
+
+	ctotal1 = ctoll1 + cbook1 + ctug1 + cline1 + cmisc1;
+
+	setValue(jQuery("#ctotal1"), fNum(ctotal1))
+
+	ctoll2 = uNum(getValue(jQuery("#ctoll2")));
+	cbook2 = uNum(getValue(jQuery("#cbook2")));
+	ctug2 = uNum(getValue(jQuery("#ctug2")));
+	cline2 = uNum(getValue(jQuery("#cline2")));
+	cmisc2 = uNum(getValue(jQuery("#cmisc2")));
+
+	ctotal2 = ctoll2 + cbook2 + ctug2 + cline2 + cmisc2;
+
+	setValue(jQuery("#ctotal2"), fNum(ctotal2))
+
+	d74 = ctotal1 + ctotal2;
+
+	setValue(jQuery("#d74"), fNum(d74));
+}
+//END OF CANAL CALCULATIONS
+
+//PORT SETUP
 function setupPortInterface(){
 	var numberOfDaysToAdd = parseInt(jQuery("#p33").val());
 
@@ -1927,336 +1984,46 @@ function setupPortInterface(){
 	setValue(jQuery("#c54_3"), fNum(c54_3));
 	setValue(jQuery("#c74"), fNum(c68));
 }
+//END OF PORT SETUP
 
-function canalTotal(){
-	ctoll1 = uNum(getValue(jQuery("#ctoll1")));
-	cbook1 = uNum(getValue(jQuery("#cbook1")));
-	ctug1 = uNum(getValue(jQuery("#ctug1")));
-	cline1 = uNum(getValue(jQuery("#cline1")));
-	cmisc1 = uNum(getValue(jQuery("#cmisc1")));
-
-	ctotal1 = ctoll1 + cbook1 + ctug1 + cline1 + cmisc1;
-
-	setValue(jQuery("#ctotal1"), fNum(ctotal1))
-
-	ctoll2 = uNum(getValue(jQuery("#ctoll2")));
-	cbook2 = uNum(getValue(jQuery("#cbook2")));
-	ctug2 = uNum(getValue(jQuery("#ctug2")));
-	cline2 = uNum(getValue(jQuery("#cline2")));
-	cmisc2 = uNum(getValue(jQuery("#cmisc2")));
-
-	ctotal2 = ctoll2 + cbook2 + ctug2 + cline2 + cmisc2;
-
-	setValue(jQuery("#ctotal2"), fNum(ctotal2))
-
-	d74 = ctotal1 + ctotal2;
-
-	setValue(jQuery("#d74"), fNum(d74));
-}
-
-function voyageDisbursement(){
-	b74 = uNum(getValue(jQuery("#b74")));
-	c74 = uNum(getValue(jQuery("#c74")));
-	d74 = uNum(getValue(jQuery("#d74")));
-	e74 = uNum(getValue(jQuery("#e74")));
-	f74 = uNum(getValue(jQuery("#f74")));
-	g74 = uNum(getValue(jQuery("#g74")));
-	h74 = uNum(getValue(jQuery("#h74")));
-	i74 = uNum(getValue(jQuery("#i74")));
-	j74 = uNum(getValue(jQuery("#j74")));
-
-	b75 = b74 + c74 + d74 + e74 + f74 + g74 + h74 + i74 + j74;
-
-	setValue(jQuery("#b75"), fNum(b75));
-}
-
-function result1(){
-	c80 = uNum(getValue(jQuery(".k32"))) * uNum(getValue(jQuery("#b80")));
-	setValue(jQuery("#c80"), fNum(c80));
-
-	d81 = (uNum(getValue(jQuery("#d80"))) + uNum(getValue(jQuery("#e80")))) / 100 * uNum(getValue(jQuery("#c80")));
-	setValue(jQuery("#d81"), fNum(d81));
-
-	f80 = uNum(getValue(jQuery("#c80"))) - uNum(getValue(jQuery("#d81"))) - uNum(getValue(jQuery("#b75")));
-	if(f80>0){
-		setValue(jQuery("#f80"), '<span style="color:#006000;">'+fNum(f80)+'</span>');
+//SHOW/HIDE OTHER INPUTS
+function expand(){
+	if($('#arrow1').attr('src')=='images/icon_pullup_warning_shore.png'){
+		$('#arrow1').attr('src', 'images/icon_dropdown_warning_shore.png');
+		
+		jQuery('#other_input_table').hide();
 	}else{
-		setValue(jQuery("#f80"), '<span style="color:#ff0000;">'+fNum(f80)+'</span>');
+		$('#arrow1').attr('src', 'images/icon_pullup_warning_shore.png');
+		
+		jQuery('#other_input_table').show();
 	}
-
-	g80 = f80 / uNum(getValue(jQuery("#o37")));
-	setValue(jQuery("#g80"), fNum(g80)); 
-}
-
-function result2(){
-	//=G85*O37
-	f85 = uNum(getValue(jQuery("#g85"))) * uNum(getValue(jQuery("#o37")));
-	setValue(jQuery("#f85"), fNum(f85));
-
-	//=(F85+B75)/(100-D85-E85)*100
-	c85 = (f85 + uNum(getValue(jQuery("#b75"))) ) / (100 - uNum(getValue(jQuery("#d85"))) - uNum(getValue(jQuery("#e85")))) * 100;
-	setValue(jQuery("#c85"), fNum(c85));
-
-	b85 = uNum(getValue(jQuery("#c85"))) / uNum(getValue(jQuery(".k32")));
-	setValue(jQuery("#b85"), fNum(b85));
-
-	//=(D85+E85)/100*C85
-	d86 = (uNum(getValue(jQuery("#d85"))) + uNum(getValue(jQuery("#e85"))) ) / 100 * uNum(getValue(jQuery("#c85")));
-	setValue(jQuery("#d86"), fNum(d86));
-}
-
-var totalseadays = 0;
-var totalportdays = 0;
-
-function thread(skip){
-	totalseadays = 0;
-	totalportdays = 0;
-
-	setValue(jQuery("#e3"), valueF(jQuery("#o37")));
-	setValue(jQuery("#e6"), valueF(jQuery("#b75")));
-	setValue(jQuery("#e13"), valueF(jQuery("#g80")));
-	setValue(jQuery("#e14"), valueF(jQuery("#b85")));
-	setValue(jQuery("#d25"), sumF("d19", "d24"));
-	setValue(jQuery("#d26"), fNum(valueU(jQuery("#d18")) - valueU(jQuery("#d25"))));
-
-	if(skip!="seacalc"){
-		ballastCalc();
-		ladenCalc();
-	}
-
-	loadingCalc();
-	dischargingCalc();
-	bunkerstopCalc();
-
-	//sf
-
-	if(skip!="sf"){
-
-		jQuery(".i32").each(function(){
-
-			str = jQuery(this).val();
-
-			pcs = str.split("-");
-
-			cargo = pcs[0];
-
-			cargo = jQuery.trim(cargo);
-
-			sf = pcs[1];
-
-			sf = jQuery.trim(sf);
-
-			idx = jQuery(this).parent().parent().attr('id');
-
-			if(sf){
-
-				setValue(jQuery("#"+idx+" .j32"), fNum(sf));
-
-			}
-
-		});
-
-		jQuery(".i35").each(function(){
-
-			str = jQuery(this).val();
-
-			pcs = str.split("-");
-
-			cargo = pcs[0];
-
-			cargo = jQuery.trim(cargo);
-
-			sf = pcs[1];
-
-			sf = jQuery.trim(sf);
-
-			idx = jQuery(this).parent().parent().attr('id');
-
-			if(sf){
-
-				setValue(jQuery("#"+idx+" .j35"), fNum(sf));
-
-			}
-
-		});
-
-	}
-
-	calculateSeaPortDays();
-	calculateDates();
+	
 	setupPortInterface();
-	canalTotal();
-	voyageDisbursement();
-	result1();
-	result2();
+}
+//END OF SHOW/HIDE OTHER INPUTS
+
+//SHOW PORT DETAILS
+function showPortDetails(portname, date_from, date_to, num_of_days){
+	var vessel_name = jQuery("#ship").val();
+	var cargo_type = jQuery("#i32").val();
+	var dwt = jQuery("#ship_summer_dwt").text();
+	var gross_tonnage = jQuery("#ship_gross_tonnage").text();
+	var net_tonnage = jQuery("#ship_net_tonnage").text();
+	var owner = jQuery("#ship_manager_owner").text();
+
+	var iframe = $("#portdetailsiframe");
+
+	$(iframe).contents().find("body").html("");
+
+	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&cargo_type='+cargo_type+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner+'&date_from='+date_from+'&date_to='+date_to+'&num_of_days='+num_of_days;
+	jQuery("#portdetails").dialog("open");
 }
 
-function autoSave(){
+jQuery("#portdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#portdetails").dialog("close");
+//END OF SHOW PORT DETAILS
 
-	str = "";
-
-	jQuery('input[type="text"]').each(function(){
-
-		str+=jQuery(this).val()+"\n";
-
-	});
-
-	jQuery.ajax({
-
-		type: 'POST',
-
-		url: "ajax_voyage_estimator.php?autosave=1",
-
-		data:  'data='+str,
-
-		
-
-		success: function(data) {
-
-		}
-
-	});	
-
-	setTimeout(function(){ autoSave(); }, 6000*10);
-
-}
-
-setTimeout(function(){ autoSave(); }, 1000*10);
-
-jQuery(function(){
-	jQuery('.number').keyup(function(){
-		thread();
-	});
-
-	jQuery('.number').blur(function(){
-
-		fnum = fNum(jQuery(this).val());
-
-		setValue(jQuery(this), fnum);
-
-		w = jQuery(this).val().length * 8;
-
-		if(w > jQuery(this).parent().width()){
-
-			//jQuery(this).width(w);
-
-		}
-	});
-
-	jQuery('.general').blur(function(){
-
-		w = jQuery(this).val().length * 8;
-
-		if(w > jQuery(this).parent().width()){
-
-			//jQuery(this).width(w);
-
-		}
-
-		thread();
-
-		
-
-	});
-
-	jQuery('.number').each(function(){
-
-		fnum = valueF(jQuery(this));
-
-		setValue(jQuery(this), fnum);
-
-	});
-
-	<?php
-	if($_SESSION['data']){
-
-		$data = explode("\n", $_SESSION['data']);
-
-		$t = count($data);
-
-		for($i=0; $i<($t-1); $i++){
-
-			/*
-
-			?>jQuery('input[type="text"]')[<?php echo $i; ?>].value = "<?php echo htmlentities($data[$i]); ?>";<?php
-
-			echo "\n";
-
-			*/
-
-		}
-
-	}
-	?>
-
-	jQuery('.number').each(function(){
-		fnum = fNum(jQuery(this).val());
-
-		setValue(jQuery(this), fnum);
-
-		w = jQuery(this).val().length * 8;
-
-		if(w > jQuery(this).parent().width()){
-			jQuery(this).width(w);
-		}
-	});
-
-	jQuery('.general').each(function(){
-		w = jQuery(this).val().length * 8;
-
-		if(w > jQuery(this).parent().width()){
-			jQuery(this).width(w);
-		}
-
-	});
-
-	thread();
-});
-
-function saveScenario(){
-	if(jQuery('#ship').val()){
-		jQuery('#pleasewait').show();
-	
-		jQuery.ajax({
-			type: "POST",
-			url: "ajax.php?new_search=2",
-			data: jQuery("#voyageestimatorform").serialize(),
-	
-			success: function(data) {
-				alert("Scenario Saved!");
-			
-				self.location = "s-bis.php?new_search=3";
-			}
-		});
-	}else{
-		alert("Please select a ship.");
-	}
-}
-
-function deleteScenario(tabid){
-	if (confirm("Are you sure you want to delete?")) {
-		jQuery('#pleasewait').show();
-		
-		jQuery.ajax({
-			type: "POST",
-			url: "ajax.php?new_search=3&tabid="+tabid,
-			data: jQuery("#voyageestimatorform").serialize(),
-	
-			success: function(data) {
-				alert("Scenario Deleted!");
-			
-				self.location = "s-bis.php?new_search=3";
-			}
-		});
-	}
-}
-
-function newScenario(){
-	jQuery('#pleasewait').show();
-	
-	self.location = "s-bis.php?new_search=3";
-}
-
+//GET PORT DETAILS
 function getPortDetails(portname, port_num){
 	var dwt = jQuery("#ship_summer_dwt").text();
 
@@ -2276,21 +2043,97 @@ function getPortDetails(portname, port_num){
 		}
 	});
 }
+//END OF GET PORT DETAILS
 
-function expand(){
-	if($('#arrow1').attr('src')=='images/icon_pullup_warning_shore.png'){
-		$('#arrow1').attr('src', 'images/icon_dropdown_warning_shore.png');
-		
-		jQuery('#other_input_table').hide();
+//VOYAGE DISBURSEMENT CALCULATIONS
+function voyageDisbursement(){
+	b74 = uNum(getValue(jQuery("#b74")));
+	c74 = uNum(getValue(jQuery("#c74")));
+	d74 = uNum(getValue(jQuery("#d74")));
+	e74 = uNum(getValue(jQuery("#e74")));
+	f74 = uNum(getValue(jQuery("#f74")));
+	g74 = uNum(getValue(jQuery("#g74")));
+	h74 = uNum(getValue(jQuery("#h74")));
+	i74 = uNum(getValue(jQuery("#i74")));
+	j74 = uNum(getValue(jQuery("#j74")));
+
+	b75 = b74 + c74 + d74 + e74 + f74 + g74 + h74 + i74 + j74;
+
+	setValue(jQuery("#b75"), fNum(b75));
+}
+//END OF VOYAGE DISBURSEMENT CALCULATIONS
+
+//FREIGHT RATE CALCULATIONS
+function result1(){
+	c80 = uNum(getValue(jQuery(".k32"))) * uNum(getValue(jQuery("#b80")));
+	setValue(jQuery("#c80"), fNum(c80));
+
+	d81 = (uNum(getValue(jQuery("#d80"))) + uNum(getValue(jQuery("#e80")))) / 100 * uNum(getValue(jQuery("#c80")));
+	setValue(jQuery("#d81"), fNum(d81));
+
+	f80 = uNum(getValue(jQuery("#c80"))) - uNum(getValue(jQuery("#d81"))) - uNum(getValue(jQuery("#b75")));
+	if(f80>0){
+		setValue(jQuery("#f80"), '<span style="color:#006000;">'+fNum(f80)+'</span>');
 	}else{
-		$('#arrow1').attr('src', 'images/icon_pullup_warning_shore.png');
-		
-		jQuery('#other_input_table').show();
+		setValue(jQuery("#f80"), '<span style="color:#ff0000;">'+fNum(f80)+'</span>');
 	}
-	
-	setupPortInterface();
+
+	g80 = f80 / uNum(getValue(jQuery("#o37")));
+	setValue(jQuery("#g80"), fNum(g80)); 
+}
+//END OF FREIGHT RATE CALCULATIONS
+
+//TCE CALCULATIONS
+function result2(){
+	f85 = uNum(getValue(jQuery("#g85"))) * uNum(getValue(jQuery("#o37")));
+	setValue(jQuery("#f85"), fNum(f85));
+
+	c85 = (f85 + uNum(getValue(jQuery("#b75"))) ) / (100 - uNum(getValue(jQuery("#d85"))) - uNum(getValue(jQuery("#e85")))) * 100;
+	setValue(jQuery("#c85"), fNum(c85));
+
+	b85 = uNum(getValue(jQuery("#c85"))) / uNum(getValue(jQuery(".k32")));
+	setValue(jQuery("#b85"), fNum(b85));
+
+	d86 = (uNum(getValue(jQuery("#d85"))) + uNum(getValue(jQuery("#e85"))) ) / 100 * uNum(getValue(jQuery("#c85")));
+	setValue(jQuery("#d86"), fNum(d86));
+}
+//END OF TCE CALCULATIONS
+
+//DISTANCE MILES CALCULATIONS
+function computeDistanceMiles1(percent){
+	if(percent){
+		ans = uNum(getValue(jQuery("#h31")))*percent;
+		
+		setValue(jQuery("#i31x"), fNum(ans));
+	}
 }
 
+function computeDistanceMiles2(percent){
+	if(percent){
+		ans = uNum(getValue(jQuery("#h33")))*percent;
+		
+		setValue(jQuery("#i33x"), fNum(ans));
+	}
+}
+
+function computeDistanceMiles3(percent){
+	if(percent){
+		ans = uNum(getValue(jQuery("#h34")))*percent;
+		
+		setValue(jQuery("#i34x"), fNum(ans));
+	}
+}
+
+function computeDistanceMiles4(percent){
+	if(percent){
+		ans = uNum(getValue(jQuery("#h36")))*percent;
+		
+		setValue(jQuery("#i36x"), fNum(ans));
+	}
+}
+//END OF DISTANCE MILES CALCULATIONS
+
+//MAIL/PRINT SHIP DETAILS
 function mailItVe_2(){
 	var imo = jQuery('#ship').val().substring(0,7);
 
@@ -2304,7 +2147,9 @@ function printItVe_2(){
 	jQuery("#misciframe")[0].src="misc/print_ve_2.php?imo="+imo;
 	jQuery("#miscdialog").dialog("open");
 }
+//END OF MAIL/PRINT SHIP DETAILS
 
+//MAIL/PRINT VOYAGE ESTIMATOR PAGE
 function mailItVe(){
 	var data = jQuery('form').serialize();
 	
@@ -2347,7 +2192,7 @@ function mailItVe(){
 	
 	//VOYAGE TIME
 	var o36 = jQuery("#o36").text();
-	var r36 = jQuery("#r36").text();
+	var t37 = jQuery("#t37").text();
 	var o37 = jQuery("#o37").text();
 	//END OF VOYAGE TIME
 	
@@ -2415,7 +2260,7 @@ function mailItVe(){
 	var d86 = jQuery("#d86").text();
 	//END OF FRIEGHT RATE
 	
-	jQuery("#misciframe")[0].src="misc/email_ve.php?"+data+'&f31='+f31+'&h31='+h31+'&c32='+c32+'&d32='+d32+'&e32='+e32+'&f32='+f32+'&g32='+g32+'&h32='+h32+'&c33='+c33+'&d33='+d33+'&f33='+f33+'&h33='+h33+'&c34='+c34+'&d34='+d34+'&f34='+f34+'&h34='+h34+'&c35='+c35+'&d35='+d35+'&e35='+e35+'&f35='+f35+'&g35='+g35+'&h35='+h35+'&r31='+r31+'&j32='+j32+'&l32='+l32+'&o32='+o32+'&o33='+o33+'&r34='+r34+'&j35='+j35+'&l35='+l35+'&o35='+o35+'&o36='+o36+'&r36='+r36+'&o37='+o37+'&c45='+c45+'&d45='+d45+'&e45='+e45+'&g45='+g45+'&h45='+h45+'&c46='+c46+'&d46='+d46+'&e46='+e46+'&f46='+f46+'&g46='+g46+'&h46='+h46+'&i46='+i46+'&c47='+c47+'&g47='+g47+'&d19b='+d19b+'&d20b='+d20b+'&d21b='+d21b+'&d22b='+d22b+'&d25='+d25+'&d26='+d26+'&ctotal1='+ctotal1+'&ctotal2='+ctotal2+'&c54='+c54+'&c54_2='+c54_2+'&c54_3='+c54_3+'&port1='+port1+'&port2='+port2+'&port3='+port3+'&c66='+c66+'&c67='+c67+'&c68='+c68+'&b74='+b74+'&c74='+c74+'&d74='+d74+'&b75='+b75+'&c80='+c80+'&f80='+f80+'&g80='+g80+'&d81='+d81+'&b85='+b85+'&c85='+c85+'&f85='+f85+'&d86='+d86;
+	jQuery("#misciframe")[0].src="misc/email_ve.php?"+data+'&f31='+f31+'&h31='+h31+'&c32='+c32+'&d32='+d32+'&e32='+e32+'&f32='+f32+'&g32='+g32+'&h32='+h32+'&c33='+c33+'&d33='+d33+'&f33='+f33+'&h33='+h33+'&c34='+c34+'&d34='+d34+'&f34='+f34+'&h34='+h34+'&c35='+c35+'&d35='+d35+'&e35='+e35+'&f35='+f35+'&g35='+g35+'&h35='+h35+'&r31='+r31+'&j32='+j32+'&l32='+l32+'&o32='+o32+'&o33='+o33+'&r34='+r34+'&j35='+j35+'&l35='+l35+'&o35='+o35+'&o36='+o36+'&t37='+t37+'&o37='+o37+'&c45='+c45+'&d45='+d45+'&e45='+e45+'&g45='+g45+'&h45='+h45+'&c46='+c46+'&d46='+d46+'&e46='+e46+'&f46='+f46+'&g46='+g46+'&h46='+h46+'&i46='+i46+'&c47='+c47+'&g47='+g47+'&d19b='+d19b+'&d20b='+d20b+'&d21b='+d21b+'&d22b='+d22b+'&d25='+d25+'&d26='+d26+'&ctotal1='+ctotal1+'&ctotal2='+ctotal2+'&c54='+c54+'&c54_2='+c54_2+'&c54_3='+c54_3+'&port1='+port1+'&port2='+port2+'&port3='+port3+'&c66='+c66+'&c67='+c67+'&c68='+c68+'&b74='+b74+'&c74='+c74+'&d74='+d74+'&b75='+b75+'&c80='+c80+'&f80='+f80+'&g80='+g80+'&d81='+d81+'&b85='+b85+'&c85='+c85+'&f85='+f85+'&d86='+d86;
 	jQuery("#miscdialog").dialog("open");
 }
 
@@ -2461,7 +2306,7 @@ function printItVe(){
 	
 	//VOYAGE TIME
 	var o36 = jQuery("#o36").text();
-	var r36 = jQuery("#r36").text();
+	var t37 = jQuery("#t37").text();
 	var o37 = jQuery("#o37").text();
 	//END OF VOYAGE TIME
 	
@@ -2529,34 +2374,98 @@ function printItVe(){
 	var d86 = jQuery("#d86").text();
 	//END OF FRIEGHT RATE
 	
-	jQuery("#misciframe")[0].src="misc/print_ve.php?"+data+'&f31='+f31+'&h31='+h31+'&c32='+c32+'&d32='+d32+'&e32='+e32+'&f32='+f32+'&g32='+g32+'&h32='+h32+'&c33='+c33+'&d33='+d33+'&f33='+f33+'&h33='+h33+'&c34='+c34+'&d34='+d34+'&f34='+f34+'&h34='+h34+'&c35='+c35+'&d35='+d35+'&e35='+e35+'&f35='+f35+'&g35='+g35+'&h35='+h35+'&r31='+r31+'&j32='+j32+'&l32='+l32+'&o32='+o32+'&o33='+o33+'&r34='+r34+'&j35='+j35+'&l35='+l35+'&o35='+o35+'&o36='+o36+'&r36='+r36+'&o37='+o37+'&c45='+c45+'&d45='+d45+'&e45='+e45+'&g45='+g45+'&h45='+h45+'&c46='+c46+'&d46='+d46+'&e46='+e46+'&f46='+f46+'&g46='+g46+'&h46='+h46+'&i46='+i46+'&c47='+c47+'&g47='+g47+'&d19b='+d19b+'&d20b='+d20b+'&d21b='+d21b+'&d22b='+d22b+'&d25='+d25+'&d26='+d26+'&ctotal1='+ctotal1+'&ctotal2='+ctotal2+'&c54='+c54+'&c54_2='+c54_2+'&c54_3='+c54_3+'&port1='+port1+'&port2='+port2+'&port3='+port3+'&c66='+c66+'&c67='+c67+'&c68='+c68+'&b74='+b74+'&c74='+c74+'&d74='+d74+'&b75='+b75+'&c80='+c80+'&f80='+f80+'&g80='+g80+'&d81='+d81+'&b85='+b85+'&c85='+c85+'&f85='+f85+'&d86='+d86;
+	jQuery("#misciframe")[0].src="misc/print_ve.php?"+data+'&f31='+f31+'&h31='+h31+'&c32='+c32+'&d32='+d32+'&e32='+e32+'&f32='+f32+'&g32='+g32+'&h32='+h32+'&c33='+c33+'&d33='+d33+'&f33='+f33+'&h33='+h33+'&c34='+c34+'&d34='+d34+'&f34='+f34+'&h34='+h34+'&c35='+c35+'&d35='+d35+'&e35='+e35+'&f35='+f35+'&g35='+g35+'&h35='+h35+'&r31='+r31+'&j32='+j32+'&l32='+l32+'&o32='+o32+'&o33='+o33+'&r34='+r34+'&j35='+j35+'&l35='+l35+'&o35='+o35+'&o36='+o36+'&t37='+t37+'&o37='+o37+'&c45='+c45+'&d45='+d45+'&e45='+e45+'&g45='+g45+'&h45='+h45+'&c46='+c46+'&d46='+d46+'&e46='+e46+'&f46='+f46+'&g46='+g46+'&h46='+h46+'&i46='+i46+'&c47='+c47+'&g47='+g47+'&d19b='+d19b+'&d20b='+d20b+'&d21b='+d21b+'&d22b='+d22b+'&d25='+d25+'&d26='+d26+'&ctotal1='+ctotal1+'&ctotal2='+ctotal2+'&c54='+c54+'&c54_2='+c54_2+'&c54_3='+c54_3+'&port1='+port1+'&port2='+port2+'&port3='+port3+'&c66='+c66+'&c67='+c67+'&c68='+c68+'&b74='+b74+'&c74='+c74+'&d74='+d74+'&b75='+b75+'&c80='+c80+'&f80='+f80+'&g80='+g80+'&d81='+d81+'&b85='+b85+'&c85='+c85+'&f85='+f85+'&d86='+d86;
 	jQuery("#miscdialog").dialog("open");
 }
+//END OF MAIL/PRINT VOYAGE ESTIMATOR PAGE
+
+//MAIL/PRINT DETAILS
+jQuery( "#miscdialog" ).dialog( { autoOpen: false, width: 1100, height: 500 });
+jQuery( "#miscdialog" ).dialog("close");
+//END OF MAIL/PRINT DETAILS
+
+//SCENARIO FUNCTIONALITY
+function saveScenario(){
+	if(jQuery('#ship').val()){
+		jQuery('#pleasewait').show();
+	
+		jQuery.ajax({
+			type: "POST",
+			url: "ajax.php?new_search=2",
+			data: jQuery("#voyageestimatorform").serialize(),
+	
+			success: function(data) {
+				alert("Scenario Saved!");
+			
+				self.location = "s-bis.php?new_search=3";
+			}
+		});
+	}else{
+		alert("Please select a ship.");
+	}
+}
+
+function deleteScenario(tabid){
+	if (confirm("Are you sure you want to delete?")) {
+		jQuery('#pleasewait').show();
+		
+		jQuery.ajax({
+			type: "POST",
+			url: "ajax.php?new_search=3&tabid="+tabid,
+			data: jQuery("#voyageestimatorform").serialize(),
+	
+			success: function(data) {
+				alert("Scenario Deleted!");
+			
+				self.location = "s-bis.php?new_search=3";
+			}
+		});
+	}
+}
+
+function newScenario(){
+	jQuery('#pleasewait').show();
+	
+	self.location = "s-bis.php?new_search=3";
+}
+//END OF SCENARIO FUNCTIONALITY
 </script>
 
-<div id="miscdialog" title=""  style='display:none'>
-	<iframe id='misciframe' frameborder='0' height="100%" width="1100px" style='border:0px; height:100%; width:1050px;'></iframe>
-</div>
-
+<!--SHOW SHIP DETAILS-->
 <div id="shipdetails" title="SHIP DETAILS" style='display:none;'>
 	<div id='shipdetails_in'></div>
 </div>
+<!--END OF SHOW SHIP DETAILS-->
 
+<!--SHOW EDITABLE SHIP DETAILS-->
 <div id="shipdetails2" title="USER'S SHIP DETAILS" style='display:none;'>
 	<iframe id='shipdetailiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
+<!--END OF SHOW EDITABLE SHIP DETAILS-->
 
+<!--SHOW SHIP SPEED HISTORY-->
 <div id="shipspeedhistory" title="SHIP SPEED HISTORY" style='display:none;'>
 	<iframe id='shipspeedhistoryiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
+<!--END OF SHOW SHIP SPEED HISTORY-->
 
-<div id="portdetails" title="PORTS D/A CHARGES" style='display:none;'>
-	<iframe id='portdetailsiframe' frameborder="0" height="100%" width="100%"></iframe>
-</div>
-
+<!--SHOW OWNER'S CONTACT DETAILS-->
 <div id="contactdialog" title="CONTACT"  style='display:none'>
 	<iframe id='contactiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
+<!--END OF SHOW OWNER'S CONTACT DETAILS-->
+
+<!--MAIL/PRINT DETAILS-->
+<div id="miscdialog" title=""  style='display:none'>
+	<iframe id='misciframe' frameborder='0' height="100%" width="1100px" style='border:0px; height:100%; width:1050px;'></iframe>
+</div>
+<!--END OF MAIL/PRINT DETAILS-->
+
+<!--PORT DETAILS-->
+<div id="portdetails" title="PORTS D/A CHARGES" style='display:none;'>
+	<iframe id='portdetailsiframe' frameborder="0" height="100%" width="100%"></iframe>
+</div>
+<!--END OF PORT DETAILS-->
 
 <?php
 if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
@@ -2918,8 +2827,6 @@ if(!trim($e85)){
 				<td valign="top" style="padding:3px;">&nbsp;</td>
 				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
 				<td valign="top" style="padding:3px;">&nbsp;</td>
-				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
-				<td valign="top" style="padding:3px;">&nbsp;</td>
 			  </tr>
 			</table>
 		</div>
@@ -2929,31 +2836,29 @@ if(!trim($e85)){
 		
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
-			<td width="120" class="text_1"><div style="padding:3px;"><b>VOYAGE LEGS</b></div></td>
-			<td width="200"></td>
-			<td width="190"></td>
-			<td width="180"></td>
-			<td width="130"></td>
-			<td width="100"></td>
-			<td width="80"></td>
+			<td class="text_1" colspan="9"><div style="padding:3px;"><b>VOYAGE LEGS</b></div></td>
 		  </tr>
 		  <tr>
-			<td class="text_1 label"><div style="padding:3px;"><i><strong>Type</strong></i></div></td>
-			<td class="text_1 label"><div style="padding:3px;"><i><strong> Port</strong></i></div></td>
-			<td class="text_1 label"><div style="padding:3px;"><i><strong>Date</strong></i></div></td>
-			<td class="text_1 label"><div style="padding:3px;"><i><strong> Port</strong></i></div></td>
-			<td class="text_1 label"><div style="padding:3px;"><i><strong>Date</strong></i></div></td>
-			<td class="text_1 label"><div style="padding:3px;"><i><strong>Speed (knts)</strong></i></div></td>
-			<td class="text_1 label"><div style="padding:3px;"><i><strong>Distance (miles)</strong></i></div></td>
+			<td width="100" class="text_1 label"><div style="padding:3px;"><i><strong>Type</strong></i></div></td>
+			<td width="200" class="text_1 label"><div style="padding:3px;"><i><strong>Port</strong></i></div></td>
+			<td width="140" class="text_1 label"><div style="padding:3px;"><i><strong>Date</strong></i></div></td>
+			<td width="180" class="text_1 label"><div style="padding:3px;"><i><strong>Port</strong></i></div></td>
+			<td width="100" class="text_1 label"><div style="padding:3px;"><i><strong>Date</strong></i></div></td>
+			<td width="100" class="text_1 label"><div style="padding:3px;"><i><strong>Speed (knts)</strong></i></div></td>
+			<td width="80" class="text_1 label"><div style="padding:3px;"><i><strong>Distance (miles)</strong></i></div></td>
+			<td width="50" class="text_1 label"><div style="padding:3px;"><i><strong>Input %</strong></i></div></td>
+			<td width="50" class="text_1 label"><div style="padding:3px;"><i><strong>% Sea Margin</strong></i></div></td>
 		  </tr>
 		  <tr id='ballast1' bgcolor="f5f5f5">
 			<td class='general b31' style="padding:3px;"><strong>Ballast</strong></td>
 			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general c31' id="c31" name="c31" value="<?php echo $c31; ?>" style="max-width:190px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></div></td>
-			<td class="input"><div style="padding:3px;"><input type='text' class='input_1 general d31' id="d31" name="d31" value="<?php echo $d31; ?>" style="max-width:170px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></div></td>
+			<td class="input"><div style="padding:3px;"><input type='text' class='input_1 general d31' id="d31" name="d31" value="<?php echo $d31; ?>" style="max-width:120px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></div></td>
 			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 general e31' id="e31" name="e31" value="<?php echo $e31; ?>" style="max-width:190px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></div></td>
 			<td class='calculated general f31' id="f31" style="padding:3px;"></td>
 			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number g31' id="g31" name="g31" value="<?php echo $g31; ?>" style="max-width:70px;" /></div></td>
 			<td class="calculated number h31" id="h31" style="padding:3px;"></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number i31' id="i31" name="i31" value="<?php echo $i31; ?>" style="max-width:30px;" onchange="computeDistanceMiles1(this.value);" /></div></td>
+			<td class="calculated number i31x" id="i31x" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='loading1' bgcolor="e9e9e9">
 			<td class='general b32' style="padding:3px;"><strong>Loading</strong></td>
@@ -2963,6 +2868,8 @@ if(!trim($e85)){
 			<td class="calculated f32" id="f32" style="padding:3px;"></td>
 			<td class='number g32' id="g32" style="padding:3px;"></td>
 			<td class="number h32" id="h32" style="padding:3px;"></td>
+			<td><div style="padding:3px;">&nbsp;</div></td>
+			<td><div style="padding:3px;">&nbsp;</div></td>
 		  </tr>
 		  <tr id='bunkerstop1' bgcolor="f5f5f5">
 			<td class='general b33' style="padding:3px;"><strong>Bunker Stop</strong></td>
@@ -2972,6 +2879,8 @@ if(!trim($e85)){
 			<td id="f33" class="calculated f33" style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g33' id="g33" name="g33" value="<?php echo $g33; ?>"  style="max-width:70px;" /></td>
 			<td id="h33" class="calculated h33" style="padding:3px;"></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number i33' id="i33" name="i33" value="<?php echo $i33; ?>" style="max-width:30px;" onchange="computeDistanceMiles2(this.value);" /></div></td>
+			<td class="calculated number i33x" id="i33x" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='laden1' bgcolor="e9e9e9">
 			<td class='general b34' style="padding:3px;"><strong>Laden</strong></td>
@@ -2981,6 +2890,8 @@ if(!trim($e85)){
 			<td id="f34" class="calculated f34" style="padding:3px;"></td>
 			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g34' id="g34" name="g34" value="<?php echo $g34; ?>" style="max-width:70px;" /></td>
 			<td id="h34" class="calculated number h34" style="padding:3px;"></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number i34' id="i34" name="i34" value="<?php echo $i34; ?>" style="max-width:30px;" onchange="computeDistanceMiles3(this.value);" /></div></td>
+			<td class="calculated number i34x" id="i34x" style="padding:3px;"></td>
 		  </tr>
 		  <tr id='discharging1' bgcolor="f5f5f5">
 			<td class='general b35' style="padding:3px;"><strong>Discharging</strong></td>
@@ -2990,6 +2901,19 @@ if(!trim($e85)){
 			<td id="f35" class="calculated f35" style="padding:3px;"></td>
 			<td id="g35" class='number g35' style="padding:3px;"></td>
 			<td id="h35" class="number h35" style="padding:3px;"></td>
+			<td><div style="padding:3px;">&nbsp;</div></td>
+			<td><div style="padding:3px;">&nbsp;</div></td>
+		  </tr>
+		  <tr id='repositioning1' bgcolor="e9e9e9">
+			<td class='general b36' style="padding:3px;"><strong>Repositioning</strong></td>
+			<td id="c36" class='input general c36' style="padding:3px;"></td>
+			<td id="d36" class='general d36' style="padding:3px;"></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 general e36' id="e36" name="e36" value="<?php echo $e36; ?>" style="max-width:190px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td id="f36" class="calculated f36" style="padding:3px;"></td>
+			<td class='input' style="padding:3px;"><input type='text' class='input_1 number g36' id="g36" name="g36" value="<?php echo $g36; ?>" style="max-width:70px;" /></td>
+			<td id="h36" class="calculated number h36" style="padding:3px;"></td>
+			<td class='input'><div style="padding:3px;"><input type='text' class='input_1 number i36' id="i36" name="i36" value="<?php echo $i36; ?>" style="max-width:30px;" onchange="computeDistanceMiles4(this.value);" /></div></td>
+			<td class="calculated number i36x" id="i36x" style="padding:3px;"></td>
 		  </tr>
 		</table>
 		
@@ -3180,6 +3104,21 @@ if(!trim($e85)){
 			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s35' id="s35" name="s35" value="<?php echo $s35; ?>" style="max-width:50px;" /></td>
 			<td class='empty' style="padding:3px;"><input type='text'  class='input_1 number t35' id="t35" name="t35" value="<?php echo $t35; ?>" style="max-width:50px;" /></td>
 		  </tr>
+		  <tr id='repositioning1' bgcolor="e9e9e9">
+			<td class='general b36' style="padding:3px;"><strong>Repositioning</strong></td>
+			<td class='number i36' style="padding:3px;"></td>
+			<td class='number j36' style="padding:3px;"></td>
+			<td class='number k36' style="padding:3px;"></td>
+			<td class='number l36' style="padding:3px;"></td>
+			<td class='number m36' style="padding:3px;"></td>
+			<td class="number o36" style="padding:3px;"></td>
+			<td class='number n36' style="padding:3px;"></td>
+			<td class='number p36' style="padding:3px;"></td>
+			<td class='number q36' style="padding:3px;"></td>
+			<td id="r36" class="calculated number r36" style="padding:3px;"></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number s36' id="s36" name="s36" value="<?php echo $s36; ?>" style="max-width:50px;" /></td>
+			<td class='empty' style="padding:3px;"><input type='text' class='input_1 number t36' id="t36" name="t36" value="<?php echo $t36; ?>" style="max-width:50px;" /></td>
+		  </tr>
 		</table>
 		
 		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
@@ -3187,28 +3126,17 @@ if(!trim($e85)){
 		
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
-			<td width="100" class="text_1"><div style="padding:3px;"><b>VOYAGE TIME</b></div></td>
-			<td width="132" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="18" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="122" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="102" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="102" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="100" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="45" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="132" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="100" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="7" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="132" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
-			<td width="38" class="text_1"><div style="padding:3px;">&nbsp;</div></td>
+			<td class="text_1" colspan="3"><div style="padding:3px;"><b>VOYAGE TIME</b></div></td>
 		  </tr>
 		  <tr>
-			<td colspan="3" class="label" style="padding:3px;"><strong>PORT/SEA DAYS</strong></td>
-			<td colspan="8" class="label calculated" id='o36' style="padding:3px;">&nbsp;</td>
-			<td colspan="2" class="label calculated" id='r36' style="padding:3px;">&nbsp;</td>
+			<td class="label" width="30%" style="padding:3px;"><strong>PORT DAYS</strong></td>
+			<td class="label" width="30%" style="padding:3px;"><strong>SEA DAYS</strong></td>
+			<td class="label" width="40%" style="padding:3px;"><strong>TOTAL VOYAGE DAYS</strong></td>
 		  </tr>
-		  <tr>
-			<td colspan="3" class="label" style="padding:3px;"><strong>TOTAL VOYAGE DAYS</strong></td>
-			<td colspan="10" class="label calculated" id='o37' style="padding:3px;">&nbsp;</td>
+		  <tr bgcolor="f5f5f5">
+			<td class="label calculated" id='o36' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='t37' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='o37' style="padding:3px;">&nbsp;</td>
 		  </tr>
 		</table>
 		
@@ -3275,7 +3203,7 @@ if(!trim($e85)){
 		  </tr>
 		  <tr>
 			<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Ballast</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Ballast/Repositioning</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Laden</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Port</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Reserve</i></b></td>
@@ -3947,9 +3875,12 @@ if(!trim($e85)){
 </table>
 <div>&nbsp;</div>
 </form>
+
 <script type="text/javascript">
+//MAKE SHIP DETAILS SHOW ONLOAD
 $(document).ready(function(){
 	$("#c31").focus();
 	$("#c31").blur();
 });
+//END OF MAKE SHIP DETAILS SHOW ONLOAD
 </script>

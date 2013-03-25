@@ -1442,6 +1442,9 @@ function ballastDistCalc(tmp, to, from, triggerajax){
 	tox = jQuery.trim(tox);
 
 	distance = valueU(jQuery(tmp+".h31"));
+	if(getValue(jQuery("#i31x"))){
+		distance = valueU(jQuery("#i31x"));
+	}
 
 	if(to!=tox||from!=fromx||!distance||triggerajax){
 		setValue(jQuery(tmp+".h31"), 'calculating...');
@@ -1455,6 +1458,9 @@ function ballastDistCalc(tmp, to, from, triggerajax){
 				setValue(jQuery(tmp+".h31"), fNum(data));
 
 				distance = valueU(jQuery(tmp+".h31"));
+				if(getValue(jQuery("#i31x"))){
+					distance = valueU(jQuery("#i31x"));
+				}
 				speed = valueU(jQuery(tmp+".g31"));
 
 				if(speed == 0){
@@ -1475,6 +1481,9 @@ function ballastDistCalc(tmp, to, from, triggerajax){
 		});
 	}else{
 		distance = valueU(jQuery(tmp+".h31"));
+		if(getValue(jQuery("#i31x"))){
+			distance = valueU(jQuery("#i31x"));
+		}
 		speed = valueU(jQuery(tmp+".g31"));
 
 		if(speed == 0){
@@ -1528,7 +1537,11 @@ function bunkerstopDistCalc(tmp, to, from, triggerajax){
 	pcs = str.split("-");
 	tox = pcs[pcs.length-1];
 	tox = jQuery.trim(tox);
+	
 	distance = valueU(jQuery(tmp+".h33"));
+	if(getValue(jQuery("#i33x"))){
+		distance = valueU(jQuery("#i33x"));
+	}
 
 	if(to!=tox||from!=fromx||!distance||triggerajax){
 		setValue(jQuery(tmp+".h33"), 'calculating...');
@@ -1542,6 +1555,9 @@ function bunkerstopDistCalc(tmp, to, from, triggerajax){
 				setValue(jQuery(tmp+".h33"), fNum(data));
 
 				distance = valueU(jQuery(tmp+".h33"));
+				if(getValue(jQuery("#i33x"))){
+					distance = valueU(jQuery("#i33x"));
+				}
 				speed = valueU(jQuery(tmp+".g33"));
 
 				if(speed == 0){
@@ -1562,6 +1578,9 @@ function bunkerstopDistCalc(tmp, to, from, triggerajax){
 		});
 	}else{
 		distance = valueU(jQuery(tmp+".h33"));
+		if(getValue(jQuery("#i33x"))){
+			distance = valueU(jQuery("#i33x"));
+		}
 		speed = valueU(jQuery(tmp+".g33"));
 
 		if(speed == 0){
@@ -1615,7 +1634,11 @@ function ladenDistCalc(tmp, to, from, triggerajax){
 	pcs = str.split("-");
 	tox = pcs[pcs.length-1];
 	tox = jQuery.trim(tox);
+	
 	distance = valueU(jQuery(tmp+".h34"));
+	if(getValue(jQuery("#i34x"))){
+		distance = valueU(jQuery("#i34x"));
+	}
 
 	if(to!=tox||from!=fromx||!distance||triggerajax){
 		setValue(jQuery(tmp+".h34"), 'calculating...');
@@ -1629,6 +1652,9 @@ function ladenDistCalc(tmp, to, from, triggerajax){
 				setValue(jQuery(tmp+".h34"), fNum(data));
 
 				distance = valueU(jQuery(tmp+".h34"));
+				if(getValue(jQuery("#i34x"))){
+					distance = valueU(jQuery("#i34x"));
+				}
 				speed = valueU(jQuery(tmp+".g34"));
 
 				if(speed == 0){
@@ -1650,6 +1676,9 @@ function ladenDistCalc(tmp, to, from, triggerajax){
 		});
 	}else{
 		distance = valueU(jQuery(tmp+".h34"));
+		if(getValue(jQuery("#i34x"))){
+			distance = valueU(jQuery("#i34x"));
+		}
 		speed = valueU(jQuery(tmp+".g34"));
 
 		if(speed == 0){
@@ -1703,7 +1732,11 @@ function repositioningDistCalc(tmp, to, from, triggerajax){
 	pcs = str.split("-");
 	tox = pcs[pcs.length-1];
 	tox = jQuery.trim(tox);
+	
 	distance = valueU(jQuery(tmp+".h36"));
+	if(getValue(jQuery("#i36x"))){
+		distance = valueU(jQuery("#i36x"));
+	}
 
 	if(to!=tox||from!=fromx||!distance||triggerajax){
 		setValue(jQuery(tmp+".h36"), 'calculating...');
@@ -1717,6 +1750,9 @@ function repositioningDistCalc(tmp, to, from, triggerajax){
 				setValue(jQuery(tmp+".h36"), fNum(data));
 
 				distance = valueU(jQuery(tmp+".h36"));
+				if(getValue(jQuery("#i36x"))){
+					distance = valueU(jQuery("#i36x"));
+				}
 				speed = valueU(jQuery(tmp+".g36"));
 
 				if(speed == 0){
@@ -1737,6 +1773,9 @@ function repositioningDistCalc(tmp, to, from, triggerajax){
 		});
 	}else{
 		distance = valueU(jQuery(tmp+".h36"));
+		if(getValue(jQuery("#i36x"))){
+			distance = valueU(jQuery("#i36x"));
+		}
 		speed = valueU(jQuery(tmp+".g36"));
 
 		if(speed == 0){
@@ -2102,34 +2141,50 @@ function result2(){
 //DISTANCE MILES CALCULATIONS
 function computeDistanceMiles1(percent){
 	if(percent){
-		ans = uNum(getValue(jQuery("#h31")))*percent;
+		ans = uNum(getValue(jQuery("#h31")))*((percent*0.01)+1);
 		
 		setValue(jQuery("#i31x"), fNum(ans));
+	}else{
+		setValue(jQuery("#i31x"), '');
 	}
+	
+	ballastCalc(true);
 }
 
 function computeDistanceMiles2(percent){
 	if(percent){
-		ans = uNum(getValue(jQuery("#h33")))*percent;
+		ans = uNum(getValue(jQuery("#h33")))*((percent*0.01)+1);
 		
 		setValue(jQuery("#i33x"), fNum(ans));
+	}else{
+		setValue(jQuery("#i33x"), '');
 	}
+	
+	bunkerstopCalc2(true);
 }
 
 function computeDistanceMiles3(percent){
 	if(percent){
-		ans = uNum(getValue(jQuery("#h34")))*percent;
+		ans = uNum(getValue(jQuery("#h34")))*((percent*0.01)+1);
 		
 		setValue(jQuery("#i34x"), fNum(ans));
+	}else{
+		setValue(jQuery("#i34x"), '');
 	}
+	
+	ladenCalc(true);
 }
 
 function computeDistanceMiles4(percent){
 	if(percent){
-		ans = uNum(getValue(jQuery("#h36")))*percent;
+		ans = uNum(getValue(jQuery("#h36")))*((percent*0.01)+1);
 		
 		setValue(jQuery("#i36x"), fNum(ans));
+	}else{
+		setValue(jQuery("#i36x"), '');
 	}
+	
+	repositioningCalc(true);
 }
 //END OF DISTANCE MILES CALCULATIONS
 

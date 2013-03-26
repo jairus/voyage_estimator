@@ -31,7 +31,7 @@ date_default_timezone_set('UTC');
 }
 
 #signup .tbox{
-	width: 300px;
+	width: 150px;
 }
 
 #signup .tbox50{
@@ -202,7 +202,7 @@ $(function(){
 		var error_count = 0;
 		
 		//fields validation
-		arr_fields = ['dwt', 'cargo', 'costs', 'load_port', 'discharge_port'];
+		arr_fields = ['load_port', 'discharge_port', 'cargo_date', 'dwt_or_ship_type', 'cargo_type', 'cargo_quantity', 'port_costs', 'load_port2', 'channel', 'anchorage', 'cargo_pier', 'discharge_port2', 'channel2', 'anchorage2', 'cargo_pier2', 'notes'];
 		$.each(arr_fields, function(index, value){
 			if( $('#' + value).val() == '' ){
 				$('#error_' + value).show();
@@ -248,7 +248,22 @@ $(function(){
 			alert('Errors found: ' + error_count);
 		return false;
 	});	
-});				
+});
+
+function getPortDepth(type){
+	jQuery.ajax({
+		type: 'POST',
+		url: "signup_ajax1.php?trigger=get_port_depth&type="+type,
+		data:  jQuery("#cargoform").serialize(),
+		dataType : 'json',
+
+		success: function(data) {
+			jQuery('#channel'+type).val(data['channel_depth']);
+			jQuery('#anchorage'+type).val(data['anchorage_depth']);
+			jQuery('#cargo_pier'+type).val(data['cargo_pier_depth']);
+		}
+	});
+}		
 </script>
 <form id='cargoform' method="post">
 <input type="hidden" name="trigger" value="save_new_cargo"  />
@@ -260,40 +275,6 @@ $(function(){
 	</tr>
 	<tr>
 		<td colspan="2">&nbsp;</td>
-	</tr>
-	<tr>
-		<td class='label'><span class="required">*</span>DWT:</td>
-		<td class='form'>
-			<input class='tbox' type='text' name='dwt' id="dwt" value="<?php echo $r[0]['dwt']; ?>">
-			<div class='error' id='error_dwt'>Please Input DWT</div></td>
-	</tr>
-	<tr>
-		<td class='label'><span class="required">*</span>Cargo:</td>
-		<td class='form'>
-			<input class='tbox' type='text' name='cargo' id="cargo" value="<?php echo $r[0]['cargo']; ?>">
-			<div class='error' id='error_cargo'>Please Input Cargo</div></td>
-	</tr>		
-	<tr>
-		<td class='label'><span class="required">*</span>Costs:</td>
-		<td class='form'>
-			<input class='tbox' type='text' name='costs' id="costs" value="<?php echo $r[0]['costs']; ?>">
-			<div class='error' id='error_costs'>Please Input Costs</div></td>
-	</tr>
-	<tr>
-		<td class='label'><span class="required">*</span>Date:</td>
-		<td class='form'>
-		  <?php
-		  if($r[0]['cargo_date']){
-			?>
-			<input type="text" name="cargo_date" value="<?php echo $r[0]['cargo_date']; ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="tbox" style="width:90px;" />
-			<?php
-		  }else{
-			?>
-			<input type="text" name="cargo_date" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="tbox" style="width:90px;" />
-			<?php
-		  }
-		  ?>
-		</td>
 	</tr>
 	<tr>
 		<td class='label'><span class="required">*</span>Load Port</td>
@@ -322,6 +303,102 @@ $(function(){
 			});
 			</script>
 		</td>
+	</tr>
+	<tr>
+		<td class='label'><span class="required">*</span>Date:</td>
+		<td class='form'>
+		  <?php
+		  if($r[0]['cargo_date']){
+			?>
+			<input type="text" name="cargo_date" value="<?php echo $r[0]['cargo_date']; ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="tbox" style="width:90px;" />
+			<?php
+		  }else{
+			?>
+			<input type="text" name="cargo_date" value="<?php echo date("M d, Y", time()); ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="tbox" style="width:90px;" />
+			<?php
+		  }
+		  ?>
+		</td>
+	</tr>
+	<tr>
+		<td class='label'><span class="required">*</span>DWT or Ship Type:</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='dwt_or_ship_type' id="dwt_or_ship_type" value="<?php echo $r[0]['dwt_or_ship_type']; ?>">
+			<div class='error' id='error_dwt_or_ship_type'>Please Input DWT or Ship Type</div></td>
+	</tr>
+	<tr>
+		<td class='label'><span class="required">*</span>Cargo Type:</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='cargo_type' id="cargo_type" value="<?php echo $r[0]['cargo_type']; ?>">
+			<div class='error' id='error_cargo_type'>Please Input Cargo Type</div></td>
+	</tr>
+	<tr>
+		<td class='label'><span class="required">*</span>Cargo Quantity:</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='cargo_quantity' id="cargo_quantity" value="<?php echo $r[0]['cargo_quantity']; ?>">
+			<div class='error' id='error_cargo_quantity'>Please Input Cargo Quantity</div></td>
+	</tr>
+	<tr>
+		<td class='label'><span class="required">*</span>Port Costs:</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='port_costs' id="port_costs" value="<?php echo $r[0]['port_costs']; ?>">
+			<div class='error' id='error_port_costs'>Please Input Port Costs</div></td>
+	</tr>
+	<tr>
+		<td class='label'><span class="required">*</span>Load Port - AVR Intake</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='load_port2' id="load_port2" value="<?php echo $r[0]['load_port2']; ?>" onblur="getPortDepth(1);" />
+			<div class='error' id='error_load_port2'>Please Input Load Port - AVR Intake</div>
+			
+			<script type="text/javascript">
+			jQuery("#load_port2").focus().autocomplete(ports);
+			jQuery("#load_port2").setOptions({
+				scrollHeight: 180
+			});
+			</script>
+		</td>
+	</tr>
+	<tr>
+		<td class='label'>Channel:</td>
+		<td class='form'><input class='tbox' type='text' name='channel' id="channel1" value="<?php echo $r[0]['channel']; ?>" style="width:30px;" /></td>
+	</tr>
+	<tr>
+		<td class='label'>Anchorage:</td>
+		<td class='form'><input class='tbox' type='text' name='anchorage' id="anchorage1" value="<?php echo $r[0]['anchorage']; ?>" style="width:30px;" /></td>
+	</tr>
+	<tr>
+		<td class='label'>Cargo Pier:</td>
+		<td class='form'><input class='tbox' type='text' name='cargo_pier' id="cargo_pier1" value="<?php echo $r[0]['cargo_pier']; ?>" style="width:30px;" /></td>
+	</tr>
+	<tr>
+		<td class='label'><span style="font-size:9px">&nbsp;</span><br /><span class="required">*</span>Discharge Port - AVR Arrival Intake</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='discharge_port2' id="discharge_port2" value="<?php echo $r[0]['discharge_port2']; ?>" onblur="getPortDepth(2);" />
+			<div class='error' id='error_discharge_port2'>Please Input Discharge Port - AVR Arrival Intake</div>
+			
+			<script type="text/javascript">
+			jQuery("#discharge_port2").focus().autocomplete(ports);
+			jQuery("#discharge_port2").setOptions({
+				scrollHeight: 180
+			});
+			</script>
+		</td>
+	</tr>
+	<tr>
+		<td class='label'>Channel:</td>
+		<td class='form'><input class='tbox' type='text' name='channel2' id="channel2" value="<?php echo $r[0]['channel2']; ?>" style="width:30px;" /></td>
+	</tr>
+	<tr>
+		<td class='label'>Anchorage:</td>
+		<td class='form'><input class='tbox' type='text' name='anchorage2' id="anchorage2" value="<?php echo $r[0]['anchorage2']; ?>" style="width:30px;" /></td>
+	</tr>
+	<tr>
+		<td class='label'>Cargo Pier:</td>
+		<td class='form'><input class='tbox' type='text' name='cargo_pier2' id="cargo_pier2" value="<?php echo $r[0]['cargo_pier2']; ?>" style="width:30px;" /></td>
+	</tr>
+	<tr>
+		<td class='label'>Notes:</td>
+		<td class='form'><textarea class='tbox' type='text' name='notes' id="notes" style="height:50px;"><?php echo $r[0]['notes']; ?></textarea>
 	</tr>
 	<tr>
 		<td class='label'>&nbsp;</td>
@@ -361,10 +438,9 @@ vars = {
 		colModel : [
 			{display: '-', name : 'actions', width : 50, sortable : false, searchable: false, align: 'center'},
 			{display: '#', name : 'id', width : 50, sortable : true, align: 'center'},
-			{display: 'DWT', name : 'dwt', width : 50, sortable : true, align: 'left'},
-			{display: 'Cargo', name : 'cargo', width : 200, sortable : true, align: 'left'},
-			{display: 'Costs', name : 'costs', width : 50, sortable : true, align: 'left'},
-			{display: 'By Agent', name : 'by_agent', width : 100, sortable : true, align: 'left'},
+			{display: 'Cargo Type', name : 'cargo_type', width : 250, sortable : true, align: 'left'},
+			{display: 'Port Costs', name : 'port_costs', width : 70, sortable : true, align: 'left'},
+			{display: 'By Agent', name : 'by_agent', width : 150, sortable : true, align: 'left'},
 			{display: 'Date Updated', name : 'dateupdated ', width : 130, sortable : true, align: 'left'}
 		],
 		buttons : [],

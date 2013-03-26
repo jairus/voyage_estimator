@@ -53,16 +53,15 @@ foreach($res as $key => $value) {
 	$res[$key]["actions"] = '<a href="s-bis.php?edit=1&amp;id='.$res[$key]["id"].'">edit</a> - <a href="s-bis.php?del=1&amp;id='.$res[$key]["id"].'">del</a>';
 	
 	$res[$key]["id"]          = $res[$key]["id"];
-	$res[$key]["dwt"]         = stripslashes($res[$key]["dwt"]);
-	$res[$key]["cargo"]       = stripslashes($res[$key]["cargo"]);
-	$res[$key]["costs"]       = stripslashes($res[$key]["costs"]);
+	$res[$key]["cargo_type"]  = stripslashes($res[$key]["cargo_type"]);
+	$res[$key]["port_costs"]  = stripslashes($res[$key]["port_costs"]);
 	$res[$key]["by_agent"]    = stripslashes($res[$key]["by_agent"]);
 	$res[$key]["dateupdated"] = stripslashes($res[$key]["dateupdated"]);
 	
 	$rows[] = $res[$key];
 }
 
-$flexfields   = array('actions', 'id', 'dwt', 'cargo', 'costs', 'by_agent', 'dateupdated');
+$flexfields   = array('actions', 'id', 'cargo_type', 'port_costs', 'by_agent', 'dateupdated');
 $arr['page']  = $page;
 $arr['total'] = $count['count'];
 

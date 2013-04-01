@@ -1,6 +1,47 @@
 <?php
 @include_once(dirname(__FILE__)."/includes/bootstrap.php");
 date_default_timezone_set('UTC');
+
+$dbhost = 's-bis.cfclysrb91of.us-east-1.rds.amazonaws.com';
+$dbuser = 'sbis';
+$dbpass = 'roysbis';
+$dbname = 'sbis';
+
+$conn   = mysql_connect($dbhost,$dbuser,$dbpass) or die('Error connecting to mysql');
+mysql_select_db($dbname, $conn);
+
+if($_GET['confirmdelete']){
+	mysql_query("DELETE FROM cargos WHERE id='".$_GET['id']."'");
+	
+	header("Location: s-bis.php");
+}
+
+if($_GET['edit']){
+	$result = mysql_query("SELECT * FROM cargos WHERE id='".$_GET['id']."'");
+	if($result!=false){
+		while($data = mysql_fetch_assoc($result)){
+			$id = $data['id'];
+			$load_port = trim(htmlentities($data['load_port']));
+			$discharge_port = trim(htmlentities($data['discharge_port']));
+			$cargo_date = date('M d, Y', strtotime($data['cargo_date']));
+			$dwt_or_ship_type = trim(htmlentities($data['dwt_or_ship_type']));
+			$cargo_type = trim(htmlentities($data['cargo_type']));
+			$cargo_quantity = trim(htmlentities($data['cargo_quantity']));
+			$port_costs = trim(htmlentities($data['port_costs']));
+			$load_port2 = trim(htmlentities($data['load_port2']));
+			$load_port_quantity = trim(htmlentities($data['load_port_quantity']));
+			$channel = trim(htmlentities($data['channel']));
+			$anchorage = trim(htmlentities($data['anchorage']));
+			$cargo_pier = trim(htmlentities($data['cargo_pier']));
+			$discharge_port2 = trim(htmlentities($data['discharge_port2']));
+			$discharge_port_quantity = trim(htmlentities($data['discharge_port_quantity']));
+			$channel2 = trim(htmlentities($data['channel2']));
+			$anchorage2 = trim(htmlentities($data['anchorage2']));
+			$cargo_pier2 = trim(htmlentities($data['cargo_pier2']));
+			$notes = trim(htmlentities($data['notes']));
+		}
+	}else{echo mysql_error();}
+}
 ?>
 <link href="../app/js/ui.css" rel="stylesheet" />
 <style>
@@ -12,7 +53,7 @@ date_default_timezone_set('UTC');
 
 #signup .error{
 	border:1px solid red;
-	width:300px;
+	width:150px;
 	padding:4px;
 	font-size:10px;
 	background:#FFD4D4;
@@ -31,7 +72,7 @@ date_default_timezone_set('UTC');
 }
 
 #signup .tbox{
-	width: 150px;
+	width: 100px;
 }
 
 #signup .tbox50{
@@ -183,7 +224,68 @@ h2{
 
 <link type="text/css" href="js/grid/jquery_css/flexigrid.css" rel="stylesheet" />
 <script type="text/javascript" src="js/grid/jquery_javascript/flexigrid.js"></script>
-<script language="javascript">		
+<script language="javascript">
+function deleteitem() {
+	<?php
+	if($_GET['del']){
+		$num    = $_GET['num'];
+		$sql    = "SELECT id FROM cargos WHERE id='".$_GET['id']."'";
+		$result = mysql_query($sql);
+		if($result!=false){
+			while($data = mysql_fetch_assoc($result)){
+				$id = $data['id'];
+			}
+		}else{echo mysql_error();}
+
+		echo 'if(confirm("Are you sure you want to DELETE this record?\n Record Number : '.$id.'")){'."\n";
+		echo "location = 's-bis.php?confirmdelete=1&id=".$id."&page=11';"."\n";
+		echo '}'."\n";
+	}
+	?>
+}
+
+function addCommas(nStr){
+	nStr += '';
+
+	x = nStr.split('.');
+	x1 = x[0];
+	x2 = x.length > 1 ? '.' + x[1] : '';
+
+	var rgx = /(\d+)(\d{3})/;
+
+	while (rgx.test(x1)) {
+		x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	}
+
+	return x1 + x2;
+}
+
+function uNum(num){
+	if(!num){
+		num = 0;
+	}else if(isNaN(num)){
+		num = num.replace(/[^0-9\.]/g, "");
+
+		if(isNaN(num)){ num = 0; }
+	}
+
+	return num*1;
+}
+
+function fNum(num){
+	num = uNum(num);
+
+	if(num==0){ return ""; }
+
+	num = num.toFixed(2);
+
+	return addCommas(num);
+}
+
+$(document).ready(function() {
+	deleteitem();
+});
+
 $(function(){				
 	$('#show-signup-success-dialog').dialog({
 		width:600,
@@ -216,7 +318,7 @@ $(function(){
 		if( $('#captcha_code').val() == '' ){
 			$('#error_captcha_code').text('Please Input Captcha Code');
 			$('#error_captcha_code').show();
-			$('#captcha_image').attr('src', 'captcha/securimage_show.php?sid=' + Math.random());								
+			$('#captcha_image').attr('src', '../captcha/CaptchaSecurityImages.php?width=100&height=40&characters=5');								
 			error_count++;
 		}
 		else{
@@ -229,7 +331,7 @@ $(function(){
 				
 			}
 			else{
-				$('#captcha_image').attr('src', 'captcha/securimage_show.php?sid=' + Math.random());
+				$('#captcha_image').attr('src', '../captcha/CaptchaSecurityImages.php?width=100&height=40&characters=5');
 				$('#captcha_code').val('');
 				$('#error_captcha_code').text('Please type the code from image above');
 				$('#error_captcha_code').show();
@@ -261,25 +363,43 @@ function getPortDepth(type){
 			jQuery('#channel'+type).val(data['channel_depth']);
 			jQuery('#anchorage'+type).val(data['anchorage_depth']);
 			jQuery('#cargo_pier'+type).val(data['cargo_pier_depth']);
+			
+			if(data['channel_depth'] == 'Unknown' ){
+				$('#error_channel' + type).show();
+			}else{
+				$('#error_channel' + type).hide();
+			}
+			
+			if(data['anchorage_depth'] == 'Unknown' ){
+				$('#error_anchorage' + type).show();
+			}else{
+				$('#error_anchorage' + type).hide();
+			}
+			
+			if(data['cargo_pier_depth'] == 'Unknown' ){
+				$('#error_cargo_pier' + type).show();
+			}else{
+				$('#error_cargo_pier' + type).hide();
+			}
 		}
 	});
 }		
 </script>
 <form id='cargoform' method="post">
 <input type="hidden" name="trigger" value="save_new_cargo"  />
-<input type='hidden' name='id' id="id" value="<?php echo $r[0]['id']; ?>">   
-<div style="float:left; width:500px; height:auto;">                           
-<table style='width:500px' id="signup">								
+<input type='hidden' name='id' id="id" value="<?php echo $id; ?>">   
+<div style="float:left; width:300px; height:auto;">                           
+<table style='width:300px' id="signup">								
 	<tr>
-		<td colspan="2"><h2>Cargo Details</h2></td>
+		<td colspan="2"><h2>Cargo Card Details:</h2></td>
 	</tr>
 	<tr>
 		<td colspan="2">&nbsp;</td>
 	</tr>
 	<tr>
-		<td class='label'><span class="required">*</span>Load Port</td>
+		<td class='label'><span class="required">*</span>Load Port:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='load_port' id="load_port" value="<?php echo $r[0]['load_port']; ?>" />
+			<input class='tbox' type='text' name='load_port' id="load_port" value="<?php echo $load_port; ?>" />
 			<div class='error' id='error_load_port'>Please Input Load Port</div>
 			
 			<script type="text/javascript">
@@ -291,9 +411,9 @@ function getPortDepth(type){
 		</td>
 	</tr>
 	<tr>
-		<td class='label'><span class="required">*</span>Discharge Port</td>
+		<td class='label'><span class="required">*</span>Discharge Port:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='discharge_port' id="discharge_port" value="<?php echo $r[0]['discharge_port']; ?>" />
+			<input class='tbox' type='text' name='discharge_port' id="discharge_port" value="<?php echo $discharge_port; ?>" />
 			<div class='error' id='error_discharge_port'>Please Input Discharge Port</div>
 			
 			<script type="text/javascript">
@@ -308,9 +428,9 @@ function getPortDepth(type){
 		<td class='label'><span class="required">*</span>Date:</td>
 		<td class='form'>
 		  <?php
-		  if($r[0]['cargo_date']){
+		  if($cargo_date){
 			?>
-			<input type="text" name="cargo_date" value="<?php echo $r[0]['cargo_date']; ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="tbox" style="width:90px;" />
+			<input type="text" name="cargo_date" value="<?php echo $cargo_date; ?>" readonly="readonly" onclick="showCalendar('',this,null,'','',0,5,1)" class="tbox" style="width:90px;" />
 			<?php
 		  }else{
 			?>
@@ -323,31 +443,32 @@ function getPortDepth(type){
 	<tr>
 		<td class='label'><span class="required">*</span>DWT or Ship Type:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='dwt_or_ship_type' id="dwt_or_ship_type" value="<?php echo $r[0]['dwt_or_ship_type']; ?>">
+			<input class='tbox' type='text' name='dwt_or_ship_type' id="dwt_or_ship_type" value="<?php echo $dwt_or_ship_type; ?>">
 			<div class='error' id='error_dwt_or_ship_type'>Please Input DWT or Ship Type</div></td>
 	</tr>
 	<tr>
 		<td class='label'><span class="required">*</span>Cargo Type:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='cargo_type' id="cargo_type" value="<?php echo $r[0]['cargo_type']; ?>">
+			<input class='tbox' type='text' name='cargo_type' id="cargo_type" value="<?php echo $cargo_type; ?>">
 			<div class='error' id='error_cargo_type'>Please Input Cargo Type</div></td>
 	</tr>
 	<tr>
 		<td class='label'><span class="required">*</span>Cargo Quantity:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='cargo_quantity' id="cargo_quantity" value="<?php echo $r[0]['cargo_quantity']; ?>">
+			<input class='tbox' type='text' name='cargo_quantity' id="cargo_quantity" value="<?php echo $cargo_quantity; ?>">
 			<div class='error' id='error_cargo_quantity'>Please Input Cargo Quantity</div></td>
 	</tr>
 	<tr>
 		<td class='label'><span class="required">*</span>Port Costs:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='port_costs' id="port_costs" value="<?php echo $r[0]['port_costs']; ?>">
+			<input class='tbox' type='text' name='port_costs' id="port_costs" value="<?php echo $port_costs; ?>" onblur="fNum(this.value);">
 			<div class='error' id='error_port_costs'>Please Input Port Costs</div></td>
 	</tr>
 	<tr>
-		<td class='label'><span class="required">*</span>Load Port - AVR Intake</td>
+		<td class='label'><p><span class="required">*</span>Load Port Name<br />
+	    AVR Intake::</p></td>
 		<td class='form'>
-			<input class='tbox' type='text' name='load_port2' id="load_port2" value="<?php echo $r[0]['load_port2']; ?>" onblur="getPortDepth(1);" />
+			<input class='tbox' type='text' name='load_port2' id="load_port2" value="<?php echo $load_port2; ?>" onblur="getPortDepth(1);" />
 			<div class='error' id='error_load_port2'>Please Input Load Port - AVR Intake</div>
 			
 			<script type="text/javascript">
@@ -359,21 +480,35 @@ function getPortDepth(type){
 		</td>
 	</tr>
 	<tr>
-		<td class='label'>Channel:</td>
-		<td class='form'><input class='tbox' type='text' name='channel' id="channel1" value="<?php echo $r[0]['channel']; ?>" style="width:30px;" /></td>
+		<td class='label'> Quantity MT:</td>
+		<td class='form'><input class='tbox' type='text' name='load_port_quantity' id="load_port_quantity" value="<?php echo $load_port_quantity; ?>" /></td>
 	</tr>
 	<tr>
-		<td class='label'>Anchorage:</td>
-		<td class='form'><input class='tbox' type='text' name='anchorage' id="anchorage1" value="<?php echo $r[0]['anchorage']; ?>" style="width:30px;" /></td>
-	</tr>
-	<tr>
-		<td class='label'>Cargo Pier:</td>
-		<td class='form'><input class='tbox' type='text' name='cargo_pier' id="cargo_pier1" value="<?php echo $r[0]['cargo_pier']; ?>" style="width:30px;" /></td>
-	</tr>
-	<tr>
-		<td class='label'><span style="font-size:9px">&nbsp;</span><br /><span class="required">*</span>Discharge Port - AVR Arrival Intake</td>
+		<td class='label'>Channel M:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='discharge_port2' id="discharge_port2" value="<?php echo $r[0]['discharge_port2']; ?>" onblur="getPortDepth(2);" />
+			<input class='tbox' type='text' name='channel' id="channel1" value="<?php echo $channel; ?>" />
+			<div class='error' id='error_channel1'>Add data if known</div>
+		</td>
+	</tr>
+	<tr>
+		<td class='label'>Anchorage M:</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='anchorage' id="anchorage1" value="<?php echo $anchorage; ?>" />
+			<div class='error' id='error_anchorage1'>Add data if known</div>
+		</td>
+	</tr>
+	<tr>
+		<td class='label'>Cargo Pier M:</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='cargo_pier' id="cargo_pier1" value="<?php echo $cargo_pier; ?>" />
+			<div class='error' id='error_cargo_pier1'>Add data if known</div>
+		</td>
+	</tr>
+	<tr>
+		<td class='label'><span class="required">*</span>Discharge Port Name <br />
+	    AVR Arrival Intake:  </td>
+		<td class='form'>
+			<input class='tbox' type='text' name='discharge_port2' id="discharge_port2" value="<?php echo $discharge_port2; ?>" onblur="getPortDepth(2);" />
 			<div class='error' id='error_discharge_port2'>Please Input Discharge Port - AVR Arrival Intake</div>
 			
 			<script type="text/javascript">
@@ -385,20 +520,35 @@ function getPortDepth(type){
 		</td>
 	</tr>
 	<tr>
-		<td class='label'>Channel:</td>
-		<td class='form'><input class='tbox' type='text' name='channel2' id="channel2" value="<?php echo $r[0]['channel2']; ?>" style="width:30px;" /></td>
+		<td class='label'> Quantity MT:</td>
+		<td class='form'><input class='tbox' type='text' name='discharge_port_quantity' id="discharge_port_quantity" value="<?php echo $discharge_port_quantity; ?>" /></td>
 	</tr>
 	<tr>
-		<td class='label'>Anchorage:</td>
-		<td class='form'><input class='tbox' type='text' name='anchorage2' id="anchorage2" value="<?php echo $r[0]['anchorage2']; ?>" style="width:30px;" /></td>
+		<td class='label'>Channel M:</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='channel2' id="channel2" value="<?php echo $channel2; ?>" />
+			<div class='error' id='error_channel2'>Add data if known</div>
+		</td>
 	</tr>
 	<tr>
-		<td class='label'>Cargo Pier:</td>
-		<td class='form'><input class='tbox' type='text' name='cargo_pier2' id="cargo_pier2" value="<?php echo $r[0]['cargo_pier2']; ?>" style="width:30px;" /></td>
+		<td class='label'>Anchorage M:</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='anchorage2' id="anchorage2" value="<?php echo $anchorage2; ?>" />
+			<div class='error' id='error_anchorage2'>Add data if known</div>
+		</td>
 	</tr>
 	<tr>
-		<td class='label'>Notes:</td>
-		<td class='form'><textarea class='tbox' type='text' name='notes' id="notes" style="height:50px;"><?php echo $r[0]['notes']; ?></textarea>
+		<td class='label'>Cargo Pier M:</td>
+		<td class='form'>
+			<input class='tbox' type='text' name='cargo_pier2' id="cargo_pier2" value="<?php echo $cargo_pier2; ?>" />
+			<div class='error' id='error_cargo_pier2'>Add data if known</div>
+		</td>
+	</tr>
+	<tr>
+		<td class='label'>Notes:<br />
+		  (Visible to all users)
+	    :</td>
+		<td class='form'><textarea class='tbox' type='text' name='notes' id="notes" style="height:50px;"><?php echo $notes; ?></textarea>
 	</tr>
 	<tr>
 		<td class='label'>&nbsp;</td>
@@ -410,10 +560,11 @@ function getPortDepth(type){
 	</tr>
 	<tr>
 		<td class='label'>&nbsp;</td>
-		<td class='form'><b>This code is case sensitive</b></td>
+		<td class='form'><b>This code is case sensitive <br />
+	    (This is a security measure)</b></td>
 	</tr>
 	<tr>
-		<td class='label'>Image code:</td>
+		<td class='label'>Image Code:</td>
 		<td class='form'>
 			<input class='tbox' type='text' name="captcha_code" id="captcha_code">
 			<div class='error' id='error_captcha_code'>Please Input Captcha Code</div></td>
@@ -428,7 +579,7 @@ function getPortDepth(type){
 </table>
 </div>
 </form>
-<div style="float:left; width:780px; height:auto; padding-left:20px;">  
+<div style="float:left; width:980px; height:auto; padding-left:20px;">  
 <table id="flexigrid" align="left"></table>
 <script type="text/javascript">
 $("document").ready(function(){
@@ -438,23 +589,39 @@ vars = {
 		colModel : [
 			{display: '-', name : 'actions', width : 50, sortable : false, searchable: false, align: 'center'},
 			{display: '#', name : 'id', width : 50, sortable : true, align: 'center'},
-			{display: 'Cargo Type', name : 'cargo_type', width : 250, sortable : true, align: 'left'},
-			{display: 'Port Costs', name : 'port_costs', width : 70, sortable : true, align: 'left'},
-			{display: 'By Agent', name : 'by_agent', width : 150, sortable : true, align: 'left'},
-			{display: 'Date Updated', name : 'dateupdated ', width : 130, sortable : true, align: 'left'}
+			{display: 'SEARCH by: Load Port', name : 'load_port', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Discharge Port', name : 'discharge_port', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Date', name : 'cargo_date', width : 100, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: DWT or Ship Type', name : 'dwt_or_ship_type', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Cargo', name : 'cargo_type', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Cargo Qty', name : 'cargo_quantity', width : 50, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Port Costs', name : 'port_costs', width : 50, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Load Port AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Discharge Port AVR Intake', name : 'discharge_port2', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Qty MT', name : 'discharge_port_quantity', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Channel M', name : 'channel2', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Anchorage M', name : 'anchorage2', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Cargo Pier M', name : 'cargo_pier2', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Agent', name : 'by_agent', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Date Added', name : 'dateadded', width : 130, sortable : true, align: 'left'}, 
+			{display: 'SEARCH by: Date Updated', name : 'dateupdated', width : 130, sortable : true, align: 'left'}
 		],
 		buttons : [],
 		resizable: false,
 		sortname: "id",
 		sortorder: "asc",
 		usepager: true,
-		title: "Cargo Lists",
+		title: "Cargo Card Lists",
 		useRp: true,
 		rp: 20,
 		showTableToggleBtn: false,
 		autoload: true,
-		width: 780,
-		height: 400,
+		width: 980,
+		height: 725,
 		singleSelect: true,
 		useInlineSearch: true
 		};

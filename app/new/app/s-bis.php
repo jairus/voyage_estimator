@@ -22,6 +22,10 @@ if($user['dry']==0){
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
 var agentpage = '<?php echo $page; ?>';
+var agentpage2 = '<?php echo $_GET['page']; ?>';
+var agentaction = '<?php echo $_GET['id']; ?>';
+var edit = '<?php echo $_GET['edit']; ?>';
+var del = '<?php echo $_GET['del']; ?>';
 var page = '<?php echo $_GET['new_search']; ?>';
 var action = '<?php echo $_GET['action']; ?>';
 var tabid = '<?php echo $_GET['tabid']; ?>';
@@ -129,6 +133,20 @@ function displayContent(content){
 				condition = '?action='+action+'&id='+id;
 			}
 		}
+	}
+	
+	if(agentpage2=='10'){
+		if(edit){
+			condition = '?id='+agentaction+'&edit='+edit;
+		}
+		
+		if(del){
+			condition = '?id='+agentaction+'&del='+del;
+		}
+	}
+	
+	if(agentpage2=='11'){
+		condition = '?confirmdelete=1&id='+agentaction;
 	}
 	
 	jQuery.ajax({

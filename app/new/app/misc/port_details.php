@@ -15,6 +15,9 @@
 <script type="text/javascript" src="../js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="../js/jquery-ui-sliderAccess.js"></script>
 
+<link type="text/css" href="../js/grid/jquery_css/flexigrid.css" rel="stylesheet" />
+<script type="text/javascript" src="../js/grid/jquery_javascript/flexigrid.js"></script>
+
 <script language="JavaScript">
 function expand(){
 	if($('#arrow1').attr('src')=='../images/icon_pullup_warning_shore.png'){
@@ -31,6 +34,7 @@ function expand(){
 }
 
 $(function() { $('#date_id').datetimepicker(); });
+$(function() { $('#date_to_id').datetimepicker(); });
 $(function() { $('#date_hour_id').datetimepicker(); });
 
 function saveForm(){
@@ -244,6 +248,11 @@ $(document).ready(function() {
 	cursor:pointer;
 	font-size:12px;
 }
+
+.label{
+	font-weight:bold;
+	width:200px;
+}
 </style>
 <?php
 @session_start();
@@ -398,12 +407,183 @@ if(isset($_GET['portname'])){
 						}
 						?>
 					</table>
+					<div>&nbsp;</div>
+					<table width="500" border="0" cellspacing="0" cellpadding="0">
+						<tr bgcolor="f5f5f5">
+							<td>
+								<table id="flexigrid" align="left"></table>
+								<script type="text/javascript">
+								$("document").ready(function(){
+								vars = {
+										url: '../js/grid/jquery_post/post_cargos2.php',
+										dataType: 'json',
+										colModel : [
+											{display: '-', name : 'actions', width : 50, sortable : false, searchable: false, align: 'center'},
+											{display: '#', name : 'id', width : 50, sortable : true, align: 'center'},
+											{display: 'SEARCH by: Cargo Qty', name : 'cargo_quantity', width : 50, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Load Port AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}
+										],
+										buttons : [],
+										resizable: false,
+										sortname: "id",
+										sortorder: "asc",
+										usepager: true,
+										title: "Cargo Card Lists",
+										useRp: true,
+										rp: 20,
+										showTableToggleBtn: false,
+										autoload: true,
+										width: 500,
+										height: 400,
+										singleSelect: true,
+										useInlineSearch: true
+										};
+												
+								$("#flexigrid").flexigrid( vars );							 
+								});
+								</script>
+							</td>
+						</tr>
+					</table>
 				</td>
 				<td width="20">&nbsp;</td>
 				<td width="600" valign="top">
 					<div id='portresults'>
 						<div id='records_tab_wrapperonly_port_details'></div>
 					</div>
+					<?php
+					if(isset($_GET['view'])){
+					
+					$sql2 = "SELECT * FROM cargos WHERE id='".$_GET['id']."'";
+					$data = dbQuery($sql2);
+					$data = $data[0];
+					
+					$load_port = trim(htmlentities($data['load_port']));
+					$discharge_port = trim(htmlentities($data['discharge_port']));
+					$cargo_date = date('M d, Y', strtotime($data['cargo_date']));
+					$dwt_or_ship_type = trim(htmlentities($data['dwt_or_ship_type']));
+					$cargo_type = trim(htmlentities($data['cargo_type']));
+					$cargo_quantity = trim(htmlentities($data['cargo_quantity']));
+					$port_costs = trim(htmlentities($data['port_costs']));
+					$load_port2 = trim(htmlentities($data['load_port2']));
+					$load_port_quantity = trim(htmlentities($data['load_port_quantity']));
+					$channel = trim(htmlentities($data['channel']));
+					$anchorage = trim(htmlentities($data['anchorage']));
+					$cargo_pier = trim(htmlentities($data['cargo_pier']));
+					$discharge_port2 = trim(htmlentities($data['discharge_port2']));
+					$discharge_port_quantity = trim(htmlentities($data['discharge_port_quantity']));
+					$channel2 = trim(htmlentities($data['channel2']));
+					$anchorage2 = trim(htmlentities($data['anchorage2']));
+					$cargo_pier2 = trim(htmlentities($data['cargo_pier2']));
+					$notes = trim(htmlentities($data['notes']));
+					$by_agent = trim(htmlentities($data['by_agent']));
+					$dateadded = trim(htmlentities($data['dateadded']));
+					$dateupdated = trim(htmlentities($data['dateupdated']));
+					?>
+					<div>
+						<table width="100%" cellpadding="0" cellspacing="0" border="0">
+							<tr>
+								<td colspan="2" height="50">&nbsp;</td>
+							</tr>
+							<tr>
+								<td colspan="2"><h2>Cargo Card Details:</h2></td>
+							</tr>
+							<tr>
+								<td colspan="2">&nbsp;</td>
+							</tr>
+							<tr>
+								<td class='label'>Load Port:</td>
+								<td class='form'><?php echo $load_port; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Discharge Port:</td>
+								<td class='form'><?php echo $discharge_port; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Date:</td>
+								<td class='form'><?php echo $cargo_date; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>DWT or Ship Type:</td>
+								<td class='form'><?php echo $dwt_or_ship_type; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Cargo Type:</td>
+								<td class='form'><?php echo $cargo_type; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Cargo Quantity:</td>
+								<td class='form'><?php echo $cargo_quantity; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Port Costs:</td>
+								<td class='form'><?php echo $port_costs; ?></td>
+							</tr>
+							<tr>
+								<td class='label'><p>Load Port Name<br />
+								AVR Intake::</p></td>
+								<td class='form'><?php echo $load_port2; ?></td>
+							</tr>
+							<tr>
+								<td class='label'> Quantity MT:</td>
+								<td class='form'><?php echo $load_port_quantity; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Channel M:</td>
+								<td class='form'><?php echo $channel; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Anchorage M:</td>
+								<td class='form'><?php echo $anchorage; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Cargo Pier M:</td>
+								<td class='form'><?php echo $cargo_pier; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Discharge Port Name <br />
+								AVR Arrival Intake:  </td>
+								<td class='form'><?php echo $discharge_port2; ?></td>
+							</tr>
+							<tr>
+								<td class='label'> Quantity MT:</td>
+								<td class='form'><?php echo $discharge_port_quantity; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Channel M:</td>
+								<td class='form'><?php echo $channel2; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Anchorage M:</td>
+								<td class='form'><?php echo $anchorage2; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Cargo Pier M:</td>
+								<td class='form'><?php echo $cargo_pier2; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Notes:</td>
+								<td class='form'><?php echo $notes; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Agent:</td>
+								<td class='form'><?php echo $by_agent; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Date Added:</td>
+								<td class='form'><?php echo $dateadded; ?></td>
+							</tr>
+							<tr>
+								<td class='label'>Date Updated:</td>
+								<td class='form'><?php echo $dateupdated; ?></td>
+							</tr>
+						</table>
+					</div>
+					<?php } ?>
 				</td>
 			</tr>
 		</table>
@@ -425,6 +605,48 @@ if(isset($_GET['portname'])){
 					<table width="500" border="0" cellspacing="0" cellpadding="0">
 						<tr bgcolor="f5f5f5">
 							<td><div style="padding:5px; font-size:14px; color:#FF0000;">No update available</div></td>
+						</tr>
+					</table>
+					<div>&nbsp;</div>
+					<table width="500" border="0" cellspacing="0" cellpadding="0">
+						<tr bgcolor="f5f5f5">
+							<td>
+								<table id="flexigrid" align="left"></table>
+								<script type="text/javascript">
+								$("document").ready(function(){
+								vars = {
+										url: '../js/grid/jquery_post/post_cargos2.php',
+										dataType: 'json',
+										colModel : [
+											{display: '-', name : 'actions', width : 50, sortable : false, searchable: false, align: 'center'},
+											{display: '#', name : 'id', width : 50, sortable : true, align: 'center'},
+											{display: 'SEARCH by: Cargo Qty', name : 'cargo_quantity', width : 50, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Load Port AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
+											{display: 'SEARCH by: Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}
+										],
+										buttons : [],
+										resizable: false,
+										sortname: "id",
+										sortorder: "asc",
+										usepager: true,
+										title: "Cargo Card Lists",
+										useRp: true,
+										rp: 20,
+										showTableToggleBtn: false,
+										autoload: true,
+										width: 500,
+										height: 400,
+										singleSelect: true,
+										useInlineSearch: true
+										};
+												
+								$("#flexigrid").flexigrid( vars );							 
+								});
+								</script>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -756,6 +978,135 @@ if(isset($_GET['portname'])){
 										</td>
 									</tr>
 								</table>
+								<?php
+								if(isset($_GET['view'])){
+								
+								$sql2 = "SELECT * FROM cargos WHERE id='".$_GET['id']."'";
+								$data = dbQuery($sql2);
+								$data = $data[0];
+								
+								$load_port = trim(htmlentities($data['load_port']));
+								$discharge_port = trim(htmlentities($data['discharge_port']));
+								$cargo_date = date('M d, Y', strtotime($data['cargo_date']));
+								$dwt_or_ship_type = trim(htmlentities($data['dwt_or_ship_type']));
+								$cargo_type = trim(htmlentities($data['cargo_type']));
+								$cargo_quantity = trim(htmlentities($data['cargo_quantity']));
+								$port_costs = trim(htmlentities($data['port_costs']));
+								$load_port2 = trim(htmlentities($data['load_port2']));
+								$load_port_quantity = trim(htmlentities($data['load_port_quantity']));
+								$channel = trim(htmlentities($data['channel']));
+								$anchorage = trim(htmlentities($data['anchorage']));
+								$cargo_pier = trim(htmlentities($data['cargo_pier']));
+								$discharge_port2 = trim(htmlentities($data['discharge_port2']));
+								$discharge_port_quantity = trim(htmlentities($data['discharge_port_quantity']));
+								$channel2 = trim(htmlentities($data['channel2']));
+								$anchorage2 = trim(htmlentities($data['anchorage2']));
+								$cargo_pier2 = trim(htmlentities($data['cargo_pier2']));
+								$notes = trim(htmlentities($data['notes']));
+								$by_agent = trim(htmlentities($data['by_agent']));
+								$dateadded = trim(htmlentities($data['dateadded']));
+								$dateupdated = trim(htmlentities($data['dateupdated']));
+								?>
+								<div>
+									<table width="100%" cellpadding="0" cellspacing="0" border="0">
+										<tr>
+											<td colspan="2" height="50">&nbsp;</td>
+										</tr>
+										<tr>
+											<td colspan="2"><h2>Cargo Card Details:</h2></td>
+										</tr>
+										<tr>
+											<td colspan="2">&nbsp;</td>
+										</tr>
+										<tr>
+											<td class='label'>Load Port:</td>
+											<td class='form'><?php echo $load_port; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Discharge Port:</td>
+											<td class='form'><?php echo $discharge_port; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Date:</td>
+											<td class='form'><?php echo $cargo_date; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>DWT or Ship Type:</td>
+											<td class='form'><?php echo $dwt_or_ship_type; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Cargo Type:</td>
+											<td class='form'><?php echo $cargo_type; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Cargo Quantity:</td>
+											<td class='form'><?php echo $cargo_quantity; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Port Costs:</td>
+											<td class='form'><?php echo $port_costs; ?></td>
+										</tr>
+										<tr>
+											<td class='label'><p>Load Port Name<br />
+											AVR Intake::</p></td>
+											<td class='form'><?php echo $load_port2; ?></td>
+										</tr>
+										<tr>
+											<td class='label'> Quantity MT:</td>
+											<td class='form'><?php echo $load_port_quantity; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Channel M:</td>
+											<td class='form'><?php echo $channel; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Anchorage M:</td>
+											<td class='form'><?php echo $anchorage; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Cargo Pier M:</td>
+											<td class='form'><?php echo $cargo_pier; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Discharge Port Name <br />
+											AVR Arrival Intake:  </td>
+											<td class='form'><?php echo $discharge_port2; ?></td>
+										</tr>
+										<tr>
+											<td class='label'> Quantity MT:</td>
+											<td class='form'><?php echo $discharge_port_quantity; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Channel M:</td>
+											<td class='form'><?php echo $channel2; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Anchorage M:</td>
+											<td class='form'><?php echo $anchorage2; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Cargo Pier M:</td>
+											<td class='form'><?php echo $cargo_pier2; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Notes:</td>
+											<td class='form'><?php echo $notes; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Agent:</td>
+											<td class='form'><?php echo $by_agent; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Date Added:</td>
+											<td class='form'><?php echo $dateadded; ?></td>
+										</tr>
+										<tr>
+											<td class='label'>Date Updated:</td>
+											<td class='form'><?php echo $dateupdated; ?></td>
+										</tr>
+									</table>
+								</div>
+								<?php } ?>
 							</td>
 							<td width="20">&nbsp;</td>
 							<td width="280" valign="top">

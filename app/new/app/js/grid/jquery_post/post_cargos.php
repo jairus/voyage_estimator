@@ -54,7 +54,7 @@ foreach($res as $key => $value) {
 	
 	$res[$key]["id"] = $res[$key]["id"];
 	$res[$key]["load_port"] = stripslashes($res[$key]["load_port"]);
-	$res[$key]["discharge_port"] = stripslashes($res[$key]["discharge_port"]);
+	//$res[$key]["discharge_port"] = stripslashes($res[$key]["discharge_port"]);
 	$res[$key]["cargo_date"] = stripslashes($res[$key]["cargo_date"]);
 	$res[$key]["dwt_or_ship_type"] = stripslashes($res[$key]["dwt_or_ship_type"]);
 	$res[$key]["cargo_type"] = stripslashes($res[$key]["cargo_type"]);
@@ -65,11 +65,11 @@ foreach($res as $key => $value) {
 	$res[$key]["channel"] = stripslashes($res[$key]["channel"]);
 	$res[$key]["anchorage"] = stripslashes($res[$key]["anchorage"]);
 	$res[$key]["cargo_pier"] = stripslashes($res[$key]["cargo_pier"]);
-	$res[$key]["discharge_port2"] = stripslashes($res[$key]["discharge_port2"]);
+	/*$res[$key]["discharge_port2"] = stripslashes($res[$key]["discharge_port2"]);
 	$res[$key]["discharge_port_quantity"] = stripslashes($res[$key]["discharge_port_quantity"]);
 	$res[$key]["channel2"] = stripslashes($res[$key]["channel2"]);
 	$res[$key]["anchorage2"] = stripslashes($res[$key]["anchorage2"]);
-	$res[$key]["cargo_pier2"] = stripslashes($res[$key]["cargo_pier2"]);
+	$res[$key]["cargo_pier2"] = stripslashes($res[$key]["cargo_pier2"]);*/
 	$res[$key]["by_agent"] = stripslashes($res[$key]["by_agent"]);
 	$res[$key]["dateadded"] = stripslashes($res[$key]["dateadded"]);
 	$res[$key]["dateupdated"] = stripslashes($res[$key]["dateupdated"]);
@@ -77,7 +77,9 @@ foreach($res as $key => $value) {
 	$rows[] = $res[$key];
 }
 
-$flexfields   = array('actions', 'id', 'load_port', 'discharge_port', 'cargo_date', 'dwt_or_ship_type', 'cargo_type', 'cargo_quantity', 'port_costs', 'load_port2', 'load_port_quantity', 'channel', 'anchorage', 'cargo_pier', 'discharge_port2', 'discharge_port_quantity', 'channel2', 'anchorage2', 'cargo_pier2', 'by_agent', 'dateadded', 'dateupdated');
+//$flexfields   = array('actions', 'id', 'load_port', 'discharge_port', 'cargo_date', 'dwt_or_ship_type', 'cargo_type', 'cargo_quantity', 'port_costs', 'load_port2', 'load_port_quantity', 'channel', 'anchorage', 'cargo_pier', 'discharge_port2', 'discharge_port_quantity', 'channel2', 'anchorage2', 'cargo_pier2', 'by_agent', 'dateadded', 'dateupdated');
+
+$flexfields   = array('actions', 'id', 'load_port', 'cargo_date', 'dwt_or_ship_type', 'cargo_type', 'cargo_quantity', 'port_costs', 'load_port2', 'load_port_quantity', 'channel', 'anchorage', 'cargo_pier', 'by_agent', 'dateadded');
 $arr['page']  = $page;
 $arr['total'] = $count['count'];
 

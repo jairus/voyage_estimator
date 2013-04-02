@@ -1,3 +1,17 @@
+<?php
+@session_start();
+
+$_SESSION['portname'] = $_GET['portname'];
+$_SESSION['vessel_name'] = $_GET['vessel_name'];
+$_SESSION['cargo_type'] = $_GET['cargo_type'];
+$_SESSION['dwt'] = $_GET['dwt'];
+$_SESSION['gross_tonnage'] = $_GET['gross_tonnage'];
+$_SESSION['net_tonnage'] = $_GET['net_tonnage'];
+$_SESSION['owner'] = $_GET['owner'];
+$_SESSION['date_from'] = $_GET['date_from'];
+$_SESSION['date_to'] = $_GET['date_to'];
+$_SESSION['num_of_days'] = $_GET['num_of_days'];
+?>
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
 
@@ -199,14 +213,14 @@ function showPortDetails(portname, id){
 	});
 }
 
-function getAgentDetails(){
+function getAgentDetails(agent_email){
 	jQuery('#agentresults').hide();
 
 	//jQuery('#pleasewait').show();
 
 	jQuery.ajax({
 		type: 'GET',
-		url: "agent_details_ajax.php",
+		url: "agent_details_ajax.php?agent_email="+agent_email,
 		data:  jQuery("#inputfrm_id").serialize(),
 
 		success: function(data) {
@@ -217,11 +231,6 @@ function getAgentDetails(){
 		}
 	});
 }
-
-$(document).ready(function() {
-	showPortDetails('<?php echo $_GET['portname']; ?>', 0);
-	jQuery('#ship_agent_id').focus();
-});
 </script>
 <style>
 *{
@@ -309,7 +318,7 @@ if($_POST['submitok']==1){
 	$sql = "INSERT INTO `_port_details` (`port_name`, `port_details`, `user_email`, `dateadded`) VALUES('".mysql_escape_string($port_name)."', '".mysql_escape_string($data)."', '".mysql_escape_string($by_user)."', NOW())";
 	dbQuery($sql, $link);
 	
-	redirectjs("port_details.php?portname=".$port_name);
+	redirectjs("port_details.php?portname=".$port_name.'&vessel_name='.$_GET['vessel_name'].'&cargo_type='.$_GET['cargo_type'].'&dwt='.$_GET['dwt'].'&gross_tonnage='.$_GET['gross_tonnage'].'&net_tonnage='.$_GET['net_tonnage'].'&owner='.$_GET['owner'].'&date_from='.$_GET['date_from'].'&date_to='.$_GET['date_to'].'&num_of_days='.$_GET['num_of_days']);
 }
 
 if(isset($_GET['portname'])){
@@ -420,12 +429,13 @@ if(isset($_GET['portname'])){
 										colModel : [
 											{display: '-', name : 'actions', width : 50, sortable : false, searchable: false, align: 'center'},
 											{display: '#', name : 'id', width : 50, sortable : true, align: 'center'},
-											{display: 'SEARCH by: Cargo Qty', name : 'cargo_quantity', width : 50, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Load Port AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}
+											{display: 'Cargo Qty', name : 'cargo_quantity', width : 50, sortable : true, align: 'left'}, 
+											{display: 'Port Costs', name : 'port_costs', width : 50, sortable : true, align: 'left'}, 
+											{display: 'AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
+											{display: 'Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
+											{display: 'Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
+											{display: 'Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
+											{display: 'Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}
 										],
 										buttons : [],
 										resizable: false,
@@ -463,7 +473,7 @@ if(isset($_GET['portname'])){
 					$data = $data[0];
 					
 					$load_port = trim(htmlentities($data['load_port']));
-					$discharge_port = trim(htmlentities($data['discharge_port']));
+					//$discharge_port = trim(htmlentities($data['discharge_port']));
 					$cargo_date = date('M d, Y', strtotime($data['cargo_date']));
 					$dwt_or_ship_type = trim(htmlentities($data['dwt_or_ship_type']));
 					$cargo_type = trim(htmlentities($data['cargo_type']));
@@ -474,11 +484,11 @@ if(isset($_GET['portname'])){
 					$channel = trim(htmlentities($data['channel']));
 					$anchorage = trim(htmlentities($data['anchorage']));
 					$cargo_pier = trim(htmlentities($data['cargo_pier']));
-					$discharge_port2 = trim(htmlentities($data['discharge_port2']));
+					/*$discharge_port2 = trim(htmlentities($data['discharge_port2']));
 					$discharge_port_quantity = trim(htmlentities($data['discharge_port_quantity']));
 					$channel2 = trim(htmlentities($data['channel2']));
 					$anchorage2 = trim(htmlentities($data['anchorage2']));
-					$cargo_pier2 = trim(htmlentities($data['cargo_pier2']));
+					$cargo_pier2 = trim(htmlentities($data['cargo_pier2']));*/
 					$notes = trim(htmlentities($data['notes']));
 					$by_agent = trim(htmlentities($data['by_agent']));
 					$dateadded = trim(htmlentities($data['dateadded']));
@@ -499,10 +509,10 @@ if(isset($_GET['portname'])){
 								<td class='label'>Load Port:</td>
 								<td class='form'><?php echo $load_port; ?></td>
 							</tr>
-							<tr>
+							<!--<tr>
 								<td class='label'>Discharge Port:</td>
-								<td class='form'><?php echo $discharge_port; ?></td>
-							</tr>
+								<td class='form'><?php //echo $discharge_port; ?></td>
+							</tr>-->
 							<tr>
 								<td class='label'>Date:</td>
 								<td class='form'><?php echo $cargo_date; ?></td>
@@ -524,8 +534,7 @@ if(isset($_GET['portname'])){
 								<td class='form'><?php echo $port_costs; ?></td>
 							</tr>
 							<tr>
-								<td class='label'><p>Load Port Name<br />
-								AVR Intake::</p></td>
+								<td class='label'>AVR Intake:</td>
 								<td class='form'><?php echo $load_port2; ?></td>
 							</tr>
 							<tr>
@@ -544,27 +553,27 @@ if(isset($_GET['portname'])){
 								<td class='label'>Cargo Pier M:</td>
 								<td class='form'><?php echo $cargo_pier; ?></td>
 							</tr>
-							<tr>
+							<!--<tr>
 								<td class='label'>Discharge Port Name <br />
 								AVR Arrival Intake:  </td>
-								<td class='form'><?php echo $discharge_port2; ?></td>
+								<td class='form'><?php //echo $discharge_port2; ?></td>
 							</tr>
 							<tr>
 								<td class='label'> Quantity MT:</td>
-								<td class='form'><?php echo $discharge_port_quantity; ?></td>
+								<td class='form'><?php //echo $discharge_port_quantity; ?></td>
 							</tr>
 							<tr>
 								<td class='label'>Channel M:</td>
-								<td class='form'><?php echo $channel2; ?></td>
+								<td class='form'><?php //echo $channel2; ?></td>
 							</tr>
 							<tr>
 								<td class='label'>Anchorage M:</td>
-								<td class='form'><?php echo $anchorage2; ?></td>
+								<td class='form'><?php //echo $anchorage2; ?></td>
 							</tr>
 							<tr>
 								<td class='label'>Cargo Pier M:</td>
-								<td class='form'><?php echo $cargo_pier2; ?></td>
-							</tr>
+								<td class='form'><?php //echo $cargo_pier2; ?></td>
+							</tr>-->
 							<tr>
 								<td class='label'>Notes:</td>
 								<td class='form'><?php echo $notes; ?></td>
@@ -620,12 +629,13 @@ if(isset($_GET['portname'])){
 										colModel : [
 											{display: '-', name : 'actions', width : 50, sortable : false, searchable: false, align: 'center'},
 											{display: '#', name : 'id', width : 50, sortable : true, align: 'center'},
-											{display: 'SEARCH by: Cargo Qty', name : 'cargo_quantity', width : 50, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Load Port AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
-											{display: 'SEARCH by: Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}
+											{display: 'Cargo Qty', name : 'cargo_quantity', width : 50, sortable : true, align: 'left'}, 
+											{display: 'Port Costs', name : 'port_costs', width : 50, sortable : true, align: 'left'}, 
+											{display: 'AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
+											{display: 'Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
+											{display: 'Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
+											{display: 'Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
+											{display: 'Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}
 										],
 										buttons : [],
 										resizable: false,
@@ -679,7 +689,7 @@ if(isset($_GET['portname'])){
 									<tr>
 										<td>Ship Agent</td>
 										<td>
-											<input type="text" id="ship_agent_id" name="ship_agent" style="width:150px; border:1px solid #CCCCCC; padding:3px;" onblur="getAgentDetails();" />
+											<input type="text" id="ship_agent_id" name="ship_agent" style="width:150px; border:1px solid #CCCCCC; padding:3px;" onblur="getAgentDetails('');" />
 											<script type="text/javascript">
 											jQuery("#ship_agent_id").focus().autocomplete(agent);
 											jQuery("#ship_agent_id").setOptions({
@@ -986,7 +996,7 @@ if(isset($_GET['portname'])){
 								$data = $data[0];
 								
 								$load_port = trim(htmlentities($data['load_port']));
-								$discharge_port = trim(htmlentities($data['discharge_port']));
+								//$discharge_port = trim(htmlentities($data['discharge_port']));
 								$cargo_date = date('M d, Y', strtotime($data['cargo_date']));
 								$dwt_or_ship_type = trim(htmlentities($data['dwt_or_ship_type']));
 								$cargo_type = trim(htmlentities($data['cargo_type']));
@@ -997,11 +1007,11 @@ if(isset($_GET['portname'])){
 								$channel = trim(htmlentities($data['channel']));
 								$anchorage = trim(htmlentities($data['anchorage']));
 								$cargo_pier = trim(htmlentities($data['cargo_pier']));
-								$discharge_port2 = trim(htmlentities($data['discharge_port2']));
+								/*$discharge_port2 = trim(htmlentities($data['discharge_port2']));
 								$discharge_port_quantity = trim(htmlentities($data['discharge_port_quantity']));
 								$channel2 = trim(htmlentities($data['channel2']));
 								$anchorage2 = trim(htmlentities($data['anchorage2']));
-								$cargo_pier2 = trim(htmlentities($data['cargo_pier2']));
+								$cargo_pier2 = trim(htmlentities($data['cargo_pier2']));*/
 								$notes = trim(htmlentities($data['notes']));
 								$by_agent = trim(htmlentities($data['by_agent']));
 								$dateadded = trim(htmlentities($data['dateadded']));
@@ -1047,8 +1057,7 @@ if(isset($_GET['portname'])){
 											<td class='form'><?php echo $port_costs; ?></td>
 										</tr>
 										<tr>
-											<td class='label'><p>Load Port Name<br />
-											AVR Intake::</p></td>
+											<td class='label'>AVR Intake:</td>
 											<td class='form'><?php echo $load_port2; ?></td>
 										</tr>
 										<tr>
@@ -1067,27 +1076,27 @@ if(isset($_GET['portname'])){
 											<td class='label'>Cargo Pier M:</td>
 											<td class='form'><?php echo $cargo_pier; ?></td>
 										</tr>
-										<tr>
+										<!--<tr>
 											<td class='label'>Discharge Port Name <br />
 											AVR Arrival Intake:  </td>
-											<td class='form'><?php echo $discharge_port2; ?></td>
+											<td class='form'><?php //echo $discharge_port2; ?></td>
 										</tr>
 										<tr>
 											<td class='label'> Quantity MT:</td>
-											<td class='form'><?php echo $discharge_port_quantity; ?></td>
+											<td class='form'><?php //echo $discharge_port_quantity; ?></td>
 										</tr>
 										<tr>
 											<td class='label'>Channel M:</td>
-											<td class='form'><?php echo $channel2; ?></td>
+											<td class='form'><?php //echo $channel2; ?></td>
 										</tr>
 										<tr>
 											<td class='label'>Anchorage M:</td>
-											<td class='form'><?php echo $anchorage2; ?></td>
+											<td class='form'><?php //echo $anchorage2; ?></td>
 										</tr>
 										<tr>
 											<td class='label'>Cargo Pier M:</td>
-											<td class='form'><?php echo $cargo_pier2; ?></td>
-										</tr>
+											<td class='form'><?php //echo $cargo_pier2; ?></td>
+										</tr>-->
 										<tr>
 											<td class='label'>Notes:</td>
 											<td class='form'><?php echo $notes; ?></td>
@@ -1137,3 +1146,10 @@ if(isset($_GET['portname'])){
     </tr>
 </table>
 </center>
+<script>
+$(document).ready(function() {
+	showPortDetails('<?php echo $_GET['portname']; ?>', 0);
+	getAgentDetails('<?php echo $by_agent; ?>');
+	jQuery('#ship_agent_id').focus();
+});
+</script>

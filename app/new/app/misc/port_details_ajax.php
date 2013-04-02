@@ -1,11 +1,23 @@
 <script language="JavaScript">
 $(function() { $('#date_id').datetimepicker(); });
+$(function() { $('#date_to_id').datetimepicker(); });
 $(function() { $('#date_hour_id').datetimepicker(); });
 </script>
 <?php
 @session_start();
 include_once(dirname(__FILE__)."/../includes/bootstrap.php");
 date_default_timezone_set('UTC');
+
+$_SESSION['portname'] = $_GET['portname'];
+$_SESSION['vessel_name'] = $_GET['vessel_name'];
+$_SESSION['cargo_type'] = $_GET['cargo_type'];
+$_SESSION['dwt'] = $_GET['dwt'];
+$_SESSION['gross_tonnage'] = $_GET['gross_tonnage'];
+$_SESSION['net_tonnage'] = $_GET['net_tonnage'];
+$_SESSION['owner'] = $_GET['owner'];
+$_SESSION['date_from'] = $_GET['date_from'];
+$_SESSION['date_to'] = $_GET['date_to'];
+$_SESSION['num_of_days'] = $_GET['num_of_days'];
 
 if(isset($_GET['id'])){
 	if($_GET['id']!=0){
@@ -52,7 +64,7 @@ if(isset($_GET['id'])){
 		$total_cargo_charges = $data['total_cargo_charges'];
 		$total_over_all = $data['total_over_all'];
 		
-		$agent = explode(' - ', $ship_agent);
+		$agent = explode(' = ', $ship_agent);
 		$agent_name = $agent[0];
 		$id = $agent[1];
 		

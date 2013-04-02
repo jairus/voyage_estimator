@@ -304,7 +304,8 @@ $(function(){
 		var error_count = 0;
 		
 		//fields validation
-		arr_fields = ['load_port', 'discharge_port', 'cargo_date', 'dwt_or_ship_type', 'cargo_type', 'cargo_quantity', 'port_costs', 'load_port2', 'channel', 'anchorage', 'cargo_pier', 'discharge_port2', 'channel2', 'anchorage2', 'cargo_pier2', 'notes'];
+		//arr_fields = ['load_port', 'discharge_port', 'cargo_date', 'dwt_or_ship_type', 'cargo_type', 'cargo_quantity', 'port_costs', 'load_port2', 'channel', 'anchorage', 'cargo_pier', 'discharge_port2', 'channel2', 'anchorage2', 'cargo_pier2', 'notes'];
+		arr_fields = [];
 		$.each(arr_fields, function(index, value){
 			if( $('#' + value).val() == '' ){
 				$('#error_' + value).show();
@@ -383,7 +384,11 @@ function getPortDepth(type){
 			}
 		}
 	});
-}		
+}
+
+function copyLoadPort(val){
+	jQuery('#load_port2').val(val);
+}	
 </script>
 <form id='cargoform' method="post">
 <input type="hidden" name="trigger" value="save_new_cargo"  />
@@ -391,15 +396,20 @@ function getPortDepth(type){
 <div style="float:left; width:300px; height:auto;">                           
 <table style='width:300px' id="signup">								
 	<tr>
-		<td colspan="2"><h2>Cargo Card Details:</h2></td>
+		<td colspan="2">
+			<h2>Cargo Card Details:</h2>
+			<?php if(isset($_GET['view'])){ ?>
+				<input type='submit' name="reload" value='New' id='signmebutt' style="width:200px;" onclick="window.location.reload();" />
+			<?php } ?>
+		</td>
 	</tr>
 	<tr>
 		<td colspan="2">&nbsp;</td>
 	</tr>
 	<tr>
-		<td class='label'><span class="required">*</span>Load Port:</td>
+		<td class='label'>Load Port:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='load_port' id="load_port" value="<?php echo $load_port; ?>" />
+			<input class='tbox' type='text' name='load_port' id="load_port" value="<?php echo $load_port; ?>" onblur="copyLoadPort(this.value); getPortDepth(1);" />
 			<div class='error' id='error_load_port'>Please Input Load Port</div>
 			
 			<script type="text/javascript">
@@ -410,8 +420,8 @@ function getPortDepth(type){
 			</script>
 		</td>
 	</tr>
-	<tr>
-		<td class='label'><span class="required">*</span>Discharge Port:</td>
+	<tr style="display:none;">
+		<td class='label'>Discharge Port:</td>
 		<td class='form'>
 			<input class='tbox' type='text' name='discharge_port' id="discharge_port" value="<?php echo $discharge_port; ?>" />
 			<div class='error' id='error_discharge_port'>Please Input Discharge Port</div>
@@ -425,7 +435,7 @@ function getPortDepth(type){
 		</td>
 	</tr>
 	<tr>
-		<td class='label'><span class="required">*</span>Date:</td>
+		<td class='label'>Date:</td>
 		<td class='form'>
 		  <?php
 		  if($cargo_date){
@@ -441,32 +451,31 @@ function getPortDepth(type){
 		</td>
 	</tr>
 	<tr>
-		<td class='label'><span class="required">*</span>DWT or Ship Type:</td>
+		<td class='label'>DWT or Ship Type:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='dwt_or_ship_type' id="dwt_or_ship_type" value="<?php echo $dwt_or_ship_type; ?>">
+			<input class='tbox' type='text' name='dwt_or_ship_type' id="dwt_or_ship_type" value="<?php echo $dwt_or_ship_type; ?>" onblur="this.value=fNum(this.value);">
 			<div class='error' id='error_dwt_or_ship_type'>Please Input DWT or Ship Type</div></td>
 	</tr>
 	<tr>
-		<td class='label'><span class="required">*</span>Cargo Type:</td>
+		<td class='label'>Cargo Type:</td>
 		<td class='form'>
 			<input class='tbox' type='text' name='cargo_type' id="cargo_type" value="<?php echo $cargo_type; ?>">
 			<div class='error' id='error_cargo_type'>Please Input Cargo Type</div></td>
 	</tr>
 	<tr>
-		<td class='label'><span class="required">*</span>Cargo Quantity:</td>
+		<td class='label'>Cargo Quantity:</td>
 		<td class='form'>
 			<input class='tbox' type='text' name='cargo_quantity' id="cargo_quantity" value="<?php echo $cargo_quantity; ?>">
 			<div class='error' id='error_cargo_quantity'>Please Input Cargo Quantity</div></td>
 	</tr>
 	<tr>
-		<td class='label'><span class="required">*</span>Port Costs:</td>
+		<td class='label'>Port Costs:</td>
 		<td class='form'>
-			<input class='tbox' type='text' name='port_costs' id="port_costs" value="<?php echo $port_costs; ?>" onblur="fNum(this.value);">
+			<input class='tbox' type='text' name='port_costs' id="port_costs" value="<?php echo $port_costs; ?>" onblur="this.value=fNum(this.value);">
 			<div class='error' id='error_port_costs'>Please Input Port Costs</div></td>
 	</tr>
 	<tr>
-		<td class='label'><p><span class="required">*</span>Load Port Name<br />
-	    AVR Intake::</p></td>
+		<td class='label'>AVR Intake:</td>
 		<td class='form'>
 			<input class='tbox' type='text' name='load_port2' id="load_port2" value="<?php echo $load_port2; ?>" onblur="getPortDepth(1);" />
 			<div class='error' id='error_load_port2'>Please Input Load Port - AVR Intake</div>
@@ -504,8 +513,8 @@ function getPortDepth(type){
 			<div class='error' id='error_cargo_pier1'>Add data if known</div>
 		</td>
 	</tr>
-	<tr>
-		<td class='label'><span class="required">*</span>Discharge Port Name <br />
+	<tr style="display:none;">
+		<td class='label'>Discharge Port Name <br />
 	    AVR Arrival Intake:  </td>
 		<td class='form'>
 			<input class='tbox' type='text' name='discharge_port2' id="discharge_port2" value="<?php echo $discharge_port2; ?>" onblur="getPortDepth(2);" />
@@ -519,25 +528,25 @@ function getPortDepth(type){
 			</script>
 		</td>
 	</tr>
-	<tr>
+	<tr style="display:none;">
 		<td class='label'> Quantity MT:</td>
 		<td class='form'><input class='tbox' type='text' name='discharge_port_quantity' id="discharge_port_quantity" value="<?php echo $discharge_port_quantity; ?>" /></td>
 	</tr>
-	<tr>
+	<tr style="display:none;">
 		<td class='label'>Channel M:</td>
 		<td class='form'>
 			<input class='tbox' type='text' name='channel2' id="channel2" value="<?php echo $channel2; ?>" />
 			<div class='error' id='error_channel2'>Add data if known</div>
 		</td>
 	</tr>
-	<tr>
+	<tr style="display:none;">
 		<td class='label'>Anchorage M:</td>
 		<td class='form'>
 			<input class='tbox' type='text' name='anchorage2' id="anchorage2" value="<?php echo $anchorage2; ?>" />
 			<div class='error' id='error_anchorage2'>Add data if known</div>
 		</td>
 	</tr>
-	<tr>
+	<tr style="display:none;">
 		<td class='label'>Cargo Pier M:</td>
 		<td class='form'>
 			<input class='tbox' type='text' name='cargo_pier2' id="cargo_pier2" value="<?php echo $cargo_pier2; ?>" />
@@ -589,26 +598,27 @@ vars = {
 		colModel : [
 			{display: '-', name : 'actions', width : 50, sortable : false, searchable: false, align: 'center'},
 			{display: '#', name : 'id', width : 50, sortable : true, align: 'center'},
-			{display: 'SEARCH by: Load Port', name : 'load_port', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Discharge Port', name : 'discharge_port', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Date', name : 'cargo_date', width : 100, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: DWT or Ship Type', name : 'dwt_or_ship_type', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Cargo', name : 'cargo_type', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Cargo Qty', name : 'cargo_quantity', width : 50, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Port Costs', name : 'port_costs', width : 50, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Load Port AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Discharge Port AVR Intake', name : 'discharge_port2', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Qty MT', name : 'discharge_port_quantity', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Channel M', name : 'channel2', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Anchorage M', name : 'anchorage2', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Cargo Pier M', name : 'cargo_pier2', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Agent', name : 'by_agent', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Date Added', name : 'dateadded', width : 130, sortable : true, align: 'left'}, 
-			{display: 'SEARCH by: Date Updated', name : 'dateupdated', width : 130, sortable : true, align: 'left'}
+			{display: 'Load Port', name : 'load_port', width : 130, sortable : true, align: 'left'}, 
+			/*{display: 'Discharge Port', name : 'discharge_port', width : 130, sortable : true, align: 'left'}, */
+			{display: 'Date', name : 'cargo_date', width : 100, sortable : true, align: 'left'}, 
+			{display: 'DWT or Ship Type', name : 'dwt_or_ship_type', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Cargo', name : 'cargo_type', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Cargo Qty', name : 'cargo_quantity', width : 50, sortable : true, align: 'left'}, 
+			{display: 'Port Costs', name : 'port_costs', width : 50, sortable : true, align: 'left'}, 
+			{display: 'AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}, 
+			/*{display: 'Discharge Port AVR Intake', name : 'discharge_port2', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Qty MT', name : 'discharge_port_quantity', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Channel M', name : 'channel2', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Anchorage M', name : 'anchorage2', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Cargo Pier M', name : 'cargo_pier2', width : 130, sortable : true, align: 'left'}, */
+			{display: 'Agent', name : 'by_agent', width : 130, sortable : true, align: 'left'}, 
+			{display: 'Date Added', name : 'dateadded', width : 130, sortable : true, align: 'left'}
+			/*, 
+			{display: 'Date Updated', name : 'dateupdated', width : 130, sortable : true, align: 'left'}*/
 		],
 		buttons : [],
 		resizable: false,

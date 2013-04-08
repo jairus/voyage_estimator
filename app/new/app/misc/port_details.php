@@ -453,14 +453,15 @@ if($_POST['submitok02']==1){
 					dataType: 'json',
 					colModel : [
 						{display: '-', name : 'actions', width : 50, sortable : false, searchable: false, align: 'center'},
-						{display: '#', name : 'id', width : 50, sortable : true, align: 'center'},
-						{display: 'Cargo Qty', name : 'cargo_quantity', width : 80, sortable : true, align: 'left'}, 
-						{display: 'Port Costs', name : 'port_costs', width : 80, sortable : true, align: 'left'}, 
-						{display: 'AVR Intake', name : 'load_port2', width : 130, sortable : true, align: 'left'}, 
-						{display: 'Qty MT', name : 'load_port_quantity', width : 130, sortable : true, align: 'left'}, 
-						{display: 'Channel M', name : 'channel', width : 130, sortable : true, align: 'left'}, 
-						{display: 'Anchorage M', name : 'anchorage', width : 130, sortable : true, align: 'left'}, 
-						{display: 'Cargo Pier M', name : 'cargo_pier', width : 130, sortable : true, align: 'left'}
+						{display: '#', name : 'a.id', width : 50, sortable : true, align: 'center'},
+						{display: 'Agent', name : 'b.ship_agent', width : 200, sortable : true, align: 'left'}, 
+						{display: 'Cargo Qty', name : 'a.cargo_quantity', width : 80, sortable : true, align: 'left'}, 
+						{display: 'Port Costs', name : 'a.port_costs', width : 80, sortable : true, align: 'left'}, 
+						{display: 'AVR Intake', name : 'a.load_port2', width : 130, sortable : true, align: 'left'}, 
+						{display: 'Qty MT', name : 'a.load_port_quantity', width : 130, sortable : true, align: 'left'}, 
+						{display: 'Channel M', name : 'a.channel', width : 130, sortable : true, align: 'left'}, 
+						{display: 'Anchorage M', name : 'a.anchorage', width : 130, sortable : true, align: 'left'}, 
+						{display: 'Cargo Pier M', name : 'a.cargo_pier', width : 130, sortable : true, align: 'left'}
 					],
 					buttons : [],
 					resizable: false,

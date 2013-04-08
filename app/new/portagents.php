@@ -1,4 +1,71 @@
-<?php session_start(); ?>
+<?php
+session_start();
+
+$dbhost = 's-bis.cfclysrb91of.us-east-1.rds.amazonaws.com';
+$dbuser = 'sbis';
+$dbpass = 'roysbis';
+$dbname = 'sbis';
+
+$conn   = mysql_connect($dbhost,$dbuser,$dbpass) or die('Error connecting to mysql');
+mysql_select_db($dbname, $conn);
+
+//CREATE IMAGE FROM UPLOAD
+function createThumb($src, $dest, $thumbWidth, $thumbHeight){
+	$info       = pathinfo($src);
+	$img        = imagecreatefromjpeg($src);
+	$width      = imagesx($img);
+	$height     = imagesy($img);
+	$new_width  = $width;
+	$new_height = $height;
+	
+	if($width > $height){
+		if($thumbWidth < $width){
+			$new_width  = $thumbWidth;
+			$new_height = floor($height*($thumbWidth/$width));
+		}
+	}else{
+		if($thumbHeight < $height){
+			$new_height = $thumbHeight;
+			$new_width  = floor($width*($thumbHeight/$height));
+		}
+	}
+	
+	$tmp_img = imagecreatetruecolor($new_width, $new_height);
+	imagecopyresampled($tmp_img, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+	imagejpeg($tmp_img, $dest);
+}
+//CREATE IMAGE FROM UPLOAD
+
+$last_rec_query = mysql_query("SELECT MAX(id) AS LastRec FROM _port_agents");
+$last_rec_row   = mysql_fetch_assoc($last_rec_query);
+$next_num       = $last_rec_row['LastRec'] + 1;
+
+if($_POST['submitok'] == 1){
+	if((!empty($_FILES["company_logo"])) && ($_FILES['company_logo']['error']==0)){
+		$company_logo = basename($_FILES['company_logo']['name']);
+		$image_ext  = substr($company_logo, strrpos($company_logo, '.') + 1);
+		
+		if(($image_ext == "jpg" || $image_ext == "JPG" || $image_ext == "png" || $image_ext == "PNG" || $image_ext == "jpeg" || $image_ext == "JPEG" || $image_ext == "gif" || $image_ext == "GIF") && ($_FILES["company_logo"]["size"] < 62914560)){
+			$company_logo = str_replace($company_logo, $_POST['agent_id'].'.'.$image_ext, $company_logo);
+			$newimagename = dirname(__FILE__).'/app/images/agents/'.$company_logo;
+			
+			if((move_uploaded_file($_FILES['company_logo']['tmp_name'], $newimagename))){
+				$thumbWidth  = "600";
+				$thumbHeight = "600";
+				createThumb($newimagename, $newimagename, $thumbWidth, $thumbHeight);
+				
+				header('Location: portagents.php?msg_alert=Save successful.');
+			}else{
+				header('Location: portagents.php?msg_alert=Save successful, but no logo uploaded. Logo field empty.');
+			}
+		}else{
+			header('Location: portagents.php?msg_alert=Save successful, but no logo uploaded. Invalid company logo file format or company logo file too large.');
+		}
+	}else{
+		header('Location: portagents.php?msg_alert=Save successful, but no logo uploaded. Logo field empty.');
+	}
+}
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -511,7 +578,7 @@
 					if( $('#captcha_code').val() == '' ){
 						$('#error_captcha_code').text('Please Input Captcha Code');
 						$('#error_captcha_code').show();
-						$('#captcha_image').attr('src', 'captcha/securimage_show.php?sid=' + Math.random());								
+						$('#captcha_image').attr('src', 'captcha/CaptchaSecurityImages.php?width=100&height=40&characters=5');								
 						error_count++;
 					}
 					else{
@@ -534,7 +601,7 @@
 							*/
 						}
 						else{
-							$('#captcha_image').attr('src', 'captcha/securimage_show.php?sid=' + Math.random());
+							$('#captcha_image').attr('src', 'captcha/CaptchaSecurityImages.php?width=100&height=40&characters=5');
 							$('#captcha_code').val('');
 							$('#error_captcha_code').text('Please type the code from image above');
 							$('#error_captcha_code').show();
@@ -542,15 +609,17 @@
 					}
 					//alert('Errors found: ' + error_count);
 					if( error_count == 0 ){
+						jQuery('#pleasewait').show();
 						//saving to dabase && send to email;
 						$.post('signup_ajax2.php', $('#signupform').serializeArray(), function(data){
-							$('#show-signup-success-dialog').dialog("open");
+							document.signupform.submit();
+							//$('#show-signup-success-dialog').dialog("open");
 						});
 					}
 					else
 						alert('Errors found: ' + error_count);
 					return false;
-				});	
+				});
 				
 				$('#p_area_code').keypress(function(){
 					if( this.value.length == 4 )
@@ -628,12 +697,12 @@
                     <tr>
                         <td valign="top" style='padding-top:20px' >
                             <div style="float:left; width:500px; height:auto;">
-                                <form id='signupform' method="post">
+                                <form id='signupform' name='signupform' method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="trigger" value="save_new_user"  />                                    
                                     <table style='width:500px' id="signup">
                                         <tr>
                                             <td class="label">&nbsp;</td>
-                                            <td class='form'><span id="print_form" style="float: right; margin-right: 15px; font-size: 11px; color: #0000ff; cursor:pointer;"><img src="app/images/print.jpg" align="absmiddle" alt="print this form" title="print this form" /></span></td>
+                                            <td class='form'><span style="font-size: 12px; color: #FF0000;"><?php if(isset($_GET['msg_alert'])){ echo $_GET['msg_alert']; } ?></span></td>
                                         </tr>									
                                         <tr>
                                             <td class="label"><strong>Personal  Details </strong></td>
@@ -743,11 +812,11 @@
                                                 <div class='error' id='error_countryField'>Please Input Country</div></td>
                                         </tr>
                                         <tr>
-                                            <td class='label'>Fax Number</span></td>
+                                            <td class='label'>Fax Number</td>
                                             <td class='form'><input name='fax_number2' type='text' class='tbox155' id="fax_number2" /></td>
                                         </tr>
 										<tr>
-                                            <td class='label'>Website</span></td>
+                                            <td class='label'>Website</td>
                                             <td class='form'><input name='website' type='text' class='tbox155' id="website" /></td>
                                         </tr>
 										<tr>
@@ -755,6 +824,10 @@
                                             <td class='form'>
                                                 <textarea class='tbox' name="services" id="services" style="height:50px;"></textarea>
                                                 <div class='error' id='error_services'>Please Input Services</div></td>
+                                        </tr>
+										<tr>
+                                            <td class='label'>Company Logo</td>
+                                            <td class='form'><input name='company_logo' type='file' class='tbox155' id="company_logo_id" /></td>
                                         </tr>
                                         <tr>
                                             <td class='label'>&nbsp;</td>
@@ -778,7 +851,9 @@
                                             <td class='signme'>&nbsp;</td>
                                             <td class='signme'>
                                             	<span class="signme">
-                                                    <input type='submit' name="signmebutt" value='Save' id='signmebutt' />
+												    <input type="hidden" name="submitok" value="1">
+													<input type="hidden" name="agent_id" value="<?php echo $next_num; ?>">
+                                                    <input type='button' name="signmebutt" value='Save' id='signmebutt' />
                                                 </span></td>
                                         </tr>
                                     </table>
@@ -791,6 +866,18 @@
 			</div>
 			<?php include("includefooter.php"); ?>
 		</div>
+		
+		<center>
+		<table width="100%" height="100%" id="pleasewait" style="display:none; position:fixed; top:0; left:0; z-index:100; background-image:url('app/images/overlay.png'); background-position:center; background-attachment:scroll; filter:alpha(opacity=90); opacity:0.9;">
+			<tr>
+				<td height="50" style="border-bottom:none;"></td>
+			</tr>
+			<tr>
+				<td align="center" valign="middle"><img src="app/images/loading.gif" /></td>
+			</tr>
+		</table>
+		</center>
+		
 		<script type="text/javascript">
 			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

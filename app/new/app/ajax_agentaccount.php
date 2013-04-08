@@ -2,6 +2,78 @@
 @include_once(dirname(__FILE__)."/includes/bootstrap.php");
 date_default_timezone_set('UTC');
 
+//DELETE FILE FROM DIRECTORY
+function deleteFile($file){
+	$success = FALSE;
+	if (file_exists( $file ) && $file != "" && $file != "n/a"){
+		unlink ( $file );
+		$success = TRUE;
+	}
+	return $success;	
+}
+//END DELETE FILE FROM DIRECTORY
+
+//CREATE IMAGE FROM UPLOAD
+function createThumb2($src, $dest, $thumbWidth, $thumbHeight){
+	$info       = pathinfo($src);
+	$img        = imagecreatefromjpeg($src);
+	$width      = imagesx($img);
+	$height     = imagesy($img);
+	$new_width  = $width;
+	$new_height = $height;
+	
+	if($width > $height){
+		if($thumbWidth < $width){
+			$new_width  = $thumbWidth;
+			$new_height = floor($height*($thumbWidth/$width));
+		}
+	}else{
+		if($thumbHeight < $height){
+			$new_height = $thumbHeight;
+			$new_width  = floor($width*($thumbHeight/$height));
+		}
+	}
+	
+	$tmp_img = imagecreatetruecolor($new_width, $new_height);
+	imagecopyresampled($tmp_img, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+	imagejpeg($tmp_img, $dest);
+}
+//CREATE IMAGE FROM UPLOAD
+
+if($_POST['submitok'] == 1){
+	if((!empty($_FILES["company_logo"])) && ($_FILES['company_logo']['error']==0)){
+		$company_logo = basename($_FILES['company_logo']['name']);
+		$image_ext  = substr($company_logo, strrpos($company_logo, '.') + 1);
+		
+		if(($image_ext == "jpg" || $image_ext == "JPG" || $image_ext == "png" || $image_ext == "PNG" || $image_ext == "jpeg" || $image_ext == "JPEG" || $image_ext == "gif" || $image_ext == "GIF") && ($_FILES["company_logo"]["size"] < 62914560)){
+			$ext = array('.jpg', '.JPG', '.gif', '.GIF', '.png', '.PNG', '.JPEG', '.jpeg');
+			foreach($ext as $value){
+				if( file_exists("images/agents/".$_SESSION['user']['id'].$value) ){
+					$file = 'images/agents/'.$_SESSION['user']['id'].$value;
+				}
+			}
+			deleteFile($file);
+			
+			$company_logo = str_replace($company_logo, $_SESSION['user']['id'].'.'.$image_ext, $company_logo);
+			$newimagename = dirname(__FILE__).'/images/agents/'.$company_logo;
+			
+			if((move_uploaded_file($_FILES['company_logo']['tmp_name'], $newimagename))){
+				$thumbWidth  = "600";
+				$thumbHeight = "600";
+				createThumb2($newimagename, $newimagename, $thumbWidth, $thumbHeight);
+				
+				header('Location: portagents.php?msg_alert=Update successful.');
+			}else{
+				header('Location: portagents.php?msg_alert=Update successful. But no image file to upload!');
+			}
+		}else{
+			header('Location: portagents.php?msg_alert=Update successful. But invalid image file format or image file too large.');
+		}
+	}else{
+		header('Location: portagents.php?msg_alert=Update successful. But no image file to upload!');
+	}
+}
+
 $sql = "SELECT * FROM _port_agents WHERE id = '".$_SESSION['user']['id']."' LIMIT 1";
 $r = dbQuery($sql, $link);
 ?>
@@ -497,7 +569,7 @@ h2{
 			if( $('#captcha_code').val() == '' ){
 				$('#error_captcha_code').text('Please Input Captcha Code');
 				$('#error_captcha_code').show();
-				$('#captcha_image').attr('src', 'captcha/securimage_show.php?sid=' + Math.random());								
+				$('#captcha_image').attr('src', '../captcha/CaptchaSecurityImages.php?width=100&height=40&characters=5');								
 				error_count++;
 			}
 			else{
@@ -510,7 +582,7 @@ h2{
 					
 				}
 				else{
-					$('#captcha_image').attr('src', 'captcha/securimage_show.php?sid=' + Math.random());
+					$('#captcha_image').attr('src', '../captcha/CaptchaSecurityImages.php?width=100&height=40&characters=5');
 					$('#captcha_code').val('');
 					$('#error_captcha_code').text('Please type the code from image above');
 					$('#error_captcha_code').show();
@@ -518,9 +590,11 @@ h2{
 			}
 			//alert('Errors found: ' + error_count);
 			if( error_count == 0 ){
+				jQuery('#pleasewait').show();
 				//saving to dabase && send to email;
 				$.post('signup_ajax2.php', $('#signupform').serializeArray(), function(data){
-					alert('You have successfully updated your account');
+					document.signupform.submit();
+					//alert('You have successfully updated your account');
 				});
 			}
 			else
@@ -576,11 +650,19 @@ h2{
 <script type='text/javascript' src='../app/js/ports.php'></script>
 <link rel="stylesheet" type="text/css" href="../app/js/jquery-autocomplete/jquery.autocomplete.css" />
 <link rel="stylesheet" type="text/css" href="../app/js/jquery-autocomplete/lib/thickbox.css" />
-<form id='signupform' method="post">
+<form id='signupform' name='signupform' method="post" enctype="multipart/form-data">
 <input type="hidden" name="trigger" value="save_new_user"  />
 <input type='hidden' name='id' id="id" value="<?php echo $r[0]['id']; ?>">
 <div style="float:left; width:500px; height:auto;">                                
-<table style='width:500px' id="signup">								
+<table style='width:500px' id="signup">
+	<?php if(isset($_GET['msg_alert'])){ ?>
+	<tr>
+		<td colspan="2" style="color:#FF0000; font-size:16px; font-weight:bold;"><?php echo $_GET['msg_alert']; ?></td>
+	</tr>
+	<tr>
+		<td colspan="2">&nbsp;</td>
+	</tr>
+	<?php } ?>						
 	<tr>
 		<td colspan="2"><h2>Personal  Details</h2></td>
 	</tr>
@@ -707,6 +789,24 @@ h2{
 			<div class='error' id='error_services'>Please Input Services</div></td>
 	</tr>
 	<tr>
+		<td class='label'>Company Logo</td>
+		<td class='form'><input name='company_logo' type='file' class='tbox' id="company_logo_id" /></td>
+	</tr>
+	<tr>
+		<td class='label'>&nbsp;</td>
+		<td class='form'>
+			<?php
+			$ext = array('.jpg', '.JPG', '.gif', '.GIF', '.png', '.PNG', '.JPEG', '.jpeg');
+			foreach($ext as $value){
+				if( file_exists("images/agents/".$_SESSION['user']['id'].$value) ){
+					$company_logo = 'images/agents/'.$_SESSION['user']['id'].$value;
+				}
+			}
+			?>
+			<img src="<?php echo $company_logo; ?>" width="300" />
+		</td>
+	</tr>
+	<tr>
 		<td class='label'>&nbsp;</td>
 		<td class='form'></td>
 	</tr>										
@@ -728,7 +828,8 @@ h2{
 		<td class='signme'>&nbsp;</td>
 		<td class='signme'>
 			<span class="signme">
-				<input type='submit' name="signmebutt" value='Update' id='signmebutt' />
+				<input type="hidden" name="submitok" value="1">
+				<input type='button' name="signmebutt" value='Update' id='signmebutt' />
 			</span></td>
 	</tr>
 </table>

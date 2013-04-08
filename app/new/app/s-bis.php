@@ -34,12 +34,14 @@ var condition = '';
 $(document).ready(function() {
 	if(page=='3'){
 		displayContent('voyage_estimator'+'<?php echo $page; ?>');
+	}else if(page=='1'){
+		displayContent('ais_broker'+'<?php echo $page; ?>');
 	}else if(agentpage=='agent'){
 		displayContent('cargo');
 	}else if(action=='network' || action=='alerts' || action=='account' || action=='accountview'){
 		displayContent('account');
 	}else{
-		displayContent('ais_broker'+'<?php echo $page; ?>');
+		displayContent('voyage_estimator'+'<?php echo $page; ?>');
 	}
 });
 
@@ -65,7 +67,7 @@ function displayContent(content){
 		jQuery('#weather_id_link').removeClass('content_link_selected');
 		jQuery('#account_id_link').removeClass('content_link_selected');
 		
-		jQuery('#ais_broker_id_link').addClass('content_link');
+		jQuery('#voyage_estimator_id_link').addClass('content_link');
 		<?php
 	}elseif($user['dry']==9){
 		?>
@@ -90,7 +92,7 @@ function displayContent(content){
 		jQuery('#weather_id_link').removeClass('content_link_selected');
 		jQuery('#account_id_link').removeClass('content_link_selected');
 		
-		jQuery('#ais_broker_wet_id_link').addClass('content_link');
+		jQuery('#voyage_estimator_wet_id_link').addClass('content_link');
 		<?php
 	}
 	?>

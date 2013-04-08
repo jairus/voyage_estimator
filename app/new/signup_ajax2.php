@@ -35,9 +35,10 @@ if( $_POST['trigger'] == 'validate_captcha' ){
 
 if( $_POST['trigger'] == 'save_new_user' ){
 	foreach($_POST as $key => $value)
-		$post[$key] = trim($value);	
+		$post[$key] = trim($value);
 	
-	$arr_data = array(	'first_name' => $post['first_name'],
+	$arr_data = array(	'id' => $post['agent_id'],
+						'first_name' => $post['first_name'],
 						'last_name' => $post['last_name'],
 						'office_number' => $post['office_number'],
 						'mobile_number' => $post['mobile_number'],

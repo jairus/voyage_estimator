@@ -1216,95 +1216,30 @@ if($_GET['action']=='getzones'){
 
 	if($_GET['dwt_range']){
 		$dwtr = trim($_GET['dwt_range']);
-		
-		if($dwtr=="0|5"){
+		if($dwtr=="0|10"){
 			$dwt_low = 0;
-			$dwt_high = 5000;
-			$dwt_type = "Minibulk 1";
-		}else if($dwtr=="5|10"){
-			$dwt_low = 5000;
-			$dwt_high = 10000;
-			$dwt_type = "Minibulk 2";
-		}else if($dwtr=="0|10"){
-			$dwt_low = 0;
-			$dwt_high = 10000;
-			$dwt_type = "All Minibulk";
-		}else if($dwtr=="10|15"){
+			$dwt_high = 9999;
+			$dwt_type = "Mini - Bulker";
+		}else if($dwtr=="10|40"){
 			$dwt_low = 10000;
-			$dwt_high = 15000;
-			$dwt_type = "Handy 1";
-		}else if($dwtr=="15|20"){
-			$dwt_low = 15000;
-			$dwt_high = 20000;
-			$dwt_type = "Handy 2";
-		}else if($dwtr=="20|25"){
-			$dwt_low = 20000;
-			$dwt_high = 25000;
-			$dwt_type = "Handy 3";
-		}else if($dwtr=="25|30"){
-			$dwt_low = 25000;
-			$dwt_high = 30000;
-			$dwt_type = "Handy 4";
-		}else if($dwtr=="30|35"){
-			$dwt_low = 30000;
-			$dwt_high = 35000;
-			$dwt_type = "Handy 5";
-		}else if($dwtr=="10|35"){
-			$dwt_low = 10000;
-			$dwt_high = 35000;
-			$dwt_type = "All Handy";
-		}else if($dwtr=="35|40"){
-			$dwt_low = 35000;
-			$dwt_high = 40000;
-			$dwt_type = "Handymax 1";
-		}else if($dwtr=="40|45"){
+			$dwt_high = 39999;
+			$dwt_type = "Handysize";
+		}else if($dwtr=="40|60"){
 			$dwt_low = 40000;
-			$dwt_high = 45000;
-			$dwt_type = "Handymax 2";
-		}else if($dwtr=="45|50"){
-			$dwt_low = 45000;
-			$dwt_high = 50000;
-			$dwt_type = "Handymax 3";
-		}else if($dwtr=="50|55"){
-			$dwt_low = 50000;
-			$dwt_high = 55000;
-			$dwt_type = "Handymax 4";
-		}else if($dwtr=="55|60"){
-			$dwt_low = 55000;
-			$dwt_high = 60000;
-			$dwt_type = "Handymax 5";
-		}else if($dwtr=="35|60"){
-			$dwt_low = 35000;
-			$dwt_high = 60000;
-			$dwt_type = "All Handymax";
-		}else if($dwtr=="60|65"){
+			$dwt_high = 59999;
+			$dwt_type = "Handymax/Supramax";
+		}else if($dwtr=="60|100"){
 			$dwt_low = 60000;
-			$dwt_high = 65000;
-			$dwt_type = "Handysize 1";
-		}else if($dwtr=="65|70"){
-			$dwt_low = 65000;
-			$dwt_high = 70000;
-			$dwt_type = "Handysize 2";
-		}else if($dwtr=="70|75"){
-			$dwt_low = 70000;
-			$dwt_high = 75000;
-			$dwt_type = "Handysize 3";
-		}else if($dwtr=="60|75"){
-			$dwt_low = 60000;
-			$dwt_high = 75000;
-			$dwt_type = "All Handysize";
-		}else if($dwtr=="75|110"){
-			$dwt_low = 75000;
-			$dwt_high = 110000;
-			$dwt_type = "Over Panamax";
-		}else if($dwtr=="110|150"){
-			$dwt_low = 110000;
-			$dwt_high = 150000;
-			$dwt_type = "Small Capesize";
-		}else if($dwtr=="150|550"){
-			$dwt_low = 150000;
-			$dwt_high = 555000;
-			$dwt_type = "Large Capesize";
+			$dwt_high = 99999;
+			$dwt_type = "Panamax";
+		}else if($dwtr=="100|220"){
+			$dwt_low = 100000;
+			$dwt_high = 219999;
+			$dwt_type = "Capesize";
+		}else if($dwtr=="220|550"){
+			$dwt_low = 220000;
+			$dwt_high = 550000;
+			$dwt_type = 'Very Large Ore Carrier - "VLOC"';
 		}
 
 		$zcount = count($zones);
@@ -1928,94 +1863,30 @@ if(!$_GET['options']){
 	}else if($_GET['dwt_range']){
 		$dwtr = trim($_GET['dwt_range']);
 
-		if($dwtr=="0|5"){
+		if($dwtr=="0|10"){
 			$dwt_low = 0;
-			$dwt_high = 5000;
-			$dwt_type = "Minibulk 1";
-		}else if($dwtr=="5|10"){
-			$dwt_low = 5000;
-			$dwt_high = 10000;
-			$dwt_type = "Minibulk 2";
-		}else if($dwtr=="0|10"){
-			$dwt_low = 0;
-			$dwt_high = 10000;
-			$dwt_type = "All Minibulk";
-		}else if($dwtr=="10|15"){
+			$dwt_high = 9999;
+			$dwt_type = "Mini - Bulker";
+		}else if($dwtr=="10|40"){
 			$dwt_low = 10000;
-			$dwt_high = 15000;
-			$dwt_type = "Handy 1";
-		}else if($dwtr=="15|20"){
-			$dwt_low = 15000;
-			$dwt_high = 20000;
-			$dwt_type = "Handy 2";
-		}else if($dwtr=="20|25"){
-			$dwt_low = 20000;
-			$dwt_high = 25000;
-			$dwt_type = "Handy 3";
-		}else if($dwtr=="25|30"){
-			$dwt_low = 25000;
-			$dwt_high = 30000;
-			$dwt_type = "Handy 4";
-		}else if($dwtr=="30|35"){
-			$dwt_low = 30000;
-			$dwt_high = 35000;
-			$dwt_type = "Handy 5";
-		}else if($dwtr=="10|35"){
-			$dwt_low = 10000;
-			$dwt_high = 35000;
-			$dwt_type = "All Handy";
-		}else if($dwtr=="35|40"){
-			$dwt_low = 35000;
-			$dwt_high = 40000;
-			$dwt_type = "Handymax 1";
-		}else if($dwtr=="40|45"){
+			$dwt_high = 39999;
+			$dwt_type = "Handysize";
+		}else if($dwtr=="40|60"){
 			$dwt_low = 40000;
-			$dwt_high = 45000;
-			$dwt_type = "Handymax 2";
-		}else if($dwtr=="45|50"){
-			$dwt_low = 45000;
-			$dwt_high = 50000;
-			$dwt_type = "Handymax 3";
-		}else if($dwtr=="50|55"){
-			$dwt_low = 50000;
-			$dwt_high = 55000;
-			$dwt_type = "Handymax 4";
-		}else if($dwtr=="55|60"){
-			$dwt_low = 55000;
-			$dwt_high = 60000;
-			$dwt_type = "Handymax 5";
-		}else if($dwtr=="35|60"){
-			$dwt_low = 35000;
-			$dwt_high = 60000;
-			$dwt_type = "All Handymax";
-		}else if($dwtr=="60|65"){
+			$dwt_high = 59999;
+			$dwt_type = "Handymax/Supramax";
+		}else if($dwtr=="60|100"){
 			$dwt_low = 60000;
-			$dwt_high = 65000;
-			$dwt_type = "Handysize 1";
-		}else if($dwtr=="65|70"){
-			$dwt_low = 65000;
-			$dwt_high = 70000;
-			$dwt_type = "Handysize 2";
-		}else if($dwtr=="70|75"){
-			$dwt_low = 70000;
-			$dwt_high = 75000;
-			$dwt_type = "Handysize 3";
-		}else if($dwtr=="60|75"){
-			$dwt_low = 60000;
-			$dwt_high = 75000;
-			$dwt_type = "All Handysize";
-		}else if($dwtr=="75|110"){
-			$dwt_low = 75000;
-			$dwt_high = 110000;
-			$dwt_type = "Over Panamax";
-		}else if($dwtr=="110|150"){
-			$dwt_low = 110000;
-			$dwt_high = 150000;
-			$dwt_type = "Small Capesize";
-		}else if($dwtr=="150|550"){
-			$dwt_low = 150000;
-			$dwt_high = 555000;
-			$dwt_type = "Large Capesize";
+			$dwt_high = 99999;
+			$dwt_type = "Panamax";
+		}else if($dwtr=="100|220"){
+			$dwt_low = 100000;
+			$dwt_high = 219999;
+			$dwt_type = "Capesize";
+		}else if($dwtr=="220|550"){
+			$dwt_low = 220000;
+			$dwt_high = 550000;
+			$dwt_type = 'Very Large Ore Carrier - "VLOC"';
 		}
 
 		if($dwtr&&$dwt_low==""){

@@ -2,8 +2,8 @@
 	<div id="site_content_1" style="padding-bottom:20px;">
 		<div style="float:left; width:120px; height:55px; padding-top:25px;"><img src="images/logo_ve2.png" border="0" alt="s-bis" title="s-bis" /></div>
         <div style="float:left; width:1180px; height:40px; padding-top:40px;">
-			<a onclick="displayContent('ais_broker_wet');" id='ais_broker_wet_id_link' class="content_link_selected">AIS Destination</a> &nbsp; 
 			<a onclick="displayContent('voyage_estimator_wet');" id='voyage_estimator_wet_id_link' class="content_link">VE</a> &nbsp; 
+			<a onclick="displayContent('ais_broker_wet');" id='ais_broker_wet_id_link' class="content_link_selected">AIS Destination</a> &nbsp; 
 			<a onclick="displayContent('distance_calculator');" id='distance_calculator_id_link' class="content_link">DT</a> &nbsp; 
 			<a onclick="displayContent('bunker_pricing');" id='bunker_pricing_id_link' class="content_link">Bunkerworld</a> &nbsp; 
 			<a onclick="displayContent('ship_search_register_wet');" id='ship_search_register_wet_id_link' class="content_link">Register</a> &nbsp; 

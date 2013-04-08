@@ -8,25 +8,22 @@ $dwt = intval(str_replace(',', '', $dwt));
 
 if($dwt>=0 && $dwt<=10000){
 	$dwt_low = 0;
-	$dwt_high = 10000;
-}else if($dwt>=10000 && $dwt<=35000){
+	$dwt_high = 9999;
+}else if($dwt>=10000 && $dwt<=39999){
 	$dwt_low = 10000;
-	$dwt_high = 35000;
-}else if($dwt>=35000 && $dwt<=60000){
-	$dwt_low = 35000;
-	$dwt_high = 60000;
-}else if($dwt>=60000 && $dwt<=75000){
+	$dwt_high = 39999;
+}else if($dwt>=40000 && $dwt<=59999){
+	$dwt_low = 40000;
+	$dwt_high = 59999;
+}else if($dwt>=60000 && $dwt<=99999){
 	$dwt_low = 60000;
-	$dwt_high = 75000;
-}else if($dwt>=75000 && $dwt<=110000){
-	$dwt_low = 75000;
-	$dwt_high = 110000;
-}else if($dwt>=110000 && $dwt<=150000){
-	$dwt_low = 110000;
-	$dwt_high = 150000;
-}else if($dwt>=150000 && $dwt<=555000){
-	$dwt_low = 150000;
-	$dwt_high = 555000;
+	$dwt_high = 99999;
+}else if($dwt>=100000 && $dwt<=219999){
+	$dwt_low = 100000;
+	$dwt_high = 219999;
+}else if($dwt>=220000 && $dwt<=550000){
+	$dwt_low = 220000;
+	$dwt_high = 550000;
 }else{
 	$dwt_low = 0;
 	$dwt_high = 555000;

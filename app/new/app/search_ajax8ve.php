@@ -101,25 +101,22 @@ if(isset($_GET['num'])){
 				$dwt_range = $_GET['dwt_range'];
 				if($dwt_range=="0|10"){
 					$dwt_low = 0;
-					$dwt_high = 10000;
-				}else if($dwt_range=="10|35"){
+					$dwt_high = 9999;
+				}else if($dwt_range=="10|40"){
 					$dwt_low = 10000;
-					$dwt_high = 35000;
-				}else if($dwt_range=="35|60"){
-					$dwt_low = 35000;
-					$dwt_high = 60000;
-				}else if($dwt_range=="60|75"){
+					$dwt_high = 39999;
+				}else if($dwt_range=="40|60"){
+					$dwt_low = 40000;
+					$dwt_high = 59999;
+				}else if($dwt_range=="60|100"){
 					$dwt_low = 60000;
-					$dwt_high = 75000;
-				}else if($dwt_range=="75|110"){
-					$dwt_low = 75000;
-					$dwt_high = 110000;
-				}else if($dwt_range=="110|150"){
-					$dwt_low = 110000;
-					$dwt_high = 150000;
-				}else if($dwt_range=="150|550"){
-					$dwt_low = 150000;
-					$dwt_high = 555000;
+					$dwt_high = 99999;
+				}else if($dwt_range=="100|220"){
+					$dwt_low = 100000;
+					$dwt_high = 219999;
+				}else if($dwt_range=="220|550"){
+					$dwt_low = 220000;
+					$dwt_high = 550000;
 				}
 				
 				$sqlext .= " `siitech_destination`='".$destination_port."' AND ";
@@ -227,25 +224,22 @@ if(isset($_GET['num'])){
 		$dwt_range = $_GET['dwt_range2'];
 		if($dwt_range=="0|10"){
 			$dwt_low = 0;
-			$dwt_high = 10000;
-		}else if($dwt_range=="10|35"){
+			$dwt_high = 9999;
+		}else if($dwt_range=="10|40"){
 			$dwt_low = 10000;
-			$dwt_high = 35000;
-		}else if($dwt_range=="35|60"){
-			$dwt_low = 35000;
-			$dwt_high = 60000;
-		}else if($dwt_range=="60|75"){
+			$dwt_high = 39999;
+		}else if($dwt_range=="40|60"){
+			$dwt_low = 40000;
+			$dwt_high = 59999;
+		}else if($dwt_range=="60|100"){
 			$dwt_low = 60000;
-			$dwt_high = 75000;
-		}else if($dwt_range=="75|110"){
-			$dwt_low = 75000;
-			$dwt_high = 110000;
-		}else if($dwt_range=="110|150"){
-			$dwt_low = 110000;
-			$dwt_high = 150000;
-		}else if($dwt_range=="150|550"){
-			$dwt_low = 150000;
-			$dwt_high = 555000;
+			$dwt_high = 99999;
+		}else if($dwt_range=="100|220"){
+			$dwt_low = 100000;
+			$dwt_high = 219999;
+		}else if($dwt_range=="220|550"){
+			$dwt_low = 220000;
+			$dwt_high = 550000;
 		}
 		
 		$zone_code = $_GET['zone'];

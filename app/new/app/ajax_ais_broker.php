@@ -872,19 +872,18 @@ if(isset($_GET['new_search'])){
 				  <td>
 				  	<?php
 					$dwt_ranges = array(
-						0=>array(0=>'0|10', 1=>'(0-10,000) Minibulk'), 
-						1=>array(0=>'10|35', 1=>'(10,000-35,000) Handy'), 
-						2=>array(0=>'35|60', 1=>'(35,000-60,000) Handymax'), 
-						3=>array(0=>'60|75', 1=>'(60,000-75,000) Handysize'), 
-						4=>array(0=>'75|110', 1=>'(75,000-110,000) Over Panamax'), 
-						5=>array(0=>'110|150', 1=>'(110,000-150,000) Small Capesize'), 
-						6=>array(0=>'150|550', 1=>'(150,000+) Large Capesize')
+						0=>array(0=>'0|10', 1=>'(0-9,999) Mini - Bulker'), 
+						1=>array(0=>'10|40', 1=>'(10,000-39,999) Handysize'), 
+						2=>array(0=>'40|60', 1=>'(40,000-59,999) Handymax/Supramax'), 
+						3=>array(0=>'60|100', 1=>'(60,000-99,999) Panamax'), 
+						4=>array(0=>'100|220', 1=>'(100,000-219,999) Capesize'), 
+						5=>array(0=>'220|550', 1=>'(220,000+) Very Large Ore Carrier - "VLOC"')
 					);
 					
 					$t_d = count($dwt_ranges);
 					?>
 				  
-					<select class="input_1" name="dwt_range" id='dwt_range_id' size="7">
+					<select class="input_1" name="dwt_range" id='dwt_range_id' size="6">
 						<?php
 						for($i_d=0; $i_d<$t_d; $i_d++){
 							if($dwt_ranges[$i_d][0]==$dwt_range){
@@ -1134,19 +1133,18 @@ if(isset($_GET['new_search'])){
 				  <td>
 				  	<?php
 					$dwt_range2s = array(
-						0=>array(0=>'0|10', 1=>'(0-10,000) Minibulk'), 
-						1=>array(0=>'10|35', 1=>'(10,000-35,000) Handy'), 
-						2=>array(0=>'35|60', 1=>'(35,000-60,000) Handymax'), 
-						3=>array(0=>'60|75', 1=>'(60,000-75,000) Handysize'), 
-						4=>array(0=>'75|110', 1=>'(75,000-110,000) Over Panamax'), 
-						5=>array(0=>'110|150', 1=>'(110,000-150,000) Small Capesize'), 
-						6=>array(0=>'150|550', 1=>'(150,000+) Large Capesize')
+						0=>array(0=>'0|10', 1=>'(0-9,999) Mini - Bulker'), 
+						1=>array(0=>'10|40', 1=>'(10,000-39,999) Handysize'), 
+						2=>array(0=>'40|60', 1=>'(40,000-59,999) Handymax/Supramax'), 
+						3=>array(0=>'60|100', 1=>'(60,000-99,999) Panamax'), 
+						4=>array(0=>'100|220', 1=>'(100,000-219,999) Capesize'), 
+						5=>array(0=>'220|550', 1=>'(220,000+) Very Large Ore Carrier - "VLOC"')
 					);
 					
 					$t_d = count($dwt_range2s);
 					?>
 				  
-					<select class="input_1" name="dwt_range2" id='dwt_range2_id' size="7">
+					<select class="input_1" name="dwt_range2" id='dwt_range2_id' size="6">
 						<?php
 						for($i_d=0; $i_d<$t_d; $i_d++){
 							if($dwt_range2s[$i_d][0]==$dwt_range2){

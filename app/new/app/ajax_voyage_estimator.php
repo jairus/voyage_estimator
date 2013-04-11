@@ -1191,7 +1191,7 @@ function calculateSeaDays(){
 
 //CALCULATE DATES
 function calculateDates(){
-	//BALLAST
+	//BALLAST IFO/MDO
 	n = 1;
 
 	while(jQuery("#ballast"+n)[0]){
@@ -1206,13 +1206,23 @@ function calculateDates(){
 
 		n++;
 	}
-
+	
+	//IFO
 	c45 = getValue(jQuery("#c44"))*days;
 	c46 = c45*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
 
 	setValue(jQuery("#c45"), fNum(c45));
 	setValue(jQuery("#c46"), fNum(c46));
-	//END OF BALLAST
+	//END OF IFO
+	
+	//MDO
+	g45_ballast = getValue(jQuery("#g44_ballast"))*days;
+	g46_ballast = g45_ballast*(uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))));
+
+	setValue(jQuery("#g45_ballast"), fNum(g45_ballast));
+	setValue(jQuery("#g46_ballast"), fNum(g46_ballast));
+	//END OF MDO
+	//END OF BALLAST IFO/MDO
 	
 	//LOADING
 	n = 1;
@@ -1234,11 +1244,27 @@ function calculateDates(){
 		days = valueU(jQuery(tmp+".o"+num)) + valueU(jQuery(tmp+".p"+num)) + valueU(jQuery(tmp+".q"+num)) + valueU(jQuery(tmp+".r"+num)) + valueU(jQuery(tmp+".s"+num)) + valueU(jQuery(tmp+".t"+num));
 
 		adate = addDays(date, days);
-
+		
 		setValue(jQuery(tmp+".f"+num), adate);
 
 		n++;
 	}
+	
+	//IFO
+	c45_loading = getValue(jQuery("#c44_loading"))*days;
+	c46_loading = c45_loading*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
+
+	setValue(jQuery("#c45_loading"), fNum(c45_loading));
+	setValue(jQuery("#c46_loading"), fNum(c46_loading));
+	//END OF IFO
+	
+	//MDO
+	g45_loading = getValue(jQuery("#g44_loading"))*days;
+	g46_loading = g45_loading*(uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))));
+
+	setValue(jQuery("#g45_loading"), fNum(g45_loading));
+	setValue(jQuery("#g46_loading"), fNum(g46_loading));
+	//END OF MDO
 	//END OF LOADING
 	
 	//BUNKER STOP
@@ -1264,6 +1290,22 @@ function calculateDates(){
 		
 		n++;
 	}
+	
+	//IFO
+	c45_bunker_stop = getValue(jQuery("#c44_bunker_stop"))*days;
+	c46_bunker_stop = c45_bunker_stop*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
+
+	setValue(jQuery("#c45_bunker_stop"), fNum(c45_bunker_stop));
+	setValue(jQuery("#c46_bunker_stop"), fNum(c46_bunker_stop));
+	//END OF IFO
+	
+	//MDO
+	g45_bunker_stop = getValue(jQuery("#g44_bunker_stop"))*days;
+	g46_bunker_stop = g45_bunker_stop*(uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))));
+
+	setValue(jQuery("#g45_bunker_stop"), fNum(g45_bunker_stop));
+	setValue(jQuery("#g46_bunker_stop"), fNum(g46_bunker_stop));
+	//END OF MDO
 	//END OF BUNKER STOP
 	
 	//LADEN
@@ -1323,6 +1365,22 @@ function calculateDates(){
 
 		n++;
 	}
+	
+	//IFO
+	d45_discharging = uNum(getValue(jQuery("#d44_discharging")))*days;
+	d46_discharging = d45_discharging*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
+
+	setValue(jQuery("#d45_discharging"), fNum(d45_discharging));
+	setValue(jQuery("#d46_discharging"), fNum(d46_discharging));
+	//END OF IFO
+	
+	//MDO
+	g45_discharging = uNum(getValue(jQuery("#g44_discharging")))*days;
+	g46_discharging = g45_discharging*(uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))));
+
+	setValue(jQuery("#g45_discharging"), fNum(g45_discharging));
+	setValue(jQuery("#g46_discharging"), fNum(g46_discharging));
+	//END OF MDO
 	//END OF DISCHARGING
 	
 	//REPOSITIONING
@@ -1336,7 +1394,7 @@ function calculateDates(){
 		portto = getValue(jQuery(tmp+".e"+(num-1)));
 
 		tmp = "#repositioning"+n+" ";
-
+		
 		setValue(jQuery(tmp+".c"+num), portto);
 		setValue(jQuery(tmp+".d"+num), date);
 
@@ -1349,6 +1407,22 @@ function calculateDates(){
 
 		n++;
 	}
+	
+	//IFO
+	d45_repo = uNum(getValue(jQuery("#d44_repo")))*days;
+	d46_repo = d45_repo*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
+
+	setValue(jQuery("#d45_repo"), fNum(d45_repo));
+	setValue(jQuery("#d46_repo"), fNum(d46_repo));
+	//END OF IFO
+	
+	//MDO
+	g45_repo = uNum(getValue(jQuery("#g44_repo")))*days;
+	g46_repo = g45_repo*(uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))));
+
+	setValue(jQuery("#g45_repo"), fNum(g45_repo));
+	setValue(jQuery("#g46_repo"), fNum(g46_repo));
+	//END OF MDO
 	//END OF REPOSITIONING
 	
 	portdays = calculatePortDays();
@@ -1364,10 +1438,10 @@ function calculateDates(){
 
 	setValue(jQuery("#f46"), fNum(f46));
 
-	c47 = c46+d46+e46+f46;
+	c47 = c46+c46_loading+c46_bunker_stop+d46+d46_discharging+d46_repo+e46+f46;
 	setValue(jQuery("#c47"), fNum(c47));
 
-	d19b = c45+d45+e45;
+	d19b = c45+c45_loading+c45_bunker_stop+d45+d45_discharging+d45_repo+e45;
 	setValue(jQuery("#d19b"), fNum(d19b));
 	setValue(jQuery("#d19"), fNum(d19b));
 
@@ -1388,13 +1462,13 @@ function calculateDates(){
 	h46 = h45 * (uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))));
 	setValue(jQuery("#h46"), fNum(h46));
 
-	i46 = (uNum(getValue(jQuery("#h42")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))))*uNum(getValue(jQuery("#i45")));
+	i46 = (uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))))*uNum(getValue(jQuery("#i45")));
 	setValue(jQuery("#i46"), fNum(i46));
 
-	g47 = g46+h46+i46;
+	g47 = g46_ballast+g46_loading+g46_bunker_stop+g46+g46_discharging+g46_repo+h46+i46;
 	setValue(jQuery("#g47"), fNum(g47));	
 
-	d20b = g45+h45;
+	d20b = g45_ballast+g45_loading+g45_bunker_stop+g45+g45_discharging+g45_repo+h45;
 	setValue(jQuery("#d20b"), fNum(d20b));
 	setValue(jQuery("#d20"), fNum(d20b));
 
@@ -2983,7 +3057,7 @@ if(!trim($e85)){
 			<td></td>
 			<td></td>
 			<td class="text_1" colspan="2"><div style="padding:3px;"><b>* Option to Load &amp; Bunker concurrently</b></div></td>
-			<td class="text_1" colspan="3"><div style="padding:3px;"><b>Port Days</b></div></td>
+			<td class="text_1" colspan="2"><div style="padding:3px;"><b>Port Days</b></div></td>
 			<td class="text_1" colspan="3"><div style="padding:3px;"><b>Sea Days</b></div></td>
 		  </tr>
 		  <tr>
@@ -3205,89 +3279,124 @@ if(!trim($e85)){
 		</table>
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="f5f5f5">
-			<td width="500" colspan="5" style="padding:3px;"><b>IFO Type</b></td>
+			<td width="500" colspan="6" style="padding:3px;"><b>IFO Type</b></td>
 			<td width="500" colspan="4" style="padding:3px;"><b>MDO Type</b></td>
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text' id="d42_input" name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td colspan="5" class="input" style="padding:3px;"><input type='text' id="d42_input" name="d42" value="<?php echo $d42; ?>" class='input_1 number' style="max-width:150px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td style="padding:3px;"><b>MDO Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;"><input type='text' id="h42_input" name="h42" value="<?php echo $h42; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
 		  <tr id="bunker_first_row" bgcolor="e9e9e9" style="display:none;">
 			<td style="padding:3px;"><b>IFO 380 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;" id='d42'></td>
+			<td colspan="5" class="input" style="padding:3px;" id='d42'></td>
 			<td style="padding:3px;"><b>MDO Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;" id='h42'></td>
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>IFO 180 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text' id="d42_180_input" name="d42_180" value="<?php echo $d42_180; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="5" class="input" style="padding:3px;"><input type='text' id="d42_180_input" name="d42_180" value="<?php echo $d42_180; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;"><b>MGO Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;"><input type='text' id="h42_mgo_input" name="h42_mgo" value="<?php echo $h42_mgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
 		  <tr id="bunker_second_row" bgcolor="e9e9e9" style="display:none;">
 			<td style="padding:3px;"><b>IFO 180 Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;" id='d42_180'></td>
+			<td colspan="5" class="input" style="padding:3px;" id='d42_180'></td>
 			<td style="padding:3px;"><b>MGO Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;" id='h42_mgo'></td>
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>LS IFO 380 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text' id="d42_lsifo380_input" name="d42_lsifo380" value="<?php echo $d42_lsifo380; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="5" class="input" style="padding:3px;"><input type='text' id="d42_lsifo380_input" name="d42_lsifo380" value="<?php echo $d42_lsifo380; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;"><b>LS MGO 1% Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;"><input type='text' id="h42_lsmgo_input" name="h42_lsmgo" value="<?php echo $h42_lsmgo; ?>" class='input_1 number' style="max-width:150px;" /></td>
 		  </tr>
 		  <tr id="bunker_third_row" bgcolor="e9e9e9" style="display:none;">
 			<td style="padding:3px;"><b>LS IFO 380 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;" id='d42_lsifo380'></td>
+			<td colspan="5" class="input" style="padding:3px;" id='d42_lsifo380'></td>
 			<td style="padding:3px;"><b>LS MGO 1% Price ($)</b></td>
 			<td colspan="3" class="input" style="padding:3px;" id='h42_lsmgo'></td>
 		  </tr>
 		  <tr bgcolor="e9e9e9">
 			<td style="padding:3px;"><b>LS IFO 180 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;"><input type='text' id="d42_lsifo180_input" name="d42_lsifo180" value="<?php echo $d42_lsifo180; ?>" class='input_1 number' style="max-width:150px;" /></td>
+			<td colspan="5" class="input" style="padding:3px;"><input type='text' id="d42_lsifo180_input" name="d42_lsifo180" value="<?php echo $d42_lsifo180; ?>" class='input_1 number' style="max-width:150px;" /></td>
 			<td style="padding:3px;">&nbsp;</td>
 			<td colspan="3" class="input" style="padding:3px;">&nbsp;</td>
 		  </tr>
 		  <tr id="bunker_fourth_row" bgcolor="e9e9e9" style="display:none;">
 			<td style="padding:3px;"><b>LS IFO 180 1% Price ($)</b></td>
-			<td colspan="4" class="input" style="padding:3px;" id='d42_lsifo180'></td>
+			<td colspan="5" class="input" style="padding:3px;" id='d42_lsifo180'></td>
 			<td style="padding:3px;">&nbsp;</td>
 			<td colspan="3" class="input" style="padding:3px;">&nbsp;</td>
 		  </tr>
+		</table>
+		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
-			<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Ballast/Repositioning</i></b></td>
+		  	<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Ballast</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Loading</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Bunker Stop</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Laden</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Discharging</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Repositioning</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Port</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Reserve</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
+		  </tr>
+		  <tr bgcolor="f5f5f5">
+			<td style="padding:3px;"><b>Consumption (MT/day)</b></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='c44' name="c44" value="<?php echo $c44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='c44_loading' name="c44_loading" value="<?php echo $c44_loading; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='c44_bunker_stop' name="c44_bunker_stop" value="<?php echo $c44_bunker_stop; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='d44' name="d44" value="<?php echo $d44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='d44_discharging' name="d44_discharging" value="<?php echo $d44_discharging; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='d44_repo' name="d44_repo" value="<?php echo $d44_repo; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='e44' name="e44" value="<?php echo $e44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class="input" style="padding:3px;">&nbsp;</td>
+		  </tr>
+		  <tr>
+			<td class="label" style="padding:3px;"><strong>Total Consumption (MT)</strong></td>
+			<td class="label calculated" id='c45' style="padding:3px;"></td>
+			<td class="label calculated" id='c45_loading' style="padding:3px;"></td>
+			<td class="label calculated" id='c45_bunker_stop' style="padding:3px;"></td>
+			<td class="label calculated" id='d45' style="padding:3px;"></td>
+			<td class="label calculated" id='d45_discharging' style="padding:3px;"></td>
+			<td class="label calculated" id='d45_repo' style="padding:3px;"></td>
+			<td class="label calculated" id='e45' style="padding:3px;"></td>
+			<td class='label' style="padding:3px;"><input type='text' id='f45' name="f45" value="<?php echo $f45; ?>" class='input_1 number' style="max-width:50px;" /></td>
+		  </tr>
+		  <tr>
+		  	<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Ballast</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Loading</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Bunker Stop</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Laden</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Discharging</i></b></td>
+			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Repositioning</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Port</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Reserve</i></b></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td style="padding:3px;"><b>Consumption (MT/day)</b></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='c44' name="c44" value="<?php echo $c44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='d44' name="d44" value="<?php echo $d44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
-			<td class='input' style="padding:3px;"><input type='text'  id='e44' name="e44" value="<?php echo $e44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
-			<td class="input" style="padding:3px;">&nbsp;</td>
-			<td class="input" style="padding:3px;">&nbsp;</td>
+			<td class='input' style="padding:3px;"><input type='text'  id='g44_ballast' name="g44_ballast" value="<?php echo $g44_ballast; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='g44_loading' name="g44_loading" value="<?php echo $g44_loading; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='g44_bunker_stop' name="g44_bunker_stop" value="<?php echo $g44_bunker_stop; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='g44' name="g44" value="<?php echo $g44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='g44_discharging' name="g44_discharging" value="<?php echo $g44_discharging; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='g44_repo' name="g44_repo" value="<?php echo $g44_repo; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='h44' name="h44" value="<?php echo $h44; ?>" class='input_1 number' style="max-width:50px;" /></td>
-			<td class='general' id='i44' style="padding:3px;"></td>
+			<td class='general' id='i44' style="padding:3px;">&nbsp;</td>
 		  </tr>
 		  <tr>
 			<td class="label" style="padding:3px;"><strong>Total Consumption (MT)</strong></td>
-			<td class="label calculated" id='c45' style="padding:3px;"></td>
-			<td class="label calculated" id='d45' style="padding:3px;"></td>
-			<td class="label calculated" id='e45' style="padding:3px;"></td>
-			<td class='label' style="padding:3px;"><input type='text' id='f45' name="f45" value="<?php echo $f45; ?>" class='input_1 number' style="max-width:50px;" /></td>
-			<td class="label" style="padding:3px;"></td>
+			<td class="label calculated" id='g45_ballast' style="padding:3px;"></td>
+			<td class="label calculated" id='g45_loading' style="padding:3px;"></td>
+			<td class="label calculated" id='g45_bunker_stop' style="padding:3px;"></td>
 			<td class="label calculated" id='g45' style="padding:3px;"></td>
+			<td class="label calculated" id='g45_discharging' style="padding:3px;"></td>
+			<td class="label calculated" id='g45_repo' style="padding:3px;"></td>
 			<td class="label calculated" id='h45' style="padding:3px;"></td>
-			<td class='label input' style="padding:3px;"><input type='text' id='i45' name="i45" value="<?php echo $i45; ?>" class='input_1 number' style="max-width:50px;" /></td>
+			<td class='label' style="padding:3px;"><input type='text' id='i45' name="i45" value="<?php echo $i45; ?>" class='input_1 number' style="max-width:50px;" /></td>
 		  </tr>
 		</table>
 		
@@ -3298,27 +3407,54 @@ if(!trim($e85)){
 		  <tr bgcolor="cddee5">
 			<td class="text_1"><div style="padding:3px;"><b>VOYAGE EXPENSES</b></div></td>
 			<td class="text_1" style="padding:3px;">IFO/Ballast</td>
+			<td class="text_1" style="padding:3px;">IFO/Loading</td>
+			<td class="text_1" style="padding:3px;">IFO/Bunker Stop</td>
 			<td class="text_1" style="padding:3px;">IFO/Laden</td>
+			<td class="text_1" style="padding:3px;">IFO/Discharging</td>
+			<td class="text_1" style="padding:3px;">IFO/Repositioning</td>
 			<td class="text_1" style="padding:3px;">IFO/Port</td>
 			<td class="text_1" style="padding:3px;">IFO/Reserve</td>
+		  </tr>
+		  <tr>
+			<td class="label" style="padding:3px;"><strong>Expense ($)</strong></td>
+			<td class="label calculated" id='c46' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='c46_loading' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='c46_bunker_stop' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='d46' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='d46_discharging' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='d46_repo' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='e46' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='f46' style="padding:3px;">&nbsp;</td>
+		  </tr>
+		  <tr>
+			<td class="label" style="padding:3px;"><strong>Total ($)</strong></td>
+			<td colspan="8" class="label calculated" id='c47' style="padding:3px;">&nbsp;</td>
+		  </tr>
+		  <tr bgcolor="cddee5">
+			<td class="text_1"><div style="padding:3px;"><b>&nbsp;</b></div></td>
+			<td class="text_1" style="padding:3px;">MDO/Ballast</td>
+			<td class="text_1" style="padding:3px;">MDO/Loading</td>
+			<td class="text_1" style="padding:3px;">MDO/Bunker Stop</td>
 			<td class="text_1" style="padding:3px;">MDO/Laden</td>
+			<td class="text_1" style="padding:3px;">MDO/Discharging</td>
+			<td class="text_1" style="padding:3px;">MDO/Repositioning</td>
 			<td class="text_1" style="padding:3px;">MDO/Port</td>
 			<td class="text_1" style="padding:3px;">MDO/Reserve</td>
 		  </tr>
 		  <tr>
 			<td class="label" style="padding:3px;"><strong>Expense ($)</strong></td>
-			<td class="label calculated" id='c46' style="padding:3px;">&nbsp;</td>
-			<td class="label calculated" id='d46' style="padding:3px;">&nbsp;</td>
-			<td class="label calculated" id='e46' style="padding:3px;">&nbsp;</td>
-			<td class="label calculated" id='f46' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='g46_ballast' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='g46_loading' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='g46_bunker_stop' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='g46' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='g46_discharging' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='g46_repo' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='h46' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='i46' style="padding:3px;">&nbsp;</td>
 		  </tr>
 		  <tr>
 			<td class="label" style="padding:3px;"><strong>Total ($)</strong></td>
-			<td colspan="4" class="label calculated" id='c47' style="padding:3px;">&nbsp;</td>
-			<td colspan="4" class="label calculated" id='g47' style="padding:3px;">&nbsp;</td>
+			<td colspan="8" class="label calculated" id='g47' style="padding:3px;">&nbsp;</td>
 		  </tr>
 		</table>
 		

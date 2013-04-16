@@ -558,7 +558,15 @@ if(trim($t)){
 						</td>
 						<td><div style='padding:5px;'>".$bi_data['dely']."</div></td>
 						<td style='text-align:right;'><div style='padding:5px;'><a onclick='openMapRegister(\"".$details."\")' class='clickable'><img src='images/map-icon.png' ></a></div></td>
-						<td><div style='padding:5px;'>".$bi_data['delydate_from']."</div></td>
+						<td><div style='padding:5px;'>";
+						
+						if(date("M d, 'y", strtotime($bi_data['delydate_from']))!="Jan 01, '70"){
+							echo date("M d, 'y", strtotime($bi_data['delydate_from']));
+						}else{
+							echo "&nbsp;";
+						}
+						
+						echo "</div></td>
 						<td>
 							<div style='padding:5px;'>
 								<table cellpadding='0' cellspacing='0' width='100%'>

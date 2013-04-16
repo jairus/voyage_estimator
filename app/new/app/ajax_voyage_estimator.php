@@ -1306,6 +1306,22 @@ function calculateDates(){
 	setValue(jQuery("#g45_bunker_stop"), fNum(g45_bunker_stop));
 	setValue(jQuery("#g46_bunker_stop"), fNum(g46_bunker_stop));
 	//END OF MDO
+	
+	//IFO
+	c45_bunkering = getValue(jQuery("#c44_bunkering"));
+	c46_bunkering = c45_bunkering*(uNum(getValue(jQuery("#d42_input")))+uNum(getValue(jQuery("#d42_180_input")))+uNum(getValue(jQuery("#d42_lsifo380_input")))+uNum(getValue(jQuery("#d42_lsifo180_input"))));
+
+	setValue(jQuery("#c45_bunkering"), fNum(c45_bunkering));
+	setValue(jQuery("#c46_bunkering"), fNum(c46_bunkering));
+	//END OF IFO
+	
+	//MDO
+	g45_bunkering = getValue(jQuery("#g44_bunkering"));
+	g46_bunkering = g45_bunkering*(uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))));
+
+	setValue(jQuery("#g45_bunkering"), fNum(g45_bunkering));
+	setValue(jQuery("#g46_bunkering"), fNum(g46_bunkering));
+	//END OF MDO
 	//END OF BUNKER STOP
 	
 	//LADEN
@@ -1438,10 +1454,10 @@ function calculateDates(){
 
 	setValue(jQuery("#f46"), fNum(f46));
 
-	c47 = c46+c46_loading+c46_bunker_stop+d46+d46_discharging+d46_repo+e46+f46;
+	c47 = c46+c46_loading+uNum(c46_bunkering)+c46_bunker_stop+d46+d46_discharging+d46_repo+e46+f46;
 	setValue(jQuery("#c47"), fNum(c47));
 
-	d19b = c45+c45_loading+c45_bunker_stop+d45+d45_discharging+d45_repo+e45;
+	d19b = c45+c45_loading+uNum(c45_bunkering)+c45_bunker_stop+d45+d45_discharging+d45_repo+e45;
 	setValue(jQuery("#d19b"), fNum(d19b));
 	setValue(jQuery("#d19"), fNum(d19b));
 
@@ -1465,10 +1481,10 @@ function calculateDates(){
 	i46 = (uNum(getValue(jQuery("#h42_input")))+uNum(getValue(jQuery("#h42_mgo_input")))+uNum(getValue(jQuery("#h42_lsmgo_input"))))*uNum(getValue(jQuery("#i45")));
 	setValue(jQuery("#i46"), fNum(i46));
 
-	g47 = g46_ballast+g46_loading+g46_bunker_stop+g46+g46_discharging+g46_repo+h46+i46;
+	g47 = g46_ballast+g46_loading+uNum(g46_bunkering)+g46_bunker_stop+g46+g46_discharging+g46_repo+h46+i46;
 	setValue(jQuery("#g47"), fNum(g47));	
 
-	d20b = g45_ballast+g45_loading+g45_bunker_stop+g45+g45_discharging+g45_repo+h45;
+	d20b = g45_ballast+g45_loading+uNum(g45_bunkering)+g45_bunker_stop+g45+g45_discharging+g45_repo+h45;
 	setValue(jQuery("#d20b"), fNum(d20b));
 	setValue(jQuery("#d20"), fNum(d20b));
 
@@ -3334,19 +3350,21 @@ if(!trim($e85)){
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 		  	<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Ballast</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Loading</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Bunker Stop</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Laden</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Discharging</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Repositioning</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Port</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#ff0000;"><b><i>IFO/Ballast</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#00b050;"><b><i>IFO/Loading</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#ff0000;"><b><i>IFO/Bunkering</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#00b050;"><b><i>IFO/Bunker Stop</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#ff0000;"><b><i>IFO/Laden</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#00b050;"><b><i>IFO/Discharging</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#ff0000;"><b><i>IFO/Repositioning</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#00b050;"><b><i>IFO/Port</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>IFO/Reserve</i></b></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td style="padding:3px;"><b>Consumption (MT/day)</b></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='c44' name="c44" value="<?php echo $c44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='c44_loading' name="c44_loading" value="<?php echo $c44_loading; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='c44_bunkering' name="c44_bunkering" value="<?php echo $c44_bunkering; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='c44_bunker_stop' name="c44_bunker_stop" value="<?php echo $c44_bunker_stop; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='d44' name="d44" value="<?php echo $d44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='d44_discharging' name="d44_discharging" value="<?php echo $d44_discharging; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
@@ -3358,6 +3376,7 @@ if(!trim($e85)){
 			<td class="label" style="padding:3px;"><strong>Total Consumption (MT)</strong></td>
 			<td class="label calculated" id='c45' style="padding:3px;"></td>
 			<td class="label calculated" id='c45_loading' style="padding:3px;"></td>
+			<td class="label calculated" id='c45_bunkering' style="padding:3px;"></td>
 			<td class="label calculated" id='c45_bunker_stop' style="padding:3px;"></td>
 			<td class="label calculated" id='d45' style="padding:3px;"></td>
 			<td class="label calculated" id='d45_discharging' style="padding:3px;"></td>
@@ -3367,19 +3386,21 @@ if(!trim($e85)){
 		  </tr>
 		  <tr>
 		  	<td class="text_1 label" style="padding:3px;"><b><i>&nbsp;</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Ballast</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Loading</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Bunker Stop</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Laden</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Discharging</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Repositioning</i></b></td>
-			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Port</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#ff0000;"><b><i>MDO/Ballast</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#00b050;"><b><i>MDO/Loading</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#ff0000;"><b><i>MDO/Bunkering</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#00b050;"><b><i>MDO/Bunker Stop</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#ff0000;"><b><i>MDO/Laden</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#00b050;"><b><i>MDO/Discharging</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#ff0000;"><b><i>MDO/Repositioning</i></b></td>
+			<td class="text_1 label" style="padding:3px; color:#00b050;"><b><i>MDO/Port</i></b></td>
 			<td class="text_1 label" style="padding:3px;"><b><i>MDO/Reserve</i></b></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td style="padding:3px;"><b>Consumption (MT/day)</b></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='g44_ballast' name="g44_ballast" value="<?php echo $g44_ballast; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='g44_loading' name="g44_loading" value="<?php echo $g44_loading; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+			<td class='input' style="padding:3px;"><input type='text'  id='g44_bunkering' name="g44_bunkering" value="<?php echo $g44_bunkering; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='g44_bunker_stop' name="g44_bunker_stop" value="<?php echo $g44_bunker_stop; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='g44' name="g44" value="<?php echo $g44; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
 			<td class='input' style="padding:3px;"><input type='text'  id='g44_discharging' name="g44_discharging" value="<?php echo $g44_discharging; ?>" class='input_1 number' style="max-width:50px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
@@ -3391,6 +3412,7 @@ if(!trim($e85)){
 			<td class="label" style="padding:3px;"><strong>Total Consumption (MT)</strong></td>
 			<td class="label calculated" id='g45_ballast' style="padding:3px;"></td>
 			<td class="label calculated" id='g45_loading' style="padding:3px;"></td>
+			<td class="label calculated" id='g45_bunkering' style="padding:3px;"></td>
 			<td class="label calculated" id='g45_bunker_stop' style="padding:3px;"></td>
 			<td class="label calculated" id='g45' style="padding:3px;"></td>
 			<td class="label calculated" id='g45_discharging' style="padding:3px;"></td>
@@ -3406,19 +3428,21 @@ if(!trim($e85)){
 		<table width="1000" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
 			<td class="text_1"><div style="padding:3px;"><b>VOYAGE EXPENSES</b></div></td>
-			<td class="text_1" style="padding:3px;">IFO/Ballast</td>
-			<td class="text_1" style="padding:3px;">IFO/Loading</td>
-			<td class="text_1" style="padding:3px;">IFO/Bunker Stop</td>
-			<td class="text_1" style="padding:3px;">IFO/Laden</td>
-			<td class="text_1" style="padding:3px;">IFO/Discharging</td>
-			<td class="text_1" style="padding:3px;">IFO/Repositioning</td>
-			<td class="text_1" style="padding:3px;">IFO/Port</td>
-			<td class="text_1" style="padding:3px;">IFO/Reserve</td>
+			<td class="text_1" style="padding:3px; color:#ff0000;"><b><i>IFO/Ballast</i></b></td>
+			<td class="text_1" style="padding:3px; color:#00b050;"><b><i>IFO/Loading</i></b></td>
+			<td class="text_1" style="padding:3px; color:#ff0000;"><b><i>IFO/Bunkering</i></b></td>
+			<td class="text_1" style="padding:3px; color:#00b050;"><b><i>IFO/Bunker Stop</i></b></td>
+			<td class="text_1" style="padding:3px; color:#ff0000;"><b><i>IFO/Laden</i></b></td>
+			<td class="text_1" style="padding:3px; color:#00b050;"><b><i>IFO/Discharging</i></b></td>
+			<td class="text_1" style="padding:3px; color:#ff0000;"><b><i>IFO/Repositioning</i></b></td>
+			<td class="text_1" style="padding:3px; color:#00b050;"><b><i>IFO/Port</i></b></td>
+			<td class="text_1" style="padding:3px;"><b><i>IFO/Reserve</i></b></td>
 		  </tr>
 		  <tr>
 			<td class="label" style="padding:3px;"><strong>Expense ($)</strong></td>
 			<td class="label calculated" id='c46' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='c46_loading' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='c46_bunkering' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='c46_bunker_stop' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='d46' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='d46_discharging' style="padding:3px;">&nbsp;</td>
@@ -3428,23 +3452,25 @@ if(!trim($e85)){
 		  </tr>
 		  <tr>
 			<td class="label" style="padding:3px;"><strong>Total ($)</strong></td>
-			<td colspan="8" class="label calculated" id='c47' style="padding:3px;">&nbsp;</td>
+			<td colspan="9" class="label calculated" id='c47' style="padding:3px;">&nbsp;</td>
 		  </tr>
 		  <tr bgcolor="cddee5">
 			<td class="text_1"><div style="padding:3px;"><b>&nbsp;</b></div></td>
-			<td class="text_1" style="padding:3px;">MDO/Ballast</td>
-			<td class="text_1" style="padding:3px;">MDO/Loading</td>
-			<td class="text_1" style="padding:3px;">MDO/Bunker Stop</td>
-			<td class="text_1" style="padding:3px;">MDO/Laden</td>
-			<td class="text_1" style="padding:3px;">MDO/Discharging</td>
-			<td class="text_1" style="padding:3px;">MDO/Repositioning</td>
-			<td class="text_1" style="padding:3px;">MDO/Port</td>
-			<td class="text_1" style="padding:3px;">MDO/Reserve</td>
+			<td class="text_1" style="padding:3px; color:#ff0000;"><b><i>MDO/Ballast</i></b></td>
+			<td class="text_1" style="padding:3px; color:#00b050;"><b><i>MDO/Loading</i></b></td>
+			<td class="text_1" style="padding:3px; color:#ff0000;"><b><i>MDO/Bunkering</i></b></td>
+			<td class="text_1" style="padding:3px; color:#00b050;"><b><i>MDO/Bunker Stop</i></b></td>
+			<td class="text_1" style="padding:3px; color:#ff0000;"><b><i>MDO/Laden</i></b></td>
+			<td class="text_1" style="padding:3px; color:#00b050;"><b><i>MDO/Discharging</i></b></td>
+			<td class="text_1" style="padding:3px; color:#ff0000;"><b><i>MDO/Repositioning</i></b></td>
+			<td class="text_1" style="padding:3px; color:#00b050;"><b><i>MDO/Port</i></b></td>
+			<td class="text_1" style="padding:3px;"><b><i>MDO/Reserve</i></b></td>
 		  </tr>
 		  <tr>
 			<td class="label" style="padding:3px;"><strong>Expense ($)</strong></td>
 			<td class="label calculated" id='g46_ballast' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='g46_loading' style="padding:3px;">&nbsp;</td>
+			<td class="label calculated" id='g46_bunkering' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='g46_bunker_stop' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='g46' style="padding:3px;">&nbsp;</td>
 			<td class="label calculated" id='g46_discharging' style="padding:3px;">&nbsp;</td>
@@ -3454,7 +3480,7 @@ if(!trim($e85)){
 		  </tr>
 		  <tr>
 			<td class="label" style="padding:3px;"><strong>Total ($)</strong></td>
-			<td colspan="8" class="label calculated" id='g47' style="padding:3px;">&nbsp;</td>
+			<td colspan="9" class="label calculated" id='g47' style="padding:3px;">&nbsp;</td>
 		  </tr>
 		</table>
 		

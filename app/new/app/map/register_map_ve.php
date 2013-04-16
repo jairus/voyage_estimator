@@ -74,6 +74,10 @@ else{ $utc = date("M j, 'y G:i e", str2time($utc)); }
 $nav = trim(getValue($xvas_pos['siitech_shippos_data'], 'NavigationalStatus'));
 if($nav==""){ $nav = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
 
+$sql_bi  = "SELECT * FROM `_messages` WHERE `imo`='".$ship['IMO #']."' ORDER BY `dateadded` DESC LIMIT 0,1";
+$r_bi = dbQuery($sql_bi);
+$r_bi = $r_bi[0];
+
 $xstring = "
 	<table width='600'>
 		<tr>
@@ -90,22 +94,46 @@ $xstring = "
 						</tr>
 					</table>
 				</div>
-			</td>
-			<td style='width:50%; background:#ffff00;'>
-			<div style='padding:5px;'>
-				<table style='font-family:verdana; font-size:10px;'>
-					<tr>
-						<td width='130'><b>AIS LAST SEEN DATE:</b></td>
-						<td>".$siitech_lastseen."</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-				</table>
-			</div>
-		</td>
-	</tr>
+			</td>";
+			
+			if(trim($r_bi)){
+				$message = unserialize($r_bi['message']);
+			
+				$xstring .= "<td style='width:50%; background:#ffc000;'>
+					<div style='padding:5px;'>
+						<table style='font-family:verdana; font-size:10px;'>
+							<tr>
+								<td colspan='2'><b>BROKERS INTELLIGENCE</b></td>
+							</tr>
+							<tr>
+								<td width='130'><b>DESTINATION:</b></td>
+								<td>".$message['dely']."</td>
+							</tr>
+							<tr>
+								<td valign='top'><b>LAYCAN:</b></td>
+								<td>".date("M j, 'y G:i e", str2time($message['delydate_from']))." to ".date("M j, 'y G:i e", str2time($message['delydate_to']))."</td>
+							</tr>
+						</table>
+					</div>
+				</td>";
+			}else{
+				$xstring .= "<td style='width:50%; background:#ffff00;'>
+					<div style='padding:5px;'>
+						<table style='font-family:verdana; font-size:10px;'>
+							<tr>
+								<td width='130'><b>AIS LAST SEEN DATE:</b></td>
+								<td>".$siitech_lastseen."</td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+						</table>
+					</div>
+				</td>";
+			}
+		
+	$xstring .= "</tr>
 	<tr>
 		<td colspan='3'>
 			<table border='0' cellspacing='0' cellpadding='0'>

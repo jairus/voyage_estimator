@@ -85,6 +85,7 @@ if(isset($_GET['num'])){
 			if($r[0]['id']){
 				$sqlext = "";
 				$sqlext2 = "";
+				$sqlext3 = "";
 				
 				$portid = $r[0]['portid'];
 				$port_latitude = $r[0]['latitude'];
@@ -133,20 +134,24 @@ if(isset($_GET['num'])){
 				for($vti=0; $vti<$vtarr; $vti++){
 					$sqlext .= " `xvas_vessel_type`='".$vessel_type[$vti]."' ";
 					$sqlext2 .= " `xvas_vessel_type`='".$vessel_type[$vti]."' ";
+					$sqlext3 .= "a.vessel_type='".$vessel_type[$vti]."'";
 			
 					if(($vti+1)<$vtarr){
 						$sqlext .= " or ";
 						$sqlext2 .= " or ";
+						$sqlext3 .= " or ";
 					}
 				}
 				
 				if($vtarr){
 					$sqlext .= " ) and ";
 					$sqlext2 .= " ) and ";
+					$sqlext3 .= " and ";
 				}
 				
 				$sqlext .= " (`xvas_summer_dwt` BETWEEN '".$dwt_low."' AND '".$dwt_high."') ";
 				$sqlext2 .= " (`xvas_summer_dwt` BETWEEN '".$dwt_low."' AND '".$dwt_high."') AND ";
+				$sqlext3 .= " (a.summer_dwt BETWEEN '".$dwt_low."' AND '".$dwt_high."')";
 				
 				$sql_ships = "SELECT * FROM `_xvas_siitech_cache` WHERE ".$sqlext." ORDER BY `dateupdated`";
 				$r_ships = dbQuery($sql_ships, $link);
@@ -182,7 +187,33 @@ if(isset($_GET['num'])){
 					$t_ships = count($r_ships);
 				}
 				
-				if($t_ships){
+				$userid = $_SESSION['user']['id'];
+				$sql_broker = "SELECT a.imo AS xvas_imo, a.vessel_type, b.id AS message_id, b.imo AS message_imo, b.message FROM _xvas_parsed2_dry AS a INNER JOIN _messages AS b ON a.imo=b.imo WHERE ".$sqlext3." AND b.type='network' AND b.user_email in ( 
+						select `email` from `_sbis_users` where 
+								`id` in (
+									select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+								) or
+								`id` in (
+									select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+								)
+							)";
+				/*$sql_broker = "SELECT * FROM `_xvas_parsed2_dry` WHERE 1 and 
+								`imo` in ( 
+									select `imo` from `_messages` where `type`='network' and 
+									`user_email` in ( 
+										select `email` from `_sbis_users` where 
+										`id` in (
+											select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+										) or
+										`id` in (
+											select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+										)
+									)
+								)";*/
+				$r_broker = dbQuery($sql_broker, $link);
+				$t_broker = count($r_broker);
+				
+				if($t_ships || $t_broker){
 					echo '<ul>
 						<li name="fragment-1" style="background: url("images/specs.jpg") no-repeat 5px 5px ; padding-left:30px; width:165px"  ><a><span>&nbsp;&nbsp;fixture management</span></a></li>
 						<li name="fragment-2" style="background: url("images/shipeta.jpg") no-repeat 5px 5px ; padding-left:30px; width:165px"><a><span>&nbsp;position report</span></a></li>
@@ -211,6 +242,7 @@ if(isset($_GET['num'])){
 		}
 	}else if($_GET['num']==2){
 		$sqlext = "";
+		$sqlext3 = "";
 	
 		$destination_port_from = date('Y-m-d', strtotime($_GET['destination_port_from2']));
 		$destination_port_to = date('Y-m-d', strtotime($_GET['destination_port_to2']));
@@ -248,24 +280,61 @@ if(isset($_GET['num'])){
 		
 		$vtarr = count($vessel_type);
 	
-		if($vtarr){ $sqlext .= " ( "; }
+		if($vtarr){
+			$sqlext .= " ( ";
+			$sqlext3 .= " ( ";
+		}
 		
 		for($vti=0; $vti<$vtarr; $vti++){
 			$sqlext .= " `xvas_vessel_type`='".$vessel_type[$vti]."' ";
+			$sqlext3 .= "a.vessel_type='".$vessel_type[$vti]."'";
 	
-			if(($vti+1)<$vtarr){ $sqlext .= " or "; }
+			if(($vti+1)<$vtarr){
+				$sqlext .= " or ";
+				$sqlext3 .= " or ";
+			}
 		}
 		
-		if($vtarr){ $sqlext .= " ) and "; }
+		if($vtarr){
+			$sqlext .= " ) and ";
+			$sqlext3 .= " ) and ";
+		}
 		
 		$sqlext .= " (`xvas_summer_dwt` BETWEEN '".$dwt_low."' AND '".$dwt_high."') ";
+		$sqlext3 .= " (a.summer_dwt BETWEEN '".$dwt_low."' AND '".$dwt_high."')";
 		
 		$sql_ships = "SELECT * FROM `_xvas_siitech_cache` WHERE ".$sqlext." ORDER BY `dateupdated`";
 		$r_ships = dbQuery($sql_ships, $link);
 		
 		$t_ships = count($r_ships);
 		
-		if($t_ships){
+		$userid = $_SESSION['user']['id'];
+		$sql_broker = "SELECT a.imo AS xvas_imo, a.vessel_type, b.id AS message_id, b.imo AS message_imo, b.message FROM _xvas_parsed2_dry AS a INNER JOIN _messages AS b ON a.imo=b.imo WHERE ".$sqlext3." AND b.type='network' AND b.user_email in ( 
+						select `email` from `_sbis_users` where 
+								`id` in (
+									select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+								) or
+								`id` in (
+									select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+								)
+							)";
+		/*$sql_broker = "SELECT * FROM `_xvas_parsed2_dry` WHERE 1 and 
+						`imo` in ( 
+							select `imo` from `_messages` where `type`='network' and 
+							`user_email` in ( 
+								select `email` from `_sbis_users` where 
+								`id` in (
+									select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+								) or
+								`id` in (
+									select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+								)
+							)
+						)";*/
+		$r_broker = dbQuery($sql_broker, $link);
+		$t_broker = count($r_broker);
+		
+		if($t_ships || $t_broker){
 			echo '<ul>
 				<li name="fragment-1" style="background: url("images/specs.jpg") no-repeat 5px 5px ; padding-left:30px; width:165px"  ><a><span>&nbsp;&nbsp;fixture management</span></a></li>
 				<li name="fragment-2" style="background: url("images/shipeta.jpg") no-repeat 5px 5px ; padding-left:30px; width:165px"><a><span>&nbsp;position report</span></a></li>

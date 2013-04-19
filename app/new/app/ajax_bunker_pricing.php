@@ -14,7 +14,7 @@ body{
 <script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
 <script type='text/javascript' src='js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
 <script type='text/javascript' src='js/jquery-autocomplete/jquery.autocomplete.js'></script>
-
+<!--<script type='text/javascript' src='js/ports_bunker.php'></script>-->
 <link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/jquery.autocomplete.css" />
 <link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/lib/thickbox.css" />
 
@@ -26,7 +26,27 @@ body{
     <iframe id='mapiframebunkerprice' name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
 
+<?php
+include_once(dirname(__FILE__)."/../includes/database.php");
+$link = dbConnect();
+
+$sql_bunker = "select * from `_veson_ports` where 1";
+$ports_bunker = dbQuery($sql_bunker, $link);
+?>
 <script>
+var ports_bunker = [ <?php
+$t_bunker = count($ports_bunker);
+for($i_bunker=0; $i_bunker<$t_bunker; $i_bunker++){
+	echo "\"".$ports_bunker[$i_bunker]['name']."\"";
+	if($i_bunker%100==0&&$i_bunker!=0){
+		echo "\n";
+	}
+	if(($i_bunker+1)<$t_bunker){
+		echo ",";
+	}
+}
+?>];
+
 function getBunkerPriceHistory(port_code, grade){
 	jQuery('#pleasewait').show();
 	
@@ -144,7 +164,7 @@ jQuery( "#bunkerpricedialog" ).dialog("close");
 </form>
 
 <script type="text/javascript">
-jQuery("#bunkerportname_id").focus().autocomplete(ports);
+jQuery("#bunkerportname_id").focus().autocomplete(ports_bunker);
 jQuery("#bunkerportname_id").setOptions({
     scrollHeight: 180
 });

@@ -20,6 +20,7 @@ if($user['dry']==0){
 <link rel="stylesheet" href="css/style_ve.css">
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>-->
 <script type="text/javascript">
 var agentpage = '<?php echo $page; ?>';
 var agentpage2 = '<?php echo $_GET['page']; ?>';
@@ -59,12 +60,12 @@ function displayContent(content){
 		jQuery('#distance_calculator_id_link').removeClass('content_link_selected');
 		jQuery('#ship_search_register_id_link').removeClass('content_link_selected');
 		jQuery('#fleet_positions_id_link').removeClass('content_link_selected');
-		jQuery('#ships_coming_into_ports_id_link').removeClass('content_link_selected');
-		jQuery('#live_ship_position_id_link').removeClass('content_link_selected');
+		//jQuery('#ships_coming_into_ports_id_link').removeClass('content_link_selected');
+		//jQuery('#live_ship_position_id_link').removeClass('content_link_selected');
 		jQuery('#ports_intelligence_id_link').removeClass('content_link_selected');
-		jQuery('#piracy_notices_id_link').removeClass('content_link_selected');
+		//jQuery('#piracy_notices_id_link').removeClass('content_link_selected');
 		jQuery('#bunker_pricing_id_link').removeClass('content_link_selected');
-		jQuery('#weather_id_link').removeClass('content_link_selected');
+		//jQuery('#weather_id_link').removeClass('content_link_selected');
 		jQuery('#account_id_link').removeClass('content_link_selected');
 		
 		jQuery('#voyage_estimator_id_link').addClass('content_link');

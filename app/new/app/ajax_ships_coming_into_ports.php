@@ -140,7 +140,7 @@ jQuery("#mapdialog").dialog("close");
                     <td style="border-bottom:none;" width="5">&nbsp;</td>
                     <td style="border-bottom:none;">
                     	<div style="padding:3px;">
-                        <select name="p_vessel_type[]" multiple="multiple" size="16" id='p_vessel_type_id' style="width:200px;">
+                        <select name="p_vessel_type[]" multiple="multiple" size="21" id='p_vessel_type_id' style="width:200px;">
                             <optgroup label="BULK CARRIER">
                                 <option value="BULK CARRIER">BULK CARRIER</option>
                                 <option value="ORE CARRIER">ORE CARRIER</option>

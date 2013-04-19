@@ -10,10 +10,10 @@
 			<a onclick="displayContent('fleet_positions');" id='fleet_positions_id_link' class="content_link">Fleet Register</a> &nbsp; 
 			<a onclick="displayContent('ship_his');" id='ship_his_id_link' class="content_link">Ship Voys</a> &nbsp; 
 			<a onclick="displayContent('ports_intelligence');" id='ports_intelligence_id_link' class="content_link">Port Specs</a> &nbsp; 
-            <a onclick="displayContent('ships_coming_into_ports');" id='ships_coming_into_ports_id_link' class="content_link">Port Arrivals</a> &nbsp; 
-            <a onclick="displayContent('live_ship_position');" id='live_ship_position_id_link' class="content_link">AIS Vessels</a> &nbsp; 
-            <a onclick="displayContent('piracy_notices');" id='piracy_notices_id_link' class="content_link">Piracy</a> &nbsp; 
-            <a onclick="displayContent('weather');" id='weather_id_link' class="content_link">Weather</a> &nbsp; 
+            <!--<a onclick="displayContent('ships_coming_into_ports');" id='ships_coming_into_ports_id_link' class="content_link" style="display:none;">Port Arrivals</a> &nbsp; 
+            <a onclick="displayContent('live_ship_position');" id='live_ship_position_id_link' class="content_link" style="display:none;">AIS Vessels</a> &nbsp; 
+            <a onclick="displayContent('piracy_notices');" id='piracy_notices_id_link' class="content_link" style="display:none;">Piracy</a> &nbsp; 
+            <a onclick="displayContent('weather');" id='weather_id_link' class="content_link" style="display:none;">Weather</a> &nbsp; -->
 			<a onclick="displayContent('account');" id='account_id_link' class="content_link">Account</a> &nbsp; 
 			<a href="s-bislogout.php" id='weather_id_link' class="content_link">Logout</a>
         </div>

@@ -109,7 +109,16 @@ for($i=0; $i<$t; $i++){
 	$nav = trim(getValue($xvas_pos['siitech_shippos_data'], 'NavigationalStatus'));
 	if($nav==""){ $nav = "<img style='height:15px; width:15px;' src='../images/alert1.png'; alt='No AIS Data Available' title='No AIS Data Available' />"; }
 	
-	$sql_bi  = "SELECT * FROM `_messages` WHERE `imo`='".$xvas1['xvas_imo']."' ORDER BY `dateadded` DESC LIMIT 0,1";
+	$userid = $_SESSION['user']['id'];
+	$sql_bi  = "SELECT * FROM `_messages` WHERE `imo`='".$xvas1['xvas_imo']."' AND type='network' AND user_email in ( 
+				select `email` from `_sbis_users` where 
+						`id` in (
+							select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+						) or
+						`id` in (
+							select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+						)
+					)";
 	$r_bi = dbQuery($sql_bi);
 	$r_bi = $r_bi[0];
 	

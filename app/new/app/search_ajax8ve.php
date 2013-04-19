@@ -197,19 +197,6 @@ if(isset($_GET['num'])){
 									select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
 								)
 							)";
-				/*$sql_broker = "SELECT * FROM `_xvas_parsed2_dry` WHERE 1 and 
-								`imo` in ( 
-									select `imo` from `_messages` where `type`='network' and 
-									`user_email` in ( 
-										select `email` from `_sbis_users` where 
-										`id` in (
-											select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
-										) or
-										`id` in (
-											select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
-										)
-									)
-								)";*/
 				$r_broker = dbQuery($sql_broker, $link);
 				$t_broker = count($r_broker);
 				
@@ -318,19 +305,6 @@ if(isset($_GET['num'])){
 									select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
 								)
 							)";
-		/*$sql_broker = "SELECT * FROM `_xvas_parsed2_dry` WHERE 1 and 
-						`imo` in ( 
-							select `imo` from `_messages` where `type`='network' and 
-							`user_email` in ( 
-								select `email` from `_sbis_users` where 
-								`id` in (
-									select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
-								) or
-								`id` in (
-									select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
-								)
-							)
-						)";*/
 		$r_broker = dbQuery($sql_broker, $link);
 		$t_broker = count($r_broker);
 		

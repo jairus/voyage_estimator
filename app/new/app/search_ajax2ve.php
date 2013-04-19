@@ -532,7 +532,16 @@ if(trim($t)){
 			</tr>";
 			
 			//SELECT BROKER INTELLIGENCE
-			$sql_int = "SELECT * FROM `_messages` WHERE imo='".$ship['IMO #']."' AND type='network' ORDER BY dateadded DESC";
+			$userid = $_SESSION['user']['id'];
+			$sql_int = "SELECT * FROM `_messages` WHERE imo='".$ship['IMO #']."' AND type='network' AND user_email in ( 
+						select `email` from `_sbis_users` where 
+								`id` in (
+									select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+								) or
+								`id` in (
+									select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+								)
+							)";
 			$broker_int = dbQuery($sql_int, $link);
 			
 			$t_int = count($broker_int);

@@ -199,7 +199,7 @@ if($_SESSION['user']){
               <tr>
                 <td width="35" valign="top"><img src="images/home/iconsmall_positions.gif" title="AIS VESSEL TRACKING" alt="AIS VESSEL TRACKING" name="Ship  or Vessel Tracking finding their position in S-BIS" width="35" height="35" /></td>
                 <td valign="top">
-                	<h6><a href="search.php#positions">AIS SHOREsearch</a></h6>
+                	<h6><a href="search.php#aisdestinationandeta">AIS Destination & ETA</a></h6>
           			<p> AIS SHOREsearch  finds all the ships in every major port.</p>
                 </td>
               </tr>
@@ -211,7 +211,7 @@ if($_SESSION['user']){
               <tr>
                 <td width="35" valign="top"><img src="images/home/iconsmall_ports.gif" title="AIS SATELLITE VESSEL TRACKING" alt="AIS SATELLITE VESSEL TRACKING" name="Ports Data and Ports Information including Lat &amp; Long" width="35" height="35" /></td>
                 <td valign="top">
-                	<h6><a href="search.php#positions">AIS SATELLITEsearch</a></h6>
+                	<h6><a href="search.php#aisshipvoyages">AIS Ship Voyages</a></h6>
           			<p>AIS SATELLITEsearch finds EVERY ship in the ocean.</p>
                 </td>
               </tr>
@@ -223,8 +223,8 @@ if($_SESSION['user']){
               <tr>
                 <td width="35" valign="top"><img src="images/home/iconsmall_cargo.gif" title="SHIP FIXTURE MANAGEMENT" alt="SHIP FIXTURE MANAGEMENT" name="Match your cargo to the Right Ship using S-BIS" width="35" height="35" /></td>
                 <td valign="top">
-                	<h6><a href="search.php#cargo">BROKERSintelligence</a></h6>
-          			<p>BROKERSintelligence adds priceless market knowledge</p>
+                	<h6><a href="search.php#portagents">Ports Agents</a></h6>
+          			<p>Ports Agents adds priceless market knowledge</p>
                 </td>
               </tr>
             </table>
@@ -243,7 +243,7 @@ if($_SESSION['user']){
               <tr>
                 <td width="35" valign="top"><img src="images/home/iconsmall_quicklook.gif" title="SHIP BROKERING TOOLS" alt="SHIP BROKERING TOOLS" name="S-BIS Fixtures Module takes Brokering to the next level" width="35" height="35" /></td>
                 <td valign="top">
-                	<h6><a href="fixture.php#quicklook">Quick Look </a></h6>
+                	<h6><a href="fixture.php#shipregister">Ship Register</a></h6>
           			<p>Reviewing probably the widest choice of ships available</p>
                 </td>
               </tr>
@@ -255,7 +255,7 @@ if($_SESSION['user']){
               <tr>
                 <td width="35" valign="top"><img src="images/home/iconsmall_voyage.gif" title="VOYAGE ESTIMATION" alt="VOYAGE ESTIMATION" name="S-BIS Voyage Estimator making intelligent choices based on accurate information" width="35" height="35" /></td>
                 <td valign="top">
-                	<h6><a href="fixture.php#voyestimator">Voyage Estimator</a></h6>
+                	<h6><a href="fixture.php#fleetregister">Fleet Register</a></h6>
           			<p>Getting down to the business of closing the charter</p>
                 </td>
               </tr>
@@ -267,7 +267,7 @@ if($_SESSION['user']){
               <tr>
                 <td width="35" valign="top"><img src="images/home/iconsmall_offerbuilder.gif" title="SHIP CHARTERING" alt="SHIP CHARTERING" name="S-BIS Offer Builder closing the deal doing the trade and not forgetting the details" width="35" height="35" /></td>
                 <td valign="top">
-                	<h6> <a href="fixture.php#offerbuilder">Offer Builder </a></h6>
+                	<h6> <a href="fixture.php#portregister">Port Register</a></h6>
           			<p>Getting an &quot;Offer' ready to email the ‘rate idea’ .</p>
                 </td>
               </tr>
@@ -287,7 +287,7 @@ if($_SESSION['user']){
               <tr>
                 <td width="35" valign="top"><img src="images/home/iconsmall_vetting.gif" title="SHIP VETTING" alt="SHIP VETTING" name="S-BIS using Ocean Intelligence for credit risk analysis" width="35" height="35" /></td>
                 <td valign="top">
-                	<h6><a href="recap.php#vetting">Vetting Information</a></h6>
+                	<h6><a href="recap.php#distancecalculator">Distance Calculator</a></h6>
           			<p>Ocean Intelligence &amp; Ship reliability analytics</p>
                 </td>
               </tr>
@@ -299,7 +299,7 @@ if($_SESSION['user']){
               <tr>
                 <td width="35" valign="top"><img src="images/home/iconsmall_charter.gif" title="CHARTER PARTY SOFTWARE" alt="CHARTER PARTY SOFTWARE" name="S-BIS Charter Party forms, keeping the information close at hand." width="35" height="35" /></td>
                 <td valign="top">
-                	<h6><a href="recap.php#charter">Charter Party Editor</a></h6>
+                	<h6><a href="recap.php#voyageestimator">Voyage Estimator</a></h6>
           			<p>Quick way to execute freight contracts</p>
                 </td>
               </tr>
@@ -311,7 +311,7 @@ if($_SESSION['user']){
               <tr>
                 <td width="35" valign="top"><img src="images/home/iconsmall_archive.gif" title="Q88 FORMS" alt="Q88 FORMS" name="S-BIS keeps track if you want to of information of Searches and data" width="35" height="35" /></td>
                 <td valign="top">
-                	<h6><a href="recap.php#archives">Archives</a></h6>
+                	<h6><a href="recap.php#bunkerworld">Bunkerworld</a></h6>
           			<p>History of your fixtures and AIS data</p>
                 </td>
               </tr>

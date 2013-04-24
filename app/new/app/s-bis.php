@@ -19,8 +19,8 @@ if($user['dry']==0){
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style_ve.css">
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>-->
+<!--<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>-->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
 var agentpage = '<?php echo $page; ?>';
 var agentpage2 = '<?php echo $_GET['page']; ?>';

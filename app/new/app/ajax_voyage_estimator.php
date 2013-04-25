@@ -621,6 +621,7 @@ $(".date").datepicker({
 		jQuery(this).val(date);
 		
 		calculateDates();
+		calculateBunkerConsumption();
 	},
 });
 //END OF SHOW DATE PICKER
@@ -677,6 +678,7 @@ function portTo1DistCalc(to, from, triggerajax){
 
 				calculateDates();
 				calculateSeaPortDays();
+				calculateBunkerConsumption();
 			}
 		});
 	}else{
@@ -697,6 +699,7 @@ function portTo1DistCalc(to, from, triggerajax){
 
 		calculateDates();
 		calculateSeaPortDays();
+		calculateBunkerConsumption();
 	}
 }
 
@@ -751,6 +754,7 @@ function portToDistCalc(to, from, triggerajax, row){
 
 				calculateDates2(row);
 				calculateSeaPortDays();
+				calculateBunkerConsumption();
 			}
 		});
 	}else{
@@ -771,6 +775,7 @@ function portToDistCalc(to, from, triggerajax, row){
 
 		calculateDates2(row);
 		calculateSeaPortDays();
+		calculateBunkerConsumption();
 	}
 }
 //END OF PORTS CALCULATIONS
@@ -810,6 +815,7 @@ function computeDistanceMiles1(percent){
 	calculateDates();
 	portTo1Calc(true);
 	calculateSeaPortDays();
+	calculateBunkerConsumption();
 }
 
 function computeDistanceMiles(percent, row){
@@ -824,6 +830,7 @@ function computeDistanceMiles(percent, row){
 	calculateDates2(row);
 	portToCalc(true, row);
 	calculateSeaPortDays();
+	calculateBunkerConsumption();
 }
 //END OF DISTANCE MILES CALCULATIONS
 
@@ -974,6 +981,8 @@ function addSequenceCargo(){
 		jQuery('#div_wdt'+rowCount+'_id').text('');
 		jQuery('#div_wadt'+rowCount+'_id').text('');
 		jQuery('#div_tie_days'+rowCount+'_id').text('');
+		jQuery('#div_canal'+rowCount+'_id').text('');
+		jQuery('#div_weather_extra'+rowCount+'_id').text('');
 	
 		if(jQuery("#voyage_type"+rowCount+"_id").val()=='Discharging'){
 			var cargos = jQuery('.cargo:last').attr('id');
@@ -981,16 +990,14 @@ function addSequenceCargo(){
 		
 			jQuery('#div_cargo'+rowCount+'_id').append('<input type="text" id="cargo'+rowCount+'_id" name="cargo'+rowCount+'" style="width:130px;" class="req cargo" value="'+jQuery('#cargo'+cargos+'_id').val()+'" />');
 			jQuery('#div_sf'+rowCount+'_id').append(jQuery('#div_sf'+cargos+'_id').text());
-			jQuery('#div_cargo_quantity'+rowCount+'_id').append('<input type="text" id="cargo_quantity'+rowCount+'_id" name="cargo_quantity'+rowCount+'" style="width:80px;" class="req" value="'+jQuery('#cargo_quantity'+cargos+'_id').val()+'" onblur="this.value=fNum(this.value);" onkeyup="loadingDischargingCalc('+rowCount+'); calculateSeaPortDays();" />');
+			jQuery('#div_cargo_quantity'+rowCount+'_id').append('<input type="text" id="cargo_quantity'+rowCount+'_id" name="cargo_quantity'+rowCount+'" style="width:80px;" class="req" value="'+jQuery('#cargo_quantity'+cargos+'_id').val()+'" onblur="this.value=fNum(this.value);" onkeyup="loadingDischargingCalc('+rowCount+'); calculateSeaPortDays(); calculateBunkerConsumption();" />');
 			jQuery('#div_cargo_volume'+rowCount+'_id').append(jQuery('#div_cargo_volume'+cargos+'_id').text());
-		}else if(jQuery("#voyage_type"+rowCount+"_id").val()=='Bunker Stop'){
-			jQuery('#div_cargo_quantity'+rowCount+'_id').append('<input type="text" id="cargo_quantity'+rowCount+'_id" name="cargo_quantity'+rowCount+'" style="width:80px;" class="req" onblur="this.value=fNum(this.value);" onkeyup="loadingDischargingCalc('+rowCount+'); calculateSeaPortDays();" />');
-		}else{
+			jQuery('#div_ld_rate'+rowCount+'_id').append('<input type="text" id="ld_rate'+rowCount+'_id" name="ld_rate'+rowCount+'" style="width:80px;" class="req" onblur="this.value=fNum(this.value);" onkeyup="loadingDischargingCalc('+rowCount+'); calculateSeaPortDays(); calculateBunkerConsumption();" />');
+		}else if(jQuery("#voyage_type"+rowCount+"_id").val()=='Loading'){
 			jQuery('#div_cargo'+rowCount+'_id').append('<input type="text" id="cargo'+rowCount+'_id" name="cargo'+rowCount+'" style="width:130px;" class="req cargo" />');
-			jQuery('#div_cargo_quantity'+rowCount+'_id').append('<input type="text" id="cargo_quantity'+rowCount+'_id" name="cargo_quantity'+rowCount+'" style="width:80px;" class="req" onblur="this.value=fNum(this.value);" onkeyup="loadingDischargingCalc('+rowCount+'); calculateSeaPortDays();" />');
+			jQuery('#div_cargo_quantity'+rowCount+'_id').append('<input type="text" id="cargo_quantity'+rowCount+'_id" name="cargo_quantity'+rowCount+'" style="width:80px;" class="req" onblur="this.value=fNum(this.value);" onkeyup="loadingDischargingCalc('+rowCount+'); calculateSeaPortDays(); calculateBunkerConsumption();" />');
+			jQuery('#div_ld_rate'+rowCount+'_id').append('<input type="text" id="ld_rate'+rowCount+'_id" name="ld_rate'+rowCount+'" style="width:80px;" class="req" onblur="this.value=fNum(this.value);" onkeyup="loadingDischargingCalc('+rowCount+'); calculateSeaPortDays(); calculateBunkerConsumption();" />');
 		}
-		
-		jQuery('#div_ld_rate'+rowCount+'_id').append('<input type="text" id="ld_rate'+rowCount+'_id" name="ld_rate'+rowCount+'" style="width:80px;" class="req" onblur="this.value=fNum(this.value);" onkeyup="loadingDischargingCalc('+rowCount+'); calculateSeaPortDays();" />');
 		
 		var wdt = "";
 		wdt += '<select id="wdt'+rowCount+'_id" name="wdt'+rowCount+'" style="width:80px;">';
@@ -1004,8 +1011,13 @@ function addSequenceCargo(){
 		wdt += '</select>';
 		jQuery('#div_wdt'+rowCount+'_id').append(wdt);
 		
-		jQuery('#div_wadt'+rowCount+'_id').append('<input type="text" id="wadt'+rowCount+'_id" name="wadt'+rowCount+'" style="width:80px;" class="req wadt" onblur="this.value=fNum(this.value);" onkeyup="calculateSeaPortDays();" />');
-		jQuery('#div_tie_days'+rowCount+'_id').append('<input type="text" id="tie_days'+rowCount+'_id" name="tie_days'+rowCount+'" style="width:80px;" onblur="this.value=fNum(this.value);" onkeyup="calculateSeaPortDays();" class="tie_days" />');
+		jQuery('#div_wadt'+rowCount+'_id').append('<input type="text" id="wadt'+rowCount+'_id" name="wadt'+rowCount+'" style="width:80px;" class="req wadt" onblur="this.value=fNum(this.value);" onkeyup="calculateSeaPortDays(); calculateBunkerConsumption();" />');
+		jQuery('#div_tie_days'+rowCount+'_id').append('<input type="text" id="tie_days'+rowCount+'_id" name="tie_days'+rowCount+'" style="width:80px;" onblur="this.value=fNum(this.value);" onkeyup="calculateSeaPortDays(); calculateBunkerConsumption();" class="tie_days" />');
+		
+		if(jQuery("#voyage_type"+rowCount+"_id").val()=='Bunker Stop'){
+			jQuery('#div_canal'+rowCount+'_id').append('<input type="text" id="canal'+rowCount+'_id" name="canal'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="canal" />');
+			jQuery('#div_weather_extra'+rowCount+'_id').append('<input type="text" id="weather_extra'+rowCount+'_id" name="weather_extra'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="weather_extra" />');
+		}
 		
 		$(function(){
 			//LOADING/DISCHARGING CARGO
@@ -1053,6 +1065,14 @@ function addSequenceCargo(){
 		jQuery('#div_wdt'+rowCount+'_id').text('');
 		jQuery('#div_wadt'+rowCount+'_id').text('');
 		jQuery('#div_tie_days'+rowCount+'_id').text('');
+		
+		if(rowCount==1){
+			jQuery('#div_canal'+rowCount+'_id').append('<input type="text" id="canal'+rowCount+'_id" name="canal'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates(); portTo1Calc(true); calculateSeaPortDays();" class="canal" />');
+			jQuery('#div_weather_extra'+rowCount+'_id').append('<input type="text" id="weather_extra'+rowCount+'_id" name="weather_extra'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates(); portTo1Calc(true); calculateSeaPortDays();" class="weather_extra" />');
+		}else{
+			jQuery('#div_canal'+rowCount+'_id').append('<input type="text" id="canal'+rowCount+'_id" name="canal'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="canal" />');
+			jQuery('#div_weather_extra'+rowCount+'_id').append('<input type="text" id="weather_extra'+rowCount+'_id" name="weather_extra'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="weather_extra" />');
+		}
 	}
 }
 
@@ -1092,15 +1112,18 @@ function addSequence(){
 								nextRowVoyageLegs += '<option value="">- Select Type -</option>';
 								nextRowVoyageLegs += '<option value="Loading">Loading</option>';
 								nextRowVoyageLegs += '<option value="Bunker Stop">Bunker Stop</option>';
+								nextRowVoyageLegs += '<option value="Laden">Laden</option>';
 							}else if(loading && !discharging){
 								nextRowVoyageLegs += '<option value="">- Select Type -</option>';
 								nextRowVoyageLegs += '<option value="Loading">Loading</option>';
 								nextRowVoyageLegs += '<option value="Bunker Stop">Bunker Stop</option>';
+								nextRowVoyageLegs += '<option value="Laden">Laden</option>';
 								nextRowVoyageLegs += '<option value="Discharging">Discharging</option>';
 							}else if(discharging){
 								nextRowVoyageLegs += '<option value="">- Select Type -</option>';
 								nextRowVoyageLegs += '<option value="Loading">Loading</option>';
 								nextRowVoyageLegs += '<option value="Bunker Stop">Bunker Stop</option>';
+								nextRowVoyageLegs += '<option value="Laden">Laden</option>';
 								nextRowVoyageLegs += '<option value="Discharging">Discharging</option>';
 								nextRowVoyageLegs += '<option value="Repositioning">Repositioning</option>';
 							}
@@ -1134,8 +1157,8 @@ function addSequence(){
 				nextRowCargoLegs += '<td><div class="dp" id="div_wadt'+nextRowCount+'_id">&nbsp;</div></td>';
 				nextRowCargoLegs += '<td><div class="dp" id="div_tie_days'+nextRowCount+'_id">&nbsp;</div></td>';
 				nextRowCargoLegs += '<td><div class="dp voyage_days" id="div_voyage_days'+nextRowCount+'_id">&nbsp;</div></td>';
-				nextRowCargoLegs += '<td><div class="dp" id="div_canal'+nextRowCount+'_id"><input type="text" id="canal'+nextRowCount+'_id" name="canal'+nextRowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+nextRowCount+'); portToCalc(true, '+nextRowCount+'); calculateSeaPortDays();" class="canal" /></div></td>';
-				nextRowCargoLegs += '<td><div class="dp" id="div_weather_extra'+nextRowCount+'_id"><input type="text" id="weather_extra'+nextRowCount+'_id" name="weather_extra'+nextRowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+nextRowCount+'); portToCalc(true, '+nextRowCount+'); calculateSeaPortDays();" class="weather_extra" /></div></td>';
+				nextRowCargoLegs += '<td><div class="dp" id="div_canal'+nextRowCount+'_id">&nbsp;</div></td>';
+				nextRowCargoLegs += '<td><div class="dp" id="div_weather_extra'+nextRowCount+'_id">&nbsp;</div></td>';
 			nextRowCargoLegs += '</tr>';
 			
 			jQuery('#cargo_legs_id tr:last').after(nextRowCargoLegs);
@@ -1285,6 +1308,7 @@ function calculateBunkerConsumption(){
 	var sum_ballast = 0;
 	var sum_loading = 0;
 	var sum_bunker_stop = 0;
+	var sum_laden = 0;
 	var sum_discharging = 0;
 	var sum_repositioning = 0;
 
@@ -1303,12 +1327,9 @@ function calculateBunkerConsumption(){
 			sum_loading += valueU(jQuery("#wadt"+row+"_id"));
 			sum_loading += valueU(jQuery("#tie_days"+row+"_id"));
 			sum_loading += valueU(jQuery("#div_voyage_days"+row+"_id"));
-			sum_loading += valueU(jQuery("#canal"+row+"_id"));
-			sum_loading += valueU(jQuery("#weather_extra"+row+"_id"));
 		}
 		
 		if(jQuery(this).val()=="Bunker Stop"){
-			sum_bunker_stop += valueU(jQuery("#div_load_days"+row+"_id"));
 			sum_bunker_stop += valueU(jQuery("#wadt"+row+"_id"));
 			sum_bunker_stop += valueU(jQuery("#tie_days"+row+"_id"));
 			sum_bunker_stop += valueU(jQuery("#div_voyage_days"+row+"_id"));
@@ -1316,13 +1337,17 @@ function calculateBunkerConsumption(){
 			sum_bunker_stop += valueU(jQuery("#weather_extra"+row+"_id"));
 		}
 		
+		if(jQuery(this).val()=="Laden"){
+			sum_laden += valueU(jQuery("#div_voyage_days"+row+"_id"));
+			sum_laden += valueU(jQuery("#canal"+row+"_id"));
+			sum_laden += valueU(jQuery("#weather_extra"+row+"_id"));
+		}
+		
 		if(jQuery(this).val()=="Discharging"){
 			sum_discharging += valueU(jQuery("#div_load_days"+row+"_id"));
 			sum_discharging += valueU(jQuery("#wadt"+row+"_id"));
 			sum_discharging += valueU(jQuery("#tie_days"+row+"_id"));
 			sum_discharging += valueU(jQuery("#div_voyage_days"+row+"_id"));
-			sum_discharging += valueU(jQuery("#canal"+row+"_id"));
-			sum_discharging += valueU(jQuery("#weather_extra"+row+"_id"));
 		}
 		
 		if(jQuery(this).val()=="Repositioning"){
@@ -1379,6 +1404,22 @@ function calculateBunkerConsumption(){
 	setValue(jQuery("#div_mdo_bunker_stop_consumption"), fNum(div_mdo_bunker_stop_consumption));
 	setValue(jQuery("#div_mdo_bunker_stop_expense"), fNum(div_mdo_bunker_stop_expense));
 	//END OF MDO/BUNKER STOP
+	
+	//IFO/LADEN
+	div_ifo_laden_consumption = getValue(jQuery("#ifo_laden_id"))*sum_laden;
+	div_ifo_laden_expense = div_ifo_laden_consumption*(uNum(getValue(jQuery("#ifo1_id")))+uNum(getValue(jQuery("#ifo2_id")))+uNum(getValue(jQuery("#ifo3_id")))+uNum(getValue(jQuery("#ifo4_id"))));
+
+	setValue(jQuery("#div_ifo_laden_consumption"), fNum(div_ifo_laden_consumption));
+	setValue(jQuery("#div_ifo_laden_expense"), fNum(div_ifo_laden_expense));
+	//END OF IFO/LADEN
+	
+	//MDO/LADEN
+	div_mdo_laden_consumption = getValue(jQuery("#mdo_laden_id"))*sum_laden;
+	div_mdo_laden_expense = div_mdo_laden_consumption*(uNum(getValue(jQuery("#mdo1_id")))+uNum(getValue(jQuery("#mdo2_id")))+uNum(getValue(jQuery("#mdo3_id"))));
+
+	setValue(jQuery("#div_mdo_laden_consumption"), fNum(div_mdo_laden_consumption));
+	setValue(jQuery("#div_mdo_laden_expense"), fNum(div_mdo_laden_expense));
+	//END OF MDO/LADEN
 	
 	//IFO/DISCHARGING
 	div_ifo_discharging_consumption = getValue(jQuery("#ifo_discharging_id"))*sum_discharging;
@@ -1447,12 +1488,12 @@ function calculateBunkerConsumption(){
 	//END OF MDO/RESERVE
 	
 	//IFO TOTAL EXPENSE
-	div_ifo_total_expense = uNum(div_ifo_ballast_expense) + uNum(div_ifo_loading_expense) + uNum(div_ifo_bunker_stop_expense) + uNum(div_ifo_discharging_expense) + uNum(div_ifo_repositioning_expense) + uNum(div_ifo_port_expense) + uNum(div_ifo_reserve_expense);
+	div_ifo_total_expense = uNum(div_ifo_ballast_expense) + uNum(div_ifo_loading_expense) + uNum(div_ifo_bunker_stop_expense) + uNum(div_ifo_laden_expense) + uNum(div_ifo_discharging_expense) + uNum(div_ifo_repositioning_expense) + uNum(div_ifo_port_expense) + uNum(div_ifo_reserve_expense);
 	setValue(jQuery("#div_ifo_total_expense"), fNum(div_ifo_total_expense));
 	//END OF IFO TOTAL EXPENSE
 	
 	//MDO TOTAL EXPENSE
-	div_mdo_total_expense = uNum(div_mdo_ballast_expense) + uNum(div_mdo_loading_expense) + uNum(div_mdo_bunker_stop_expense) + uNum(div_mdo_discharging_expense) + uNum(div_mdo_repositioning_expense) + uNum(div_mdo_port_expense) + uNum(div_mdo_reserve_expense);
+	div_mdo_total_expense = uNum(div_mdo_ballast_expense) + uNum(div_mdo_loading_expense) + uNum(div_mdo_bunker_stop_expense) + uNum(div_mdo_laden_expense) + uNum(div_mdo_discharging_expense) + uNum(div_mdo_repositioning_expense) + uNum(div_mdo_port_expense) + uNum(div_mdo_reserve_expense);
 	setValue(jQuery("#div_mdo_total_expense"), fNum(div_mdo_total_expense));
 	//END OF MDO TOTAL EXPENSE
 }
@@ -1848,8 +1889,8 @@ select{
 					<td><div class="dp" id="div_wadt1_id">&nbsp;</div></td>
 					<td><div class="dp" id="div_tie_days1_id">&nbsp;</div></td>
 					<td><div class="dp voyage_days" id="div_voyage_days1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_canal1_id"><input type="text" id="canal1_id" name="canal1" style="width:50px;" class="number canal" /></div></td>
-					<td><div class="dp" id="div_weather_extra1_id"><input type="text" id="weather_extra1_id" name="weather_extra1" style="width:50px;" class="number weather_extra" /></div></td>
+					<td><div class="dp" id="div_canal1_id">&nbsp;</div></td>
+					<td><div class="dp" id="div_weather_extra1_id">&nbsp;</div></td>
 				</tr>
 			</table>
 			
@@ -1989,25 +2030,31 @@ select{
 						<td><div class="dp" id="div_ifo_bunker_stop_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>IFO/Discharging</b></div></td>
+						<td><div class="dp" style="color:#00b050;"><b>IFO/Laden</b></div></td>
+						<td><div class="dp"><input type="text" id="ifo_laden_id" name="ifo_laden" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp" id="div_ifo_laden_consumption">&nbsp;</div></td>
+						<td><div class="dp" id="div_ifo_laden_expense">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td><div class="dp" style="color:#ff0000;"><b>IFO/Discharging</b></div></td>
 						<td><div class="dp"><input type="text" id="ifo_discharging_id" name="ifo_discharging" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_discharging_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_discharging_expense">&nbsp;</div></td>
 					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>IFO/Repositioning</b></div></td>
+					  <tr bgcolor="e9e9e9">
+						<td><div class="dp" style="color:#00b050;"><b>IFO/Repositioning</b></div></td>
 						<td><div class="dp"><input type="text" id="ifo_repositioning_id" name="ifo_repositioning" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_repositioning_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_repositioning_expense">&nbsp;</div></td>
 					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>IFO/Port</b></div></td>
+					  <tr bgcolor="f5f5f5">
+						<td><div class="dp" style="color:#ff0000;"><b>IFO/Port</b></div></td>
 						<td><div class="dp"><input type="text" id="ifo_port_id" name="ifo_port" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_port_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_port_expense">&nbsp;</div></td>
 					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>IFO/Reserve</b></div></td>
+					  <tr bgcolor="e9e9e9">
+						<td><div class="dp"><b>IFO/Reserve</b></div></td>
 						<td><div class="dp">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_ifo_reserve_id"><input type="text" id="ifo_reserve_id" name="ifo_reserve" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_reserve_expense">&nbsp;</div></td>
@@ -2046,25 +2093,31 @@ select{
 						<td><div class="dp" id="div_mdo_bunker_stop_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>MDO/Discharging</b></div></td>
+						<td><div class="dp" style="color:#00b050;"><b>MDO/Laden</b></div></td>
+						<td><div class="dp"><input type="text" id="mdo_laden_id" name="mdo_laden" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp" id="div_mdo_laden_consumption">&nbsp;</div></td>
+						<td><div class="dp" id="div_mdo_laden_expense">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td><div class="dp" style="color:#ff0000;"><b>MDO/Discharging</b></div></td>
 						<td><div class="dp"><input type="text" id="mdo_discharging_id" name="mdo_discharging" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_discharging_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_discharging_expense">&nbsp;</div></td>
 					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>MDO/Repositioning</b></div></td>
+					  <tr bgcolor="e9e9e9">
+						<td><div class="dp" style="color:#00b050;"><b>MDO/Repositioning</b></div></td>
 						<td><div class="dp"><input type="text" id="mdo_repositioning_id" name="mdo_repositioning" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_repositioning_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_repositioning_expense">&nbsp;</div></td>
 					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>MDO/Port</b></div></td>
+					  <tr bgcolor="f5f5f5">
+						<td><div class="dp" style="color:#ff0000;"><b>MDO/Port</b></div></td>
 						<td><div class="dp"><input type="text" id="mdo_port_id" name="mdo_port" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_port_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_port_expense">&nbsp;</div></td>
 					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>MDO/Reserve</b></div></td>
+					  <tr bgcolor="e9e9e9">
+						<td><div class="dp"><b>MDO/Reserve</b></div></td>
 						<td><div class="dp">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_mdo_reserve_id"><input type="text" id="mdo_reserve_id" name="mdo_reserve" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_reserve_expense">&nbsp;</div></td>

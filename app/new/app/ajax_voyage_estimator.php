@@ -10,6 +10,21 @@ if($_GET['autosave']){
 }
 //END OF SAVE SESSION
 
+//GET DWT DATA
+if($_GET['search_dwt']){
+	$imo = $_GET['imo'];
+	
+	$sql = "select * from  _xvas_parsed2_dry where imo='".$imo."' limit 1";
+	$r = dbQuery($sql);
+	
+	$dwt = $r[0]['summer_dwt'];
+	
+	echo json_encode($dwt);
+
+	exit();
+}
+//END OF GET DWT DATA
+
 //GET SHIP DATA
 if($_GET['search']){
 	$search = $_GET['term'];
@@ -412,6 +427,20 @@ var average_price_lsmgos = [];
 var dateupdateds = [];
 //END OF PORT DETAIL VARIABLES
 
+//GET DWT TYPE
+function getDwtType(imo){
+	jQuery.ajax({
+		type: 'POST',
+		url: "ajax_voyage_estimator.php?search_dwt=1&imo="+imo,
+		data: '',
+
+		success: function(data) {
+			setValue(jQuery("#div_dwt_id"), fNum(data));
+		}
+	});	
+}
+//END OF GET DWT TYPE
+
 $(function(){
 	//DETAILS COMING FROM SHIP NAME
 	$("#vessel_name_or_imo_id").autocomplete({
@@ -569,6 +598,11 @@ $(function(){
 				setValue(jQuery(this), fNum(speeds[imo]));
 			});
 			//END OF SPEED FOR VOYAGE LEGS
+			
+			iframeve = document.getElementById('map_iframeve');
+  			iframeve.src = "map/map_voyage_estimator.php?imo="+imo;
+			
+			setValue(jQuery("#div_dwt_id"), fNum(dwts[imo]));
 		},
 	});
 	//END OF DETAILS COMING FROM SHIP NAME
@@ -609,6 +643,7 @@ $(function(){
 			portTo1Calc(true);
 			calculateDates();
 			calculateSeaPortDays();
+			addPort(1, ui.item.value);
 		},
 	});
 	//END OF GET PORTS
@@ -847,12 +882,95 @@ function loadingDischargingCalc(row){
 }
 //END OF LOADING/DISCHARGING CARGO CALCULATIONS
 
+//CALCULATE DWCC
+function calculateDWCC(){
+	var dwcc_amount1 = uNum(jQuery('#div_ifo_ballast_consumption').text()) + uNum(jQuery('#div_ifo_loading_consumption').text()) + uNum(jQuery('#div_ifo_bunker_stop_consumption').text()) + uNum(jQuery('#div_ifo_laden_consumption').text()) + uNum(jQuery('#div_ifo_discharging_consumption').text()) + uNum(jQuery('#div_ifo_repositioning_consumption').text()) + uNum(jQuery('#div_ifo_port_consumption').text());
+	var dwcc_amount2 = uNum(jQuery('#div_mdo_ballast_consumption').text()) + uNum(jQuery('#div_mdo_loading_consumption').text()) + uNum(jQuery('#div_mdo_bunker_stop_consumption').text()) + uNum(jQuery('#div_mdo_laden_consumption').text()) + uNum(jQuery('#div_mdo_discharging_consumption').text()) + uNum(jQuery('#div_mdo_repositioning_consumption').text()) + uNum(jQuery('#div_mdo_port_consumption').text());
+	var dwcc_amount5 = dwcc_amount1 + dwcc_amount2 + uNum(jQuery("#ifo_reserve_id").val()) + uNum(jQuery("#mdo_reserve_id").val()) + uNum(jQuery("#dwcc_fw1_id").val()) + uNum(jQuery("#dwcc_constant1_id").val());
+	var dwcc_amount6 = uNum(jQuery("#div_dwt_id").text()) - dwcc_amount5;
+
+	setValue(jQuery('#div_dwcc_amount1_id'), fNum(dwcc_amount1));
+	setValue(jQuery('#div_dwcc_amount2_id'), fNum(dwcc_amount2));
+	setValue(jQuery('#div_dwcc_amount3_id'), fNum(jQuery("#ifo_reserve_id").val()));
+	setValue(jQuery('#div_dwcc_amount4_id'), fNum(jQuery("#mdo_reserve_id").val()));
+	setValue(jQuery('#div_dwcc_amount5_id'), fNum(dwcc_amount5));
+	setValue(jQuery('#div_dwcc_amount6_id'), fNum(dwcc_amount6));
+}
+//END OF CALCULATE DWCC
+
+//CANAL CALCULATIONS
+function canalTotal(){
+	cbook1 = uNum(getValue(jQuery("#cbook1_id")));
+	ctug1 = uNum(getValue(jQuery("#ctug1_id")));
+	cline1 = uNum(getValue(jQuery("#cline1_id")));
+	cmisc1 = uNum(getValue(jQuery("#cmisc1_id")));
+
+	ctotal1 = cbook1 + ctug1 + cline1 + cmisc1;
+
+	setValue(jQuery("#div_ctotal1_id"), fNum(ctotal1))
+
+	cbook2 = uNum(getValue(jQuery("#cbook2_id")));
+	ctug2 = uNum(getValue(jQuery("#ctug2_id")));
+	cline2 = uNum(getValue(jQuery("#cline2_id")));
+	cmisc2 = uNum(getValue(jQuery("#cmisc2_id")));
+
+	ctotal2 = cbook2 + ctug2 + cline2 + cmisc2;
+
+	setValue(jQuery("#div_ctotal2_id"), fNum(ctotal2))
+
+	canal_total = ctotal1 + ctotal2;
+
+	setValue(jQuery("#div_canal_total_id"), fNum(canal_total));
+}
+//END OF CANAL CALCULATIONS
+
+//PORT SETUP
+function setupPortInterface(rowCount){
+	//CALCULATE DEMURRAGE/DESPATCH
+	dem = uNum(getValue(jQuery("#dem"+rowCount+"_id")));
+	
+	div_des = dem/2;
+	
+	setValue(jQuery("#div_des"+rowCount+"_id"), fNum(div_des));
+	
+	var load_days = 0;
+	load_days = sumClass('load_days');
+	load_days = load_days / 24;
+	
+	var des = 0;
+	des = sumClass('des');
+	
+	if(load_days<0){
+		despatch = -1 * load_days * (des);
+		demurrage = 0;
+	}else{
+		despatch = 0;
+		demurrage = load_days * (des);
+	}
+	
+	setValue(jQuery("#div_demurrage_total_id"), fNum(demurrage));
+	setValue(jQuery("#div_despatch_total_id"), fNum(despatch));
+	//END OF CALCULATE DEMURRAGE/DESPATCH
+	
+	//GET PORT TOTALS
+	var ports_total = 0;
+	ports_total = sumClass('da_quick_input');
+	ports_total = ports_total + (demurrage - despatch);
+	
+	setValue(jQuery("#div_ports_total_id"), fNum(ports_total));
+	setValue(jQuery("#div_port_total_id"), fNum(ports_total));
+	//END OF GET PORT TOTALS
+}
+//END OF PORT SETUP
+
 //OTHER FUNCTIONS
 function thread(){
 	calculateDates();
 	portTo1Calc(true);
 	calculateSeaPortDays();
-	calculateBunkerConsumption()
+	calculateBunkerConsumption();
+	calculateDWCC();
+	canalTotal();
 }
 
 jQuery(function(){
@@ -954,6 +1072,7 @@ function getVesselBy(val){
 	jQuery("#ship_info").hide();
 	jQuery("#dwt_type_id").val(0);
 	jQuery("#vessel_name_or_imo_id").val("");
+	setValue(jQuery("#div_dwt_id"), "");
 	
 	jQuery("#shipdetailshref").html("");
 	jQuery(".speed").each(function(){
@@ -1244,6 +1363,7 @@ function addSequence(){
 						}
 						
 						portToCalc(true, nextRowCount);
+						addPort(nextRowCount, ui.item.value);
 					},
 				});
 			});
@@ -1255,6 +1375,54 @@ function addSequence(){
 	}
 }
 //END OF ADD SEQUENCE
+
+//ADD PORT
+function addPort(rowCount, portname){
+	if(jQuery("#voyage_type"+rowCount+"_id").val()=='Loading' || jQuery("#voyage_type"+rowCount+"_id").val()=='Discharging' || jQuery("#voyage_type"+rowCount+"_id").val()=='Bunker Stop'){
+		jQuery(".row_ports"+rowCount).remove();
+	
+		var bgColor = "";
+		var nextRowPorts = "";
+	
+		if(rowCount%2==0){ bgColor = "#f5f5f5"; }
+		else{ bgColor = "#e9e9e9"; }
+		
+		//PORTS
+		nextRowPorts += '<tr id="row_ports" class="row_ports'+rowCount+'" bgcolor="'+bgColor+'">';
+			nextRowPorts += '<td><div class="dp"><input type="text" id="dem'+rowCount+'_id" name="dem'+rowCount+'" style="width:150px;" onblur="this.value=fNum(this.value);" onkeyup="setupPortInterface('+rowCount+');" /></div></td>';
+			nextRowPorts += '<td>';
+				nextRowPorts += '<div class="dp">';
+					nextRowPorts += '<select id="term'+rowCount+'_id" name="term'+rowCount+'" style="width:150px;">';
+						nextRowPorts += '<option value="DHDLTSBENDS">DHDLTSBENDS</option>';
+						nextRowPorts += '<option value="DHDATSBENDS">DHDATSBENDS</option>';
+						nextRowPorts += '<option value="DHDWTSBENDS">DHDWTSBENDS</option>';
+					nextRowPorts += '</select>';
+				nextRowPorts += '</div>';
+			nextRowPorts += '</td>';
+			nextRowPorts += '<td><div class="dp des" id="div_des'+rowCount+'_id">&nbsp;</div></td>';
+			nextRowPorts += '<td>';
+				nextRowPorts += '<div class="dp">';
+					nextRowPorts += '<select id="linerterms'+rowCount+'_id" name="linerterms'+rowCount+'" style="width:150px;">';
+						nextRowPorts += '<option value="FILO">FILO</option>';
+						nextRowPorts += '<option value="FILTD">FILTD</option>';
+						nextRowPorts += '<option value="FIOLS">FIOLS</option>';
+						nextRowPorts += '<option value="FIOSLSD">FIOSLSD</option>';
+						nextRowPorts += '<option value="FIOSPT">FIOSPT</option>';
+						nextRowPorts += '<option value="FIOST">FIOST</option>';
+						nextRowPorts += '<option value="LIFO">LIFO</option>';
+						nextRowPorts += '<option value="BTBT">BTBT</option>';
+					nextRowPorts += '</select>';
+				nextRowPorts += '</div>';
+			nextRowPorts += '</td>';
+			nextRowPorts += '<td><div class="dp"><a onclick="showPortDetails(\''+portname+'\', '+rowCount+', 0);" class="clickable">'+portname+'</a></div></td>';
+			nextRowPorts += '<td><div class="dp"><input type="text" id="da_quick_input'+rowCount+'_id" name="da_quick_input'+rowCount+'" class="da_quick_input" style="width:150px;" onblur="this.value=fNum(this.value);" onkeyup="setupPortInterface('+rowCount+');" /></div></td>';
+		nextRowPorts += '</tr>';
+		
+		jQuery('#row_ports_id tr#row_ports:last').after(nextRowPorts);
+	}
+	//END OF PORTS
+}
+//END OF ADD PORT
 
 //SUM OF CLASS
 function sumClass(clas){
@@ -1496,6 +1664,9 @@ function calculateBunkerConsumption(){
 	div_mdo_total_expense = uNum(div_mdo_ballast_expense) + uNum(div_mdo_loading_expense) + uNum(div_mdo_bunker_stop_expense) + uNum(div_mdo_laden_expense) + uNum(div_mdo_discharging_expense) + uNum(div_mdo_repositioning_expense) + uNum(div_mdo_port_expense) + uNum(div_mdo_reserve_expense);
 	setValue(jQuery("#div_mdo_total_expense"), fNum(div_mdo_total_expense));
 	//END OF MDO TOTAL EXPENSE
+	
+	bunker_total = div_ifo_total_expense + div_mdo_total_expense;
+	setValue(jQuery("#div_bunker_total_id"), fNum(bunker_total));
 }
 //END OF CALCULATE BUNKER CONSUMPTION
 
@@ -1594,6 +1765,38 @@ function printItVe_2(){
 jQuery( "#miscdialog" ).dialog( { autoOpen: false, width: 1100, height: 500 });
 jQuery( "#miscdialog" ).dialog("close");
 //END OF MAIL/PRINT DETAILS
+
+//SHOW PORT DETAILS
+function showPortDetails(portname, rowCount, num_of_days){
+	var vessel_name = jQuery("#vessel_name_or_imo_id").val();
+	if(!vessel_name){ vessel_name = ""; }
+	
+	var cargo_type = jQuery(".cargo").val();
+	if(!cargo_type){ cargo_type = ""; }
+	
+	if(rowCount==1){ var date_from = jQuery("#date_from"+rowCount+"_id").val(); }
+	else{ var date_from = jQuery("#div_date_from"+rowCount+"_id").text(); }
+	if(!date_from){ date_from = ""; }
+	
+	var date_to = jQuery("#div_date_to"+rowCount+"_id").text();
+	if(!date_to){ date_to = ""; }
+	
+	var dwt = jQuery("#div_dwt_id").text();
+	var gross_tonnage = jQuery("#ship_gross_tonnage").text();
+	var net_tonnage = jQuery("#ship_net_tonnage").text();
+	var owner = jQuery("#ship_manager_owner").text();
+
+	var iframe = $("#portdetailsiframe");
+
+	$(iframe).contents().find("body").html("");
+
+	jQuery("#portdetailsiframe")[0].src='misc/port_details.php?portname='+portname+'&vessel_name='+vessel_name+'&cargo_type='+cargo_type+'&dwt='+dwt+'&gross_tonnage='+gross_tonnage+'&net_tonnage='+net_tonnage+'&owner='+owner+'&date_from='+date_from+'&date_to='+date_to+'&num_of_days='+num_of_days;
+	jQuery("#portdetails").dialog("open");
+}
+
+jQuery("#portdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
+jQuery("#portdetails").dialog("close");
+//END OF SHOW PORT DETAILS
 //END OF OTHER FUNCTIONS
 </script>
 
@@ -1670,6 +1873,12 @@ select{
 </div>
 <!--END OF MAIL/PRINT DETAILS-->
 
+<!--PORT DETAILS-->
+<div id="portdetails" title="PORTS D/A CHARGES" style='display:none;'>
+	<iframe id='portdetailsiframe' frameborder="0" height="100%" width="100%"></iframe>
+</div>
+<!--END OF PORT DETAILS-->
+
 <form method="post" id="voyageestimatorform" name="voyageestimatorform" enctype="multipart/form-data">
 <table width="1800" border="0" cellspacing="0" cellpadding="0">
 	<tr>
@@ -1695,7 +1904,7 @@ select{
 						<div class="div_all" style="display:none;" id="vessel_by_1">
 							<div class="div_title"><b>DWT Type:</b></div>
 							<div class="div_content">
-								<select id="dwt_type_id" name="dwt_type" style="width:300px;" class="req">
+								<select id="dwt_type_id" name="dwt_type" style="width:300px;" class="req" onchange="getDwtType(this.value);">
 									<option value="0">- Select DWT Type -</option>
 									<option value="7208728">(0-9,999) Mini Bulker</option>
 									<option value="9177791">(10,000-39,999) Handysize</option>
@@ -1997,7 +2206,7 @@ select{
 			<!-- BUNKER CONSUMPTIONS -->
 			<table width="1500" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="cddee5">
-				<td><div class="dp"><b>BUNKER CONSUMPTIONS</div></td>
+				<td><div class="dp"><b>BUNKER CONSUMPTIONS</b></div></td>
 			  </tr>
 			</table>
 			
@@ -2134,8 +2343,368 @@ select{
 			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
 			<div>&nbsp;</div>
 			<!-- END OF BUNKER CONSUMPTIONS -->
+			
+			<!-- DWCC AND CANAL -->
+			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			  <tr>
+				<td width="738" bgcolor="cddee5"><div class="dp"><b>DWCC</b></div></td>
+				<td width="24">&nbsp;</td>
+				<td width="738" bgcolor="cddee5"><div class="dp"><b>CANAL</b></div></td>
+			  </tr>
+			</table>
+			
+			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			  <tr>
+				<td valign="top">
+					<table width="738" border="0" cellspacing="0" cellpadding="0">
+					  <tr bgcolor="d6d6d6">
+						<td width="369" colspan="2"><div class="dp"><b>DW (MT)</b></div></td>
+						<td width="369"><div class="dp" id="div_dwt_id" style="font-weight:bold;">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td rowspan="2"><div class="dp"><b>Consumption (MT)</b></div></td>
+						<td><div class="dp"><b>FO</b></div></td>
+						<td><div class="dp" id="div_dwcc_amount1_id">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td><div class="dp"><b>DO</b></div></td>
+						<td><div class="dp" id="div_dwcc_amount2_id">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="e9e9e9">
+						<td rowspan="2"><div class="dp"><b>Reserve (MT)</b></div></td>
+						<td><div class="dp"><b>FO</b></div></td>
+						<td><div class="dp" id="div_dwcc_amount3_id">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="e9e9e9">
+						<td><div class="dp"><b>DO</b></div></td>
+						<td><div class="dp" id="div_dwcc_amount4_id">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td colspan="2"><div class="dp"><b>FW (MT)</b></div></td>
+						<td><div class="dp"><input type="text" id="dwcc_fw1_id" name="dwcc_fw1" class="number" style="width:150px;" /></div></td>
+					  </tr>
+					  <tr bgcolor="e9e9e9">
+						<td colspan="2"><div class="dp"><b>Constant (MT)</b></div></td>
+						<td><div class="dp"><input type="text" id="dwcc_constant1_id" name="dwcc_constant1" class="number" style="width:150px;" /></div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td colspan="2"><div class="dp"><b>Used DW (MT)</b></div></td>
+						<td><div class="dp" id="div_dwcc_amount5_id">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="e9e9e9">
+						<td colspan="2"><div class="dp"><b>DWCC (MT)</b></div></td>
+						<td><div class="dp" id="div_dwcc_amount6_id">&nbsp;</div></td>
+					  </tr>
+					</table>
+				</td>
+				<td width="24"></td>
+				<td valign="top">
+					<table width="738" border="0" cellspacing="0" cellpadding="0">
+					  <tr bgcolor="d6d6d6">
+						<td><div class="dp"><b>Canal</b></div></td>
+						<td colspan="2">
+							<div class="dp">
+								<?php
+								$canalarr = array(
+											1=>"White Sea - Baltic Canal", 
+											2=>"Rhine - Main- Danube Canal", 
+											3=>"Volga - Don Canal",
+											4=>"Kiel Canal",
+											5=>"Houston Ship Channel",
+											6=>"Alphonse Xlll Canal",
+											7=>"Panama Canal",
+											8=>"Danube Black - Sea Canal",
+											9=>"Manchester Ship Canal",
+											10=>"Welland Canal",
+											11=>"Saint Lawrence Seaway",
+											12=>"Suez Canal"
+										);
+										
+								$canalt = count($canalarr);
+								?>
+								<select id='canal_list_id' name="canal_list" style="width:200px;">
+									<?php
+									for($canali=1; $canali<=$canalt; $canali++){
+										echo '<option value="'.$canalarr[$canali].'">'.$canalarr[$canali].'</option>';
+									}
+									?>
+								</select>
+							</div>
+						</td>
+					  </tr>
+					  <tr bgcolor="e9e9e9">
+						<td width="246"><div class="dp"><b>Booking Fee ($)</b></div></td>
+						<td width="246"><div class="dp"><input type="text" id="cbook1_id" name="cbook1" class="number" style="width:150px;" /></div></td>
+						<td width="246"><div class="dp"><input type="text" id="cbook2_id" name="cbook2" class="number" style="width:150px;" /></div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td width="246"><div class="dp"><b>Tugs ($)</b></div></td>
+						<td width="246"><div class="dp"><input type="text" id="ctug1_id" name="ctug1" class="number" style="width:150px;" /></div></td>
+						<td width="246"><div class="dp"><input type="text" id="ctug2_id" name="ctug2" class="number" style="width:150px;" /></div></td>
+					  </tr>
+					  <tr bgcolor="e9e9e9">
+						<td width="246"><div class="dp"><b>Line Handlers ($)</b></div></td>
+						<td width="246"><div class="dp"><input type="text" id="cline1_id" name="cline1" class="number" style="width:150px;" /></div></td>
+						<td width="246"><div class="dp"><input type="text" id="cline2_id" name="cline2" class="number" style="width:150px;" /></div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td width="246"><div class="dp"><b>Miscellaneous ($)</b></div></td>
+						<td width="246"><div class="dp"><input type="text" id="cmisc1_id" name="cmisc1" class="number" style="width:150px;" /></div></td>
+						<td width="246"><div class="dp"><input type="text" id="cmisc2_id" name="cmisc2" class="number" style="width:150px;" /></div></td>
+					  </tr>
+					  <tr bgcolor="e9e9e9">
+						<td width="246"><div class="dp"><b>Total ($)</b></div></td>
+						<td width="246"><div class="dp" id="div_ctotal1_id">&nbsp;</div></td>
+						<td width="246"><div class="dp" id="div_ctotal2_id">&nbsp;</div></td>
+					  </tr>
+					</table>
+				</td>
+			  </tr>
+			</table>
+			
+			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+			<div>&nbsp;</div>
+			<!-- END OF DWCC AND CANAL -->
+			
+			<!-- PORTS -->
+			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			  <tr>
+				<td width="1500" bgcolor="cddee5"><div class="dp"><b>PORT(S)</b></div></td>
+			  </tr>
+			</table>
+			
+			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			  <tr>
+				<td valign="top">
+					<table width="1500" border="0" cellspacing="0" cellpadding="0" id="row_ports_id">
+					  <tr id="row_ports" class="row_ports0" bgcolor="d6d6d6">
+						<td><div class="dp"><b>Dem ($/day)</b> <span style="font-size:10px;">Pro Rated</span></div></td>
+						<td><div class="dp"><b>Term</b></div></td>
+						<td><div class="dp"><b>Des ($/day)</b></div></td>
+						<td><div class="dp"><b>Liner Terms</b></div></td>
+						<td width="200"><div class="dp"><b>Port</b></div></td>
+						<td><div class="dp"><b>DA Quick Input ($)</b></div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td><div class="dp"><b>Demurrage ($)</b></div></td>
+						<td colspan="6"><div class="dp" id="div_demurrage_total_id">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="e9e9e9">
+						<td><div class="dp"><b>Despatch ($)</b></div></td>
+						<td colspan="6"><div class="dp" id="div_despatch_total_id">&nbsp;</div></td>
+					  </tr>
+					  <tr bgcolor="f5f5f5">
+						<td><div class="dp"><b>Total ($)</b></div></td>
+						<td colspan="6"><div class="dp" id="div_ports_total_id">&nbsp;</div></td>
+					  </tr>
+					</table>
+				</td>
+			  </tr>
+			</table>
+			
+			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+			<div>&nbsp;</div>
+			<!-- END OF PORTS -->
+			
+			<!-- VOYAGE TIME -->
+			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			  <tr bgcolor="cddee5">
+				<td colspan="4"><div class="dp"><b>VOYAGE DISBURSMENTS</b></div></td>
+				<td colspan="5"><div class="dp"><b>VOYAGE</b></div></td>
+			  </tr>
+			  <tr>
+				<td width="166"><div class="dp"><b>Bunker ($)</b></div></td>
+				<td width="166"><div class="dp"><b>Port ($)</b></div></td>
+				<td width="166"><div class="dp"><b>Canal($)</b></div></td>
+				<td width="167"><div class="dp"><b>Add. Insurance ($)</b></div></td>
+				<td width="167"><div class="dp"><b>ILOHC</b></div></td>
+				<td width="167"><div class="dp"><b>ILOW</b></div></td>
+				<td width="167"><div class="dp"><b>CVE</b></div></td>
+				<td width="167"><div class="dp"><b>Ballast Bonus</b></div></td>
+				<td width="167"><div class="dp"><b>Miscellaneous</b></div></td>
+			  </tr>
+			  <tr bgcolor="f5f5f5">
+				<td><div class="dp" id='div_bunker_total_id'>&nbsp;</div></td>
+				<td><div class="dp" id='div_port_total_id'>&nbsp;</div></td>
+				<td><div class="dp" id='div_canal_total_id'>&nbsp;</div></td>
+				<td><div class="dp" id='div_add_insurance_id'><input type="text" id="add_insurance_id" name="add_insurance" class="number" style="width:125px;" /></div></td>
+				<td><div class="dp" id='div_ilohc_id'><input type="text" id="ilohc_id" name="ilohc" class="number" style="width:125px;" /></div></td>
+				<td><div class="dp" id='div_ilow_id'><input type="text" id="ilow_id" name="ilow" class="number" style="width:125px;" /></div></td>
+				<td><div class="dp" id='div_cve_id'><input type="text" id="cve_id" name="cve" class="number" style="width:125px;" /></div></td>
+				<td><div class="dp" id='div_ballast_bonus_id'><input type="text" id="ballast_bonus_id" name="ballast_bonus" class="number" style="width:125px;" /></div></td>
+				<td><div class="dp" id='div_miscellaneous_id'><input type="text" id="miscellaneous_id" name="miscellaneous" class="number" style="width:125px;" /></div></td>
+			  </tr>
+			</table>
+			
+			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+			<div>&nbsp;</div>
+			<!-- END OF VOYAGE TIME -->
+			
+			<!-- AIS MAP -->
+			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			  <tr>
+				<td width="1500" bgcolor="cddee5"><div class="dp"><b>MAP - Data from AIS</b></div></td>
+			  </tr>
+			  <tr bgcolor="#000000">
+				<td><iframe src='map/world_map.php' id="map_iframeve" width='1500' height='400' frameborder="0"></iframe></td>
+			  </tr>
+			</table>
+			
+			<div>&nbsp;</div>
+			<!-- END OF AIS MAP -->
 		</td>
-		<td width="300"><div style="padding-left:20px;">CONTENT RIGHT</div></td>
+		<td width="300">
+			<!--<div style="position:fixed;">-->
+				<table width="300" border="0" cellspacing="0" cellpadding="0">
+				  <tr>
+					<td width="150" style="border:none;">
+						<div style="padding-left:10px;">
+							<table width="140" border="0" cellspacing="0" cellpadding="0">
+								<tr bgcolor="cddee5">
+									<td><div class="dp"><b>FREIGHT RATE</b></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><span style="font-size:14px; color:#0066FF; font-weight:bold;">Freight Rate ($/MT)</span></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='b80' name="b80" value="<?php echo $b80; ?>" style="max-width:100px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Gross Freight ($)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="calculated" id='c80' style="padding:3px;"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Brok. Comm ($)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td style="padding:3px;"><input type='text' class='input_1 number' id='d80' name="d80" value="<?php echo $d80; ?>" style="max-width:100px;" /></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Add. Comm ($)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td style="padding:3px;"><input type='text' class='input_1 number' id='e80' name='e80' value="<?php echo $e80; ?>" style="max-width:100px;" /></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px; border-left:1px solid #000000; border-top:1px solid #000000; border-right:1px solid #000000;"><strong>Income ($)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="calculated" id='f80' style="padding:3px; border-left:1px solid #000000; border-bottom:1px solid #000000; border-right:1px solid #000000;"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px; border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><strong>TCE ($/day)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="calculated" id='g80' style="padding:3px; border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Broker Commission</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label calculated" id='d81' style="padding:3px;"></td>
+								</tr>
+							</table>
+						</div>
+					</td>
+					<td width="150" style="border:none;">
+						<div style="padding-left:10px;">
+							<table width="140" border="0" cellspacing="0" cellpadding="0">
+								<tr bgcolor="cddee5">
+									<td><div class="dp"><b>TCE</b></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td style="padding:3px; border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><strong>Freight Rate ($/MT)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="calculated" id='b85' style="padding:3px; border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Gross Freight ($)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="calculated"  id='c85' style="padding:3px;"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Brok. Comm ($)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td style="padding:3px;"><input type='text' class='input_1 number' id='d85' name='d85' value="<?php echo $d85; ?>" style="max-width:100px;" /></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Add. Comm ($)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td style="padding:3px;"><input type='text' class='input_1 number' id='e85' name='e85' value="<?php echo $e85; ?>" style="max-width:100px;" /></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Income ($)</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="calculated"  id='f85' style="padding:3px;"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><span style="font-size:14px; color:#0066FF; font-weight:bold;">TCE ($/day)</span></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='g85' name='g85' value="<?php echo $g85; ?>" style="max-width:100px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label" style="padding:3px;"><strong>Broker Commission</strong></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td class="label calculated"  id='d86' style="padding:3px;"></td>
+								</tr>
+							</table>
+						</div>
+					</td>
+				  </tr>
+				</table>
+			<!--</div>-->
+		</td>
 	</tr>
 </table>
 </form>

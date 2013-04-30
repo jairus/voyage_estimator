@@ -963,6 +963,80 @@ function setupPortInterface(rowCount){
 }
 //END OF PORT SETUP
 
+//FREIGHT RATE CALCULATIONS
+function result1(){
+	//GROSS FREIGHT ($) - RESULT 1
+	var cargo_quantity = 0;
+	var loadingCount = 1;
+	
+	jQuery(".voyage_type").each(function(){
+		if(jQuery(this).val()=="Loading"){
+			cargo_quantity += valueU(jQuery("#cargo_quantity"+loadingCount+"_id"));
+		}
+		
+		loadingCount++;
+	});
+
+	div_gross_freight1_id = uNum(cargo_quantity) * uNum(getValue(jQuery("#freight_rate1_id")));
+	setValue(jQuery("#div_gross_freight1_id"), fNum(div_gross_freight1_id));
+	//END OF GROSS FREIGHT ($) - RESULT 1
+	
+	//BROKER COMMISSION - RESULT 1
+	div_broker_comm1_id = (uNum(getValue(jQuery("#broker_comm1_id"))) + uNum(getValue(jQuery("#add_comm1_id")))) / 100 * div_gross_freight1_id;
+	setValue(jQuery("#div_broker_comm1_id"), fNum(div_broker_comm1_id));
+	//END OF BROKER COMMISSION - RESULT 1
+	
+	//INCOME - RESULT 1
+	div_income1_id = div_gross_freight1_id - div_broker_comm1_id - uNum(getValue(jQuery("#div_total_voyage_disbursment_id")));
+	if(div_income1_id>0){
+		setValue(jQuery("#div_income1_id"), '<span style="color:#006000;">'+fNum(div_income1_id)+'</span>');
+	}else{
+		setValue(jQuery("#div_income1_id"), '<span style="color:#ff0000;">'+fNum(div_income1_id)+'</span>');
+	}
+	//END OF INCOME - RESULT 1
+	
+	//TCE ($/DAY) - RESULT 1
+	div_tce1_id = div_income1_id / uNum(getValue(jQuery("#voyage_total_days")));
+	setValue(jQuery("#div_tce1_id"), fNum(div_tce1_id));
+	//END OF TCE ($/DAY) - RESULT 1
+}
+//END OF FREIGHT RATE CALCULATIONS
+
+//TCE CALCULATIONS
+function result2(){
+	//INCOME - RESULT 2
+	div_income2_id = uNum(getValue(jQuery("#tce2_id"))) * uNum(getValue(jQuery("#voyage_total_days")));
+	setValue(jQuery("#div_income2_id"), fNum(div_income2_id));
+	//END OF INCOME - RESULT 2
+	
+	//GROSS FREIGHT ($) - RESULT 2
+	div_gross_freight2_id = (div_income2_id + uNum(getValue(jQuery("#div_total_voyage_disbursment_id"))) ) / (100 - uNum(getValue(jQuery("#broker_comm2_id"))) - uNum(getValue(jQuery("#add_comm2_id")))) * 100;
+	setValue(jQuery("#div_gross_freight2_id"), fNum(div_gross_freight2_id));
+	//END OF GROSS FREIGHT ($) - RESULT 2
+	
+	//FREIGHT RATE - RESULT 2
+	var cargo_quantity2 = 0;
+	var loadingCount2 = 1;
+	
+	jQuery(".voyage_type").each(function(){
+		if(jQuery(this).val()=="Loading"){
+			cargo_quantity2 += valueU(jQuery("#cargo_quantity"+loadingCount2+"_id"));
+		}
+		
+		loadingCount2++;
+	});
+	
+	div_freight_rate2_id = div_gross_freight2_id / uNum(cargo_quantity2);
+	setValue(jQuery("#div_freight_rate2_id"), fNum(div_freight_rate2_id));
+	//END OF FREIGHT RATE - RESULT 2
+	
+	//BROKER COMMISSION - RESULT 2
+	div_broker_comm2_id = (uNum(getValue(jQuery("#broker_comm2_id"))) + uNum(getValue(jQuery("#add_comm2_id"))) ) / 100 * div_gross_freight2_id;
+	setValue(jQuery("#div_broker_comm2_id"), fNum(div_broker_comm2_id));
+	//END OF BROKER COMMISSION - RESULT 2
+}
+//END OF TCE CALCULATIONS
+
 //OTHER FUNCTIONS
 function thread(){
 	calculateDates();
@@ -971,6 +1045,9 @@ function thread(){
 	calculateBunkerConsumption();
 	calculateDWCC();
 	canalTotal();
+	voyageDisbursement();
+	result1();
+	result2();
 }
 
 jQuery(function(){
@@ -1130,12 +1207,12 @@ function addSequenceCargo(){
 		wdt += '</select>';
 		jQuery('#div_wdt'+rowCount+'_id').append(wdt);
 		
-		jQuery('#div_wadt'+rowCount+'_id').append('<input type="text" id="wadt'+rowCount+'_id" name="wadt'+rowCount+'" style="width:80px;" class="req wadt" onblur="this.value=fNum(this.value);" onkeyup="calculateSeaPortDays(); calculateBunkerConsumption();" />');
-		jQuery('#div_tie_days'+rowCount+'_id').append('<input type="text" id="tie_days'+rowCount+'_id" name="tie_days'+rowCount+'" style="width:80px;" onblur="this.value=fNum(this.value);" onkeyup="calculateSeaPortDays(); calculateBunkerConsumption();" class="tie_days" />');
+		jQuery('#div_wadt'+rowCount+'_id').append('<input type="text" id="wadt'+rowCount+'_id" name="wadt'+rowCount+'" style="width:40px;" class="req wadt" onblur="this.value=fNum(this.value);" onkeyup="calculateSeaPortDays(); calculateBunkerConsumption();" />');
+		jQuery('#div_tie_days'+rowCount+'_id').append('<input type="text" id="tie_days'+rowCount+'_id" name="tie_days'+rowCount+'" style="width:40px;" onblur="this.value=fNum(this.value);" onkeyup="calculateSeaPortDays(); calculateBunkerConsumption();" class="tie_days" />');
 		
 		if(jQuery("#voyage_type"+rowCount+"_id").val()=='Bunker Stop'){
-			jQuery('#div_canal'+rowCount+'_id').append('<input type="text" id="canal'+rowCount+'_id" name="canal'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="canal" />');
-			jQuery('#div_weather_extra'+rowCount+'_id').append('<input type="text" id="weather_extra'+rowCount+'_id" name="weather_extra'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="weather_extra" />');
+			jQuery('#div_canal'+rowCount+'_id').append('<input type="text" id="canal'+rowCount+'_id" name="canal'+rowCount+'" style="width:40px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="canal" />');
+			jQuery('#div_weather_extra'+rowCount+'_id').append('<input type="text" id="weather_extra'+rowCount+'_id" name="weather_extra'+rowCount+'" style="width:40px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="weather_extra" />');
 		}
 		
 		$(function(){
@@ -1184,13 +1261,17 @@ function addSequenceCargo(){
 		jQuery('#div_wdt'+rowCount+'_id').text('');
 		jQuery('#div_wadt'+rowCount+'_id').text('');
 		jQuery('#div_tie_days'+rowCount+'_id').text('');
+		jQuery('#div_canal'+rowCount+'_id').text('');
+		jQuery('#div_weather_extra'+rowCount+'_id').text('');
 		
-		if(rowCount==1){
-			jQuery('#div_canal'+rowCount+'_id').append('<input type="text" id="canal'+rowCount+'_id" name="canal'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates(); portTo1Calc(true); calculateSeaPortDays();" class="canal" />');
-			jQuery('#div_weather_extra'+rowCount+'_id').append('<input type="text" id="weather_extra'+rowCount+'_id" name="weather_extra'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates(); portTo1Calc(true); calculateSeaPortDays();" class="weather_extra" />');
-		}else{
-			jQuery('#div_canal'+rowCount+'_id').append('<input type="text" id="canal'+rowCount+'_id" name="canal'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="canal" />');
-			jQuery('#div_weather_extra'+rowCount+'_id').append('<input type="text" id="weather_extra'+rowCount+'_id" name="weather_extra'+rowCount+'" style="width:50px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="weather_extra" />');
+		if(jQuery("#voyage_type"+rowCount+"_id").val()!=''){
+			if(rowCount==1){
+				jQuery('#div_canal'+rowCount+'_id').append('<input type="text" id="canal'+rowCount+'_id" name="canal'+rowCount+'" style="width:40px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates(); portTo1Calc(true); calculateSeaPortDays();" class="canal" />');
+				jQuery('#div_weather_extra'+rowCount+'_id').append('<input type="text" id="weather_extra'+rowCount+'_id" name="weather_extra'+rowCount+'" style="width:40px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates(); portTo1Calc(true); calculateSeaPortDays();" class="weather_extra" />');
+			}else{
+				jQuery('#div_canal'+rowCount+'_id').append('<input type="text" id="canal'+rowCount+'_id" name="canal'+rowCount+'" style="width:40px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="canal" />');
+				jQuery('#div_weather_extra'+rowCount+'_id').append('<input type="text" id="weather_extra'+rowCount+'_id" name="weather_extra'+rowCount+'" style="width:40px;" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+rowCount+'); portToCalc(true, '+rowCount+'); calculateSeaPortDays();" class="weather_extra" />');
+			}
 		}
 	}
 }
@@ -1225,7 +1306,7 @@ function addSequence(){
 				nextRowVoyageLegs += '<td><div class="dp" style="padding-right:0px;"><a style="cursor:pointer;" onclick="deleteSequence(\''+nextRowCount+'\');"><img src="images/delete.png" border="0" /></a></div></td>';
 				nextRowVoyageLegs += '<td>';
 					nextRowVoyageLegs += '<div class="dp" id="div_voyage_type'+nextRowCount+'_id">';
-						nextRowVoyageLegs += '<select id="voyage_type'+nextRowCount+'_id" name="voyage_type'+nextRowCount+'" style="width:140px;" class="req voyage_type" onchange="addSequenceCargo();">';
+						nextRowVoyageLegs += '<select id="voyage_type'+nextRowCount+'_id" name="voyage_type'+nextRowCount+'" style="width:110px;" class="req voyage_type" onchange="addSequenceCargo();">';
 							
 							if(ballast && !loading){
 								nextRowVoyageLegs += '<option value="">- Select Type -</option>';
@@ -1252,11 +1333,11 @@ function addSequence(){
 				nextRowVoyageLegs += '</td>';
 				nextRowVoyageLegs += '<td><div class="dp" id="div_port_from'+nextRowCount+'_id">'+jQuery('#port_to'+rowCount+'_id').val()+'</div></td>';
 				nextRowVoyageLegs += '<td><div class="dp" id="div_date_from'+nextRowCount+'_id">'+jQuery('#div_date_to'+rowCount+'_id').text()+'</div></td>';
-				nextRowVoyageLegs += '<td><div class="dp" id="div_port_to'+nextRowCount+'_id"><input type="text" id="port_to'+nextRowCount+'_id" name="port_to'+nextRowCount+'" style="width:181px;" class="req port_to" /></div></td>';
+				nextRowVoyageLegs += '<td><div class="dp" id="div_port_to'+nextRowCount+'_id"><input type="text" id="port_to'+nextRowCount+'_id" name="port_to'+nextRowCount+'" style="width:150px;" class="req port_to" /></div></td>';
 				nextRowVoyageLegs += '<td><div class="dp" id="div_date_to'+nextRowCount+'_id">'+jQuery('#div_date_to'+rowCount+'_id').text()+'</div></td>';
-				nextRowVoyageLegs += '<td><div class="dp" id="div_speed'+nextRowCount+'_id"><input type="text" id="speed'+nextRowCount+'_id" name="speed'+nextRowCount+'" style="width:70px;" value="'+jQuery('#speed1_id').val()+'" class="speed" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+nextRowCount+'); portToCalc(true, '+nextRowCount+'); calculateSeaPortDays();" /></div></td>';
+				nextRowVoyageLegs += '<td><div class="dp" id="div_speed'+nextRowCount+'_id"><input type="text" id="speed'+nextRowCount+'_id" name="speed'+nextRowCount+'" style="width:40px;" value="'+jQuery('#speed1_id').val()+'" class="speed" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+nextRowCount+'); portToCalc(true, '+nextRowCount+'); calculateSeaPortDays();" /></div></td>';
 				nextRowVoyageLegs += '<td><div class="dp" id="div_distance_miles'+nextRowCount+'_id"></div></td>';
-				nextRowVoyageLegs += '<td><div class="dp" id="div_input_percent'+nextRowCount+'_id"><input type="text" id="input_percent'+nextRowCount+'_id" name="input_percent'+nextRowCount+'" style="width:70px;" class="number" onkeyup="computeDistanceMiles(this.value, '+nextRowCount+');" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+nextRowCount+'); portToCalc(true, '+nextRowCount+'); calculateSeaPortDays();" /></div></td>';
+				nextRowVoyageLegs += '<td><div class="dp" id="div_input_percent'+nextRowCount+'_id"><input type="text" id="input_percent'+nextRowCount+'_id" name="input_percent'+nextRowCount+'" style="width:40px;" class="number" onkeyup="computeDistanceMiles(this.value, '+nextRowCount+');" onblur="this.value=fNum(this.value);" onkeyup="calculateDates2('+nextRowCount+'); portToCalc(true, '+nextRowCount+'); calculateSeaPortDays();" /></div></td>';
 				nextRowVoyageLegs += '<td><div class="dp" id="div_sea_margin'+nextRowCount+'_id"></div></td>';
 			nextRowVoyageLegs += '</tr>';
 			
@@ -1468,6 +1549,8 @@ function calculateSeaPortDays(){
 	setValue(jQuery("#voyage_port_days"), fNum(totalportdays));
 	setValue(jQuery("#voyage_sea_days"), fNum(totalseadays));
 	setValue(jQuery("#voyage_total_days"), fNum(totalseadays+totalportdays));
+	
+	voyageDisbursement();
 }
 //END OF CALCULATE SEA PORTDAYS
 
@@ -1667,8 +1750,30 @@ function calculateBunkerConsumption(){
 	
 	bunker_total = div_ifo_total_expense + div_mdo_total_expense;
 	setValue(jQuery("#div_bunker_total_id"), fNum(bunker_total));
+	
+	voyageDisbursement();
 }
 //END OF CALCULATE BUNKER CONSUMPTION
+
+//VOYAGE DISBURESMENT
+function voyageDisbursement(){
+	vb1 = uNum(getValue(jQuery("#div_bunker_total_id")));
+	vb2 = uNum(getValue(jQuery("#div_port_total_id")));
+	vb3 = uNum(getValue(jQuery("#div_canal_total_id")));
+	vb4 = uNum(getValue(jQuery("#add_insurance_id")));
+	vb5 = uNum(getValue(jQuery("#ilohc_id")));
+	vb6 = uNum(getValue(jQuery("#ilow_id")));
+	vb7 = uNum(getValue(jQuery("#cve_id")));
+	vb8 = uNum(getValue(jQuery("#ballast_bonus_id")));
+	vb9 = uNum(getValue(jQuery("#miscellaneous_id")));
+
+	div_total_voyage_disbursment_id = vb1 + vb2 + vb3 + vb4 + vb5 + vb6 + vb7 + vb8 + vb9;
+	setValue(jQuery("#div_total_voyage_disbursment_id"), fNum(div_total_voyage_disbursment_id));
+	
+	result1();
+	result2();
+}
+//END OF VOYAGE DISBURSMENT
 
 //DELETE SEQUENCE
 function deleteSequence(num){
@@ -1821,9 +1926,9 @@ select{
 
 .div_all{
 	float:left;
-	width:1480px;
+	width:1194px;
 	height:auto;
-	padding:10px;
+	padding:3px;
 }
 
 .div_title{
@@ -1834,12 +1939,12 @@ select{
 
 .div_content{
 	float:left;
-	width:1345px;
+	width:1059px;
 	height:auto;
 }
 
 .dp{
-	padding:10px;
+	padding:3px;
 }
 </style>
 
@@ -1878,13 +1983,12 @@ select{
 	<iframe id='portdetailsiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
 <!--END OF PORT DETAILS-->
-
 <form method="post" id="voyageestimatorform" name="voyageestimatorform" enctype="multipart/form-data">
-<table width="1800" border="0" cellspacing="0" cellpadding="0">
+<table width="1200" border="0" cellspacing="0" cellpadding="0">
 	<tr>
-		<td width="1500">
+		<td width="1200">
 			<!-- CHOOSE VESSEL BY DWT TYPE OR VESSEL NAME / IMO# -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 				<tr bgcolor="cddee5">
 					<td>
 						<div class="div_all">
@@ -1923,16 +2027,16 @@ select{
 				</tr>
 			</table>
 			<div id="ship_info" style="display:none;">
-				<table width="1500" border="0" cellspacing="0" cellpadding="0">
+				<table width="1200" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="f5f5f5">
 					<td width="140" valign="top"><div style="padding:3px;"><b>IMO</b> #</div></td>
-					<td width="235" valign="top"><div style="padding:3px;" id="ship_imo">&nbsp;</div></td>
+					<td width="160" valign="top"><div style="padding:3px;" id="ship_imo">&nbsp;</div></td>
 					<td width="140" valign="top"><div style="padding:3px;"><b>LOA</b></div></td>
-					<td width="235" valign="top"><div style="padding:3px;" id="ship_loa">&nbsp;</div></td>
+					<td width="160" valign="top"><div style="padding:3px;" id="ship_loa">&nbsp;</div></td>
 					<td width="140" valign="top"><div style="padding:3px;"><b>Grain</b></div></td>
-					<td width="235" valign="top"><div style="padding:3px;" id="ship_grain">&nbsp;</div></td>
+					<td width="160" valign="top"><div style="padding:3px;" id="ship_grain">&nbsp;</div></td>
 					<td width="140" valign="top"><div style="padding:3px;"><b>Class Notation</b></div></td>
-					<td width="235" valign="top"><div style="padding:3px;" id="ship_class_notation">&nbsp;</div></td>
+					<td width="160" valign="top"><div style="padding:3px;" id="ship_class_notation">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td valign="top"><div style="padding:3px;"><b>Summer DWT</b></div></td>
@@ -2012,11 +2116,11 @@ select{
 			<!-- CHOOSE VESSEL BY DWT TYPE OR VESSEL NAME / IMO# -->
 			
 			<!-- VOYAGE LEGS -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0" id="voyage_legs_id">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0" id="voyage_legs_id">
 				<tr bgcolor="cddee5">
 					<td colspan="10">
 						<div class="div_all">
-							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<table width="1194" border="0" cellspacing="0" cellpadding="0">
 								<tr>
 									<td width="100"><b>VOYAGE LEGS</b></td>
 									<td width="25" align="center"><a style="cursor:pointer;" onclick="addSequence();"><img src="images/plus.png" border="0" /></a></td>
@@ -2027,34 +2131,34 @@ select{
 					</td>
 				</tr>
 				<tr bgcolor="d6d6d6">
-					<td width="188" colspan="2"><div class="dp"><b>Type</b></div></td>
-					<td width="208"><div class="dp"><b>Port</b></div></td>
-					<td width="208"><div class="dp"><b>Date</b></div></td>
-					<td width="208"><div class="dp"><b>Port</b></div></td>
-					<td width="208"><div class="dp"><b>Date</b></div></td>
-					<td width="120"><div class="dp"><b>Speed (knts)</b></div></td>
-					<td width="120"><div class="dp"><b>Distance (miles)</b></div></td>
-					<td width="120"><div class="dp"><b>Input %</b></div></td>
-					<td width="120"><div class="dp"><b>% Sea Margin</b></div></td>
+					<td width="130" colspan="2"><div class="dp"><b>Type</b></div></td>
+					<td width="200"><div class="dp"><b>Port</b></div></td>
+					<td width="200"><div class="dp"><b>Date</b></div></td>
+					<td width="200"><div class="dp"><b>Port</b></div></td>
+					<td width="200"><div class="dp"><b>Date</b></div></td>
+					<td width="167"><div class="dp"><b>Speed (knts)</b></div></td>
+					<td width="167"><div class="dp"><b>Distance (miles)</b></div></td>
+					<td width="167"><div class="dp"><b>Input %</b></div></td>
+					<td width="169"><div class="dp"><b>% Sea Margin</b></div></td>
 				</tr>
 				<tr bgcolor="f5f5f5" id="voyage_legs_row" class="voyage_legs_row1">
 					<td><div class="dp">&nbsp;</div></td>
 					<td>
 						<div class="dp" id="div_voyage_type1_id">
-							<select id="voyage_type1_id" name="voyage_type1" style="width:140px;" class="req voyage_type" onchange="addSequenceCargo();">
+							<select id="voyage_type1_id" name="voyage_type1" style="width:110px;" class="req voyage_type" onchange="addSequenceCargo();">
 								<option value="">- Select Type -</option>
 								<option value="Ballast">Ballast</option>
 								<option value="Loading">Loading</option>
 							</select>
 						</div>
 					</td>
-					<td><div class="dp" id="div_port_from1_id"><input type="text" id="port_from1_id" name="port_from1" style="width:181px;" class="req port_from" /></div></td>
-					<td><div class="dp" id="div_date_from1_id"><input type="text" id="date_from1_id" name="date_from1" style="width:181px;" class="req date" readonly="readonly" /></div></td>
-					<td><div class="dp" id="div_port_to1_id"><input type="text" id="port_to1_id" name="port_to1" style="width:181px;" class="req port_to" /></div></td>
+					<td><div class="dp" id="div_port_from1_id"><input type="text" id="port_from1_id" name="port_from1" style="width:150px;" class="req port_from" /></div></td>
+					<td><div class="dp" id="div_date_from1_id"><input type="text" id="date_from1_id" name="date_from1" style="width:150px;" class="req date" readonly="readonly" /></div></td>
+					<td><div class="dp" id="div_port_to1_id"><input type="text" id="port_to1_id" name="port_to1" style="width:150px;" class="req port_to" /></div></td>
 					<td><div class="dp" id="div_date_to1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_speed1_id"><input type="text" id="speed1_id" name="speed1" style="width:70px;" class="speed number" /></div></td>
+					<td><div class="dp" id="div_speed1_id"><input type="text" id="speed1_id" name="speed1" style="width:40px;" class="speed number" /></div></td>
 					<td><div class="dp" id="div_distance_miles1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_input_percent1_id"><input type="text" id="input_percent1_id" name="input_percent1" style="width:70px;" class="number" onkeyup="computeDistanceMiles1(this.value);" /></div></td>
+					<td><div class="dp" id="div_input_percent1_id"><input type="text" id="input_percent1_id" name="input_percent1" style="width:40px;" class="number" onkeyup="computeDistanceMiles1(this.value);" /></div></td>
 					<td><div class="dp" id="div_sea_margin1_id"></div></td>
 				</tr>
 			</table>
@@ -2064,7 +2168,7 @@ select{
 			<!-- END OF VOYAGE LEGS -->
 			
 			<!-- CARGO LEGS -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0" id="cargo_legs_id">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0" id="cargo_legs_id">
 				<tr bgcolor="cddee5">
 					<td colspan="6"><div class="dp"><b>CARGO LEGS</b></div></td>
 					<td colspan="2"><div class="dp"><b>* Option to Load & Bunker concurrently</b></div></td>
@@ -2072,19 +2176,19 @@ select{
 					<td colspan="3"><div class="dp"><b>Sea Days</b></div></td>
 				</tr>
 				<tr bgcolor="d6d6d6">
-					<td width="116"><div class="dp"><b>Type</b></div></td>
-					<td width="192"><div class="dp"><b>Cargo</b></div></td>
-					<td width="70"><div class="dp"><b>SF</b></div></td>
-					<td width="116"><div class="dp"><b>Quantity (MT)</b></div></td>
-					<td width="116"><div class="dp"><b>Volume (M3)</b></div></td>
-					<td width="115"><div class="dp"><b>L/D Rate (MT/day)</b></div></td>
-					<td width="115"><div class="dp"><b>Load Days</b></div></td>
-					<td width="115"><div class="dp"><b>Working Days TERMS</b></div></td>
-					<td width="115"><div class="dp"><b>Working Aditional Days TERMS</b></div></td>
-					<td width="115"><div class="dp"><b>Turn/Idle/Extra Days</b></div></td>
-					<td width="115"><div class="dp"><b>Voyage Days</b></div></td>
-					<td width="100"><div class="dp"><b>Canal Days</b></div></td>
-					<td width="100"><div class="dp"><b>Weather/Extra Days</b></div></td>
+					<td width="85"><div class="dp"><b>Type</b></div></td>
+					<td width="205"><div class="dp"><b>Cargo</b></div></td>
+					<td width="30"><div class="dp"><b>SF</b></div></td>
+					<td width="205"><div class="dp"><b>Quantity (MT)</b></div></td>
+					<td width="80"><div class="dp"><b>Volume (M3)</b></div></td>
+					<td width="205"><div class="dp"><b>L/D Rate (MT/day)</b></div></td>
+					<td width="30"><div class="dp"><b>Load Days</b></div></td>
+					<td width="90"><div class="dp"><b>Working Days TERMS</b></div></td>
+					<td width="60"><div class="dp"><b>Working Aditional Days TERMS</b></div></td>
+					<td width="60"><div class="dp"><b>Turn/Idle/Extra Days</b></div></td>
+					<td width="30"><div class="dp"><b>Voyage Days</b></div></td>
+					<td width="60"><div class="dp"><b>Canal Days</b></div></td>
+					<td width="60"><div class="dp"><b>Weather/Extra Days</b></div></td>
 				</tr>
 				<tr bgcolor="f5f5f5" id="cargo_legs_row" class="cargo_legs_row1">
 					<td><div class="dp" id="div_cargo_legs_type1_id" style="font-weight:bold;">&nbsp;</div></td>
@@ -2108,14 +2212,14 @@ select{
 			<!-- END OF CARGO LEGS -->
 			
 			<!-- VOYAGE TIME -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="cddee5">
 				<td colspan="3"><div class="dp"><b>VOYAGE TIME</b></div></td>
 			  </tr>
 			  <tr>
-				<td width="30%"><div class="dp"><b>PORT DAYS</b></div></td>
-				<td width="30%"><div class="dp"><b>SEA DAYS</b></div></td>
-				<td width="40%"><div class="dp"><b>TOTAL VOYAGE DAYS</b></div></td>
+				<td width="400"><div class="dp"><b>PORT DAYS</b></div></td>
+				<td width="400"><div class="dp"><b>SEA DAYS</b></div></td>
+				<td width="400"><div class="dp"><b>TOTAL VOYAGE DAYS</b></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div class="dp" id='voyage_port_days'>&nbsp;</div></td>
@@ -2129,64 +2233,64 @@ select{
 			<!-- END OF VOYAGE TIME -->
 			
 			<!-- BUNKER PRICING -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="cddee5">
 				<td><div class="dp"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated" style="color:#FF0000;">&nbsp;</span></div></td>
 			  </tr>
 			</table>
 			
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
 				<td valign="top">
-					<table width="738" border="0" cellspacing="0" cellpadding="0">
+					<table width="595" border="0" cellspacing="0" cellpadding="0">
 					  <tr bgcolor="d6d6d6">
-						<td width="246"><div class="dp"><b>Type IFO</b></div></td>
-						<td width="246"><div class="dp"><b>Price Input ($)</b></div></td>
-						<td width="246"><div class="dp"><b>Price Available ($)</b></div></td>
+						<td width="198"><div class="dp"><b>Type IFO</b></div></td>
+						<td width="199"><div class="dp"><b>Price Input ($)</b></div></td>
+						<td width="198"><div class="dp"><b>Price Available ($)</b></div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp"><b>IFO 380</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo1_id" name="ifo1" class="number" style="width:200px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo1_id" name="ifo1" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo1_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp"><b>IFO 180</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo2_id" name="ifo2" class="number" style="width:200px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo2_id" name="ifo2" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo2_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp"><b>LS IFO 380 1%</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo3_id" name="ifo3" class="number" style="width:200px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo3_id" name="ifo3" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo3_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp"><b>LS IFO 180 1%</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo4_id" name="ifo4" class="number" style="width:200px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo4_id" name="ifo4" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo4_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 					  </tr>
 					</table>
 				</td>
-				<td width="24"></td>
+				<td width="10"></td>
 				<td valign="top">
-					<table width="738" border="0" cellspacing="0" cellpadding="0">
+					<table width="595" border="0" cellspacing="0" cellpadding="0">
 					  <tr bgcolor="d6d6d6">
-						<td width="246"><div class="dp"><b>Type MDO</b></div></td>
-						<td width="246"><div class="dp"><b>Price Input ($)</b></div></td>
-						<td width="246"><div class="dp"><b>Price Available ($)</b></div></td>
+						<td width="198"><div class="dp"><b>Type MDO</b></div></td>
+						<td width="199"><div class="dp"><b>Price Input ($)</b></div></td>
+						<td width="198"><div class="dp"><b>Price Available ($)</b></div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp"><b>MDO</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo1_id" name="mdo1" class="number" style="width:200px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo1_id" name="mdo1" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo1_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp"><b>MGO</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo2_id" name="mdo2" class="number" style="width:200px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo2_id" name="mdo2" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo2_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp"><b>LS MGO 1%</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo3_id" name="mdo3" class="number" style="width:200px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo3_id" name="mdo3" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo3_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
@@ -2204,68 +2308,68 @@ select{
 			<!-- END OF BUNKER PRICING -->
 			
 			<!-- BUNKER CONSUMPTIONS -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="cddee5">
 				<td><div class="dp"><b>BUNKER CONSUMPTIONS</b></div></td>
 			  </tr>
 			</table>
 			
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
 				<td valign="top">
-					<table width="738" border="0" cellspacing="0" cellpadding="0">
+					<table width="595" border="0" cellspacing="0" cellpadding="0">
 					  <tr bgcolor="d6d6d6">
-						<td width="184"><div class="dp"><b>Voyage Type</b></div></td>
-						<td width="184"><div class="dp"><b>Consumption (MT/day)</b></div></td>
-						<td width="185"><div class="dp"><b>Total Consumption (MT)</b></div></td>
-						<td width="185"><div class="dp"><b>Voyage Expense ($)</b></div></td>
+						<td width="151"><div class="dp"><b>Voyage Type</b></div></td>
+						<td width="148"><div class="dp"><b>Consumption (MT/day)</b></div></td>
+						<td width="148"><div class="dp"><b>Total Consumption (MT)</b></div></td>
+						<td width="148"><div class="dp"><b>Voyage Expense ($)</b></div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp" style="color:#ff0000;"><b>IFO/Ballast</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_ballast_id" name="ifo_ballast" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo_ballast_id" name="ifo_ballast" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_ballast_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_ballast_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp" style="color:#00b050;"><b>IFO/Loading</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_loading_id" name="ifo_loading" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo_loading_id" name="ifo_loading" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_loading_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_loading_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp" style="color:#ff0000;"><b>IFO/Bunker Stop</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_bunker_stop_id" name="ifo_bunker_stop" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo_bunker_stop_id" name="ifo_bunker_stop" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_bunker_stop_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_bunker_stop_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp" style="color:#00b050;"><b>IFO/Laden</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_laden_id" name="ifo_laden" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo_laden_id" name="ifo_laden" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_laden_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_laden_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp" style="color:#ff0000;"><b>IFO/Discharging</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_discharging_id" name="ifo_discharging" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo_discharging_id" name="ifo_discharging" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_discharging_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_discharging_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp" style="color:#00b050;"><b>IFO/Repositioning</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_repositioning_id" name="ifo_repositioning" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo_repositioning_id" name="ifo_repositioning" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_repositioning_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_repositioning_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp" style="color:#ff0000;"><b>IFO/Port</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_port_id" name="ifo_port" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="ifo_port_id" name="ifo_port" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_port_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_ifo_port_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp"><b>IFO/Reserve</b></div></td>
 						<td><div class="dp">&nbsp;</div></td>
-						<td><div class="dp" id="div_ifo_ifo_reserve_id"><input type="text" id="ifo_reserve_id" name="ifo_reserve" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp" id="div_ifo_ifo_reserve_id"><input type="text" id="ifo_reserve_id" name="ifo_reserve" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_ifo_reserve_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
@@ -2274,61 +2378,61 @@ select{
 					  </tr>
 					</table>
 				</td>
-				<td width="24"></td>
+				<td width="10"></td>
 				<td valign="top">
-					<table width="738" border="0" cellspacing="0" cellpadding="0">
+					<table width="595" border="0" cellspacing="0" cellpadding="0">
 					  <tr bgcolor="d6d6d6">
-						<td width="184"><div class="dp"><b>Voyage Type</b></div></td>
-						<td width="184"><div class="dp"><b>Consumption (MT/day)</b></div></td>
-						<td width="185"><div class="dp"><b>Total Consumption (MT)</b></div></td>
-						<td width="185"><div class="dp"><b>Voyage Expense ($)</b></div></td>
+						<td width="151"><div class="dp"><b>Voyage Type</b></div></td>
+						<td width="148"><div class="dp"><b>Consumption (MT/day)</b></div></td>
+						<td width="148"><div class="dp"><b>Total Consumption (MT)</b></div></td>
+						<td width="148"><div class="dp"><b>Voyage Expense ($)</b></div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp" style="color:#ff0000;"><b>MDO/Ballast</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_ballast_id" name="mdo_ballast" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo_ballast_id" name="mdo_ballast" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_ballast_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_ballast_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp" style="color:#00b050;"><b>MDO/Loading</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_loading_id" name="mdo_loading" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo_loading_id" name="mdo_loading" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_loading_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_loading_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp" style="color:#ff0000;"><b>MDO/Bunker Stop</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_bunker_stop_id" name="mdo_bunker_stop" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo_bunker_stop_id" name="mdo_bunker_stop" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_bunker_stop_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_bunker_stop_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp" style="color:#00b050;"><b>MDO/Laden</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_laden_id" name="mdo_laden" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo_laden_id" name="mdo_laden" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_laden_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_laden_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp" style="color:#ff0000;"><b>MDO/Discharging</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_discharging_id" name="mdo_discharging" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo_discharging_id" name="mdo_discharging" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_discharging_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_discharging_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp" style="color:#00b050;"><b>MDO/Repositioning</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_repositioning_id" name="mdo_repositioning" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo_repositioning_id" name="mdo_repositioning" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_repositioning_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_repositioning_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp" style="color:#ff0000;"><b>MDO/Port</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_port_id" name="mdo_port" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp"><input type="text" id="mdo_port_id" name="mdo_port" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_port_consumption">&nbsp;</div></td>
 						<td><div class="dp" id="div_mdo_port_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
 						<td><div class="dp"><b>MDO/Reserve</b></div></td>
 						<td><div class="dp">&nbsp;</div></td>
-						<td><div class="dp" id="div_mdo_mdo_reserve_id"><input type="text" id="mdo_reserve_id" name="mdo_reserve" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+						<td><div class="dp" id="div_mdo_mdo_reserve_id"><input type="text" id="mdo_reserve_id" name="mdo_reserve" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 						<td><div class="dp" id="div_mdo_reserve_expense">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
@@ -2345,21 +2449,21 @@ select{
 			<!-- END OF BUNKER CONSUMPTIONS -->
 			
 			<!-- DWCC AND CANAL -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
-				<td width="738" bgcolor="cddee5"><div class="dp"><b>DWCC</b></div></td>
-				<td width="24">&nbsp;</td>
-				<td width="738" bgcolor="cddee5"><div class="dp"><b>CANAL</b></div></td>
+				<td width="595" bgcolor="cddee5"><div class="dp"><b>DWCC</b></div></td>
+				<td width="10">&nbsp;</td>
+				<td width="595" bgcolor="cddee5"><div class="dp"><b>CANAL</b></div></td>
 			  </tr>
 			</table>
 			
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
 				<td valign="top">
-					<table width="738" border="0" cellspacing="0" cellpadding="0">
+					<table width="595" border="0" cellspacing="0" cellpadding="0">
 					  <tr bgcolor="d6d6d6">
-						<td width="369" colspan="2"><div class="dp"><b>DW (MT)</b></div></td>
-						<td width="369"><div class="dp" id="div_dwt_id" style="font-weight:bold;">&nbsp;</div></td>
+						<td width="297" colspan="2"><div class="dp"><b>DW (MT)</b></div></td>
+						<td width="298"><div class="dp" id="div_dwt_id" style="font-weight:bold;">&nbsp;</div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td rowspan="2"><div class="dp"><b>Consumption (MT)</b></div></td>
@@ -2397,9 +2501,9 @@ select{
 					  </tr>
 					</table>
 				</td>
-				<td width="24"></td>
+				<td width="10"></td>
 				<td valign="top">
-					<table width="738" border="0" cellspacing="0" cellpadding="0">
+					<table width="595" border="0" cellspacing="0" cellpadding="0">
 					  <tr bgcolor="d6d6d6">
 						<td><div class="dp"><b>Canal</b></div></td>
 						<td colspan="2">
@@ -2433,29 +2537,29 @@ select{
 						</td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
-						<td width="246"><div class="dp"><b>Booking Fee ($)</b></div></td>
-						<td width="246"><div class="dp"><input type="text" id="cbook1_id" name="cbook1" class="number" style="width:150px;" /></div></td>
-						<td width="246"><div class="dp"><input type="text" id="cbook2_id" name="cbook2" class="number" style="width:150px;" /></div></td>
+						<td width="199"><div class="dp"><b>Booking Fee ($)</b></div></td>
+						<td width="198"><div class="dp"><input type="text" id="cbook1_id" name="cbook1" class="number" style="width:150px;" /></div></td>
+						<td width="198"><div class="dp"><input type="text" id="cbook2_id" name="cbook2" class="number" style="width:150px;" /></div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
-						<td width="246"><div class="dp"><b>Tugs ($)</b></div></td>
-						<td width="246"><div class="dp"><input type="text" id="ctug1_id" name="ctug1" class="number" style="width:150px;" /></div></td>
-						<td width="246"><div class="dp"><input type="text" id="ctug2_id" name="ctug2" class="number" style="width:150px;" /></div></td>
+						<td><div class="dp"><b>Tugs ($)</b></div></td>
+						<td><div class="dp"><input type="text" id="ctug1_id" name="ctug1" class="number" style="width:150px;" /></div></td>
+						<td><div class="dp"><input type="text" id="ctug2_id" name="ctug2" class="number" style="width:150px;" /></div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
-						<td width="246"><div class="dp"><b>Line Handlers ($)</b></div></td>
-						<td width="246"><div class="dp"><input type="text" id="cline1_id" name="cline1" class="number" style="width:150px;" /></div></td>
-						<td width="246"><div class="dp"><input type="text" id="cline2_id" name="cline2" class="number" style="width:150px;" /></div></td>
+						<td><div class="dp"><b>Line Handlers ($)</b></div></td>
+						<td><div class="dp"><input type="text" id="cline1_id" name="cline1" class="number" style="width:150px;" /></div></td>
+						<td><div class="dp"><input type="text" id="cline2_id" name="cline2" class="number" style="width:150px;" /></div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
-						<td width="246"><div class="dp"><b>Miscellaneous ($)</b></div></td>
-						<td width="246"><div class="dp"><input type="text" id="cmisc1_id" name="cmisc1" class="number" style="width:150px;" /></div></td>
-						<td width="246"><div class="dp"><input type="text" id="cmisc2_id" name="cmisc2" class="number" style="width:150px;" /></div></td>
+						<td><div class="dp"><b>Miscellaneous ($)</b></div></td>
+						<td><div class="dp"><input type="text" id="cmisc1_id" name="cmisc1" class="number" style="width:150px;" /></div></td>
+						<td><div class="dp"><input type="text" id="cmisc2_id" name="cmisc2" class="number" style="width:150px;" /></div></td>
 					  </tr>
 					  <tr bgcolor="e9e9e9">
-						<td width="246"><div class="dp"><b>Total ($)</b></div></td>
-						<td width="246"><div class="dp" id="div_ctotal1_id">&nbsp;</div></td>
-						<td width="246"><div class="dp" id="div_ctotal2_id">&nbsp;</div></td>
+						<td><div class="dp"><b>Total ($)</b></div></td>
+						<td><div class="dp" id="div_ctotal1_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_ctotal2_id">&nbsp;</div></td>
 					  </tr>
 					</table>
 				</td>
@@ -2467,23 +2571,23 @@ select{
 			<!-- END OF DWCC AND CANAL -->
 			
 			<!-- PORTS -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
-				<td width="1500" bgcolor="cddee5"><div class="dp"><b>PORT(S)</b></div></td>
+				<td width="1200" bgcolor="cddee5"><div class="dp"><b>PORT(S)</b></div></td>
 			  </tr>
 			</table>
 			
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
 				<td valign="top">
-					<table width="1500" border="0" cellspacing="0" cellpadding="0" id="row_ports_id">
+					<table width="1200" border="0" cellspacing="0" cellpadding="0" id="row_ports_id">
 					  <tr id="row_ports" class="row_ports0" bgcolor="d6d6d6">
-						<td><div class="dp"><b>Dem ($/day)</b> <span style="font-size:10px;">Pro Rated</span></div></td>
-						<td><div class="dp"><b>Term</b></div></td>
-						<td><div class="dp"><b>Des ($/day)</b></div></td>
-						<td><div class="dp"><b>Liner Terms</b></div></td>
+						<td width="200"><div class="dp"><b>Dem ($/day)</b> <span style="font-size:10px;">Pro Rated</span></div></td>
+						<td width="200"><div class="dp"><b>Term</b></div></td>
+						<td width="200"><div class="dp"><b>Des ($/day)</b></div></td>
+						<td width="200"><div class="dp"><b>Liner Terms</b></div></td>
 						<td width="200"><div class="dp"><b>Port</b></div></td>
-						<td><div class="dp"><b>DA Quick Input ($)</b></div></td>
+						<td width="200"><div class="dp"><b>DA Quick Input ($)</b></div></td>
 					  </tr>
 					  <tr bgcolor="f5f5f5">
 						<td><div class="dp"><b>Demurrage ($)</b></div></td>
@@ -2506,60 +2610,63 @@ select{
 			<div>&nbsp;</div>
 			<!-- END OF PORTS -->
 			
-			<!-- VOYAGE TIME -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<!-- VOYAGE DISBURSMENT -->
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="cddee5">
 				<td colspan="4"><div class="dp"><b>VOYAGE DISBURSMENTS</b></div></td>
 				<td colspan="5"><div class="dp"><b>VOYAGE</b></div></td>
 			  </tr>
 			  <tr>
-				<td width="166"><div class="dp"><b>Bunker ($)</b></div></td>
-				<td width="166"><div class="dp"><b>Port ($)</b></div></td>
-				<td width="166"><div class="dp"><b>Canal($)</b></div></td>
-				<td width="167"><div class="dp"><b>Add. Insurance ($)</b></div></td>
-				<td width="167"><div class="dp"><b>ILOHC</b></div></td>
-				<td width="167"><div class="dp"><b>ILOW</b></div></td>
-				<td width="167"><div class="dp"><b>CVE</b></div></td>
-				<td width="167"><div class="dp"><b>Ballast Bonus</b></div></td>
-				<td width="167"><div class="dp"><b>Miscellaneous</b></div></td>
+				<td width="133"><div class="dp"><b>Bunker ($)</b></div></td>
+				<td width="133"><div class="dp"><b>Port ($)</b></div></td>
+				<td width="133"><div class="dp"><b>Canal($)</b></div></td>
+				<td width="133"><div class="dp"><b>Add. Insurance ($)</b></div></td>
+				<td width="133"><div class="dp"><b>ILOHC</b></div></td>
+				<td width="133"><div class="dp"><b>ILOW</b></div></td>
+				<td width="134"><div class="dp"><b>CVE</b></div></td>
+				<td width="134"><div class="dp"><b>Ballast Bonus</b></div></td>
+				<td width="134"><div class="dp"><b>Miscellaneous</b></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div class="dp" id='div_bunker_total_id'>&nbsp;</div></td>
 				<td><div class="dp" id='div_port_total_id'>&nbsp;</div></td>
 				<td><div class="dp" id='div_canal_total_id'>&nbsp;</div></td>
-				<td><div class="dp" id='div_add_insurance_id'><input type="text" id="add_insurance_id" name="add_insurance" class="number" style="width:125px;" /></div></td>
-				<td><div class="dp" id='div_ilohc_id'><input type="text" id="ilohc_id" name="ilohc" class="number" style="width:125px;" /></div></td>
-				<td><div class="dp" id='div_ilow_id'><input type="text" id="ilow_id" name="ilow" class="number" style="width:125px;" /></div></td>
-				<td><div class="dp" id='div_cve_id'><input type="text" id="cve_id" name="cve" class="number" style="width:125px;" /></div></td>
-				<td><div class="dp" id='div_ballast_bonus_id'><input type="text" id="ballast_bonus_id" name="ballast_bonus" class="number" style="width:125px;" /></div></td>
-				<td><div class="dp" id='div_miscellaneous_id'><input type="text" id="miscellaneous_id" name="miscellaneous" class="number" style="width:125px;" /></div></td>
+				<td><div class="dp" id='div_add_insurance_id'><input type="text" id="add_insurance_id" name="add_insurance" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+				<td><div class="dp" id='div_ilohc_id'><input type="text" id="ilohc_id" name="ilohc" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+				<td><div class="dp" id='div_ilow_id'><input type="text" id="ilow_id" name="ilow" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+				<td><div class="dp" id='div_cve_id'><input type="text" id="cve_id" name="cve" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+				<td><div class="dp" id='div_ballast_bonus_id'><input type="text" id="ballast_bonus_id" name="ballast_bonus" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+				<td><div class="dp" id='div_miscellaneous_id'><input type="text" id="miscellaneous_id" name="miscellaneous" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			  </tr>
+			  <tr>
+				<td colspan="9"><div class="dp" id='div_total_voyage_disbursment_id'>&nbsp;</div></td>
 			  </tr>
 			</table>
 			
 			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
 			<div>&nbsp;</div>
-			<!-- END OF VOYAGE TIME -->
+			<!-- END OF VOYAGE DISBURSMENT -->
 			
 			<!-- AIS MAP -->
-			<table width="1500" border="0" cellspacing="0" cellpadding="0">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
-				<td width="1500" bgcolor="cddee5"><div class="dp"><b>MAP - Data from AIS</b></div></td>
+				<td width="1200" bgcolor="cddee5"><div class="dp"><b>MAP - Data from AIS</b></div></td>
 			  </tr>
 			  <tr bgcolor="#000000">
-				<td><iframe src='map/world_map.php' id="map_iframeve" width='1500' height='400' frameborder="0"></iframe></td>
+				<td><iframe src='http://www.openstreetmap.org/export/embed.html?bbox=10.4,22,81.8,61.4&amp;layer=mapnik' id="map_iframeve" width='1200' height='400' frameborder="0"></iframe></td>
 			  </tr>
 			</table>
 			
 			<div>&nbsp;</div>
 			<!-- END OF AIS MAP -->
 		</td>
-		<td width="300">
-			<!--<div style="position:fixed;">-->
+		<td width="300" valign="top">
+			<div style="position:fixed;">
 				<table width="300" border="0" cellspacing="0" cellpadding="0">
 				  <tr>
 					<td width="150" style="border:none;">
-						<div style="padding-left:10px;">
-							<table width="140" border="0" cellspacing="0" cellpadding="0">
+						<div style="padding-left:5px;">
+							<table width="145" border="0" cellspacing="0" cellpadding="0">
 								<tr bgcolor="cddee5">
 									<td><div class="dp"><b>FREIGHT RATE</b></div></td>
 								</tr>
@@ -2567,71 +2674,71 @@ select{
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><span style="font-size:14px; color:#0066FF; font-weight:bold;">Freight Rate ($/MT)</span></td>
+									<td><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">Freight Rate ($/MT)</span></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='b80' name="b80" value="<?php echo $b80; ?>" style="max-width:100px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Gross Freight ($)</strong></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="calculated" id='c80' style="padding:3px;"></td>
+									<td><div class="dp"><input type='text' class='number' id='freight_rate1_id' name="freight_rate1" style="width:100px; border:1px solid #FF0000;" /></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Brok. Comm ($)</strong></td>
+									<td><div class="dp"><b>Gross Freight ($)</b></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td style="padding:3px;"><input type='text' class='input_1 number' id='d80' name="d80" value="<?php echo $d80; ?>" style="max-width:100px;" /></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Add. Comm ($)</strong></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td style="padding:3px;"><input type='text' class='input_1 number' id='e80' name='e80' value="<?php echo $e80; ?>" style="max-width:100px;" /></td>
+									<td><div class="dp" id='div_gross_freight1_id'>&nbsp;</div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px; border-left:1px solid #000000; border-top:1px solid #000000; border-right:1px solid #000000;"><strong>Income ($)</strong></td>
+									<td><div class="dp"><b>Brok. Comm ($)</b></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="calculated" id='f80' style="padding:3px; border-left:1px solid #000000; border-bottom:1px solid #000000; border-right:1px solid #000000;"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px; border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><strong>TCE ($/day)</strong></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="calculated" id='g80' style="padding:3px; border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"></td>
+									<td><div class="dp"><input type='text' class='number' id='broker_comm1_id' name="broker_comm1" style="width:100px;" value="1.25" /></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Broker Commission</strong></td>
+									<td><div class="dp"><b>Add. Comm ($)</b></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label calculated" id='d81' style="padding:3px;"></td>
+									<td><div class="dp"><input type='text' class='number' id='add_comm1_id' name='add_comm1' style="width:100px;" value="2.50" /></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td style="border-left:1px solid #000000; border-top:1px solid #000000; border-right:1px solid #000000;"><div class="dp"><b>Income ($)</b></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td style="border-left:1px solid #000000; border-bottom:1px solid #000000; border-right:1px solid #000000;"><div class="dp" id="div_income1_id">&nbsp;</div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td style="border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><div class="dp"><b>TCE ($/day)</b></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td style="border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"><div class="dp" id="div_tce1_id">&nbsp;</div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td><div class="dp"><b>Broker Commission</b></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td><div class="dp" id="div_broker_comm1_id">&nbsp;</div></td>
 								</tr>
 							</table>
 						</div>
 					</td>
 					<td width="150" style="border:none;">
-						<div style="padding-left:10px;">
-							<table width="140" border="0" cellspacing="0" cellpadding="0">
+						<div style="padding-left:5px;">
+							<table width="145" border="0" cellspacing="0" cellpadding="0">
 								<tr bgcolor="cddee5">
 									<td><div class="dp"><b>TCE</b></div></td>
 								</tr>
@@ -2639,71 +2746,71 @@ select{
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td style="padding:3px; border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><strong>Freight Rate ($/MT)</strong></td>
+									<td style="border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><div class="dp"><b>Freight Rate ($/MT)</b></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="calculated" id='b85' style="padding:3px; border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Gross Freight ($)</strong></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="calculated"  id='c85' style="padding:3px;"></td>
+									<td style="border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"><div class="dp" id="div_freight_rate2_id">&nbsp;</div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Brok. Comm ($)</strong></td>
+									<td><div class="dp"><b>Gross Freight ($)</b></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td style="padding:3px;"><input type='text' class='input_1 number' id='d85' name='d85' value="<?php echo $d85; ?>" style="max-width:100px;" /></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Add. Comm ($)</strong></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td style="padding:3px;"><input type='text' class='input_1 number' id='e85' name='e85' value="<?php echo $e85; ?>" style="max-width:100px;" /></td>
+									<td><div class="dp" id="div_gross_freight2_id">&nbsp;</div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Income ($)</strong></td>
+									<td><div class="dp"><b>Brok. Comm ($)</b></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="calculated"  id='f85' style="padding:3px;"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><span style="font-size:14px; color:#0066FF; font-weight:bold;">TCE ($/day)</span></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td class='empty' style="padding:3px;"><input type='text' class='input_1 number' id='g85' name='g85' value="<?php echo $g85; ?>" style="max-width:100px; border:1px solid #FF0000;" /> <span style="color:#FF0000; font-weight:bold; font-size:14px;">*</span></td>
+									<td><div class="dp"><input type='text' class='number' id='broker_comm2_id' name='broker_comm2' style="width:100px;" value="1.25" /></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
 									<td height="5"></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label" style="padding:3px;"><strong>Broker Commission</strong></td>
+									<td><div class="dp"><b>Add. Comm ($)</b></div></td>
 								</tr>
 								<tr bgcolor="f5f5f5">
-									<td class="label calculated"  id='d86' style="padding:3px;"></td>
+									<td><div class="dp"><input type='text' class='number' id='add_comm2_id' name='add_comm2' style="width:100px;" value="2.50" /></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td><div class="dp"><b>Income ($)</b></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td><div class="dp" id="div_income2_id">&nbsp;</div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">TCE ($/day)</span></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td><div class="dp"><input type='text' class='number' id='tce2_id' name='tce2' style="width:100px; border:1px solid #FF0000;" /></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td height="5"></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td><div class="dp"><b>Broker Commission</b></div></td>
+								</tr>
+								<tr bgcolor="f5f5f5">
+									<td><div class="dp" id="div_broker_comm2_id">&nbsp;</div></td>
 								</tr>
 							</table>
 						</div>
 					</td>
 				  </tr>
 				</table>
-			<!--</div>-->
+			</div>
 		</td>
 	</tr>
 </table>

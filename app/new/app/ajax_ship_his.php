@@ -118,7 +118,7 @@ jQuery("#contactdialog").dialog("close");
                 <tr>
 					<td style="vertical-align:middle; border:0px;">
 						<div style="padding:2px;">
-							SHIP NAME AND IMO: <input type='text' id='ship' name='ship' class='input_1' style='width:200px;'>
+							SHIP NAME AND IMO AND DWT: <input type='text' id='ship' name='ship' class='input_1' style='width:200px;'>
 							<script type="text/javascript">
 							jQuery("#ship").focus().autocomplete(vessel);
 							jQuery("#ship").setOptions({

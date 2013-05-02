@@ -4,6 +4,14 @@
 <script type="text/javascript" src="js/development-bundle/ui/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="js/development-bundle/ui/jquery.ui.dialog.js"></script>
 
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.bgiframe.min.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/jquery.ajaxQueue.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/lib/thickbox-compressed.js'></script>
+<script type='text/javascript' src='js/jquery-autocomplete/jquery.autocomplete.js'></script>
+<script type='text/javascript' src='js/autoVessel2.php'></script>
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/jquery.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery-autocomplete/lib/thickbox.css" />
+
 <div id="mapdialogfleet" title="MAP" style='display:none;'>
     <iframe id="mapiframefleet" name='mapname' frameborder=0 height="100%" width="100%" style='border:0px; height:100%; width:100%'></iframe>
 </div>
@@ -120,7 +128,17 @@ jQuery("#contactdialog").dialog("close");
                     <td><div style="padding:2px;"><input type='text' name='operator' class='input_1' style='width:200px'></div></td>
                     <td width="50">&nbsp;</td>
                     <td style="vertical-align:middle;"><div style="padding:2px;">SHIP NAME, IMO, MMSI, CALLSIGN</div></td>
-                    <td><div style="padding:2px;"><input type='text' name='ship' class='input_1' style='width:200px'></div></td>
+                    <td>
+						<div style="padding:2px;">
+							<input type='text' id='ship' name='ship' class='input_1' style='width:200px'>
+							<script type="text/javascript">
+							jQuery("#ship").focus().autocomplete(vessel);
+							jQuery("#ship").setOptions({
+								scrollHeight: 180
+							});
+							</script>
+						</div>
+					</td>
                 </tr>
                 <tr>
                     <td colspan='5' style="text-align:center; border-bottom:none;"><div style="padding:2px;"><input class='searchbutton' type="button" id='sbutton' name="search" value="SEARCH" style='cursor:pointer;' onclick='fleetPositions();'  /></div></td>

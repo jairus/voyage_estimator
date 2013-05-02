@@ -103,6 +103,9 @@ function word_limit($str, $limit){
 }
 
 $ship = trim($_GET['ship']);
+$ships = explode(' - ', trim($_GET['ship']));
+$ship_namex = $ships[0];
+$ship_imox = $ships[1];
 $operator = trim($_GET['operator']);
 
 if(!$ship&&!$operator){
@@ -130,11 +133,17 @@ if(!$ship && $operator){
 }else if($ship && !$operator){
 	$ship = "%".mysql_escape_string($ship)."%";
 
-	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE name LIKE '".$ship."' AND name!='' ORDER BY name";
+	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE name LIKE '".$ship_namex."' AND name!='' ORDER BY name";
 	$ships_name = dbQuery($sql, $link);
 	
-	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE imo LIKE '".$ship."' AND imo!='' ORDER BY name";
+	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE name LIKE '".$ship."' AND name!='' ORDER BY name";
+	$ships_name2 = dbQuery($sql, $link);
+	
+	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE imo LIKE '".$ship_imox."' AND imo!='' ORDER BY name";
 	$ships_imo = dbQuery($sql, $link);
+	
+	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE imo LIKE '".$ship."' AND imo!='' ORDER BY name";
+	$ships_imo2 = dbQuery($sql, $link);
 	
 	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE mmsi LIKE '".$ship."' AND mmsi!='' ORDER BY name";
 	$ships_mmsi = dbQuery($sql, $link);
@@ -142,7 +151,7 @@ if(!$ship && $operator){
 	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE callsign LIKE '".$ship."' AND callsign!='' ORDER BY name";
 	$ships_callsign = dbQuery($sql, $link);
 	
-	$ships = array_merge($ships_name, $ships_imo, $ships_mmsi, $ships_callsign);
+	$ships = array_merge($ships_name, $ships_name2, $ships_imo, $ships_imo2, $ships_mmsi, $ships_callsign);
 	$ships = array_values($ships);
 	
 	$t = count($ships);
@@ -150,11 +159,17 @@ if(!$ship && $operator){
 	$ship     = "%".mysql_escape_string($ship)."%";
 	$operator = "%".mysql_escape_string($operator)."%";
 
-	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE name LIKE '".$ship."' AND name!='' ORDER BY name";
+	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE name LIKE '".$ship_namex."' AND name!='' ORDER BY name";
 	$ships_name = dbQuery($sql, $link);
 	
-	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE imo LIKE '".$ship."' AND imo!='' ORDER BY name";
+	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE name LIKE '".$ship."' AND name!='' ORDER BY name";
+	$ships_name2 = dbQuery($sql, $link);
+	
+	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE imo LIKE '".$ship_imox."' AND imo!='' ORDER BY name";
 	$ships_imo = dbQuery($sql, $link);
+	
+	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE imo LIKE '".$ship."' AND imo!='' ORDER BY name";
+	$ships_imo2 = dbQuery($sql, $link);
 	
 	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE mmsi LIKE '".$ship."' AND mmsi!='' ORDER BY name";
 	$ships_mmsi = dbQuery($sql, $link);
@@ -171,7 +186,7 @@ if(!$ship && $operator){
 	$sql = "SELECT imo, name FROM `_xvas_parsed2_dry` WHERE manager LIKE '".$operator."' AND manager!='' ORDER BY name";
 	$ships_manager = dbQuery($sql, $link);
 	
-	$ships = array_merge($ships_name, $ships_imo, $ships_mmsi, $ships_callsign, $ships_owner, $ships_manager_owner, $ships_manager);
+	$ships = array_merge($ships_name, $ships_name2, $ships_imo, $ships_imo2, $ships_mmsi, $ships_callsign, $ships_owner, $ships_manager_owner, $ships_manager);
 	$ships = array_values($ships);
 	
 	$t = count($ships);

@@ -45,9 +45,12 @@ if($_GET['search']){
 		$sql3 = "select * from _xvas_siitech_cache where xvas_imo <> '' and xvas_imo='".trim($r[$i]['imo'])."' limit 1";
 		$r3 = dbQuery($sql3);
 		
+		$sql4 = "SELECT * FROM _xvas_shipdata_dry_user WHERE imo='".trim($r[$i]['imo'])."' LIMIT 0,1";
+		$r4 = dbQuery($sql4);
+		
 		$ship = array();
 
-		$ship['name'] = $r[$i]['imo']." - ".$r[$i]['name'];
+		$ship['name'] = $r[$i]['imo']." - ".$r[$i]['name']." - ".number_format($r[$i]['summer_dwt']);
 		$ship['mmsi'] = $r[$i]['mmsi'];
 		$ship['imo'] = $r[$i]['imo'];
 		$ship['dwt'] = $r[$i]['summer_dwt'];
@@ -97,6 +100,39 @@ if($_GET['search']){
 			$ship['aisdateupdated'] = $r3[0]['dateupdated'];
 		}
 		//END OF AIS DATA
+		
+		//BUNKER FUEL
+		$data2 = unserialize($r4[0]['data']);
+		
+		$ship['SPEED1_1'] = $data2['BUNKER_FUEL']['SPEED1_1'];
+		$ship['SPEED2_1'] = $data2['BUNKER_FUEL']['SPEED2_1'];
+		$ship['SPEED1_2'] = $data2['BUNKER_FUEL']['SPEED1_2'];
+		$ship['SPEED2_2'] = $data2['BUNKER_FUEL']['SPEED2_2'];
+		$ship['SPEED1_3'] = $data2['BUNKER_FUEL']['SPEED1_3'];
+		$ship['SPEED2_3'] = $data2['BUNKER_FUEL']['SPEED2_3'];
+		$ship['SPEED1_4'] = $data2['BUNKER_FUEL']['SPEED1_4'];
+		$ship['SPEED2_4'] = $data2['BUNKER_FUEL']['SPEED2_4'];
+		$ship['SPEED1_5'] = $data2['BUNKER_FUEL']['SPEED1_5'];
+		$ship['SPEED2_5'] = $data2['BUNKER_FUEL']['SPEED2_5'];
+		$ship['SPEED1_6'] = $data2['BUNKER_FUEL']['SPEED1_6'];
+		$ship['SPEED2_6'] = $data2['BUNKER_FUEL']['SPEED2_6'];
+		$ship['SPEED1_7'] = $data2['BUNKER_FUEL']['SPEED1_7'];
+		$ship['SPEED2_7'] = $data2['BUNKER_FUEL']['SPEED2_7'];
+		$ship['CONSUMPTION1_1'] = $data2['BUNKER_FUEL']['CONSUMPTION1_1'];
+		$ship['CONSUMPTION2_1'] = $data2['BUNKER_FUEL']['CONSUMPTION2_1'];
+		$ship['CONSUMPTION1_2'] = $data2['BUNKER_FUEL']['CONSUMPTION1_2'];
+		$ship['CONSUMPTION2_2'] = $data2['BUNKER_FUEL']['CONSUMPTION2_2'];
+		$ship['CONSUMPTION1_3'] = $data2['BUNKER_FUEL']['CONSUMPTION1_3'];
+		$ship['CONSUMPTION2_3'] = $data2['BUNKER_FUEL']['CONSUMPTION2_3'];
+		$ship['CONSUMPTION1_4'] = $data2['BUNKER_FUEL']['CONSUMPTION1_4'];
+		$ship['CONSUMPTION2_4'] = $data2['BUNKER_FUEL']['CONSUMPTION2_4'];
+		$ship['CONSUMPTION1_5'] = $data2['BUNKER_FUEL']['CONSUMPTION1_5'];
+		$ship['CONSUMPTION2_5'] = $data2['BUNKER_FUEL']['CONSUMPTION2_5'];
+		$ship['CONSUMPTION1_6'] = $data2['BUNKER_FUEL']['CONSUMPTION1_6'];
+		$ship['CONSUMPTION2_6'] = $data2['BUNKER_FUEL']['CONSUMPTION2_6'];
+		$ship['CONSUMPTION1_7'] = $data2['BUNKER_FUEL']['CONSUMPTION1_7'];
+		$ship['CONSUMPTION2_7'] = $data2['BUNKER_FUEL']['CONSUMPTION2_7'];
+		//END OF BUNKER FUEL
 
 		$ships[] = $ship;
 	}
@@ -414,6 +450,34 @@ var largest_hatchs = [];
 var speed_aiss = [];
 var NavigationalStatuss = [];
 var aisdateupdateds = [];
+var SPEED1_1 = [];
+var SPEED2_1 = [];
+var SPEED1_2 = [];
+var SPEED2_2 = [];
+var SPEED1_3 = [];
+var SPEED2_3 = [];
+var SPEED1_4 = [];
+var SPEED2_4 = [];
+var SPEED1_5 = [];
+var SPEED2_5 = [];
+var SPEED1_6 = [];
+var SPEED2_6 = [];
+var SPEED1_7 = [];
+var SPEED2_7 = [];
+var CONSUMPTION1_1 = [];
+var CONSUMPTION2_1 = [];
+var CONSUMPTION1_2 = [];
+var CONSUMPTION2_2 = [];
+var CONSUMPTION1_3 = [];
+var CONSUMPTION2_3 = [];
+var CONSUMPTION1_4 = [];
+var CONSUMPTION2_4 = [];
+var CONSUMPTION1_5 = [];
+var CONSUMPTION2_5 = [];
+var CONSUMPTION1_6 = [];
+var CONSUMPTION2_6 = [];
+var CONSUMPTION1_7 = [];
+var CONSUMPTION2_7 = [];
 //END OF SHIP DETAIL VARIABLES
 
 //PORT DETAIL VARIABLES
@@ -485,6 +549,34 @@ $(function(){
 					speed_aiss[val.imo] = val.speed_ais;
 					NavigationalStatuss[val.imo] = val.NavigationalStatus;
 					aisdateupdateds[val.imo] = val.aisdateupdated;
+					SPEED1_1[val.imo] = val.SPEED1_1;
+					SPEED2_1[val.imo] = val.SPEED2_1;
+					SPEED1_2[val.imo] = val.SPEED1_2;
+					SPEED2_2[val.imo] = val.SPEED2_2;
+					SPEED1_3[val.imo] = val.SPEED1_3;
+					SPEED2_3[val.imo] = val.SPEED2_3;
+					SPEED1_4[val.imo] = val.SPEED1_4;
+					SPEED2_4[val.imo] = val.SPEED2_4;
+					SPEED1_5[val.imo] = val.SPEED1_5;
+					SPEED2_5[val.imo] = val.SPEED2_5;
+					SPEED1_6[val.imo] = val.SPEED1_6;
+					SPEED2_6[val.imo] = val.SPEED2_6;
+					SPEED1_7[val.imo] = val.SPEED1_7;
+					SPEED2_7[val.imo] = val.SPEED2_7;
+					CONSUMPTION1_1[val.imo] = val.CONSUMPTION1_1;
+					CONSUMPTION2_1[val.imo] = val.CONSUMPTION2_1;
+					CONSUMPTION1_2[val.imo] = val.CONSUMPTION1_2;
+					CONSUMPTION2_2[val.imo] = val.CONSUMPTION2_2;
+					CONSUMPTION1_3[val.imo] = val.CONSUMPTION1_3;
+					CONSUMPTION2_3[val.imo] = val.CONSUMPTION2_3;
+					CONSUMPTION1_4[val.imo] = val.CONSUMPTION1_4;
+					CONSUMPTION2_4[val.imo] = val.CONSUMPTION2_4;
+					CONSUMPTION1_5[val.imo] = val.CONSUMPTION1_5;
+					CONSUMPTION2_5[val.imo] = val.CONSUMPTION2_5;
+					CONSUMPTION1_6[val.imo] = val.CONSUMPTION1_6;
+					CONSUMPTION2_6[val.imo] = val.CONSUMPTION2_6;
+					CONSUMPTION1_7[val.imo] = val.CONSUMPTION1_7;
+					CONSUMPTION2_7[val.imo] = val.CONSUMPTION2_7;
 				});
 
 				add(suggestions);
@@ -592,6 +684,41 @@ $(function(){
 				setValue(jQuery(this), aisdateupdateds[imo]);
 			});
 			//END OF SHIP DETAILS
+			
+			//BUNKER FUEL
+			if(SPEED1_1[imo] || SPEED2_1[imo] || SPEED1_2[imo] || SPEED2_2[imo] || SPEED1_3[imo] || SPEED2_3[imo] || SPEED1_4[imo] || SPEED2_4[imo] || SPEED1_5[imo] || SPEED2_5[imo] || SPEED1_6[imo] || SPEED2_6[imo] || SPEED1_7[imo] || SPEED2_7[imo] || CONSUMPTION1_1[imo] || CONSUMPTION2_1[imo] || CONSUMPTION1_2[imo] || CONSUMPTION2_2[imo] || CONSUMPTION1_3[imo] || CONSUMPTION2_3[imo] || CONSUMPTION1_4[imo] || CONSUMPTION2_4[imo] || CONSUMPTION1_5[imo] || CONSUMPTION2_5[imo] || CONSUMPTION1_6[imo] || CONSUMPTION2_6[imo] || CONSUMPTION1_7[imo] || CONSUMPTION2_7[imo]){
+				jQuery("#bunker_fuel_info").show();
+			}
+			
+			if(SPEED1_1[imo]){ setValue(jQuery("#SPEED1_1"), SPEED1_1[imo]); }
+			if(SPEED2_1[imo]){ setValue(jQuery("#SPEED2_1"), SPEED2_1[imo]); }
+			if(SPEED1_2[imo]){ setValue(jQuery("#SPEED1_2"), SPEED1_2[imo]); }
+			if(SPEED2_2[imo]){ setValue(jQuery("#SPEED2_2"), SPEED2_2[imo]); }
+			if(SPEED1_3[imo]){ setValue(jQuery("#SPEED1_3"), SPEED1_3[imo]); }
+			if(SPEED2_3[imo]){ setValue(jQuery("#SPEED2_3"), SPEED2_3[imo]); }
+			if(SPEED1_4[imo]){ setValue(jQuery("#SPEED1_4"), SPEED1_4[imo]); }
+			if(SPEED2_4[imo]){ setValue(jQuery("#SPEED2_4"), SPEED2_4[imo]); }
+			if(SPEED1_5[imo]){ setValue(jQuery("#SPEED1_5"), SPEED1_5[imo]); }
+			if(SPEED2_5[imo]){ setValue(jQuery("#SPEED2_5"), SPEED2_5[imo]); }
+			if(SPEED1_6[imo]){ setValue(jQuery("#SPEED1_6"), SPEED1_6[imo]); }
+			if(SPEED2_6[imo]){ setValue(jQuery("#SPEED2_6"), SPEED2_6[imo]); }
+			if(SPEED1_7[imo]){ setValue(jQuery("#SPEED1_7"), SPEED1_7[imo]); }
+			if(SPEED2_7[imo]){ setValue(jQuery("#SPEED2_7"), SPEED2_7[imo]); }
+			if(CONSUMPTION1_1[imo]){ setValue(jQuery("#CONSUMPTION1_1"), CONSUMPTION1_1[imo]); }
+			if(CONSUMPTION2_1[imo]){ setValue(jQuery("#CONSUMPTION2_1"), CONSUMPTION2_1[imo]); }
+			if(CONSUMPTION1_2[imo]){ setValue(jQuery("#CONSUMPTION1_2"), CONSUMPTION1_2[imo]); }
+			if(CONSUMPTION2_2[imo]){ setValue(jQuery("#CONSUMPTION2_2"), CONSUMPTION2_2[imo]); }
+			if(CONSUMPTION1_3[imo]){ setValue(jQuery("#CONSUMPTION1_3"), CONSUMPTION1_3[imo]); }
+			if(CONSUMPTION2_3[imo]){ setValue(jQuery("#CONSUMPTION2_3"), CONSUMPTION2_3[imo]); }
+			if(CONSUMPTION1_4[imo]){ setValue(jQuery("#CONSUMPTION1_4"), CONSUMPTION1_4[imo]); }
+			if(CONSUMPTION2_4[imo]){ setValue(jQuery("#CONSUMPTION2_4"), CONSUMPTION2_4[imo]); }
+			if(CONSUMPTION1_5[imo]){ setValue(jQuery("#CONSUMPTION1_5"), CONSUMPTION1_5[imo]); }
+			if(CONSUMPTION2_5[imo]){ setValue(jQuery("#CONSUMPTION2_5"), CONSUMPTION2_5[imo]); }
+			if(CONSUMPTION1_6[imo]){ setValue(jQuery("#CONSUMPTION1_6"), CONSUMPTION1_6[imo]); }
+			if(CONSUMPTION2_6[imo]){ setValue(jQuery("#CONSUMPTION2_6"), CONSUMPTION2_6[imo]); }
+			if(CONSUMPTION1_7[imo]){ setValue(jQuery("#CONSUMPTION1_7"), CONSUMPTION1_7[imo]); }
+			if(CONSUMPTION2_7[imo]){ setValue(jQuery("#CONSUMPTION2_7"), CONSUMPTION2_7[imo]); }
+			//END OF BUNKER FUEL
 			
 			//SPEED FOR VOYAGE LEGS
 			jQuery(".speed").each(function(){
@@ -1983,835 +2110,800 @@ select{
 	<iframe id='portdetailsiframe' frameborder="0" height="100%" width="100%"></iframe>
 </div>
 <!--END OF PORT DETAILS-->
+
 <form method="post" id="voyageestimatorform" name="voyageestimatorform" enctype="multipart/form-data">
 <table width="1200" border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="1200">
-			<!-- CHOOSE VESSEL BY DWT TYPE OR VESSEL NAME / IMO# -->
+  <tr style="position:fixed;">
+	<td bgcolor="#CCCCCC">
+		<!-- TOTALS -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #333333;">
+		  <tr bgcolor="cddee5">
+			<td colspan="7"><div class="dp"><b>FREIGHT RATE CALCULATION</b></div></td>
+		  </tr>
+		  <tr>
+			<td width="171"><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">Freight Rate ($/MT)</span></div></td>
+			<td width="171"><div class="dp"><b>Gross Freight ($)</b></div></td>
+			<td width="171"><div class="dp"><b>Brok. Comm ($)</b></div></td>
+			<td width="171"><div class="dp"><b>Add. Comm ($)</b></div></td>
+			<td width="172" style="border-left:1px solid #000000; border-top:1px solid #000000; border-right:1px solid #000000;"><div class="dp"><b>Income ($)</b></div></td>
+			<td width="172" style="border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><div class="dp"><b>TCE ($/day)</b></div></td>
+			<td width="172"><div class="dp"><b>Broker Commission</b></div></td>
+		  </tr>
+		  <tr bgcolor="f5f5f5">
+			<td><div class="dp"><input type='text' class='number' id='freight_rate1_id' name="freight_rate1" style="width:100px; border:1px solid #FF0000;" /></div></td>
+			<td><div class="dp" id='div_gross_freight1_id'>&nbsp;</div></td>
+			<td><div class="dp"><input type='text' class='number' id='broker_comm1_id' name="broker_comm1" style="width:100px;" value="1.25" /></div></td>
+			<td><div class="dp"><input type='text' class='number' id='add_comm1_id' name='add_comm1' style="width:100px;" value="2.50" /></div></td>
+			<td style="border-left:1px solid #000000; border-bottom:1px solid #000000; border-right:1px solid #000000;"><div class="dp" id="div_income1_id">&nbsp;</div></td>
+			<td style="border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"><div class="dp" id="div_tce1_id">&nbsp;</div></td>
+			<td><div class="dp" id="div_broker_comm1_id">&nbsp;</div></td>
+		  </tr>
+		  <tr bgcolor="d6d6d6">
+			<td colspan="7"><div class="dp">&nbsp;</div></td>
+		  </tr>
+		  <tr bgcolor="cddee5">
+			<td colspan="7"><div class="dp"><b>TCE CALCULATION</b></div></td>
+		  </tr>
+		  <tr>
+			<td width="171"><div class="dp"><b>Freight Rate ($/MT)</b></div></td>
+			<td width="171"><div class="dp"><b>Gross Freight ($)</b></div></td>
+			<td width="171"><div class="dp"><b>Brok. Comm ($)</b></div></td>
+			<td width="171"><div class="dp"><b>Add. Comm ($)</b></div></td>
+			<td width="172"><div class="dp"><b>Income ($)</b></div></td>
+			<td width="172"><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">TCE ($/day)</span></div></td>
+			<td width="172"><div class="dp"><b>Broker Commission</b></div></td>
+		  </tr>
+		  <tr bgcolor="f5f5f5">
+			<td><div class="dp" id="div_freight_rate2_id">&nbsp;</div></td>
+			<td><div class="dp" id="div_gross_freight2_id">&nbsp;</div></td>
+			<td><div class="dp"><input type='text' class='number' id='broker_comm2_id' name="broker_comm2" style="width:100px;" value="1.25" /></div></td>
+			<td><div class="dp"><input type='text' class='number' id='add_comm2_id' name='add_comm2' style="width:100px;" value="2.50" /></div></td>
+			<td><div class="dp" id="div_income2_id">&nbsp;</div></td>
+			<td><div class="dp"><input type='text' class='number' id='tce2_id' name='tce2' style="width:100px;" /></div></td>
+			<td><div class="dp" id="div_broker_comm2_id">&nbsp;</div></td>
+		  </tr>
+		</table>
+		<!-- END OF TOTALS -->
+	</td>
+  </tr>
+  <tr>
+  	<td>
+		<div style="height:180px; border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- CHOOSE VESSEL BY DWT TYPE OR VESSEL NAME / IMO# -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+			<tr bgcolor="cddee5">
+				<td>
+					<div class="div_all">
+						<div class="div_title"><b>Vessel by:</b></div>
+						<div class="div_content">
+							<select id="vessel_by_id" name="vessel_by" style="width:300px;" onchange="getVesselBy(this.value);" class="req">
+								<option value="0">- Select Vessel By -</option>
+								<option value="1">DWT Type</option>
+								<option value="2">Vessel Name / IMO # / DWT</option>
+							</select>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr bgcolor="d6d6d6">
+				<td>
+					<div class="div_all" style="display:none;" id="vessel_by_1">
+						<div class="div_title"><b>DWT Type:</b></div>
+						<div class="div_content">
+							<select id="dwt_type_id" name="dwt_type" style="width:300px;" class="req" onchange="getDwtType(this.value);">
+								<option value="0">- Select DWT Type -</option>
+								<option value="7208728">(0-9,999) Mini Bulker</option>
+								<option value="9177791">(10,000-39,999) Handysize</option>
+								<option value="9547805">(40,000-59,999) Handymax / Supramax</option>
+								<option value="9111577">(60,000-99,999) Panamax</option>
+								<option value="9587386">(100,000-219,999) Capesize</option>
+								<option value="9565065">(220,000+) Very Large Ore Carrier</option>
+							</select>
+						</div>
+					</div>
+					<div class="div_all" style="display:none;" id="vessel_by_2">
+						<div class="div_title"><b>Vessel Name / IMO # / DWT:</b></div>
+						<div class="div_content"><input type="text" id="vessel_name_or_imo_id" name="vessel_name_or_imo" style="width:295px;" value="<?php echo $vessel_name_or_imo; ?>" class="req" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div id="ship_info" style="display:none;">
 			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-				<tr bgcolor="cddee5">
-					<td>
-						<div class="div_all">
-							<div class="div_title"><b>Vessel by:</b></div>
-							<div class="div_content">
-								<select id="vessel_by_id" name="vessel_by" style="width:300px;" onchange="getVesselBy(this.value);" class="req">
-									<option value="0">- Select Vessel By -</option>
-									<option value="1">DWT Type</option>
-									<option value="2">Vessel Name / IMO #</option>
-								</select>
-							</div>
-						</div>
-					</td>
-				</tr>
-				<tr bgcolor="d6d6d6">
-					<td>
-						<div class="div_all" style="display:none;" id="vessel_by_1">
-							<div class="div_title"><b>DWT Type:</b></div>
-							<div class="div_content">
-								<select id="dwt_type_id" name="dwt_type" style="width:300px;" class="req" onchange="getDwtType(this.value);">
-									<option value="0">- Select DWT Type -</option>
-									<option value="7208728">(0-9,999) Mini Bulker</option>
-									<option value="9177791">(10,000-39,999) Handysize</option>
-									<option value="9547805">(40,000-59,999) Handymax / Supramax</option>
-									<option value="9111577">(60,000-99,999) Panamax</option>
-									<option value="9587386">(100,000-219,999) Capesize</option>
-									<option value="9565065">(220,000+) Very Large Ore Carrier</option>
-								</select>
-							</div>
-						</div>
-						<div class="div_all" style="display:none;" id="vessel_by_2">
-							<div class="div_title"><b>Vessel Name / IMO #:</b></div>
-							<div class="div_content"><input type="text" id="vessel_name_or_imo_id" name="vessel_name_or_imo" style="width:295px;" value="<?php echo $vessel_name_or_imo; ?>" class="req" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div>
-						</div>
-					</td>
-				</tr>
+			  <tr bgcolor="f5f5f5">
+				<td width="140" valign="top"><div style="padding:3px;"><b>IMO</b> #</div></td>
+				<td width="160" valign="top"><div style="padding:3px;" id="ship_imo">&nbsp;</div></td>
+				<td width="140" valign="top"><div style="padding:3px;"><b>LOA</b></div></td>
+				<td width="160" valign="top"><div style="padding:3px;" id="ship_loa">&nbsp;</div></td>
+				<td width="140" valign="top"><div style="padding:3px;"><b>Grain</b></div></td>
+				<td width="160" valign="top"><div style="padding:3px;" id="ship_grain">&nbsp;</div></td>
+				<td width="140" valign="top"><div style="padding:3px;"><b>Class Notation</b></div></td>
+				<td width="160" valign="top"><div style="padding:3px;" id="ship_class_notation">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="e9e9e9">
+				<td valign="top"><div style="padding:3px;"><b>Summer DWT</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_summer_dwt">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Draught</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_draught">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Lifting Equipment</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_lifting_equipment">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Fuel Oil</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_fuel_oil">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="f5f5f5">
+				<td valign="top"><div style="padding:3px;"><b>Gross Tonnage</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_gross_tonnage">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Net Tonnage</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_net_tonnage">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Speed</b></div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_speed">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Cargo Handling</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_cargo_handling">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="e9e9e9">
+				<td valign="top"><div style="padding:3px;"><b>Fuel</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_fuel">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Built Year</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_built_year">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Speed AIS</b></div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_speed_ais">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Breadth</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_breadth">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="f5f5f5">
+				<td valign="top"><div style="padding:3px;"><b>Decks Number</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_decks_number">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Fuel Consumption</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_fuel_consumption">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Movement Status</b></div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_NavigationalStatus">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Bale</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_bale">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="e9e9e9">
+				<td valign="top"><div style="padding:3px;"><b>Cranes</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_cranes">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Bulkheads</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_bulkheads">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>AIS Date Updated</b></div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_aisdateupdated">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Fuel Type</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_fuel_type">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="f5f5f5">
+				<td valign="top"><div style="padding:3px;"><b>Manager Owner</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_manager_owner">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Manager Owner Email</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_manager_owner_email">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Class Society</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_class_society">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Largest Hatch</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_largest_hatch">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="e9e9e9">
+				<td valign="top"><div style="padding:3px;"><b>Holds</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_holds">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>Flag</b></div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_flag">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
+				<td valign="top"><div style="padding:3px;">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
+				<td valign="top"><div style="padding:3px;">&nbsp;</div></td>
+			  </tr>
 			</table>
-			<div id="ship_info" style="display:none;">
-				<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		</div>
+		<div>&nbsp;</div>
+		<div id="bunker_fuel_info" style="display:none;">
+			<table width="1200" border="0" cellspacing="0" cellpadding="0">
+			  <tr bgcolor="d6d6d6">
+				<td width="240"><div style="padding:3px;"><b>Bunker Fuel Type</b></div></td>
+				<td width="240"><div style="padding:3px;"><b>Speed  1</b></div></td>
+				<td width="240"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
+				<td width="240"><div style="padding:3px;"><b>Speed  2</b></div></td>
+				<td width="240"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
+			  </tr>
+			  <tr bgcolor="f5f5f5">
+				<td><div style="padding:3px;">IFO 380</div></td>
+				<td><div style="padding:3px;" id="SPEED1_1">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_1">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED2_1">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_1">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="e9e9e9">
+				<td><div style="padding:3px;">IFO 180</div></td>
+				<td><div style="padding:3px;" id="SPEED1_2">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_2">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED2_2">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_2">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="f5f5f5">
+				<td><div style="padding:3px;">LS IFO 380 1%</div></td>
+				<td><div style="padding:3px;" id="SPEED1_3">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_3">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED2_3">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_3">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="e9e9e9">
+				<td><div style="padding:3px;">LS IFO 180 1%</div></td>
+				<td><div style="padding:3px;" id="SPEED1_4">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_4">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED2_4">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_4">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="f5f5f5">
+				<td><div style="padding:3px;">MDO</div></td>
+				<td><div style="padding:3px;" id="SPEED1_5">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_5">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED2_5">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_5">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="e9e9e9">
+				<td><div style="padding:3px;">MGO</div></td>
+				<td><div style="padding:3px;" id="SPEED1_6">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_6">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED2_6">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_6">&nbsp;</div></td>
+			  </tr>
+			  <tr bgcolor="f5f5f5">
+				<td><div style="padding:3px;">LS MGO 1%</div></td>
+				<td><div style="padding:3px;" id="SPEED1_7">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_7">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED2_7">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_7">&nbsp;</div></td>
+			  </tr>
+			</table>
+		</div>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- CHOOSE VESSEL BY DWT TYPE OR VESSEL NAME / IMO# -->
+		
+		<!-- VOYAGE LEGS -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0" id="voyage_legs_id">
+			<tr bgcolor="cddee5">
+				<td colspan="10">
+					<div class="div_all">
+						<table width="1194" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="100"><b>VOYAGE LEGS</b></td>
+								<td width="25" align="center"><a style="cursor:pointer;" onclick="addSequence();"><img src="images/plus.png" border="0" /></a></td>
+								<td><a style="cursor:pointer; color:#FF0000;" onclick="addSequence();">add new sequence</a></td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+			<tr bgcolor="d6d6d6">
+				<td width="130" colspan="2"><div class="dp"><b>Type</b></div></td>
+				<td width="200"><div class="dp"><b>Port</b></div></td>
+				<td width="200"><div class="dp"><b>Date</b></div></td>
+				<td width="200"><div class="dp"><b>Port</b></div></td>
+				<td width="200"><div class="dp"><b>Date</b></div></td>
+				<td width="167"><div class="dp"><b>Speed (knts)</b></div></td>
+				<td width="167"><div class="dp"><b>Distance (miles)</b></div></td>
+				<td width="167"><div class="dp"><b>Input %</b></div></td>
+				<td width="169"><div class="dp"><b>% Sea Margin</b></div></td>
+			</tr>
+			<tr bgcolor="f5f5f5" id="voyage_legs_row" class="voyage_legs_row1">
+				<td><div class="dp">&nbsp;</div></td>
+				<td>
+					<div class="dp" id="div_voyage_type1_id">
+						<select id="voyage_type1_id" name="voyage_type1" style="width:110px;" class="req voyage_type" onchange="addSequenceCargo();">
+							<option value="">- Select Type -</option>
+							<option value="Ballast">Ballast</option>
+							<option value="Loading">Loading</option>
+						</select>
+					</div>
+				</td>
+				<td><div class="dp" id="div_port_from1_id"><input type="text" id="port_from1_id" name="port_from1" style="width:150px;" class="req port_from" /></div></td>
+				<td><div class="dp" id="div_date_from1_id"><input type="text" id="date_from1_id" name="date_from1" style="width:150px;" class="req date" readonly="readonly" /></div></td>
+				<td><div class="dp" id="div_port_to1_id"><input type="text" id="port_to1_id" name="port_to1" style="width:150px;" class="req port_to" /></div></td>
+				<td><div class="dp" id="div_date_to1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_speed1_id"><input type="text" id="speed1_id" name="speed1" style="width:40px;" class="speed number" /></div></td>
+				<td><div class="dp" id="div_distance_miles1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_input_percent1_id"><input type="text" id="input_percent1_id" name="input_percent1" style="width:40px;" class="number" onkeyup="computeDistanceMiles1(this.value);" /></div></td>
+				<td><div class="dp" id="div_sea_margin1_id"></div></td>
+			</tr>
+		</table>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- END OF VOYAGE LEGS -->
+		
+		<!-- CARGO LEGS -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0" id="cargo_legs_id">
+			<tr bgcolor="cddee5">
+				<td colspan="6"><div class="dp"><b>CARGO LEGS</b></div></td>
+				<td colspan="2"><div class="dp"><b>* Option to Load & Bunker concurrently</b></div></td>
+				<td colspan="2"><div class="dp"><b>Port Days</b></div></td>
+				<td colspan="3"><div class="dp"><b>Sea Days</b></div></td>
+			</tr>
+			<tr bgcolor="d6d6d6">
+				<td width="85"><div class="dp"><b>Type</b></div></td>
+				<td width="205"><div class="dp"><b>Cargo</b></div></td>
+				<td width="30"><div class="dp"><b>SF</b></div></td>
+				<td width="205"><div class="dp"><b>Quantity (MT)</b></div></td>
+				<td width="80"><div class="dp"><b>Volume (M3)</b></div></td>
+				<td width="205"><div class="dp"><b>L/D Rate (MT/day)</b></div></td>
+				<td width="30"><div class="dp"><b>Load Days</b></div></td>
+				<td width="90"><div class="dp"><b>Working Days TERMS</b></div></td>
+				<td width="60"><div class="dp"><b>Working Aditional Days TERMS</b></div></td>
+				<td width="60"><div class="dp"><b>Turn/Idle/Extra Days</b></div></td>
+				<td width="30"><div class="dp"><b>Voyage Days</b></div></td>
+				<td width="60"><div class="dp"><b>Canal Days</b></div></td>
+				<td width="60"><div class="dp"><b>Weather/Extra Days</b></div></td>
+			</tr>
+			<tr bgcolor="f5f5f5" id="cargo_legs_row" class="cargo_legs_row1">
+				<td><div class="dp" id="div_cargo_legs_type1_id" style="font-weight:bold;">&nbsp;</div></td>
+				<td><div class="dp" id="div_cargo1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_sf1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_cargo_quantity1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_cargo_volume1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_ld_rate1_id">&nbsp;</div></td>
+				<td><div class="dp load_days" id="div_load_days1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_wdt1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_wadt1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_tie_days1_id">&nbsp;</div></td>
+				<td><div class="dp voyage_days" id="div_voyage_days1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_canal1_id">&nbsp;</div></td>
+				<td><div class="dp" id="div_weather_extra1_id">&nbsp;</div></td>
+			</tr>
+		</table>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- END OF CARGO LEGS -->
+		
+		<!-- VOYAGE TIME -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr bgcolor="cddee5">
+			<td colspan="3"><div class="dp"><b>VOYAGE TIME</b></div></td>
+		  </tr>
+		  <tr>
+			<td width="400"><div class="dp"><b>PORT DAYS</b></div></td>
+			<td width="400"><div class="dp"><b>SEA DAYS</b></div></td>
+			<td width="400"><div class="dp"><b>TOTAL VOYAGE DAYS</b></div></td>
+		  </tr>
+		  <tr bgcolor="f5f5f5">
+			<td><div class="dp" id='voyage_port_days'>&nbsp;</div></td>
+			<td><div class="dp" id='voyage_sea_days'>&nbsp;</div></td>
+			<td><div class="dp" id='voyage_total_days'>&nbsp;</div></td>
+		  </tr>
+		</table>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- END OF VOYAGE TIME -->
+		
+		<!-- BUNKER PRICING -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr bgcolor="cddee5">
+			<td><div class="dp"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated" style="color:#FF0000;">&nbsp;</span></div></td>
+		  </tr>
+		</table>
+		
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td valign="top">
+				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				  <tr bgcolor="d6d6d6">
+					<td width="198"><div class="dp"><b>Type IFO</b></div></td>
+					<td width="199"><div class="dp"><b>Price Input ($)</b></div></td>
+					<td width="198"><div class="dp"><b>Price Available ($)</b></div></td>
+				  </tr>
 				  <tr bgcolor="f5f5f5">
-					<td width="140" valign="top"><div style="padding:3px;"><b>IMO</b> #</div></td>
-					<td width="160" valign="top"><div style="padding:3px;" id="ship_imo">&nbsp;</div></td>
-					<td width="140" valign="top"><div style="padding:3px;"><b>LOA</b></div></td>
-					<td width="160" valign="top"><div style="padding:3px;" id="ship_loa">&nbsp;</div></td>
-					<td width="140" valign="top"><div style="padding:3px;"><b>Grain</b></div></td>
-					<td width="160" valign="top"><div style="padding:3px;" id="ship_grain">&nbsp;</div></td>
-					<td width="140" valign="top"><div style="padding:3px;"><b>Class Notation</b></div></td>
-					<td width="160" valign="top"><div style="padding:3px;" id="ship_class_notation">&nbsp;</div></td>
+					<td><div class="dp"><b>IFO 380</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo1_id" name="ifo1" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo1_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
-					<td valign="top"><div style="padding:3px;"><b>Summer DWT</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_summer_dwt">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Draught</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_draught">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Lifting Equipment</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_lifting_equipment">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Fuel Oil</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_fuel_oil">&nbsp;</div></td>
+					<td><div class="dp"><b>IFO 180</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo2_id" name="ifo2" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo2_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
-					<td valign="top"><div style="padding:3px;"><b>Gross Tonnage</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_gross_tonnage">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Net Tonnage</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_net_tonnage">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Speed</b></div></td>
-					<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_speed">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Cargo Handling</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_cargo_handling">&nbsp;</div></td>
+					<td><div class="dp"><b>LS IFO 380 1%</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo3_id" name="ifo3" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo3_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
-					<td valign="top"><div style="padding:3px;"><b>Fuel</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_fuel">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Built Year</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_built_year">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Speed AIS</b></div></td>
-					<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_speed_ais">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Breadth</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_breadth">&nbsp;</div></td>
-				  </tr>
-				  <tr bgcolor="f5f5f5">
-					<td valign="top"><div style="padding:3px;"><b>Decks Number</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_decks_number">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Fuel Consumption</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_fuel_consumption">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Movement Status</b></div></td>
-					<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_NavigationalStatus">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Bale</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_bale">&nbsp;</div></td>
-				  </tr>
-				  <tr bgcolor="e9e9e9">
-					<td valign="top"><div style="padding:3px;"><b>Cranes</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_cranes">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Bulkheads</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_bulkheads">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px; color:#FF0000;"><b>AIS Date Updated</b></div></td>
-					<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_aisdateupdated">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Fuel Type</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_fuel_type">&nbsp;</div></td>
-				  </tr>
-				  <tr bgcolor="f5f5f5">
-					<td valign="top"><div style="padding:3px;"><b>Manager Owner</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_manager_owner">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Manager Owner Email</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_manager_owner_email">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Class Society</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_class_society">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Largest Hatch</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_largest_hatch">&nbsp;</div></td>
-				  </tr>
-				  <tr bgcolor="e9e9e9">
-					<td valign="top"><div style="padding:3px;"><b>Holds</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_holds">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>Flag</b></div></td>
-					<td valign="top"><div style="padding:3px;" id="ship_flag">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
-					<td valign="top"><div style="padding:3px;">&nbsp;</div></td>
-					<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
-					<td valign="top"><div style="padding:3px;">&nbsp;</div></td>
+					<td><div class="dp"><b>LS IFO 180 1%</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo4_id" name="ifo4" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo4_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				</table>
-			</div>
-			
-			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
-			<div>&nbsp;</div>
-			<!-- CHOOSE VESSEL BY DWT TYPE OR VESSEL NAME / IMO# -->
-			
-			<!-- VOYAGE LEGS -->
-			<table width="1200" border="0" cellspacing="0" cellpadding="0" id="voyage_legs_id">
-				<tr bgcolor="cddee5">
-					<td colspan="10">
-						<div class="div_all">
-							<table width="1194" border="0" cellspacing="0" cellpadding="0">
-								<tr>
-									<td width="100"><b>VOYAGE LEGS</b></td>
-									<td width="25" align="center"><a style="cursor:pointer;" onclick="addSequence();"><img src="images/plus.png" border="0" /></a></td>
-									<td><a style="cursor:pointer; color:#FF0000;" onclick="addSequence();">add new sequence</a></td>
-								</tr>
-							</table>
-						</div>
-					</td>
-				</tr>
-				<tr bgcolor="d6d6d6">
-					<td width="130" colspan="2"><div class="dp"><b>Type</b></div></td>
-					<td width="200"><div class="dp"><b>Port</b></div></td>
-					<td width="200"><div class="dp"><b>Date</b></div></td>
-					<td width="200"><div class="dp"><b>Port</b></div></td>
-					<td width="200"><div class="dp"><b>Date</b></div></td>
-					<td width="167"><div class="dp"><b>Speed (knts)</b></div></td>
-					<td width="167"><div class="dp"><b>Distance (miles)</b></div></td>
-					<td width="167"><div class="dp"><b>Input %</b></div></td>
-					<td width="169"><div class="dp"><b>% Sea Margin</b></div></td>
-				</tr>
-				<tr bgcolor="f5f5f5" id="voyage_legs_row" class="voyage_legs_row1">
+			</td>
+			<td width="10"></td>
+			<td valign="top">
+				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				  <tr bgcolor="d6d6d6">
+					<td width="198"><div class="dp"><b>Type MDO</b></div></td>
+					<td width="199"><div class="dp"><b>Price Input ($)</b></div></td>
+					<td width="198"><div class="dp"><b>Price Available ($)</b></div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp"><b>MDO</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo1_id" name="mdo1" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo1_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>MGO</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo2_id" name="mdo2" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo2_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp"><b>LS MGO 1%</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo3_id" name="mdo3" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo3_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>&nbsp;</b></div></td>
 					<td><div class="dp">&nbsp;</div></td>
-					<td>
-						<div class="dp" id="div_voyage_type1_id">
-							<select id="voyage_type1_id" name="voyage_type1" style="width:110px;" class="req voyage_type" onchange="addSequenceCargo();">
-								<option value="">- Select Type -</option>
-								<option value="Ballast">Ballast</option>
-								<option value="Loading">Loading</option>
+					<td><div class="dp" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
+				  </tr>
+				</table>
+			</td>
+		  </tr>
+		</table>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- END OF BUNKER PRICING -->
+		
+		<!-- BUNKER CONSUMPTIONS -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr bgcolor="cddee5">
+			<td><div class="dp"><b>BUNKER CONSUMPTIONS</b></div></td>
+		  </tr>
+		</table>
+		
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td valign="top">
+				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				  <tr bgcolor="d6d6d6">
+					<td width="151"><div class="dp"><b>Voyage Type</b></div></td>
+					<td width="148"><div class="dp"><b>Consumption (MT/day)</b></div></td>
+					<td width="148"><div class="dp"><b>Total Consumption (MT)</b></div></td>
+					<td width="148"><div class="dp"><b>Voyage Expense ($)</b></div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp" style="color:#ff0000;"><b>IFO/Ballast</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo_ballast_id" name="ifo_ballast" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo_ballast_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_ifo_ballast_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp" style="color:#00b050;"><b>IFO/Loading</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo_loading_id" name="ifo_loading" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo_loading_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_ifo_loading_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp" style="color:#ff0000;"><b>IFO/Bunker Stop</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo_bunker_stop_id" name="ifo_bunker_stop" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo_bunker_stop_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_ifo_bunker_stop_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp" style="color:#00b050;"><b>IFO/Laden</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo_laden_id" name="ifo_laden" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo_laden_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_ifo_laden_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp" style="color:#ff0000;"><b>IFO/Discharging</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo_discharging_id" name="ifo_discharging" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo_discharging_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_ifo_discharging_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp" style="color:#00b050;"><b>IFO/Repositioning</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo_repositioning_id" name="ifo_repositioning" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo_repositioning_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_ifo_repositioning_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp" style="color:#ff0000;"><b>IFO/Port</b></div></td>
+					<td><div class="dp"><input type="text" id="ifo_port_id" name="ifo_port" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo_port_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_ifo_port_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>IFO/Reserve</b></div></td>
+					<td><div class="dp">&nbsp;</div></td>
+					<td><div class="dp" id="div_ifo_ifo_reserve_id"><input type="text" id="ifo_reserve_id" name="ifo_reserve" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo_reserve_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>IFO Total Expense ($)</b></div></td>
+					<td colspan="3"><div class="dp" id="div_ifo_total_expense">&nbsp;</div></td>
+				  </tr>
+				</table>
+			</td>
+			<td width="10"></td>
+			<td valign="top">
+				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				  <tr bgcolor="d6d6d6">
+					<td width="151"><div class="dp"><b>Voyage Type</b></div></td>
+					<td width="148"><div class="dp"><b>Consumption (MT/day)</b></div></td>
+					<td width="148"><div class="dp"><b>Total Consumption (MT)</b></div></td>
+					<td width="148"><div class="dp"><b>Voyage Expense ($)</b></div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp" style="color:#ff0000;"><b>MDO/Ballast</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo_ballast_id" name="mdo_ballast" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo_ballast_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_mdo_ballast_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp" style="color:#00b050;"><b>MDO/Loading</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo_loading_id" name="mdo_loading" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo_loading_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_mdo_loading_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp" style="color:#ff0000;"><b>MDO/Bunker Stop</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo_bunker_stop_id" name="mdo_bunker_stop" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo_bunker_stop_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_mdo_bunker_stop_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp" style="color:#00b050;"><b>MDO/Laden</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo_laden_id" name="mdo_laden" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo_laden_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_mdo_laden_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp" style="color:#ff0000;"><b>MDO/Discharging</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo_discharging_id" name="mdo_discharging" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo_discharging_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_mdo_discharging_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp" style="color:#00b050;"><b>MDO/Repositioning</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo_repositioning_id" name="mdo_repositioning" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo_repositioning_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_mdo_repositioning_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp" style="color:#ff0000;"><b>MDO/Port</b></div></td>
+					<td><div class="dp"><input type="text" id="mdo_port_id" name="mdo_port" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo_port_consumption">&nbsp;</div></td>
+					<td><div class="dp" id="div_mdo_port_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>MDO/Reserve</b></div></td>
+					<td><div class="dp">&nbsp;</div></td>
+					<td><div class="dp" id="div_mdo_mdo_reserve_id"><input type="text" id="mdo_reserve_id" name="mdo_reserve" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo_reserve_expense">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>MDO Total Expense ($)</b></div></td>
+					<td colspan="3"><div class="dp" id="div_mdo_total_expense">&nbsp;</div></td>
+				  </tr>
+				</table>
+			</td>
+		  </tr>
+		</table>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- END OF BUNKER CONSUMPTIONS -->
+		
+		<!-- DWCC AND CANAL -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td width="595" bgcolor="cddee5"><div class="dp"><b>DWCC</b></div></td>
+			<td width="10">&nbsp;</td>
+			<td width="595" bgcolor="cddee5"><div class="dp"><b>CANAL</b></div></td>
+		  </tr>
+		</table>
+		
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td valign="top">
+				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				  <tr bgcolor="d6d6d6">
+					<td width="297" colspan="2"><div class="dp"><b>DW (MT)</b></div></td>
+					<td width="298"><div class="dp" id="div_dwt_id" style="font-weight:bold;">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td rowspan="2"><div class="dp"><b>Consumption (MT)</b></div></td>
+					<td><div class="dp"><b>FO</b></div></td>
+					<td><div class="dp" id="div_dwcc_amount1_id">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp"><b>DO</b></div></td>
+					<td><div class="dp" id="div_dwcc_amount2_id">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td rowspan="2"><div class="dp"><b>Reserve (MT)</b></div></td>
+					<td><div class="dp"><b>FO</b></div></td>
+					<td><div class="dp" id="div_dwcc_amount3_id">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>DO</b></div></td>
+					<td><div class="dp" id="div_dwcc_amount4_id">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td colspan="2"><div class="dp"><b>FW (MT)</b></div></td>
+					<td><div class="dp"><input type="text" id="dwcc_fw1_id" name="dwcc_fw1" class="number" style="width:150px;" /></div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td colspan="2"><div class="dp"><b>Constant (MT)</b></div></td>
+					<td><div class="dp"><input type="text" id="dwcc_constant1_id" name="dwcc_constant1" class="number" style="width:150px;" /></div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td colspan="2"><div class="dp"><b>Used DW (MT)</b></div></td>
+					<td><div class="dp" id="div_dwcc_amount5_id">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td colspan="2"><div class="dp"><b>DWCC (MT)</b></div></td>
+					<td><div class="dp" id="div_dwcc_amount6_id">&nbsp;</div></td>
+				  </tr>
+				</table>
+			</td>
+			<td width="10"></td>
+			<td valign="top">
+				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				  <tr bgcolor="d6d6d6">
+					<td><div class="dp"><b>Canal</b></div></td>
+					<td colspan="2">
+						<div class="dp">
+							<?php
+							$canalarr = array(
+										1=>"White Sea - Baltic Canal", 
+										2=>"Rhine - Main- Danube Canal", 
+										3=>"Volga - Don Canal",
+										4=>"Kiel Canal",
+										5=>"Houston Ship Channel",
+										6=>"Alphonse Xlll Canal",
+										7=>"Panama Canal",
+										8=>"Danube Black - Sea Canal",
+										9=>"Manchester Ship Canal",
+										10=>"Welland Canal",
+										11=>"Saint Lawrence Seaway",
+										12=>"Suez Canal"
+									);
+									
+							$canalt = count($canalarr);
+							?>
+							<select id='canal_list_id' name="canal_list" style="width:200px;">
+								<?php
+								for($canali=1; $canali<=$canalt; $canali++){
+									echo '<option value="'.$canalarr[$canali].'">'.$canalarr[$canali].'</option>';
+								}
+								?>
 							</select>
 						</div>
 					</td>
-					<td><div class="dp" id="div_port_from1_id"><input type="text" id="port_from1_id" name="port_from1" style="width:150px;" class="req port_from" /></div></td>
-					<td><div class="dp" id="div_date_from1_id"><input type="text" id="date_from1_id" name="date_from1" style="width:150px;" class="req date" readonly="readonly" /></div></td>
-					<td><div class="dp" id="div_port_to1_id"><input type="text" id="port_to1_id" name="port_to1" style="width:150px;" class="req port_to" /></div></td>
-					<td><div class="dp" id="div_date_to1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_speed1_id"><input type="text" id="speed1_id" name="speed1" style="width:40px;" class="speed number" /></div></td>
-					<td><div class="dp" id="div_distance_miles1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_input_percent1_id"><input type="text" id="input_percent1_id" name="input_percent1" style="width:40px;" class="number" onkeyup="computeDistanceMiles1(this.value);" /></div></td>
-					<td><div class="dp" id="div_sea_margin1_id"></div></td>
-				</tr>
-			</table>
-			
-			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
-			<div>&nbsp;</div>
-			<!-- END OF VOYAGE LEGS -->
-			
-			<!-- CARGO LEGS -->
-			<table width="1200" border="0" cellspacing="0" cellpadding="0" id="cargo_legs_id">
-				<tr bgcolor="cddee5">
-					<td colspan="6"><div class="dp"><b>CARGO LEGS</b></div></td>
-					<td colspan="2"><div class="dp"><b>* Option to Load & Bunker concurrently</b></div></td>
-					<td colspan="2"><div class="dp"><b>Port Days</b></div></td>
-					<td colspan="3"><div class="dp"><b>Sea Days</b></div></td>
-				</tr>
-				<tr bgcolor="d6d6d6">
-					<td width="85"><div class="dp"><b>Type</b></div></td>
-					<td width="205"><div class="dp"><b>Cargo</b></div></td>
-					<td width="30"><div class="dp"><b>SF</b></div></td>
-					<td width="205"><div class="dp"><b>Quantity (MT)</b></div></td>
-					<td width="80"><div class="dp"><b>Volume (M3)</b></div></td>
-					<td width="205"><div class="dp"><b>L/D Rate (MT/day)</b></div></td>
-					<td width="30"><div class="dp"><b>Load Days</b></div></td>
-					<td width="90"><div class="dp"><b>Working Days TERMS</b></div></td>
-					<td width="60"><div class="dp"><b>Working Aditional Days TERMS</b></div></td>
-					<td width="60"><div class="dp"><b>Turn/Idle/Extra Days</b></div></td>
-					<td width="30"><div class="dp"><b>Voyage Days</b></div></td>
-					<td width="60"><div class="dp"><b>Canal Days</b></div></td>
-					<td width="60"><div class="dp"><b>Weather/Extra Days</b></div></td>
-				</tr>
-				<tr bgcolor="f5f5f5" id="cargo_legs_row" class="cargo_legs_row1">
-					<td><div class="dp" id="div_cargo_legs_type1_id" style="font-weight:bold;">&nbsp;</div></td>
-					<td><div class="dp" id="div_cargo1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_sf1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_cargo_quantity1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_cargo_volume1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_ld_rate1_id">&nbsp;</div></td>
-					<td><div class="dp load_days" id="div_load_days1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_wdt1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_wadt1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_tie_days1_id">&nbsp;</div></td>
-					<td><div class="dp voyage_days" id="div_voyage_days1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_canal1_id">&nbsp;</div></td>
-					<td><div class="dp" id="div_weather_extra1_id">&nbsp;</div></td>
-				</tr>
-			</table>
-			
-			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
-			<div>&nbsp;</div>
-			<!-- END OF CARGO LEGS -->
-			
-			<!-- VOYAGE TIME -->
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr bgcolor="cddee5">
-				<td colspan="3"><div class="dp"><b>VOYAGE TIME</b></div></td>
-			  </tr>
-			  <tr>
-				<td width="400"><div class="dp"><b>PORT DAYS</b></div></td>
-				<td width="400"><div class="dp"><b>SEA DAYS</b></div></td>
-				<td width="400"><div class="dp"><b>TOTAL VOYAGE DAYS</b></div></td>
-			  </tr>
-			  <tr bgcolor="f5f5f5">
-				<td><div class="dp" id='voyage_port_days'>&nbsp;</div></td>
-				<td><div class="dp" id='voyage_sea_days'>&nbsp;</div></td>
-				<td><div class="dp" id='voyage_total_days'>&nbsp;</div></td>
-			  </tr>
-			</table>
-			
-			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
-			<div>&nbsp;</div>
-			<!-- END OF VOYAGE TIME -->
-			
-			<!-- BUNKER PRICING -->
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr bgcolor="cddee5">
-				<td><div class="dp"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated" style="color:#FF0000;">&nbsp;</span></div></td>
-			  </tr>
-			</table>
-			
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr>
-				<td valign="top">
-					<table width="595" border="0" cellspacing="0" cellpadding="0">
-					  <tr bgcolor="d6d6d6">
-						<td width="198"><div class="dp"><b>Type IFO</b></div></td>
-						<td width="199"><div class="dp"><b>Price Input ($)</b></div></td>
-						<td width="198"><div class="dp"><b>Price Available ($)</b></div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp"><b>IFO 380</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo1_id" name="ifo1" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo1_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>IFO 180</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo2_id" name="ifo2" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo2_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp"><b>LS IFO 380 1%</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo3_id" name="ifo3" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo3_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>LS IFO 180 1%</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo4_id" name="ifo4" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo4_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
-					  </tr>
-					</table>
-				</td>
-				<td width="10"></td>
-				<td valign="top">
-					<table width="595" border="0" cellspacing="0" cellpadding="0">
-					  <tr bgcolor="d6d6d6">
-						<td width="198"><div class="dp"><b>Type MDO</b></div></td>
-						<td width="199"><div class="dp"><b>Price Input ($)</b></div></td>
-						<td width="198"><div class="dp"><b>Price Available ($)</b></div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp"><b>MDO</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo1_id" name="mdo1" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo1_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>MGO</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo2_id" name="mdo2" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo2_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp"><b>LS MGO 1%</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo3_id" name="mdo3" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo3_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>&nbsp;</b></div></td>
-						<td><div class="dp">&nbsp;</div></td>
-						<td><div class="dp" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
-					  </tr>
-					</table>
-				</td>
-			  </tr>
-			</table>
-			
-			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
-			<div>&nbsp;</div>
-			<!-- END OF BUNKER PRICING -->
-			
-			<!-- BUNKER CONSUMPTIONS -->
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr bgcolor="cddee5">
-				<td><div class="dp"><b>BUNKER CONSUMPTIONS</b></div></td>
-			  </tr>
-			</table>
-			
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr>
-				<td valign="top">
-					<table width="595" border="0" cellspacing="0" cellpadding="0">
-					  <tr bgcolor="d6d6d6">
-						<td width="151"><div class="dp"><b>Voyage Type</b></div></td>
-						<td width="148"><div class="dp"><b>Consumption (MT/day)</b></div></td>
-						<td width="148"><div class="dp"><b>Total Consumption (MT)</b></div></td>
-						<td width="148"><div class="dp"><b>Voyage Expense ($)</b></div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>IFO/Ballast</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_ballast_id" name="ifo_ballast" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo_ballast_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_ifo_ballast_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>IFO/Loading</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_loading_id" name="ifo_loading" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo_loading_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_ifo_loading_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>IFO/Bunker Stop</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_bunker_stop_id" name="ifo_bunker_stop" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo_bunker_stop_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_ifo_bunker_stop_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>IFO/Laden</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_laden_id" name="ifo_laden" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo_laden_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_ifo_laden_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>IFO/Discharging</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_discharging_id" name="ifo_discharging" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo_discharging_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_ifo_discharging_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>IFO/Repositioning</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_repositioning_id" name="ifo_repositioning" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo_repositioning_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_ifo_repositioning_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>IFO/Port</b></div></td>
-						<td><div class="dp"><input type="text" id="ifo_port_id" name="ifo_port" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo_port_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_ifo_port_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>IFO/Reserve</b></div></td>
-						<td><div class="dp">&nbsp;</div></td>
-						<td><div class="dp" id="div_ifo_ifo_reserve_id"><input type="text" id="ifo_reserve_id" name="ifo_reserve" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_ifo_reserve_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>IFO Total Expense ($)</b></div></td>
-						<td colspan="3"><div class="dp" id="div_ifo_total_expense">&nbsp;</div></td>
-					  </tr>
-					</table>
-				</td>
-				<td width="10"></td>
-				<td valign="top">
-					<table width="595" border="0" cellspacing="0" cellpadding="0">
-					  <tr bgcolor="d6d6d6">
-						<td width="151"><div class="dp"><b>Voyage Type</b></div></td>
-						<td width="148"><div class="dp"><b>Consumption (MT/day)</b></div></td>
-						<td width="148"><div class="dp"><b>Total Consumption (MT)</b></div></td>
-						<td width="148"><div class="dp"><b>Voyage Expense ($)</b></div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>MDO/Ballast</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_ballast_id" name="mdo_ballast" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo_ballast_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_mdo_ballast_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>MDO/Loading</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_loading_id" name="mdo_loading" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo_loading_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_mdo_loading_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>MDO/Bunker Stop</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_bunker_stop_id" name="mdo_bunker_stop" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo_bunker_stop_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_mdo_bunker_stop_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>MDO/Laden</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_laden_id" name="mdo_laden" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo_laden_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_mdo_laden_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>MDO/Discharging</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_discharging_id" name="mdo_discharging" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo_discharging_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_mdo_discharging_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp" style="color:#00b050;"><b>MDO/Repositioning</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_repositioning_id" name="mdo_repositioning" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo_repositioning_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_mdo_repositioning_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp" style="color:#ff0000;"><b>MDO/Port</b></div></td>
-						<td><div class="dp"><input type="text" id="mdo_port_id" name="mdo_port" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo_port_consumption">&nbsp;</div></td>
-						<td><div class="dp" id="div_mdo_port_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>MDO/Reserve</b></div></td>
-						<td><div class="dp">&nbsp;</div></td>
-						<td><div class="dp" id="div_mdo_mdo_reserve_id"><input type="text" id="mdo_reserve_id" name="mdo_reserve" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-						<td><div class="dp" id="div_mdo_reserve_expense">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>MDO Total Expense ($)</b></div></td>
-						<td colspan="3"><div class="dp" id="div_mdo_total_expense">&nbsp;</div></td>
-					  </tr>
-					</table>
-				</td>
-			  </tr>
-			</table>
-			
-			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
-			<div>&nbsp;</div>
-			<!-- END OF BUNKER CONSUMPTIONS -->
-			
-			<!-- DWCC AND CANAL -->
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr>
-				<td width="595" bgcolor="cddee5"><div class="dp"><b>DWCC</b></div></td>
-				<td width="10">&nbsp;</td>
-				<td width="595" bgcolor="cddee5"><div class="dp"><b>CANAL</b></div></td>
-			  </tr>
-			</table>
-			
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr>
-				<td valign="top">
-					<table width="595" border="0" cellspacing="0" cellpadding="0">
-					  <tr bgcolor="d6d6d6">
-						<td width="297" colspan="2"><div class="dp"><b>DW (MT)</b></div></td>
-						<td width="298"><div class="dp" id="div_dwt_id" style="font-weight:bold;">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td rowspan="2"><div class="dp"><b>Consumption (MT)</b></div></td>
-						<td><div class="dp"><b>FO</b></div></td>
-						<td><div class="dp" id="div_dwcc_amount1_id">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp"><b>DO</b></div></td>
-						<td><div class="dp" id="div_dwcc_amount2_id">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td rowspan="2"><div class="dp"><b>Reserve (MT)</b></div></td>
-						<td><div class="dp"><b>FO</b></div></td>
-						<td><div class="dp" id="div_dwcc_amount3_id">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>DO</b></div></td>
-						<td><div class="dp" id="div_dwcc_amount4_id">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td colspan="2"><div class="dp"><b>FW (MT)</b></div></td>
-						<td><div class="dp"><input type="text" id="dwcc_fw1_id" name="dwcc_fw1" class="number" style="width:150px;" /></div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td colspan="2"><div class="dp"><b>Constant (MT)</b></div></td>
-						<td><div class="dp"><input type="text" id="dwcc_constant1_id" name="dwcc_constant1" class="number" style="width:150px;" /></div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td colspan="2"><div class="dp"><b>Used DW (MT)</b></div></td>
-						<td><div class="dp" id="div_dwcc_amount5_id">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td colspan="2"><div class="dp"><b>DWCC (MT)</b></div></td>
-						<td><div class="dp" id="div_dwcc_amount6_id">&nbsp;</div></td>
-					  </tr>
-					</table>
-				</td>
-				<td width="10"></td>
-				<td valign="top">
-					<table width="595" border="0" cellspacing="0" cellpadding="0">
-					  <tr bgcolor="d6d6d6">
-						<td><div class="dp"><b>Canal</b></div></td>
-						<td colspan="2">
-							<div class="dp">
-								<?php
-								$canalarr = array(
-											1=>"White Sea - Baltic Canal", 
-											2=>"Rhine - Main- Danube Canal", 
-											3=>"Volga - Don Canal",
-											4=>"Kiel Canal",
-											5=>"Houston Ship Channel",
-											6=>"Alphonse Xlll Canal",
-											7=>"Panama Canal",
-											8=>"Danube Black - Sea Canal",
-											9=>"Manchester Ship Canal",
-											10=>"Welland Canal",
-											11=>"Saint Lawrence Seaway",
-											12=>"Suez Canal"
-										);
-										
-								$canalt = count($canalarr);
-								?>
-								<select id='canal_list_id' name="canal_list" style="width:200px;">
-									<?php
-									for($canali=1; $canali<=$canalt; $canali++){
-										echo '<option value="'.$canalarr[$canali].'">'.$canalarr[$canali].'</option>';
-									}
-									?>
-								</select>
-							</div>
-						</td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td width="199"><div class="dp"><b>Booking Fee ($)</b></div></td>
-						<td width="198"><div class="dp"><input type="text" id="cbook1_id" name="cbook1" class="number" style="width:150px;" /></div></td>
-						<td width="198"><div class="dp"><input type="text" id="cbook2_id" name="cbook2" class="number" style="width:150px;" /></div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp"><b>Tugs ($)</b></div></td>
-						<td><div class="dp"><input type="text" id="ctug1_id" name="ctug1" class="number" style="width:150px;" /></div></td>
-						<td><div class="dp"><input type="text" id="ctug2_id" name="ctug2" class="number" style="width:150px;" /></div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>Line Handlers ($)</b></div></td>
-						<td><div class="dp"><input type="text" id="cline1_id" name="cline1" class="number" style="width:150px;" /></div></td>
-						<td><div class="dp"><input type="text" id="cline2_id" name="cline2" class="number" style="width:150px;" /></div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp"><b>Miscellaneous ($)</b></div></td>
-						<td><div class="dp"><input type="text" id="cmisc1_id" name="cmisc1" class="number" style="width:150px;" /></div></td>
-						<td><div class="dp"><input type="text" id="cmisc2_id" name="cmisc2" class="number" style="width:150px;" /></div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>Total ($)</b></div></td>
-						<td><div class="dp" id="div_ctotal1_id">&nbsp;</div></td>
-						<td><div class="dp" id="div_ctotal2_id">&nbsp;</div></td>
-					  </tr>
-					</table>
-				</td>
-			  </tr>
-			</table>
-			
-			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
-			<div>&nbsp;</div>
-			<!-- END OF DWCC AND CANAL -->
-			
-			<!-- PORTS -->
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr>
-				<td width="1200" bgcolor="cddee5"><div class="dp"><b>PORT(S)</b></div></td>
-			  </tr>
-			</table>
-			
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr>
-				<td valign="top">
-					<table width="1200" border="0" cellspacing="0" cellpadding="0" id="row_ports_id">
-					  <tr id="row_ports" class="row_ports0" bgcolor="d6d6d6">
-						<td width="200"><div class="dp"><b>Dem ($/day)</b> <span style="font-size:10px;">Pro Rated</span></div></td>
-						<td width="200"><div class="dp"><b>Term</b></div></td>
-						<td width="200"><div class="dp"><b>Des ($/day)</b></div></td>
-						<td width="200"><div class="dp"><b>Liner Terms</b></div></td>
-						<td width="200"><div class="dp"><b>Port</b></div></td>
-						<td width="200"><div class="dp"><b>DA Quick Input ($)</b></div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp"><b>Demurrage ($)</b></div></td>
-						<td colspan="6"><div class="dp" id="div_demurrage_total_id">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="e9e9e9">
-						<td><div class="dp"><b>Despatch ($)</b></div></td>
-						<td colspan="6"><div class="dp" id="div_despatch_total_id">&nbsp;</div></td>
-					  </tr>
-					  <tr bgcolor="f5f5f5">
-						<td><div class="dp"><b>Total ($)</b></div></td>
-						<td colspan="6"><div class="dp" id="div_ports_total_id">&nbsp;</div></td>
-					  </tr>
-					</table>
-				</td>
-			  </tr>
-			</table>
-			
-			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
-			<div>&nbsp;</div>
-			<!-- END OF PORTS -->
-			
-			<!-- VOYAGE DISBURSMENT -->
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr bgcolor="cddee5">
-				<td colspan="4"><div class="dp"><b>VOYAGE DISBURSMENTS</b></div></td>
-				<td colspan="5"><div class="dp"><b>VOYAGE</b></div></td>
-			  </tr>
-			  <tr>
-				<td width="133"><div class="dp"><b>Bunker ($)</b></div></td>
-				<td width="133"><div class="dp"><b>Port ($)</b></div></td>
-				<td width="133"><div class="dp"><b>Canal($)</b></div></td>
-				<td width="133"><div class="dp"><b>Add. Insurance ($)</b></div></td>
-				<td width="133"><div class="dp"><b>ILOHC</b></div></td>
-				<td width="133"><div class="dp"><b>ILOW</b></div></td>
-				<td width="134"><div class="dp"><b>CVE</b></div></td>
-				<td width="134"><div class="dp"><b>Ballast Bonus</b></div></td>
-				<td width="134"><div class="dp"><b>Miscellaneous</b></div></td>
-			  </tr>
-			  <tr bgcolor="f5f5f5">
-				<td><div class="dp" id='div_bunker_total_id'>&nbsp;</div></td>
-				<td><div class="dp" id='div_port_total_id'>&nbsp;</div></td>
-				<td><div class="dp" id='div_canal_total_id'>&nbsp;</div></td>
-				<td><div class="dp" id='div_add_insurance_id'><input type="text" id="add_insurance_id" name="add_insurance" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-				<td><div class="dp" id='div_ilohc_id'><input type="text" id="ilohc_id" name="ilohc" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-				<td><div class="dp" id='div_ilow_id'><input type="text" id="ilow_id" name="ilow" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-				<td><div class="dp" id='div_cve_id'><input type="text" id="cve_id" name="cve" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-				<td><div class="dp" id='div_ballast_bonus_id'><input type="text" id="ballast_bonus_id" name="ballast_bonus" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-				<td><div class="dp" id='div_miscellaneous_id'><input type="text" id="miscellaneous_id" name="miscellaneous" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-			  </tr>
-			  <tr>
-				<td colspan="9"><div class="dp" id='div_total_voyage_disbursment_id'>&nbsp;</div></td>
-			  </tr>
-			</table>
-			
-			<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
-			<div>&nbsp;</div>
-			<!-- END OF VOYAGE DISBURSMENT -->
-			
-			<!-- AIS MAP -->
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
-			  <tr>
-				<td width="1200" bgcolor="cddee5"><div class="dp"><b>MAP - Data from AIS</b></div></td>
-			  </tr>
-			  <tr bgcolor="#000000">
-				<td><iframe src='http://www.openstreetmap.org/export/embed.html?bbox=10.4,22,81.8,61.4&amp;layer=mapnik' id="map_iframeve" width='1200' height='400' frameborder="0"></iframe></td>
-			  </tr>
-			</table>
-			
-			<div>&nbsp;</div>
-			<!-- END OF AIS MAP -->
-		</td>
-		<td width="300" valign="top">
-			<div style="position:fixed;">
-				<table width="300" border="0" cellspacing="0" cellpadding="0">
-				  <tr>
-					<td width="150" style="border:none;">
-						<div style="padding-left:5px;">
-							<table width="145" border="0" cellspacing="0" cellpadding="0">
-								<tr bgcolor="cddee5">
-									<td><div class="dp"><b>FREIGHT RATE</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">Freight Rate ($/MT)</span></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><input type='text' class='number' id='freight_rate1_id' name="freight_rate1" style="width:100px; border:1px solid #FF0000;" /></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><b>Gross Freight ($)</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp" id='div_gross_freight1_id'>&nbsp;</div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><b>Brok. Comm ($)</b></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><input type='text' class='number' id='broker_comm1_id' name="broker_comm1" style="width:100px;" value="1.25" /></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><b>Add. Comm ($)</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><input type='text' class='number' id='add_comm1_id' name='add_comm1' style="width:100px;" value="2.50" /></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td style="border-left:1px solid #000000; border-top:1px solid #000000; border-right:1px solid #000000;"><div class="dp"><b>Income ($)</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td style="border-left:1px solid #000000; border-bottom:1px solid #000000; border-right:1px solid #000000;"><div class="dp" id="div_income1_id">&nbsp;</div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td style="border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><div class="dp"><b>TCE ($/day)</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td style="border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"><div class="dp" id="div_tce1_id">&nbsp;</div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><b>Broker Commission</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp" id="div_broker_comm1_id">&nbsp;</div></td>
-								</tr>
-							</table>
-						</div>
-					</td>
-					<td width="150" style="border:none;">
-						<div style="padding-left:5px;">
-							<table width="145" border="0" cellspacing="0" cellpadding="0">
-								<tr bgcolor="cddee5">
-									<td><div class="dp"><b>TCE</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td style="border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><div class="dp"><b>Freight Rate ($/MT)</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td style="border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"><div class="dp" id="div_freight_rate2_id">&nbsp;</div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><b>Gross Freight ($)</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp" id="div_gross_freight2_id">&nbsp;</div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><b>Brok. Comm ($)</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><input type='text' class='number' id='broker_comm2_id' name='broker_comm2' style="width:100px;" value="1.25" /></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><b>Add. Comm ($)</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><input type='text' class='number' id='add_comm2_id' name='add_comm2' style="width:100px;" value="2.50" /></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><b>Income ($)</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp" id="div_income2_id">&nbsp;</div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">TCE ($/day)</span></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><input type='text' class='number' id='tce2_id' name='tce2' style="width:100px; border:1px solid #FF0000;" /></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td height="5"></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp"><b>Broker Commission</b></div></td>
-								</tr>
-								<tr bgcolor="f5f5f5">
-									<td><div class="dp" id="div_broker_comm2_id">&nbsp;</div></td>
-								</tr>
-							</table>
-						</div>
-					</td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td width="199"><div class="dp"><b>Booking Fee ($)</b></div></td>
+					<td width="198"><div class="dp"><input type="text" id="cbook1_id" name="cbook1" class="number" style="width:150px;" /></div></td>
+					<td width="198"><div class="dp"><input type="text" id="cbook2_id" name="cbook2" class="number" style="width:150px;" /></div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp"><b>Tugs ($)</b></div></td>
+					<td><div class="dp"><input type="text" id="ctug1_id" name="ctug1" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="ctug2_id" name="ctug2" class="number" style="width:150px;" /></div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>Line Handlers ($)</b></div></td>
+					<td><div class="dp"><input type="text" id="cline1_id" name="cline1" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="cline2_id" name="cline2" class="number" style="width:150px;" /></div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp"><b>Miscellaneous ($)</b></div></td>
+					<td><div class="dp"><input type="text" id="cmisc1_id" name="cmisc1" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="cmisc2_id" name="cmisc2" class="number" style="width:150px;" /></div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>Total ($)</b></div></td>
+					<td><div class="dp" id="div_ctotal1_id">&nbsp;</div></td>
+					<td><div class="dp" id="div_ctotal2_id">&nbsp;</div></td>
 				  </tr>
 				</table>
-			</div>
-		</td>
-	</tr>
+			</td>
+		  </tr>
+		</table>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- END OF DWCC AND CANAL -->
+		
+		<!-- PORTS -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td width="1200" bgcolor="cddee5"><div class="dp"><b>PORT(S)</b></div></td>
+		  </tr>
+		</table>
+		
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td valign="top">
+				<table width="1200" border="0" cellspacing="0" cellpadding="0" id="row_ports_id">
+				  <tr id="row_ports" class="row_ports0" bgcolor="d6d6d6">
+					<td width="200"><div class="dp"><b>Dem ($/day)</b> <span style="font-size:10px;">Pro Rated</span></div></td>
+					<td width="200"><div class="dp"><b>Term</b></div></td>
+					<td width="200"><div class="dp"><b>Des ($/day)</b></div></td>
+					<td width="200"><div class="dp"><b>Liner Terms</b></div></td>
+					<td width="200"><div class="dp"><b>Port</b></div></td>
+					<td width="200"><div class="dp"><b>DA Quick Input ($)</b></div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp"><b>Demurrage ($)</b></div></td>
+					<td colspan="6"><div class="dp" id="div_demurrage_total_id">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="e9e9e9">
+					<td><div class="dp"><b>Despatch ($)</b></div></td>
+					<td colspan="6"><div class="dp" id="div_despatch_total_id">&nbsp;</div></td>
+				  </tr>
+				  <tr bgcolor="f5f5f5">
+					<td><div class="dp"><b>Total ($)</b></div></td>
+					<td colspan="6"><div class="dp" id="div_ports_total_id">&nbsp;</div></td>
+				  </tr>
+				</table>
+			</td>
+		  </tr>
+		</table>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- END OF PORTS -->
+		
+		<!-- VOYAGE DISBURSMENT -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr bgcolor="cddee5">
+			<td colspan="4"><div class="dp"><b>VOYAGE DISBURSMENTS</b></div></td>
+			<td colspan="5"><div class="dp"><b>VOYAGE</b></div></td>
+		  </tr>
+		  <tr>
+			<td width="133"><div class="dp"><b>Bunker ($)</b></div></td>
+			<td width="133"><div class="dp"><b>Port ($)</b></div></td>
+			<td width="133"><div class="dp"><b>Canal($)</b></div></td>
+			<td width="133"><div class="dp"><b>Add. Insurance ($)</b></div></td>
+			<td width="133"><div class="dp"><b>ILOHC</b></div></td>
+			<td width="133"><div class="dp"><b>ILOW</b></div></td>
+			<td width="134"><div class="dp"><b>CVE</b></div></td>
+			<td width="134"><div class="dp"><b>Ballast Bonus</b></div></td>
+			<td width="134"><div class="dp"><b>Miscellaneous</b></div></td>
+		  </tr>
+		  <tr bgcolor="f5f5f5">
+			<td><div class="dp" id='div_bunker_total_id'>&nbsp;</div></td>
+			<td><div class="dp" id='div_port_total_id'>&nbsp;</div></td>
+			<td><div class="dp" id='div_canal_total_id'>&nbsp;</div></td>
+			<td><div class="dp" id='div_add_insurance_id'><input type="text" id="add_insurance_id" name="add_insurance" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_ilohc_id'><input type="text" id="ilohc_id" name="ilohc" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_ilow_id'><input type="text" id="ilow_id" name="ilow" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_cve_id'><input type="text" id="cve_id" name="cve" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_ballast_bonus_id'><input type="text" id="ballast_bonus_id" name="ballast_bonus" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_miscellaneous_id'><input type="text" id="miscellaneous_id" name="miscellaneous" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+		  </tr>
+		  <tr>
+			<td colspan="9"><div class="dp" id='div_total_voyage_disbursment_id'>&nbsp;</div></td>
+		  </tr>
+		</table>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		<!-- END OF VOYAGE DISBURSMENT -->
+		
+		<!-- AIS MAP -->
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td width="1200" bgcolor="cddee5"><div class="dp"><b>MAP - Data from AIS</b></div></td>
+		  </tr>
+		  <tr bgcolor="#000000">
+			<td><iframe src='http://www.openstreetmap.org/export/embed.html?bbox=10.4,22,81.8,61.4&amp;layer=mapnik' id="map_iframeve" width='1200' height='400' frameborder="0"></iframe></td>
+		  </tr>
+		</table>
+		
+		<div>&nbsp;</div>
+		<!-- END OF AIS MAP -->
+	</td>
+  </tr>
 </table>
 </form>

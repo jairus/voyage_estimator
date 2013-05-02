@@ -17,6 +17,44 @@ function saveForm(){
 	if(submitok==1){document.inputfrm.submit();}
 	else{alert(alertmsg);}
 }
+
+function addCommas(nStr){
+	nStr += '';
+
+	x = nStr.split('.');
+	x1 = x[0];
+	x2 = x.length > 1 ? '.' + x[1] : '';
+
+	var rgx = /(\d+)(\d{3})/;
+
+	while (rgx.test(x1)) {
+		x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	}
+
+	return x1 + x2;
+}
+
+function fNum(num){
+	num = uNum(num);
+
+	if(num==0){ return ""; }
+
+	num = num.toFixed(2);
+
+	return addCommas(num);
+}
+
+function uNum(num){
+	if(!num){
+		num = 0;
+	}else if(isNaN(num)){
+		num = num.replace(/[^0-9\.]/g, "");
+
+		if(isNaN(num)){ num = 0; }
+	}
+
+	return num*1;
+}
 </script>
 <style>
 *{
@@ -234,6 +272,34 @@ if($_POST['submitok']==1){
 	$print['STRUCTURES']['TRANSVERSE_BULKHEADS'] = $_POST['TRANSVERSE_BULKHEADS'];
 	$print['STRUCTURES']['WATERTIGHT_BULKHEADS'] = $_POST['WATERTIGHT_BULKHEADS'];
 	$print['STRUCTURES']['WATERTIGHT_COMPARTMENTS'] = $_POST['WATERTIGHT_COMPARTMENTS'];
+	$print['BUNKER_FUEL']['SPEED1_1'] = $_POST['SPEED1_1'];
+	$print['BUNKER_FUEL']['SPEED2_1'] = $_POST['SPEED2_1'];
+	$print['BUNKER_FUEL']['SPEED1_2'] = $_POST['SPEED1_2'];
+	$print['BUNKER_FUEL']['SPEED2_2'] = $_POST['SPEED2_2'];
+	$print['BUNKER_FUEL']['SPEED1_3'] = $_POST['SPEED1_3'];
+	$print['BUNKER_FUEL']['SPEED2_3'] = $_POST['SPEED2_3'];
+	$print['BUNKER_FUEL']['SPEED1_4'] = $_POST['SPEED1_4'];
+	$print['BUNKER_FUEL']['SPEED2_4'] = $_POST['SPEED2_4'];
+	$print['BUNKER_FUEL']['SPEED1_5'] = $_POST['SPEED1_5'];
+	$print['BUNKER_FUEL']['SPEED2_5'] = $_POST['SPEED2_5'];
+	$print['BUNKER_FUEL']['SPEED1_6'] = $_POST['SPEED1_6'];
+	$print['BUNKER_FUEL']['SPEED2_6'] = $_POST['SPEED2_6'];
+	$print['BUNKER_FUEL']['SPEED1_7'] = $_POST['SPEED1_7'];
+	$print['BUNKER_FUEL']['SPEED2_7'] = $_POST['SPEED2_7'];
+	$print['BUNKER_FUEL']['CONSUMPTION1_1'] = $_POST['CONSUMPTION1_1'];
+	$print['BUNKER_FUEL']['CONSUMPTION2_1'] = $_POST['CONSUMPTION2_1'];
+	$print['BUNKER_FUEL']['CONSUMPTION1_2'] = $_POST['CONSUMPTION1_2'];
+	$print['BUNKER_FUEL']['CONSUMPTION2_2'] = $_POST['CONSUMPTION2_2'];
+	$print['BUNKER_FUEL']['CONSUMPTION1_3'] = $_POST['CONSUMPTION1_3'];
+	$print['BUNKER_FUEL']['CONSUMPTION2_3'] = $_POST['CONSUMPTION2_3'];
+	$print['BUNKER_FUEL']['CONSUMPTION1_4'] = $_POST['CONSUMPTION1_4'];
+	$print['BUNKER_FUEL']['CONSUMPTION2_4'] = $_POST['CONSUMPTION2_4'];
+	$print['BUNKER_FUEL']['CONSUMPTION1_5'] = $_POST['CONSUMPTION1_5'];
+	$print['BUNKER_FUEL']['CONSUMPTION2_5'] = $_POST['CONSUMPTION2_5'];
+	$print['BUNKER_FUEL']['CONSUMPTION1_6'] = $_POST['CONSUMPTION1_6'];
+	$print['BUNKER_FUEL']['CONSUMPTION2_6'] = $_POST['CONSUMPTION2_6'];
+	$print['BUNKER_FUEL']['CONSUMPTION1_7'] = $_POST['CONSUMPTION1_7'];
+	$print['BUNKER_FUEL']['CONSUMPTION2_7'] = $_POST['CONSUMPTION2_7'];
 	$print['TONNAGES']['NET_TONNAGE'] = $_POST['NET_TONNAGE'];
 	$print['TONNAGES']['PANAMA_GROSS_TONNAGE'] = $_POST['PANAMA_GROSS_TONNAGE'];
 	$print['TONNAGES']['PANAMA_NET_TONNAGE'] = $_POST['PANAMA_NET_TONNAGE'];
@@ -487,6 +553,34 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			$TRANSVERSE_BULKHEADS = getValue($r[0]['data'], 'TRANSVERSE_BULKHEADS');
 			$WATERTIGHT_BULKHEADS = getValue($r[0]['data'], 'WATERTIGHT_BULKHEADS');
 			$WATERTIGHT_COMPARTMENTS = getValue($r[0]['data'], 'WATERTIGHT_COMPARTMENTS');
+			$SPEED1_1 = getValue($r[0]['data'], 'SPEED1_1');
+			$SPEED2_1 = getValue($r[0]['data'], 'SPEED2_1');
+			$SPEED1_2 = getValue($r[0]['data'], 'SPEED1_2');
+			$SPEED2_2 = getValue($r[0]['data'], 'SPEED2_2');
+			$SPEED1_3 = getValue($r[0]['data'], 'SPEED1_3');
+			$SPEED2_3 = getValue($r[0]['data'], 'SPEED2_3');
+			$SPEED1_4 = getValue($r[0]['data'], 'SPEED1_4');
+			$SPEED2_4 = getValue($r[0]['data'], 'SPEED2_4');
+			$SPEED1_5 = getValue($r[0]['data'], 'SPEED1_5');
+			$SPEED2_5 = getValue($r[0]['data'], 'SPEED2_5');
+			$SPEED1_6 = getValue($r[0]['data'], 'SPEED1_6');
+			$SPEED2_6 = getValue($r[0]['data'], 'SPEED2_6');
+			$SPEED1_7 = getValue($r[0]['data'], 'SPEED1_7');
+			$SPEED2_7 = getValue($r[0]['data'], 'SPEED2_7');
+			$CONSUMPTION1_1 = getValue($r[0]['data'], 'CONSUMPTION1_1');
+			$CONSUMPTION2_1 = getValue($r[0]['data'], 'CONSUMPTION2_1');
+			$CONSUMPTION1_2 = getValue($r[0]['data'], 'CONSUMPTION1_2');
+			$CONSUMPTION2_2 = getValue($r[0]['data'], 'CONSUMPTION2_2');
+			$CONSUMPTION1_3 = getValue($r[0]['data'], 'CONSUMPTION1_3');
+			$CONSUMPTION2_3 = getValue($r[0]['data'], 'CONSUMPTION2_3');
+			$CONSUMPTION1_4 = getValue($r[0]['data'], 'CONSUMPTION1_4');
+			$CONSUMPTION2_4 = getValue($r[0]['data'], 'CONSUMPTION2_4');
+			$CONSUMPTION1_5 = getValue($r[0]['data'], 'CONSUMPTION1_5');
+			$CONSUMPTION2_5 = getValue($r[0]['data'], 'CONSUMPTION2_5');
+			$CONSUMPTION1_6 = getValue($r[0]['data'], 'CONSUMPTION1_6');
+			$CONSUMPTION2_6 = getValue($r[0]['data'], 'CONSUMPTION2_6');
+			$CONSUMPTION1_7 = getValue($r[0]['data'], 'CONSUMPTION1_7');
+			$CONSUMPTION2_7 = getValue($r[0]['data'], 'CONSUMPTION2_7');
 			$NET_TONNAGE = getValue($r[0]['data'], 'NET_TONNAGE');
 			$PANAMA_GROSS_TONNAGE = getValue($r[0]['data'], 'PANAMA_GROSS_TONNAGE');
 			$PANAMA_NET_TONNAGE = getValue($r[0]['data'], 'PANAMA_NET_TONNAGE');
@@ -721,6 +815,34 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 		$TRANSVERSE_BULKHEADS = $data['STRUCTURES']['TRANSVERSE_BULKHEADS'];
 		$WATERTIGHT_BULKHEADS = $data['STRUCTURES']['WATERTIGHT_BULKHEADS'];
 		$WATERTIGHT_COMPARTMENTS = $data['STRUCTURES']['WATERTIGHT_COMPARTMENTS'];
+		$SPEED1_1 = $data['BUNKER_FUEL']['SPEED1_1'];
+		$SPEED2_1 = $data['BUNKER_FUEL']['SPEED2_1'];
+		$SPEED1_2 = $data['BUNKER_FUEL']['SPEED1_2'];
+		$SPEED2_2 = $data['BUNKER_FUEL']['SPEED2_2'];
+		$SPEED1_3 = $data['BUNKER_FUEL']['SPEED1_3'];
+		$SPEED2_3 = $data['BUNKER_FUEL']['SPEED2_3'];
+		$SPEED1_4 = $data['BUNKER_FUEL']['SPEED1_4'];
+		$SPEED2_4 = $data['BUNKER_FUEL']['SPEED2_4'];
+		$SPEED1_5 = $data['BUNKER_FUEL']['SPEED1_5'];
+		$SPEED2_5 = $data['BUNKER_FUEL']['SPEED2_5'];
+		$SPEED1_6 = $data['BUNKER_FUEL']['SPEED1_6'];
+		$SPEED2_6 = $data['BUNKER_FUEL']['SPEED2_6'];
+		$SPEED1_7 = $data['BUNKER_FUEL']['SPEED1_7'];
+		$SPEED2_7 = $data['BUNKER_FUEL']['SPEED2_7'];
+		$CONSUMPTION1_1 = $data['BUNKER_FUEL']['CONSUMPTION1_1'];
+		$CONSUMPTION2_1 = $data['BUNKER_FUEL']['CONSUMPTION2_1'];
+		$CONSUMPTION1_2 = $data['BUNKER_FUEL']['CONSUMPTION1_2'];
+		$CONSUMPTION2_2 = $data['BUNKER_FUEL']['CONSUMPTION2_2'];
+		$CONSUMPTION1_3 = $data['BUNKER_FUEL']['CONSUMPTION1_3'];
+		$CONSUMPTION2_3 = $data['BUNKER_FUEL']['CONSUMPTION2_3'];
+		$CONSUMPTION1_4 = $data['BUNKER_FUEL']['CONSUMPTION1_4'];
+		$CONSUMPTION2_4 = $data['BUNKER_FUEL']['CONSUMPTION2_4'];
+		$CONSUMPTION1_5 = $data['BUNKER_FUEL']['CONSUMPTION1_5'];
+		$CONSUMPTION2_5 = $data['BUNKER_FUEL']['CONSUMPTION2_5'];
+		$CONSUMPTION1_6 = $data['BUNKER_FUEL']['CONSUMPTION1_6'];
+		$CONSUMPTION2_6 = $data['BUNKER_FUEL']['CONSUMPTION2_6'];
+		$CONSUMPTION1_7 = $data['BUNKER_FUEL']['CONSUMPTION1_7'];
+		$CONSUMPTION2_7 = $data['BUNKER_FUEL']['CONSUMPTION2_7'];
 		$NET_TONNAGE = $data['TONNAGES']['NET_TONNAGE'];
 		$PANAMA_GROSS_TONNAGE = $data['TONNAGES']['PANAMA_GROSS_TONNAGE'];
 		$PANAMA_NET_TONNAGE = $data['TONNAGES']['PANAMA_NET_TONNAGE'];
@@ -885,7 +1007,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="INSURER_ID" name="INSURER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $INSURER; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">GENERAL</td>
@@ -982,7 +1104,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="TRADING_AREAS_ID" name="TRADING_AREAS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TRADING_AREAS; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">HISTORICAL</td>
@@ -1079,7 +1201,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="YARD_NUMBER_ID" name="YARD_NUMBER" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $YARD_NUMBER; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">ANCHOR</td>
@@ -1106,7 +1228,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="ANCHOR_STRENGTH_LEVEL_ID" name="ANCHOR_STRENGTH_LEVEL" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $ANCHOR_STRENGTH_LEVEL; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">CAPACITIES</td>
@@ -1329,7 +1451,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="TRAILERS_ID" name="TRAILERS" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TRAILERS; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">CLASSIFICATIONS</td>
@@ -1391,7 +1513,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="NEXT_SPECIAL_SURVEY_ID" name="NEXT_SPECIAL_SURVEY" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $NEXT_SPECIAL_SURVEY; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">PORT STATE CONTROLS</td>
@@ -1467,7 +1589,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="DEFICIENCIES_ID" name="DEFICIENCIES" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $DEFICIENCIES; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">STRUCTURES</td>
@@ -1575,6 +1697,95 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 	<td width="20">&nbsp;</td>
 	<td width="540" valign="top">
 	  <table width="540" border="0" cellspacing="0" cellpadding="0">
+	  	  <tr>
+			<td colspan="2" class="main_title">BUNKER FUEL</td>
+		  </tr>
+		  <tr>
+			<td colspan="2">
+				<table width="540" border="0" cellspacing="0" cellpadding="0">
+				  <tr>
+					<td width="108"><b>Bunker Fuel Type</b></td>
+					<td width="108"><b>Speed 1</b></td>
+					<td width="108"><b>Consumption MT/Day</b></td>
+					<td width="108"><b>Speed 2</b></td>
+					<td width="108"><b>Consumption MT/Day</b></td>
+				  </tr>
+				  <tr>
+					<td height="5" colspan="5"></td>
+				  </tr>
+				  <tr>
+					<td>IFO 380</td>
+					<td><input type="text" id="SPEED1_1_ID" name="SPEED1_1" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED1_1; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION1_1_ID" name="CONSUMPTION1_1" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION1_1; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="SPEED2_1_ID" name="SPEED2_1" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED2_1; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION2_1_ID" name="CONSUMPTION2_1" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION2_1; ?>" onblur="this.value=fNum(this.value);" /></td>
+				  </tr>
+				  <tr>
+					<td height="5" colspan="5"></td>
+				  </tr>
+				  <tr>
+					<td>IFO 180</td>
+					<td><input type="text" id="SPEED1_2_ID" name="SPEED1_2" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED1_2; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION1_2_ID" name="CONSUMPTION1_2" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION1_2; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="SPEED2_2_ID" name="SPEED2_2" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED2_2; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION2_2_ID" name="CONSUMPTION2_2" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION2_2; ?>" onblur="this.value=fNum(this.value);" /></td>
+				  </tr>
+				  <tr>
+					<td height="5" colspan="5"></td>
+				  </tr>
+				  <tr>
+					<td>LS IFO 380 1%</td>
+					<td><input type="text" id="SPEED1_3_ID" name="SPEED1_3" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED1_3; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION1_3_ID" name="CONSUMPTION1_3" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION1_3; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="SPEED2_3_ID" name="SPEED2_3" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED2_3; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION2_3_ID" name="CONSUMPTION2_3" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION2_3; ?>" onblur="this.value=fNum(this.value);" /></td>
+				  </tr>
+				  <tr>
+					<td height="5" colspan="5"></td>
+				  </tr>
+				  <tr>
+					<td>LS IFO 180 1%</td>
+					<td><input type="text" id="SPEED1_4_ID" name="SPEED1_4" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED1_4; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION1_4_ID" name="CONSUMPTION1_4" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION1_4; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="SPEED2_4_ID" name="SPEED2_4" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED2_4; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION2_4_ID" name="CONSUMPTION2_4" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION2_4; ?>" onblur="this.value=fNum(this.value);" /></td>
+				  </tr>
+				  <tr>
+					<td height="5" colspan="5"></td>
+				  </tr>
+				  <tr>
+					<td>MDO</td>
+					<td><input type="text" id="SPEED1_5_ID" name="SPEED1_5" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED1_5; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION1_5_ID" name="CONSUMPTION1_5" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION1_5; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="SPEED2_5_ID" name="SPEED2_5" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED2_5; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION2_5_ID" name="CONSUMPTION2_5" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION2_5; ?>" onblur="this.value=fNum(this.value);" /></td>
+				  </tr>
+				  <tr>
+					<td height="5" colspan="5"></td>
+				  </tr>
+				  <tr>
+					<td>MGO</td>
+					<td><input type="text" id="SPEED1_6_ID" name="SPEED1_6" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED1_6; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION1_6_ID" name="CONSUMPTION1_6" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION1_6; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="SPEED2_6_ID" name="SPEED2_6" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED2_6; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION2_6_ID" name="CONSUMPTION2_6" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION2_6; ?>" onblur="this.value=fNum(this.value);" /></td>
+				  </tr>
+				  <tr>
+					<td height="5" colspan="5"></td>
+				  </tr>
+				  <tr>
+					<td>LS MGO 1%</td>
+					<td><input type="text" id="SPEED1_7_ID" name="SPEED1_7" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED1_7; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION1_7_ID" name="CONSUMPTION1_7" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION1_7; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="SPEED2_7_ID" name="SPEED2_7" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SPEED2_7; ?>" onblur="this.value=fNum(this.value);" /></td>
+					<td><input type="text" id="CONSUMPTION2_7_ID" name="CONSUMPTION2_7" style="width:70px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CONSUMPTION2_7; ?>" onblur="this.value=fNum(this.value);" /></td>
+				  </tr>
+				</table>
+			</td>
+		  </tr>
+		  <tr>
+			<td height="20" colspan="2"></td>
+		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">TONNAGES</td>
 		  </tr>
@@ -1628,7 +1839,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="SUEZ_TONNAGE_ID" name="SUEZ_TONNAGE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SUEZ_TONNAGE; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">LOADLINES</td>
@@ -1837,7 +2048,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="TPC_IMMERSION_SUMMER_DRAFT_ID" name="TPC_IMMERSION_SUMMER_DRAFT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TPC_IMMERSION_SUMMER_DRAFT; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">DIMENSIONS</td>
@@ -1997,7 +2208,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="QUARTERDECK_ID" name="QUARTERDECK" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $QUARTERDECK; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">CARGO</td>
@@ -2073,7 +2284,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="LIFTING_EQUIPMENT_ID" name="LIFTING_EQUIPMENT" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $LIFTING_EQUIPMENT; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">CREW</td>
@@ -2128,7 +2339,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="TOTAL_CREW_ID" name="TOTAL_CREW" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $TOTAL_CREW; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">COMMUNICATION</td>
@@ -2156,7 +2367,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="SATCOM_ID_ID" name="SATCOM_ID" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $SATCOM_ID; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">CERTIFICATES</td>
@@ -2197,7 +2408,7 @@ if(!trim($_GET['imo']) && !isset($_GET['msg'])){
 			<td>: <input type="text" id="CERTIFICATE_ID" name="CERTIFICATE" style="width:250px; border:1px solid #CCCCCC; padding:3px;" value="<?php echo $CERTIFICATE; ?>" /></td>
 		  </tr>
 		  <tr>
-			<td height="20"></td>
+			<td height="20" colspan="2"></td>
 		  </tr>
 		  <tr>
 			<td colspan="2" class="main_title">ENGINE</td>

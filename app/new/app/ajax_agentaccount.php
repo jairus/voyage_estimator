@@ -1,5 +1,6 @@
 <?php
 @include_once(dirname(__FILE__)."/includes/bootstrap.php");
+@session_start();
 date_default_timezone_set('UTC');
 
 //DELETE FILE FROM DIRECTORY
@@ -44,6 +45,7 @@ if($_POST['submitok'] == 1){
 	if((!empty($_FILES["company_logo"])) && ($_FILES['company_logo']['error']==0)){
 		$company_logo = basename($_FILES['company_logo']['name']);
 		$image_ext  = substr($company_logo, strrpos($company_logo, '.') + 1);
+
 		
 		if(($image_ext == "jpg" || $image_ext == "JPG" || $image_ext == "png" || $image_ext == "PNG" || $image_ext == "jpeg" || $image_ext == "JPEG" || $image_ext == "gif" || $image_ext == "GIF") && ($_FILES["company_logo"]["size"] < 62914560)){
 			$ext = array('.jpg', '.JPG', '.gif', '.GIF', '.png', '.PNG', '.JPEG', '.jpeg');
@@ -593,6 +595,8 @@ h2{
 				jQuery('#pleasewait').show();
 				//saving to dabase && send to email;
 				$.post('signup_ajax2.php', $('#signupform').serializeArray(), function(data){
+					var submitok = 1;
+				
 					document.signupform.submit();
 					//alert('You have successfully updated your account');
 				});

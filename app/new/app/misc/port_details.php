@@ -1071,6 +1071,22 @@ if($_POST['submitok02']==1){
 				<td colspan="2" height="5">&nbsp;</td>
 			</tr>
 			<tr>
+				<td colspan="2">
+					<?php
+					$ext = array('.jpg', '.JPG', '.gif', '.GIF', '.png', '.PNG', '.JPEG', '.jpeg');
+					foreach($ext as $value){
+						if( file_exists("../images/agents/".$r[0]['id'].$value) ){
+							$company_logo = '../images/agents/'.$r[0]['id'].$value;
+						}
+					}
+					?>
+					<img src="<?php echo $company_logo; ?>" width="280" border="0" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" height="5">&nbsp;</td>
+			</tr>
+			<tr>
 				<td width="110" class='label'>Company Name</td>
 				<td> : <?php echo $r[0]['company_name']; ?></td>
 			</tr>

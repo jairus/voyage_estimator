@@ -377,6 +377,75 @@ if(trim($t)){
 								</table>
 							</td>
 						</tr>";
+						
+						//SELECT BROKER INTELLIGENCE
+						$userid = $_SESSION['user']['id'];		
+
+						$sql_int = "SELECT * FROM `_messages` WHERE imo='".$ships[$i]['imo']."' AND type='network' and 
+						`user_email` in ( 
+							select `email` from `_sbis_users` where 
+							`id` in (
+								select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+							) or
+							`id` in (
+								select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
+							)
+						)
+						order by `id` desc limit 1";
+						$broker_int = dbQuery($sql_int, $link);
+						
+						$t_int = count($broker_int);
+						
+						if($t_int){
+							for($i_int=0; $i_int<$t_int; $i_int++){
+								$bi_data = unserialize($broker_int[$i_int]['message']);
+							
+								echo "<tr style='background:#ffb83a;'>
+									<td colspan='5'><div style='padding:5px;'><b style='font-size:14px; color:white;'>BROKER INTELLIGENCE</b></div></td>
+								</tr>
+								<tr style='background:#e5e5e5;'>
+									<td>
+										<div style='padding:5px;'>
+											<table cellpadding='0' cellspacing='0' width='100%'>
+												<tr>
+													<td width='25' style='border-bottom:none;'><img src='image.php?b=1&mx=20&p=".$imageb."'></td>
+													<td style='border-bottom:none;'><a class='clickable' onclick='return showShipDetails(\"".$ships[$i]['imo']."\")' >".$ships[$i]['name']."</a></td>
+													<td width='25' style='border-bottom:none; text-align:right;'><a class='clickable' title='Contact' alt='Contact' onclick='contactOwner(\"".$ships[$i]['imo']."\")'><img src='images/contact_icon.png'></a></td>
+												</tr>
+											</table>
+										</div>
+									</td>
+									<td><div style='padding:5px;'>".$bi_data['dely']."</div></td>
+									<td style='text-align:right;'><div style='padding:5px;'><a onclick='openMapRegister(\"".$details."\")' class='clickable'><img src='images/map-icon.png' ></a></div></td>
+									<td><div style='padding:5px;'>".$bi_data['delydate_from']."</div></td>
+									<td>
+										<div style='padding:5px;'>
+											<table cellpadding='0' cellspacing='0' width='100%'>
+												<tr>
+													<td width='50%' style='border-bottom:none;'><b>Delivery:</b> <input type='button' style='width:125px; cursor:pointer; background:#f0f0f0; border:1px solid #ccc; font-size:10px; padding:2px;' value='".$bi_data['dely']."' alt='".$bi_data['dely']."' title='".$bi_data['dely']."' id='brokersupdate_".$broker_int[$i_int]['id']."' onclick='openMessageDialog(this.id, \"".$ship['IMO #']."\", \"network\")' /></td>
+													<td width='50%' style='border-bottom:none;'><b>Dely Date:</b> <input type='button' style='width:125px; cursor:pointer; background:#f0f0f0; border:1px solid #ccc; font-size:10px; padding:2px;' value='".$bi_data['delydate_from']."' alt='".$bi_data['delydate_from']."' title='".$bi_data['delydate_from']."' id='brokersupdate_".$broker_int[$i_int]['id']."' onclick='openMessageDialog(this.id, \"".$ship['IMO #']."\", \"network\")' /></td>
+												</tr>
+											</table>
+										</div>
+									</td>
+								</tr>
+								<tr style='background:#e5e5e5;'>
+									<td><div style='padding:5px;'><b>".$operator."</b></div></td>
+									<td style='text-align:center;'>
+										<div style='padding:5px;'>";
+											if(trim($updatearr)){
+												echo "<input type='button' class='clickable' style='border:1px solid #c0c0c0; font-weight:normal; height:20px; font-size:10px; color:red;' onclick='oUpdateShipSearch0(".$i2.")' value=\"Operator's Update\">";
+											}else{
+												echo "<input type='button' class='clickable' style='border:1px solid #c0c0c0; font-weight:normal; height:20px; font-size:10px;' onclick='oUpdateShipSearch0(".$i2.")' value=\"Operator's Update\">";
+											}
+										echo "</div>
+									</td>
+									<td colspan='2'><div style='padding:5px;'><b>Private:</b> <input type='button' style='width:144px; cursor:pointer; background:#f0f0f0; border:1px solid #ccc; font-size:10px; padding:2px;' value='".$private."' alt='".$privatealt."' title='".$privatealt."' id='private_".$mid."' onclick='openMessageDialog(this.id, \"".$ship['IMO #']."\", \"private\")' /></div></td>
+									<td><div style='padding:5px;'><b>Remarks:</b> <input type='button' style='width:144px; cursor:pointer; background:#f0f0f0; border:1px solid #ccc; font-size:10px; padding:2px;' value='".$remarks."' alt='".$remarksalt."' title='".$remarksalt."' id='brokersupdate_".$nmid."' onclick='openMessageDialog(this.id, \"".$ship['IMO #']."\", \"network\")' /> <span style='color:red;'>".$broker_int[$i_int]['user_email']."</span></div></td>
+								</tr>";
+							}
+						}
+						//END
 					}
 				}
 			}

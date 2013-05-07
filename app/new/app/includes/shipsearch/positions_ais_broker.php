@@ -1,6 +1,7 @@
 <?php
-echo "<form id='positions' method='POST' style='margin:0px;'>";
 echo "<div style='text-align:left; padding:5px;'><b>CURRENT DATE/TIME: ".date("M j, Y G:i e", time())."</b></div>";
+
+echo "<form id='positions' method='POST' style='margin:0px;'>";
 echo "<div style='width:990px; text-align:left; padding:5px; background:#c5dc3b; color:white; margin-top:5px;'>
 	<table cellpadding='0' cellspacing='0' width='990px'>
 		<tr>
@@ -148,7 +149,7 @@ for($i_broker=0; $i_broker<$t_broker; $i_broker++){
 	$nmessage = unserialize($r_broker[$i_broker]['message']);
 
 	if($nmessage['dely']==$destination_port){
-		if($destination_port_from<=$nmessage['delydate_from'] && $destination_port_to>=$nmessage['delydate_from']){
+		if(date('Ymd', strtotime($destination_port_from))<=date('Ymd', strtotime($nmessage['delydate_from'])) && date('Ymd', strtotime($destination_port_to))>=date('Ymd', strtotime($nmessage['delydate_from']))){
 			if($counter==1){
 				echo "</table>
 				<table cellpadding='0' cellspacing='0' width='1000'>
@@ -265,7 +266,6 @@ for($i_broker=0; $i_broker<$t_broker; $i_broker++){
 							<table width='100%' cellpadding='0' cellspacing='0'>
 								<tr>
 									<td style='text-align:right;'>".$destination."</td>
-									<td style='text-align:center; width:20px;'><a class='clickable' onclick='openMapVe2(\"".$details."\")'><img title='Map' alt='Map' src='images/map-icon.png'></a></td>
 								</tr>
 							</table>
 						</div>

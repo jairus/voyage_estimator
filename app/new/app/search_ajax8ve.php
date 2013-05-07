@@ -21,24 +21,15 @@ function getMessageByImo($imo, $type){
 		$userid = $_SESSION['user']['id'];		
 
 		$sql = "select * from `_messages` where `imo`='".$imo."' and `type`='network' and 
-
 		`user_email` in ( 
-
 			select `email` from `_sbis_users` where 
-
 			`id` in (
-
 				select `userid1` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
-
 			) or
-
 			`id` in (
-
 				select `userid2` from _network where (`userid1` = '".$userid."' or `userid2` = '".$userid."')
-
 			)
 		)
-
 		order by `id` desc limit 1";
 	}
 

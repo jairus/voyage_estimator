@@ -118,6 +118,20 @@ if($_GET['search']){
 		$ship['SPEED2_6'] = $data2['BUNKER_FUEL']['SPEED2_6'];
 		$ship['SPEED1_7'] = $data2['BUNKER_FUEL']['SPEED1_7'];
 		$ship['SPEED2_7'] = $data2['BUNKER_FUEL']['SPEED2_7'];
+		$ship['SPEED_TEXT1_1'] = $data2['BUNKER_FUEL']['SPEED_TEXT1_1'];
+		$ship['SPEED_TEXT2_1'] = $data2['BUNKER_FUEL']['SPEED_TEXT2_1'];
+		$ship['SPEED_TEXT1_2'] = $data2['BUNKER_FUEL']['SPEED_TEXT1_2'];
+		$ship['SPEED_TEXT2_2'] = $data2['BUNKER_FUEL']['SPEED_TEXT2_2'];
+		$ship['SPEED_TEXT1_3'] = $data2['BUNKER_FUEL']['SPEED_TEXT1_3'];
+		$ship['SPEED_TEXT2_3'] = $data2['BUNKER_FUEL']['SPEED_TEXT2_3'];
+		$ship['SPEED_TEXT1_4'] = $data2['BUNKER_FUEL']['SPEED_TEXT1_4'];
+		$ship['SPEED_TEXT2_4'] = $data2['BUNKER_FUEL']['SPEED_TEXT2_4'];
+		$ship['SPEED_TEXT1_5'] = $data2['BUNKER_FUEL']['SPEED_TEXT1_5'];
+		$ship['SPEED_TEXT2_5'] = $data2['BUNKER_FUEL']['SPEED_TEXT2_5'];
+		$ship['SPEED_TEXT1_6'] = $data2['BUNKER_FUEL']['SPEED_TEXT1_6'];
+		$ship['SPEED_TEXT2_6'] = $data2['BUNKER_FUEL']['SPEED_TEXT2_6'];
+		$ship['SPEED_TEXT1_7'] = $data2['BUNKER_FUEL']['SPEED_TEXT1_7'];
+		$ship['SPEED_TEXT2_7'] = $data2['BUNKER_FUEL']['SPEED_TEXT2_7'];
 		$ship['CONSUMPTION1_1'] = $data2['BUNKER_FUEL']['CONSUMPTION1_1'];
 		$ship['CONSUMPTION2_1'] = $data2['BUNKER_FUEL']['CONSUMPTION2_1'];
 		$ship['CONSUMPTION1_2'] = $data2['BUNKER_FUEL']['CONSUMPTION1_2'];
@@ -132,6 +146,20 @@ if($_GET['search']){
 		$ship['CONSUMPTION2_6'] = $data2['BUNKER_FUEL']['CONSUMPTION2_6'];
 		$ship['CONSUMPTION1_7'] = $data2['BUNKER_FUEL']['CONSUMPTION1_7'];
 		$ship['CONSUMPTION2_7'] = $data2['BUNKER_FUEL']['CONSUMPTION2_7'];
+		$ship['CONSUMPTION_TEXT1_1'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_1'];
+		$ship['CONSUMPTION_TEXT2_1'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_1'];
+		$ship['CONSUMPTION_TEXT1_2'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_2'];
+		$ship['CONSUMPTION_TEXT2_2'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_2'];
+		$ship['CONSUMPTION_TEXT1_3'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_3'];
+		$ship['CONSUMPTION_TEXT2_3'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_3'];
+		$ship['CONSUMPTION_TEXT1_4'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_4'];
+		$ship['CONSUMPTION_TEXT2_4'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_4'];
+		$ship['CONSUMPTION_TEXT1_5'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_5'];
+		$ship['CONSUMPTION_TEXT2_5'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_5'];
+		$ship['CONSUMPTION_TEXT1_6'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_6'];
+		$ship['CONSUMPTION_TEXT2_6'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_6'];
+		$ship['CONSUMPTION_TEXT1_7'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_7'];
+		$ship['CONSUMPTION_TEXT2_7'] = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_7'];
 		//END OF BUNKER FUEL
 
 		$ships[] = $ship;
@@ -464,6 +492,20 @@ var SPEED1_6 = [];
 var SPEED2_6 = [];
 var SPEED1_7 = [];
 var SPEED2_7 = [];
+var SPEED_TEXT1_1 = [];
+var SPEED_TEXT2_1 = [];
+var SPEED_TEXT1_2 = [];
+var SPEED_TEXT2_2 = [];
+var SPEED_TEXT1_3 = [];
+var SPEED_TEXT2_3 = [];
+var SPEED_TEXT1_4 = [];
+var SPEED_TEXT2_4 = [];
+var SPEED_TEXT1_5 = [];
+var SPEED_TEXT2_5 = [];
+var SPEED_TEXT1_6 = [];
+var SPEED_TEXT2_6 = [];
+var SPEED_TEXT1_7 = [];
+var SPEED_TEXT2_7 = [];
 var CONSUMPTION1_1 = [];
 var CONSUMPTION2_1 = [];
 var CONSUMPTION1_2 = [];
@@ -478,6 +520,20 @@ var CONSUMPTION1_6 = [];
 var CONSUMPTION2_6 = [];
 var CONSUMPTION1_7 = [];
 var CONSUMPTION2_7 = [];
+var CONSUMPTION_TEXT1_1 = [];
+var CONSUMPTION_TEXT2_1 = [];
+var CONSUMPTION_TEXT1_2 = [];
+var CONSUMPTION_TEXT2_2 = [];
+var CONSUMPTION_TEXT1_3 = [];
+var CONSUMPTION_TEXT2_3 = [];
+var CONSUMPTION_TEXT1_4 = [];
+var CONSUMPTION_TEXT2_4 = [];
+var CONSUMPTION_TEXT1_5 = [];
+var CONSUMPTION_TEXT2_5 = [];
+var CONSUMPTION_TEXT1_6 = [];
+var CONSUMPTION_TEXT2_6 = [];
+var CONSUMPTION_TEXT1_7 = [];
+var CONSUMPTION_TEXT2_7 = [];
 //END OF SHIP DETAIL VARIABLES
 
 //PORT DETAIL VARIABLES
@@ -563,6 +619,20 @@ $(function(){
 					SPEED2_6[val.imo] = val.SPEED2_6;
 					SPEED1_7[val.imo] = val.SPEED1_7;
 					SPEED2_7[val.imo] = val.SPEED2_7;
+					SPEED_TEXT1_1[val.imo] = val.SPEED_TEXT1_1;
+					SPEED_TEXT2_1[val.imo] = val.SPEED_TEXT2_1;
+					SPEED_TEXT1_2[val.imo] = val.SPEED_TEXT1_2;
+					SPEED_TEXT2_2[val.imo] = val.SPEED_TEXT2_2;
+					SPEED_TEXT1_3[val.imo] = val.SPEED_TEXT1_3;
+					SPEED_TEXT2_3[val.imo] = val.SPEED_TEXT2_3;
+					SPEED_TEXT1_4[val.imo] = val.SPEED_TEXT1_4;
+					SPEED_TEXT2_4[val.imo] = val.SPEED_TEXT2_4;
+					SPEED_TEXT1_5[val.imo] = val.SPEED_TEXT1_5;
+					SPEED_TEXT2_5[val.imo] = val.SPEED_TEXT2_5;
+					SPEED_TEXT1_6[val.imo] = val.SPEED_TEXT1_6;
+					SPEED_TEXT2_6[val.imo] = val.SPEED_TEXT2_6;
+					SPEED_TEXT1_7[val.imo] = val.SPEED_TEXT1_7;
+					SPEED_TEXT2_7[val.imo] = val.SPEED_TEXT2_7;
 					CONSUMPTION1_1[val.imo] = val.CONSUMPTION1_1;
 					CONSUMPTION2_1[val.imo] = val.CONSUMPTION2_1;
 					CONSUMPTION1_2[val.imo] = val.CONSUMPTION1_2;
@@ -577,6 +647,20 @@ $(function(){
 					CONSUMPTION2_6[val.imo] = val.CONSUMPTION2_6;
 					CONSUMPTION1_7[val.imo] = val.CONSUMPTION1_7;
 					CONSUMPTION2_7[val.imo] = val.CONSUMPTION2_7;
+					CONSUMPTION_TEXT1_1[val.imo] = val.CONSUMPTION_TEXT1_1;
+					CONSUMPTION_TEXT2_1[val.imo] = val.CONSUMPTION_TEXT2_1;
+					CONSUMPTION_TEXT1_2[val.imo] = val.CONSUMPTION_TEXT1_2;
+					CONSUMPTION_TEXT2_2[val.imo] = val.CONSUMPTION_TEXT2_2;
+					CONSUMPTION_TEXT1_3[val.imo] = val.CONSUMPTION_TEXT1_3;
+					CONSUMPTION_TEXT2_3[val.imo] = val.CONSUMPTION_TEXT2_3;
+					CONSUMPTION_TEXT1_4[val.imo] = val.CONSUMPTION_TEXT1_4;
+					CONSUMPTION_TEXT2_4[val.imo] = val.CONSUMPTION_TEXT2_4;
+					CONSUMPTION_TEXT1_5[val.imo] = val.CONSUMPTION_TEXT1_5;
+					CONSUMPTION_TEXT2_5[val.imo] = val.CONSUMPTION_TEXT2_5;
+					CONSUMPTION_TEXT1_6[val.imo] = val.CONSUMPTION_TEXT1_6;
+					CONSUMPTION_TEXT2_6[val.imo] = val.CONSUMPTION_TEXT2_6;
+					CONSUMPTION_TEXT1_7[val.imo] = val.CONSUMPTION_TEXT1_7;
+					CONSUMPTION_TEXT2_7[val.imo] = val.CONSUMPTION_TEXT2_7;
 				});
 
 				add(suggestions);
@@ -686,7 +770,7 @@ $(function(){
 			//END OF SHIP DETAILS
 			
 			//BUNKER FUEL
-			if(SPEED1_1[imo] || SPEED2_1[imo] || SPEED1_2[imo] || SPEED2_2[imo] || SPEED1_3[imo] || SPEED2_3[imo] || SPEED1_4[imo] || SPEED2_4[imo] || SPEED1_5[imo] || SPEED2_5[imo] || SPEED1_6[imo] || SPEED2_6[imo] || SPEED1_7[imo] || SPEED2_7[imo] || CONSUMPTION1_1[imo] || CONSUMPTION2_1[imo] || CONSUMPTION1_2[imo] || CONSUMPTION2_2[imo] || CONSUMPTION1_3[imo] || CONSUMPTION2_3[imo] || CONSUMPTION1_4[imo] || CONSUMPTION2_4[imo] || CONSUMPTION1_5[imo] || CONSUMPTION2_5[imo] || CONSUMPTION1_6[imo] || CONSUMPTION2_6[imo] || CONSUMPTION1_7[imo] || CONSUMPTION2_7[imo]){
+			if(SPEED1_1[imo] || SPEED2_1[imo] || SPEED1_2[imo] || SPEED2_2[imo] || SPEED1_3[imo] || SPEED2_3[imo] || SPEED1_4[imo] || SPEED2_4[imo] || SPEED1_5[imo] || SPEED2_5[imo] || SPEED1_6[imo] || SPEED2_6[imo] || SPEED1_7[imo] || SPEED2_7[imo] || SPEED_TEXT1_1[imo] || SPEED_TEXT2_1[imo] || SPEED_TEXT1_2[imo] || SPEED_TEXT2_2[imo] || SPEED_TEXT1_3[imo] || SPEED_TEXT2_3[imo] || SPEED_TEXT1_4[imo] || SPEED_TEXT2_4[imo] || SPEED_TEXT1_5[imo] || SPEED_TEXT2_5[imo] || SPEED_TEXT1_6[imo] || SPEED_TEXT2_6[imo] || SPEED_TEXT1_7[imo] || SPEED_TEXT2_7[imo] || CONSUMPTION1_1[imo] || CONSUMPTION2_1[imo] || CONSUMPTION1_2[imo] || CONSUMPTION2_2[imo] || CONSUMPTION1_3[imo] || CONSUMPTION2_3[imo] || CONSUMPTION1_4[imo] || CONSUMPTION2_4[imo] || CONSUMPTION1_5[imo] || CONSUMPTION2_5[imo] || CONSUMPTION1_6[imo] || CONSUMPTION2_6[imo] || CONSUMPTION1_7[imo] || CONSUMPTION2_7[imo] || CONSUMPTION_TEXT1_1[imo] || CONSUMPTION_TEXT2_1[imo] || CONSUMPTION_TEXT1_2[imo] || CONSUMPTION_TEXT2_2[imo] || CONSUMPTION_TEXT1_3[imo] || CONSUMPTION_TEXT2_3[imo] || CONSUMPTION_TEXT1_4[imo] || CONSUMPTION_TEXT2_4[imo] || CONSUMPTION_TEXT1_5[imo] || CONSUMPTION_TEXT2_5[imo] || CONSUMPTION_TEXT1_6[imo] || CONSUMPTION_TEXT2_6[imo] || CONSUMPTION_TEXT1_7[imo] || CONSUMPTION_TEXT2_7[imo]){
 				jQuery("#bunker_fuel_info").show();
 			}
 			
@@ -704,6 +788,20 @@ $(function(){
 			if(SPEED2_6[imo]){ setValue(jQuery("#SPEED2_6"), SPEED2_6[imo]); }
 			if(SPEED1_7[imo]){ setValue(jQuery("#SPEED1_7"), SPEED1_7[imo]); }
 			if(SPEED2_7[imo]){ setValue(jQuery("#SPEED2_7"), SPEED2_7[imo]); }
+			if(SPEED_TEXT1_1[imo]){ setValue(jQuery("#SPEED_TEXT1_1"), SPEED_TEXT1_1[imo]); }
+			if(SPEED_TEXT2_1[imo]){ setValue(jQuery("#SPEED_TEXT2_1"), SPEED_TEXT2_1[imo]); }
+			if(SPEED_TEXT1_2[imo]){ setValue(jQuery("#SPEED_TEXT1_2"), SPEED_TEXT1_2[imo]); }
+			if(SPEED_TEXT2_2[imo]){ setValue(jQuery("#SPEED_TEXT2_2"), SPEED_TEXT2_2[imo]); }
+			if(SPEED_TEXT1_3[imo]){ setValue(jQuery("#SPEED_TEXT1_3"), SPEED_TEXT1_3[imo]); }
+			if(SPEED_TEXT2_3[imo]){ setValue(jQuery("#SPEED_TEXT2_3"), SPEED_TEXT2_3[imo]); }
+			if(SPEED_TEXT1_4[imo]){ setValue(jQuery("#SPEED_TEXT1_4"), SPEED_TEXT1_4[imo]); }
+			if(SPEED_TEXT2_4[imo]){ setValue(jQuery("#SPEED_TEXT2_4"), SPEED_TEXT2_4[imo]); }
+			if(SPEED_TEXT1_5[imo]){ setValue(jQuery("#SPEED_TEXT1_5"), SPEED_TEXT1_5[imo]); }
+			if(SPEED_TEXT2_5[imo]){ setValue(jQuery("#SPEED_TEXT2_5"), SPEED_TEXT2_5[imo]); }
+			if(SPEED_TEXT1_6[imo]){ setValue(jQuery("#SPEED_TEXT1_6"), SPEED_TEXT1_6[imo]); }
+			if(SPEED_TEXT2_6[imo]){ setValue(jQuery("#SPEED_TEXT2_6"), SPEED_TEXT2_6[imo]); }
+			if(SPEED_TEXT1_7[imo]){ setValue(jQuery("#SPEED_TEXT1_7"), SPEED_TEXT1_7[imo]); }
+			if(SPEED_TEXT2_7[imo]){ setValue(jQuery("#SPEED_TEXT2_7"), SPEED_TEXT2_7[imo]); }
 			if(CONSUMPTION1_1[imo]){ setValue(jQuery("#CONSUMPTION1_1"), CONSUMPTION1_1[imo]); }
 			if(CONSUMPTION2_1[imo]){ setValue(jQuery("#CONSUMPTION2_1"), CONSUMPTION2_1[imo]); }
 			if(CONSUMPTION1_2[imo]){ setValue(jQuery("#CONSUMPTION1_2"), CONSUMPTION1_2[imo]); }
@@ -718,6 +816,20 @@ $(function(){
 			if(CONSUMPTION2_6[imo]){ setValue(jQuery("#CONSUMPTION2_6"), CONSUMPTION2_6[imo]); }
 			if(CONSUMPTION1_7[imo]){ setValue(jQuery("#CONSUMPTION1_7"), CONSUMPTION1_7[imo]); }
 			if(CONSUMPTION2_7[imo]){ setValue(jQuery("#CONSUMPTION2_7"), CONSUMPTION2_7[imo]); }
+			if(CONSUMPTION_TEXT1_1[imo]){ setValue(jQuery("#CONSUMPTION_TEXT1_1"), CONSUMPTION_TEXT1_1[imo]); }
+			if(CONSUMPTION_TEXT2_1[imo]){ setValue(jQuery("#CONSUMPTION_TEXT2_1"), CONSUMPTION_TEXT2_1[imo]); }
+			if(CONSUMPTION_TEXT1_2[imo]){ setValue(jQuery("#CONSUMPTION_TEXT1_2"), CONSUMPTION_TEXT1_2[imo]); }
+			if(CONSUMPTION_TEXT2_2[imo]){ setValue(jQuery("#CONSUMPTION_TEXT2_2"), CONSUMPTION_TEXT2_2[imo]); }
+			if(CONSUMPTION_TEXT1_3[imo]){ setValue(jQuery("#CONSUMPTION_TEXT1_3"), CONSUMPTION_TEXT1_3[imo]); }
+			if(CONSUMPTION_TEXT2_3[imo]){ setValue(jQuery("#CONSUMPTION_TEXT2_3"), CONSUMPTION_TEXT2_3[imo]); }
+			if(CONSUMPTION_TEXT1_4[imo]){ setValue(jQuery("#CONSUMPTION_TEXT1_4"), CONSUMPTION_TEXT1_4[imo]); }
+			if(CONSUMPTION_TEXT2_4[imo]){ setValue(jQuery("#CONSUMPTION_TEXT2_4"), CONSUMPTION_TEXT2_4[imo]); }
+			if(CONSUMPTION_TEXT1_5[imo]){ setValue(jQuery("#CONSUMPTION_TEXT1_5"), CONSUMPTION_TEXT1_5[imo]); }
+			if(CONSUMPTION_TEXT2_5[imo]){ setValue(jQuery("#CONSUMPTION_TEXT2_5"), CONSUMPTION_TEXT2_5[imo]); }
+			if(CONSUMPTION_TEXT1_6[imo]){ setValue(jQuery("#CONSUMPTION_TEXT1_6"), CONSUMPTION_TEXT1_6[imo]); }
+			if(CONSUMPTION_TEXT2_6[imo]){ setValue(jQuery("#CONSUMPTION_TEXT2_6"), CONSUMPTION_TEXT2_6[imo]); }
+			if(CONSUMPTION_TEXT1_7[imo]){ setValue(jQuery("#CONSUMPTION_TEXT1_7"), CONSUMPTION_TEXT1_7[imo]); }
+			if(CONSUMPTION_TEXT2_7[imo]){ setValue(jQuery("#CONSUMPTION_TEXT2_7"), CONSUMPTION_TEXT2_7[imo]); }
 			//END OF BUNKER FUEL
 			
 			//SPEED FOR VOYAGE LEGS
@@ -2297,60 +2409,92 @@ select{
 		<div id="bunker_fuel_info" style="display:none;">
 			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="d6d6d6">
-				<td width="240"><div style="padding:3px;"><b>Bunker Fuel Type</b></div></td>
-				<td width="240"><div style="padding:3px;"><b>Speed  1</b></div></td>
-				<td width="240"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
-				<td width="240"><div style="padding:3px;"><b>Speed  2</b></div></td>
-				<td width="240"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
+				<td width="104"><div style="padding:3px;"><b>Bunker Fuel Type</b></div></td>
+				<td width="137"><div style="padding:3px;"><b>Speed 1</b></div></td>
+				<td width="137"><div style="padding:3px;"><b>Info</b></div></td>
+				<td width="137"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
+				<td width="137"><div style="padding:3px;"><b>Info</b></div></td>
+				<td width="137"><div style="padding:3px;"><b>Speed 2</b></div></td>
+				<td width="137"><div style="padding:3px;"><b>Info</b></div></td>
+				<td width="137"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
+				<td width="137"><div style="padding:3px;"><b>Info</b></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div style="padding:3px;">IFO 380</div></td>
 				<td><div style="padding:3px;" id="SPEED1_1">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_1">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION1_1">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_1">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="SPEED2_1">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_1">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION2_1">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_1">&nbsp;</div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td><div style="padding:3px;">IFO 180</div></td>
 				<td><div style="padding:3px;" id="SPEED1_2">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_2">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION1_2">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_2">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="SPEED2_2">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_2">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION2_2">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_2">&nbsp;</div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div style="padding:3px;">LS IFO 380 1%</div></td>
 				<td><div style="padding:3px;" id="SPEED1_3">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_3">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION1_3">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_3">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="SPEED2_3">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_3">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION2_3">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_3">&nbsp;</div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td><div style="padding:3px;">LS IFO 180 1%</div></td>
 				<td><div style="padding:3px;" id="SPEED1_4">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_4">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION1_4">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_4">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="SPEED2_4">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_4">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION2_4">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_4">&nbsp;</div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div style="padding:3px;">MDO</div></td>
 				<td><div style="padding:3px;" id="SPEED1_5">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_5">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION1_5">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_5">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="SPEED2_5">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_5">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION2_5">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_5">&nbsp;</div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td><div style="padding:3px;">MGO</div></td>
 				<td><div style="padding:3px;" id="SPEED1_6">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_6">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION1_6">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_6">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="SPEED2_6">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_6">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION2_6">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_6">&nbsp;</div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div style="padding:3px;">LS MGO 1%</div></td>
 				<td><div style="padding:3px;" id="SPEED1_7">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_7">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION1_7">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_7">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="SPEED2_7">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_7">&nbsp;</div></td>
 				<td><div style="padding:3px;" id="CONSUMPTION2_7">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_7">&nbsp;</div></td>
 			  </tr>
 			</table>
 		</div>

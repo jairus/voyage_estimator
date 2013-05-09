@@ -66,6 +66,159 @@ function word_limit($str, $limit){
 }
 
 if(isset($_GET['num'])){
+	//VESSEL TYPES
+	$bulk_carrier = array(
+		0=>'BULK CARRIER WITH VEHICLE DECKS', 
+		1=>'WOOD CHIPS CARRIERS', 
+		2=>'ORE CARRIERS', 
+		3=>'OBO CARRIERS', 
+		4=>'ORE/OIL CARRIERS', 
+		5=>'ORE/BULK/OIL CARRIERS', 
+		6=>'AGGREGATES BARGES', 
+		7=>'BULK CARRIER', 
+		8=>'SELF DISCHARGING BULK CARRIERS', 
+		9=>'BULK/CONTAINER CARRIERS', 
+		10=>'BULK STORAGE BARGES', 
+		11=>'AGGREGATES CARRIERS'
+	);
+	$t1 = count($bulk_carrier);
+	
+	$cargo = array(
+		0=>'CARGO', 
+		1=>'DECK CARGO SHIPS', 
+		2=>'CARGO/CONTAINERSHIPS', 
+		3=>'LIMESTONE CARRIERS', 
+		4=>'LIVESTOCK CARRIERS', 
+		5=>'PALLET CARRIERS', 
+		6=>'GENERAL CARGOES', 
+		7=>'CARGO BARGES', 
+		8=>'BARGE CARRIERS', 
+		9=>'SLUDGE CARRIERS', 
+		10=>'HEAVY LOAD CARRIERS', 
+		11=>'POWDER CARRIERS', 
+		12=>'PASSENGER/CARGO SHIPS', 
+		13=>'NUCLEAR FUEL CARRIERS', 
+		14=>'MOTOR HOPPERS', 
+		15=>'STONE CARRIERS', 
+		16=>'REEFER/CONTAINERSHIPS', 
+		17=>'TIMBER CARRIERS', 
+		18=>'CEMENT BARGES', 
+		19=>'CEMENT CARRIERS', 
+		20=>'REEFERS'
+	);
+	$t2 = count($cargo);
+	
+	$container_ships = array(
+		0=>'CONTAINER SHIPS'
+	);
+	$t3 = count($container_ships);
+	
+	$ro_ro_cargo = array(
+		0=>'RO-RO/PASSENGER SHIPS', 
+		1=>'VEHICLES CARRIERS', 
+		2=>'RO-RO/CONTAINER CARRIERS', 
+		3=>'RAIL/VEHICLES CARRIERS'
+	);
+	$t4 = count($ro_ro_cargo);
+	
+	$passenger_ship = array(
+		0=>'PASSENGERS LANDING CRAFTS', 
+		1=>'YACHTS', 
+		2=>'HYDROFOILS', 
+		3=>'THEATRE VESSELS', 
+		4=>'CREW BOATS', 
+		5=>'PADDLE SHIPS', 
+		6=>'MUSEUM SHIPS', 
+		7=>'ACCOMMODATION BARGES', 
+		8=>'HOUSEBOATS', 
+		9=>'EXHIBITION SHIPS', 
+		10=>'ACCOMMODATION VESSELS', 
+		11=>'SAILING VESSELS', 
+		12=>'FLOATING HOTEL/RESTAURANTS'
+	);
+	$t5 = count($passenger_ship);
+	
+	$supply_vessels = array(
+		0=>'TRANS SHIPMENT VESSELS', 
+		1=>'TRENCHING SUPPORT VESSELS', 
+		2=>'DIVING SUPPORT VESSELS', 
+		3=>'MOORING VESSELS', 
+		4=>'ARTICULATED PUSHER TUGS', 
+		5=>'TOWING VESSELS', 
+		6=>'OFFSHORE SAFETY VESSELS', 
+		7=>'TUG/SUPPLY VESSELS', 
+		8=>'ANCHOR HANDLING VESSELS', 
+		9=>'PUSHER TUGS', 
+		10=>'SUPPLY TENDERS', 
+		11=>'OFFSHORE SUPPLY SHIPS', 
+		12=>'STANDBY SAFETY VESSELS', 
+		13=>'SALVAGE/RESCUE VESSELS', 
+		14=>'POLLUTION CONTROL VESSELS', 
+		15=>'TUGS', 
+		16=>'FIRE FIGHTING VESSELS', 
+		17=>'UTILITY VESSELS', 
+		18=>'TUG/ICE BREAKERS', 
+		19=>'MULTI PURPOSE OFFSHORE VESSELS', 
+		20=>'TRANS SHIPMENT BARGES', 
+		21=>'PIPE CARRIERS'
+	);
+	$t6 = count($supply_vessels);
+	
+	$special_vessels = array(
+		0=>'ACCOMMODATION SHIPS', 
+		1=>'PIPELAY BARGES', 
+		2=>'CABLE LAYERS', 
+		3=>'LANDING CRAFTS', 
+		4=>'ICEBREAKERS', 
+		5=>'WASTE DISPOSAL VESSELS', 
+		6=>'MISSION SHIPS', 
+		7=>'PIPE LAYERS', 
+		8=>'HOSPITAL SHIPS', 
+		9=>'PATROL VESSELS', 
+		10=>'PILOT SHIPS', 
+		11=>'TENDERS', 
+		12=>'TRAINING SHIPS', 
+		13=>'WORK VESSELS', 
+		14=>'HEAVY LIFT VESSELS', 
+		15=>'TANK-CLEANING VESSELS', 
+		16=>'WELL STIMULATION VESSELS', 
+		17=>'PRODUCTION TESTING VESSELS', 
+		18=>'RESEARCH/SURVEY VESSELS', 
+		19=>'MINING VESSELS', 
+		20=>'REPAIR SHIPS', 
+		21=>'BUOY-LAYING VESSELS', 
+		22=>'MAINTENANCE VESSELS', 
+		23=>'RADIO SHIPS', 
+		24=>'POWER STATION VESSELS'
+	);
+	$t7 = count($special_vessels);
+	
+	$air_cushion_vessels = array(
+		0=>'AIR CUSHION RO-RO/PASSENGER SHIPS', 
+		1=>'AIR CUSHION PASSENGER SHIPS', 
+		2=>'AIR CUSHION CREW BOATS', 
+		3=>'AIR CUSHION WORK VESSELS', 
+		4=>'AIR CUSHION PATROL VESSELS', 
+		5=>'HOVERCRAFTS', 
+		6=>'AIR CUSHION RESEARCH VESSELS', 
+		7=>'WING IN GROUND EFFECT VESSELS'
+	);
+	$t8 = count($air_cushion_vessels);
+	
+	$inland_vessels = array(
+		0=>'INLAND RESEARCH VESSELS', 
+		1=>'INLAND RO-RO CARGO SHIPS', 
+		2=>'INLAND CARGO/PASSENGER SHIPS', 
+		3=>'INLAND CARGOES', 
+		4=>'INLAND DREDGERS', 
+		5=>'INLAND TANKERS', 
+		6=>'INLAND SUPPLY VESSELS', 
+		7=>'INLAND PASSENGERS SHIPS', 
+		8=>'INLAND FERRIES'
+	);
+	$t9 = count($inland_vessels);
+	//END OF VESSEL TYPES
+
 	if($_GET['num']==1){
 		if(isset($_GET['destination_port'])){
 			$destination_port = $_GET['destination_port'];
@@ -116,16 +269,138 @@ if(isset($_GET['num'])){
 				$sqlext2 .= " (`siitech_eta` BETWEEN '".$destination_port_from."' AND '".$destination_port_to."') and ";
 				
 				$vtarr = count($vessel_type);
-			
+				
 				if($vtarr){
 					$sqlext .= " ( ";
 					$sqlext2 .= " ( ";
 				}
 				
 				for($vti=0; $vti<$vtarr; $vti++){
-					$sqlext .= " `xvas_vessel_type`='".$vessel_type[$vti]."' ";
-					$sqlext2 .= " `xvas_vessel_type`='".$vessel_type[$vti]."' ";
-					$sqlext3 .= "a.vessel_type='".$vessel_type[$vti]."'";
+					if($vessel_type[$vti]==1){
+						for($i1=0; $i1<$t1; $i1++){
+							$sqlext .= " `xvas_vessel_type`='".$bulk_carrier[$i1]."' ";
+							$sqlext2 .= " `xvas_vessel_type`='".$bulk_carrier[$i1]."' ";
+							$sqlext3 .= "a.vessel_type='".$bulk_carrier[$i1]."'";
+							
+							if(($i1+1)<$t1){
+								$sqlext .= " or ";
+								$sqlext2 .= " or ";
+								$sqlext3 .= " or ";
+							}
+						}
+					}
+				
+					if($vessel_type[$vti]==2){
+						for($i2=0; $i2<$t2; $i2++){
+							$sqlext .= " `xvas_vessel_type`='".$cargo[$i2]."' ";
+							$sqlext2 .= " `xvas_vessel_type`='".$cargo[$i2]."' ";
+							$sqlext3 .= "a.vessel_type='".$cargo[$i2]."'";
+							
+							if(($i2+1)<$t2){
+								$sqlext .= " or ";
+								$sqlext2 .= " or ";
+								$sqlext3 .= " or ";
+							}
+						}
+					}
+					
+					if($vessel_type[$vti]==3){
+						for($i3=0; $i3<$t3; $i3++){
+							$sqlext .= " `xvas_vessel_type`='".$container_ships[$i3]."' ";
+							$sqlext2 .= " `xvas_vessel_type`='".$container_ships[$i3]."' ";
+							$sqlext3 .= "a.vessel_type='".$container_ships[$i3]."'";
+							
+							if(($i3+1)<$t3){
+								$sqlext .= " or ";
+								$sqlext2 .= " or ";
+								$sqlext3 .= " or ";
+							}
+						}
+					}
+					
+					if($vessel_type[$vti]==4){
+						for($i4=0; $i4<$t4; $i4++){
+							$sqlext .= " `xvas_vessel_type`='".$ro_ro_cargo[$i4]."' ";
+							$sqlext2 .= " `xvas_vessel_type`='".$ro_ro_cargo[$i4]."' ";
+							$sqlext3 .= "a.vessel_type='".$ro_ro_cargo[$i4]."'";
+							
+							if(($i4+1)<$t4){
+								$sqlext .= " or ";
+								$sqlext2 .= " or ";
+								$sqlext3 .= " or ";
+							}
+						}
+					}
+					
+					if($vessel_type[$vti]==5){
+						for($i5=0; $i5<$t5; $i5++){
+							$sqlext .= " `xvas_vessel_type`='".$passenger_ship[$i5]."' ";
+							$sqlext2 .= " `xvas_vessel_type`='".$passenger_ship[$i5]."' ";
+							$sqlext3 .= "a.vessel_type='".$passenger_ship[$i5]."'";
+							
+							if(($i5+1)<$t5){
+								$sqlext .= " or ";
+								$sqlext2 .= " or ";
+								$sqlext3 .= " or ";
+							}
+						}
+					}
+					
+					if($vessel_type[$vti]==6){
+						for($i6=0; $i6<$t6; $i6++){
+							$sqlext .= " `xvas_vessel_type`='".$supply_vessels[$i6]."' ";
+							$sqlext2 .= " `xvas_vessel_type`='".$supply_vessels[$i6]."' ";
+							$sqlext3 .= "a.vessel_type='".$supply_vessels[$i6]."'";
+							
+							if(($i6+1)<$t6){
+								$sqlext .= " or ";
+								$sqlext2 .= " or ";
+								$sqlext3 .= " or ";
+							}
+						}
+					}
+					
+					if($vessel_type[$vti]==7){
+						for($i7=0; $i7<$t7; $i7++){
+							$sqlext .= " `xvas_vessel_type`='".$special_vessels[$i7]."' ";
+							$sqlext2 .= " `xvas_vessel_type`='".$special_vessels[$i7]."' ";
+							$sqlext3 .= "a.vessel_type='".$special_vessels[$i7]."'";
+							
+							if(($i7+1)<$t7){
+								$sqlext .= " or ";
+								$sqlext2 .= " or ";
+								$sqlext3 .= " or ";
+							}
+						}
+					}
+					
+					if($vessel_type[$vti]==8){
+						for($i8=0; $i8<$t8; $i8++){
+							$sqlext .= " `xvas_vessel_type`='".$air_cushion_vessels[$i8]."' ";
+							$sqlext2 .= " `xvas_vessel_type`='".$air_cushion_vessels[$i8]."' ";
+							$sqlext3 .= "a.vessel_type='".$air_cushion_vessels[$i8]."'";
+							
+							if(($i8+1)<$t8){
+								$sqlext .= " or ";
+								$sqlext2 .= " or ";
+								$sqlext3 .= " or ";
+							}
+						}
+					}
+					
+					if($vessel_type[$vti]==9){
+						for($i9=0; $i9<$t9; $i9++){
+							$sqlext .= " `xvas_vessel_type`='".$inland_vessels[$i9]."' ";
+							$sqlext2 .= " `xvas_vessel_type`='".$inland_vessels[$i9]."' ";
+							$sqlext3 .= "a.vessel_type='".$inland_vessels[$i9]."'";
+							
+							if(($i9+1)<$t9){
+								$sqlext .= " or ";
+								$sqlext2 .= " or ";
+								$sqlext3 .= " or ";
+							}
+						}
+					}
 			
 					if(($vti+1)<$vtarr){
 						$sqlext .= " or ";
@@ -264,8 +539,113 @@ if(isset($_GET['num'])){
 		}
 		
 		for($vti=0; $vti<$vtarr; $vti++){
-			$sqlext .= " `xvas_vessel_type`='".$vessel_type[$vti]."' ";
-			$sqlext3 .= "a.vessel_type='".$vessel_type[$vti]."'";
+			if($vessel_type[$vti]==1){
+				for($i1=0; $i1<$t1; $i1++){
+					$sqlext .= " `xvas_vessel_type`='".$bulk_carrier[$i1]."' ";
+					$sqlext3 .= "a.vessel_type='".$bulk_carrier[$i1]."'";
+					
+					if(($i1+1)<$t1){
+						$sqlext .= " or ";
+						$sqlext3 .= " or ";
+					}
+				}
+			}
+		
+			if($vessel_type[$vti]==2){
+				for($i2=0; $i2<$t2; $i2++){
+					$sqlext .= " `xvas_vessel_type`='".$cargo[$i2]."' ";
+					$sqlext3 .= "a.vessel_type='".$cargo[$i2]."'";
+					
+					if(($i2+1)<$t2){
+						$sqlext .= " or ";
+						$sqlext3 .= " or ";
+					}
+				}
+			}
+			
+			if($vessel_type[$vti]==3){
+				for($i3=0; $i3<$t3; $i3++){
+					$sqlext .= " `xvas_vessel_type`='".$container_ships[$i3]."' ";
+					$sqlext3 .= "a.vessel_type='".$container_ships[$i3]."'";
+					
+					if(($i3+1)<$t3){
+						$sqlext .= " or ";
+						$sqlext3 .= " or ";
+					}
+				}
+			}
+			
+			if($vessel_type[$vti]==4){
+				for($i4=0; $i4<$t4; $i4++){
+					$sqlext .= " `xvas_vessel_type`='".$ro_ro_cargo[$i4]."' ";
+					$sqlext3 .= "a.vessel_type='".$ro_ro_cargo[$i4]."'";
+					
+					if(($i4+1)<$t4){
+						$sqlext .= " or ";
+						$sqlext3 .= " or ";
+					}
+				}
+			}
+			
+			if($vessel_type[$vti]==5){
+				for($i5=0; $i5<$t5; $i5++){
+					$sqlext .= " `xvas_vessel_type`='".$passenger_ship[$i5]."' ";
+					$sqlext3 .= "a.vessel_type='".$passenger_ship[$i5]."'";
+					
+					if(($i5+1)<$t5){
+						$sqlext .= " or ";
+						$sqlext3 .= " or ";
+					}
+				}
+			}
+			
+			if($vessel_type[$vti]==6){
+				for($i6=0; $i6<$t6; $i6++){
+					$sqlext .= " `xvas_vessel_type`='".$supply_vessels[$i6]."' ";
+					$sqlext3 .= "a.vessel_type='".$supply_vessels[$i6]."'";
+					
+					if(($i6+1)<$t6){
+						$sqlext .= " or ";
+						$sqlext3 .= " or ";
+					}
+				}
+			}
+			
+			if($vessel_type[$vti]==7){
+				for($i7=0; $i7<$t7; $i7++){
+					$sqlext .= " `xvas_vessel_type`='".$special_vessels[$i7]."' ";
+					$sqlext3 .= "a.vessel_type='".$special_vessels[$i7]."'";
+					
+					if(($i7+1)<$t7){
+						$sqlext .= " or ";
+						$sqlext3 .= " or ";
+					}
+				}
+			}
+			
+			if($vessel_type[$vti]==8){
+				for($i8=0; $i8<$t8; $i8++){
+					$sqlext .= " `xvas_vessel_type`='".$air_cushion_vessels[$i8]."' ";
+					$sqlext3 .= "a.vessel_type='".$air_cushion_vessels[$i8]."'";
+					
+					if(($i8+1)<$t8){
+						$sqlext .= " or ";
+						$sqlext3 .= " or ";
+					}
+				}
+			}
+			
+			if($vessel_type[$vti]==9){
+				for($i9=0; $i9<$t9; $i9++){
+					$sqlext .= " `xvas_vessel_type`='".$inland_vessels[$i9]."' ";
+					$sqlext3 .= "a.vessel_type='".$inland_vessels[$i9]."'";
+					
+					if(($i9+1)<$t9){
+						$sqlext .= " or ";
+						$sqlext3 .= " or ";
+					}
+				}
+			}
 	
 			if(($vti+1)<$vtarr){
 				$sqlext .= " or ";

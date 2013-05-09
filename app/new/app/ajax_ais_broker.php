@@ -905,99 +905,33 @@ if(isset($_GET['new_search'])){
 				  <td width="10">&nbsp;</td>
 				  <td>
 				  	<?php
-					$bulk_carrier = array(
-						0=>'BULK CARRIER', 
-						1=>'ORE CARRIER', 
-						2=>'WOOD CHIPS CARRIER'
+					$dry_vessels = array(
+						0=>'BULKERS', 
+						1=>'CARGOES', 
+						2=>'CONTAINER SHIPS', 
+						3=>'RO-RO CARGOES', 
+						4=>'PASSENGERS SHIPS', 
+						5=>'SUPPLY VESSELS', 
+						6=>'SPECIAL VESSELS', 
+						7=>'AIR CUSHION VESSELS', 
+						8=>'INLAND VESSELS'
 					);
-					$t1 = count($bulk_carrier);
-					
-					$cargo = array(
-						0=>'BARGE CARRIER', 
-						1=>'CARGO', 
-						2=>'CARGO/PASSENGER SHIP', 
-						3=>'HEAVY LOAD CARRIER', 
-						4=>'LIVESTOCK CARRIER', 
-						5=>'MOTOR HOPPER', 
-						6=>'NUCLEAR FUEL CARRIER', 
-						7=>'SLUDGE CARRIER'
-					);
-					$t2 = count($cargo);
-					
-					$cement_carrier = array(
-						0=>'CEMENT CARRIER'
-					);
-					$t3 = count($cement_carrier);
-					
-					$obo_carrier = array(
-						0=>'OBO CARRIER'
-					);
-					$t4 = count($obo_carrier);
-					
-					$ro_ro_cargo = array(
-						0=>'RO-RO CARGO', 
-						1=>'RO-RO/CONTAINER CARRIER', 
-						2=>'RO-RO/PASSENGER SHIP'
-					);
-					$t5 = count($ro_ro_cargo);
+					$t1 = count($dry_vessels);
 					?>
 				  
-					<select name="vessel_type[]" multiple="multiple" size="21" id='vessel_type_id' class="input_1" style="width:220px;">
-						<optgroup label="BULK CARRIER">
-							<?php
-							for($i1=0; $i1<$t1; $i1++){
-								if(in_array($bulk_carrier[$i1], $vessel_type)){
-									echo '<option value="'.$bulk_carrier[$i1].'" selected="selected">'.$bulk_carrier[$i1].'</option>';
-								}else{
-									echo '<option value="'.$bulk_carrier[$i1].'">'.$bulk_carrier[$i1].'</option>';
-								}
+					<select name="vessel_type[]" multiple="multiple" size="9" id='vessel_type_id' class="input_1" style="width:220px;">
+						<?php
+						$vessel_count = 1;
+						for($i1=0; $i1<$t1; $i1++){
+							if(in_array($dry_vessels[$i1], $vessel_type)){
+								echo '<option value="'.$vessel_count.'" selected="selected">'.$dry_vessels[$i1].'</option>';
+							}else{
+								echo '<option value="'.$vessel_count.'">'.$dry_vessels[$i1].'</option>';
 							}
-							?>
-						</optgroup>
-						<optgroup label="CARGO">
-							<?php
-							for($i2=0; $i2<$t2; $i2++){
-								if(in_array($cargo[$i2], $vessel_type)){
-									echo '<option value="'.$cargo[$i2].'" selected="selected">'.$cargo[$i2].'</option>';
-								}else{
-									echo '<option value="'.$cargo[$i2].'">'.$cargo[$i2].'</option>';
-								}
-							}
-							?>
-						</optgroup>
-						<optgroup label="CEMENT CARRIER">
-							<?php
-							for($i3=0; $i3<$t3; $i3++){
-								if(in_array($cement_carrier[$i3], $vessel_type)){
-									echo '<option value="'.$cement_carrier[$i3].'" selected="selected">'.$cement_carrier[$i3].'</option>';
-								}else{
-									echo '<option value="'.$cement_carrier[$i3].'">'.$cement_carrier[$i3].'</option>';
-								}
-							}
-							?>
-						</optgroup>
-						<optgroup label="OBO CARRIER">
-							<?php
-							for($i4=0; $i4<$t4; $i4++){
-								if(in_array($obo_carrier[$i4], $vessel_type)){
-									echo '<option value="'.$obo_carrier[$i4].'" selected="selected">'.$obo_carrier[$i4].'</option>';
-								}else{
-									echo '<option value="'.$obo_carrier[$i4].'">'.$obo_carrier[$i4].'</option>';
-								}
-							}
-							?>
-						</optgroup>
-						<optgroup label="RO-RO CARGO">
-							<?php
-							for($i5=0; $i5<$t5; $i5++){
-								if(in_array($ro_ro_cargo[$i5], $vessel_type)){
-									echo '<option value="'.$ro_ro_cargo[$i5].'" selected="selected">'.$ro_ro_cargo[$i5].'</option>';
-								}else{
-									echo '<option value="'.$ro_ro_cargo[$i5].'">'.$ro_ro_cargo[$i5].'</option>';
-								}
-							}
-							?>
-						</optgroup>
+							
+							$vessel_count++;
+						}
+						?>
 					</select>
 					<br />
 					To add more than one type<br />use the 'Ctrl' key and select
@@ -1165,99 +1099,33 @@ if(isset($_GET['new_search'])){
 				  <td width="10">&nbsp;</td>
 				  <td>
 					<?php
-					$bulk_carrier = array(
-						0=>'BULK CARRIER', 
-						1=>'ORE CARRIER', 
-						2=>'WOOD CHIPS CARRIER'
+					$dry_vessels = array(
+						0=>'BULKERS', 
+						1=>'CARGOES', 
+						2=>'CONTAINER SHIPS', 
+						3=>'RO-RO CARGOES', 
+						4=>'PASSENGERS SHIPS', 
+						5=>'SUPPLY VESSELS', 
+						6=>'SPECIAL VESSELS', 
+						7=>'AIR CUSHION VESSELS', 
+						8=>'INLAND VESSELS'
 					);
-					$t1 = count($bulk_carrier);
-					
-					$cargo = array(
-						0=>'BARGE CARRIER', 
-						1=>'CARGO', 
-						2=>'CARGO/PASSENGER SHIP', 
-						3=>'HEAVY LOAD CARRIER', 
-						4=>'LIVESTOCK CARRIER', 
-						5=>'MOTOR HOPPER', 
-						6=>'NUCLEAR FUEL CARRIER', 
-						7=>'SLUDGE CARRIER'
-					);
-					$t2 = count($cargo);
-					
-					$cement_carrier = array(
-						0=>'CEMENT CARRIER'
-					);
-					$t3 = count($cement_carrier);
-					
-					$obo_carrier = array(
-						0=>'OBO CARRIER'
-					);
-					$t4 = count($obo_carrier);
-					
-					$ro_ro_cargo = array(
-						0=>'RO-RO CARGO', 
-						1=>'RO-RO/CONTAINER CARRIER', 
-						2=>'RO-RO/PASSENGER SHIP'
-					);
-					$t5 = count($ro_ro_cargo);
+					$t1 = count($dry_vessels);
 					?>
 				  
-					<select name="vessel_type2[]" multiple="multiple" size="21" id='vessel_type2_id' class="input_1" style="width:220px;">
-						<optgroup label="BULK CARRIER">
-							<?php
-							for($i1=0; $i1<$t1; $i1++){
-								if(in_array($bulk_carrier[$i1], $vessel_type2)){
-									echo '<option value="'.$bulk_carrier[$i1].'" selected="selected">'.$bulk_carrier[$i1].'</option>';
-								}else{
-									echo '<option value="'.$bulk_carrier[$i1].'">'.$bulk_carrier[$i1].'</option>';
-								}
+					<select name="vessel_type2[]" multiple="multiple" size="9" id='vessel_type2_id' class="input_1" style="width:220px;">
+						<?php
+						$vessel_count = 1;
+						for($i1=0; $i1<$t1; $i1++){
+							if(in_array($dry_vessels[$i1], $vessel_type2)){
+								echo '<option value="'.$vessel_count.'" selected="selected">'.$dry_vessels[$i1].'</option>';
+							}else{
+								echo '<option value="'.$vessel_count.'">'.$dry_vessels[$i1].'</option>';
 							}
-							?>
-						</optgroup>
-						<optgroup label="CARGO">
-							<?php
-							for($i2=0; $i2<$t2; $i2++){
-								if(in_array($cargo[$i2], $vessel_type2)){
-									echo '<option value="'.$cargo[$i2].'" selected="selected">'.$cargo[$i2].'</option>';
-								}else{
-									echo '<option value="'.$cargo[$i2].'">'.$cargo[$i2].'</option>';
-								}
-							}
-							?>
-						</optgroup>
-						<optgroup label="CEMENT CARRIER">
-							<?php
-							for($i3=0; $i3<$t3; $i3++){
-								if(in_array($cement_carrier[$i3], $vessel_type2)){
-									echo '<option value="'.$cement_carrier[$i3].'" selected="selected">'.$cement_carrier[$i3].'</option>';
-								}else{
-									echo '<option value="'.$cement_carrier[$i3].'">'.$cement_carrier[$i3].'</option>';
-								}
-							}
-							?>
-						</optgroup>
-						<optgroup label="OBO CARRIER">
-							<?php
-							for($i4=0; $i4<$t4; $i4++){
-								if(in_array($obo_carrier[$i4], $vessel_type2)){
-									echo '<option value="'.$obo_carrier[$i4].'" selected="selected">'.$obo_carrier[$i4].'</option>';
-								}else{
-									echo '<option value="'.$obo_carrier[$i4].'">'.$obo_carrier[$i4].'</option>';
-								}
-							}
-							?>
-						</optgroup>
-						<optgroup label="RO-RO CARGO">
-							<?php
-							for($i5=0; $i5<$t5; $i5++){
-								if(in_array($ro_ro_cargo[$i5], $vessel_type2)){
-									echo '<option value="'.$ro_ro_cargo[$i5].'" selected="selected">'.$ro_ro_cargo[$i5].'</option>';
-								}else{
-									echo '<option value="'.$ro_ro_cargo[$i5].'">'.$ro_ro_cargo[$i5].'</option>';
-								}
-							}
-							?>
-						</optgroup>
+							
+							$vessel_count++;
+						}
+						?>
 					</select>
 					<br />
 					To add more than one type<br />use the 'Ctrl' key and select

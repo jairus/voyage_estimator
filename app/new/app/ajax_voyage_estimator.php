@@ -12,7 +12,8 @@ if($_GET['autosave']){
 
 //GET DWT DATA
 if($_GET['search_dwt']){
-	$imo = $_GET['imo'];
+	$imo = explode(' - ', $_GET['imo']);
+	$imo = $imo[0];
 	
 	$sql = "select * from  _xvas_parsed2_dry where imo='".$imo."' limit 1";
 	$r = dbQuery($sql);
@@ -2141,6 +2142,52 @@ function showPortDetails(portname, rowCount, num_of_days){
 jQuery("#portdetails").dialog( { autoOpen: false, width: '90%', height: jQuery(window).height()*0.9 });
 jQuery("#portdetails").dialog("close");
 //END OF SHOW PORT DETAILS
+
+//NEW SCENARIO
+function newScenario(){
+	jQuery('#pleasewait').show();
+	
+	self.location = "s-bis.php?new_search=3";
+}
+//END OF NEW SCENARIO
+
+//SAVE SCENARIO
+function saveScenario(){
+	jQuery('#pleasewait').show();
+
+	jQuery.ajax({
+		type: "POST",
+		url: "ajax.php?new_search=2",
+		data: jQuery("#voyageestimatorform").serialize(),
+
+		success: function(data) {
+			alert("Scenario Saved!");
+		
+			self.location = "s-bis.php";
+		}
+	});
+}
+//END OF SAVE SCENARIO
+
+//DELETE SCENARIO
+function deleteScenario(tabid){
+	if (confirm("Are you sure you want to delete?")) {
+		jQuery('#pleasewait').show();
+		
+		jQuery.ajax({
+			type: "POST",
+			url: "ajax.php?new_search=3&tabid="+tabid,
+			data: jQuery("#voyageestimatorform").serialize(),
+	
+			success: function(data) {
+				alert("Scenario Deleted!");
+			
+				self.location = "s-bis.php?new_search=3";
+			}
+		});
+	}
+}
+//END OF DELETE SCENARIO
 //END OF OTHER FUNCTIONS
 </script>
 
@@ -2223,10 +2270,268 @@ select{
 </div>
 <!--END OF PORT DETAILS-->
 
+<?php
+if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
+	if(isset($_GET['tabid'])){
+		$sql = "SELECT * FROM `_user_tabs` WHERE `id`='".$_GET['tabid']."'";
+		$r = dbQuery($sql, $link);
+	}else{
+		$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='voyageestimator' ORDER BY `dateadded` DESC LIMIT 0,1";
+		$r = dbQuery($sql, $link);
+	}
+	
+	if(trim($r)){
+		$tabid = $r[0]['id'];
+		$tabname = $r[0]['tabname'];
+		$tabdata = unserialize($r[0]['tabdata']);
+		
+		foreach($tabdata as $key => $val) {
+			$$key = $val;
+		}
+	}
+}
+
+if(!trim($broker_comm1)){
+	$broker_comm1 = "1.25";
+}
+
+if(!trim($add_comm1)){
+	$add_comm1 = "2.50";
+}
+
+if(!trim($broker_comm2)){
+	$broker_comm2 = "1.25";
+}
+
+if(!trim($add_comm2)){
+	$add_comm2 = "2.50";
+}
+
+if($vessel_by==1){
+	$display1 = 'block';
+	$display2 = 'none';
+	$display3 = 'none';
+	$display4 = 'none';
+}else if($vessel_by==2){
+	$display1 = 'none';
+	$display2 = 'block';
+	
+	$ship_name_imo = explode(' - ', $vessel_name_or_imo);
+	$ship_imo = $ship_name_imo[0];
+	
+	$sql = "select * from _xvas_parsed2_dry where imo <> '' and imo='".trim($ship_imo)."' limit 1";
+	$r = dbQuery($sql);
+	
+	$sql2 = "select * from _xvas_shipdata_dry where imo <> '' and imo='".trim($ship_imo)."' limit 1";
+	$r2 = dbQuery($sql2);
+	
+	$sql3 = "select * from _xvas_siitech_cache where xvas_imo <> '' and xvas_imo='".trim($ship_imo)."' limit 1";
+	$r3 = dbQuery($sql3);
+	
+	$sql4 = "SELECT * FROM _xvas_shipdata_dry_user WHERE imo='".trim($ship_imo)."' LIMIT 0,1";
+	$r4 = dbQuery($sql4);
+
+	$ship_mmsi = $r[0]['mmsi'];
+	$ship_dwt = $r[0]['summer_dwt'];
+	$ship_gross_tonnage = getValue($r2[0]['data'], 'GROSS_TONNAGE');
+	$ship_net_tonnage = getValue($r2[0]['data'], 'NET_TONNAGE');
+	$ship_built_year = getValue($r2[0]['data'], 'BUILD');
+	
+	$ship_flag = getValue($r2[0]['data'], 'LAST_KNOWN_FLAG');
+	if($ship_flag==""){
+		$ship_flag = getValue($r2[0]['data'], 'FLAG');
+		$ship_flag_image = getFlagImage($ship_flag);
+		
+		$flag = '<img src="'.$ship_flag_image.'" alt="'.$ship_flag.'" title="'.$ship_flag.'" />';
+	}else{
+		$ship_flag = $ship_flag;
+		$ship_flag_image = getFlagImage($ship_flag);
+		
+		$flag = '<img src="'.$ship_flag_image.'" alt="'.$ship_flag.'" title="'.$ship_flag.'" />';
+	}
+	
+	$ship_loa = getValue($r2[0]['data'], 'LENGTH_OVERALL');
+	$ship_draught = getValue($r2[0]['data'], 'DRAUGHT');
+	$ship_speed = $r[0]['speed'];
+	$ship_breadth = getValue($r2[0]['data'], 'BREADTH_EXTREME');
+	$ship_cranes = getValue($r2[0]['data'], 'CRANES');
+	$ship_grain = getValue($r2[0]['data'], 'GRAIN');
+	$ship_cargo_handling = getValue($r2[0]['data'], 'CARGO_HANDLING');
+	$ship_decks_number = getValue($r2[0]['data'], 'DECKS_NUMBER');
+	$ship_bulkheads = getValue($r2[0]['data'], 'BULKHEADS');
+	$ship_class_notation = getValue($r2[0]['data'], 'CLASS_NOTATION');
+	$ship_lifting_equipment = getValue($r2[0]['data'], 'LIFTING_EQUIPMENT');
+	$ship_bale = getValue($r2[0]['data'], 'BALE');
+	$ship_fuel_oil = getValue($r2[0]['data'], 'FUEL_OIL');
+	$ship_fuel = getValue($r2[0]['data'], 'FUEL');
+	$ship_fuel_consumption = getValue($r2[0]['data'], 'FUEL_CONSUMPTION');
+	$ship_fuel_type = getValue($r2[0]['data'], 'FUEL_TYPE');
+	
+	$ship_manager_owner = getValue($r2[0]['data'], 'MANAGER');
+	if(!trim($ship_manager_owner)){ $ship_manager_owner = getValue($r2[0]['data'], 'MANAGER_OWNER'); }
+	if(!trim($ship_manager_owner)){ $ship_manager_owner = getValue($r2[0]['data'], 'OWNER'); }
+	
+	$ship_manager_owner_email = getValue($r2[0]['data'], 'MANAGER_OWNER_EMAIL');
+	$ship_class_society = htmlentities(getValue($r2[0]['data'], 'CLASS_SOCIETY'));
+	$ship_holds = htmlentities(getValue($r2[0]['data'], 'HOLDS'));
+	$ship_largest_hatch = htmlentities(getValue($r2[0]['data'], 'LARGEST_HATCH'));
+	
+	//AIS DATA
+	if($r3[0]){
+		$ship_speed_ais = getValue($r3[0]['siitech_shipstat_data'], 'speed_ais');
+		$ship_NavigationalStatus = getValue($r3[0]['siitech_shippos_data'], 'NavigationalStatus');
+		$ship_aisdateupdated = $r3[0]['dateupdated'];
+	}
+	//END OF AIS DATA
+	
+	$display3 = 'block';
+	
+	//BUNKER FUEL
+	$data2 = unserialize($r4[0]['data']);
+	
+	$SPEED1_1 = $data2['BUNKER_FUEL']['SPEED1_1'];
+	$SPEED2_1 = $data2['BUNKER_FUEL']['SPEED2_1'];
+	$SPEED1_2 = $data2['BUNKER_FUEL']['SPEED1_2'];
+	$SPEED2_2 = $data2['BUNKER_FUEL']['SPEED2_2'];
+	$SPEED1_3 = $data2['BUNKER_FUEL']['SPEED1_3'];
+	$SPEED2_3 = $data2['BUNKER_FUEL']['SPEED2_3'];
+	$SPEED1_4 = $data2['BUNKER_FUEL']['SPEED1_4'];
+	$SPEED2_4 = $data2['BUNKER_FUEL']['SPEED2_4'];
+	$SPEED1_5 = $data2['BUNKER_FUEL']['SPEED1_5'];
+	$SPEED2_5 = $data2['BUNKER_FUEL']['SPEED2_5'];
+	$SPEED1_6 = $data2['BUNKER_FUEL']['SPEED1_6'];
+	$SPEED2_6 = $data2['BUNKER_FUEL']['SPEED2_6'];
+	$SPEED1_7 = $data2['BUNKER_FUEL']['SPEED1_7'];
+	$SPEED2_7 = $data2['BUNKER_FUEL']['SPEED2_7'];
+	$SPEED_TEXT1_1 = $data2['BUNKER_FUEL']['SPEED_TEXT1_1'];
+	$SPEED_TEXT2_1 = $data2['BUNKER_FUEL']['SPEED_TEXT2_1'];
+	$SPEED_TEXT1_2 = $data2['BUNKER_FUEL']['SPEED_TEXT1_2'];
+	$SPEED_TEXT2_2 = $data2['BUNKER_FUEL']['SPEED_TEXT2_2'];
+	$SPEED_TEXT1_3 = $data2['BUNKER_FUEL']['SPEED_TEXT1_3'];
+	$SPEED_TEXT2_3 = $data2['BUNKER_FUEL']['SPEED_TEXT2_3'];
+	$SPEED_TEXT1_4 = $data2['BUNKER_FUEL']['SPEED_TEXT1_4'];
+	$SPEED_TEXT2_4 = $data2['BUNKER_FUEL']['SPEED_TEXT2_4'];
+	$SPEED_TEXT1_5 = $data2['BUNKER_FUEL']['SPEED_TEXT1_5'];
+	$SPEED_TEXT2_5 = $data2['BUNKER_FUEL']['SPEED_TEXT2_5'];
+	$SPEED_TEXT1_6 = $data2['BUNKER_FUEL']['SPEED_TEXT1_6'];
+	$SPEED_TEXT2_6 = $data2['BUNKER_FUEL']['SPEED_TEXT2_6'];
+	$SPEED_TEXT1_7 = $data2['BUNKER_FUEL']['SPEED_TEXT1_7'];
+	$SPEED_TEXT2_7 = $data2['BUNKER_FUEL']['SPEED_TEXT2_7'];
+	$CONSUMPTION1_1 = $data2['BUNKER_FUEL']['CONSUMPTION1_1'];
+	$CONSUMPTION2_1 = $data2['BUNKER_FUEL']['CONSUMPTION2_1'];
+	$CONSUMPTION1_2 = $data2['BUNKER_FUEL']['CONSUMPTION1_2'];
+	$CONSUMPTION2_2 = $data2['BUNKER_FUEL']['CONSUMPTION2_2'];
+	$CONSUMPTION1_3 = $data2['BUNKER_FUEL']['CONSUMPTION1_3'];
+	$CONSUMPTION2_3 = $data2['BUNKER_FUEL']['CONSUMPTION2_3'];
+	$CONSUMPTION1_4 = $data2['BUNKER_FUEL']['CONSUMPTION1_4'];
+	$CONSUMPTION2_4 = $data2['BUNKER_FUEL']['CONSUMPTION2_4'];
+	$CONSUMPTION1_5 = $data2['BUNKER_FUEL']['CONSUMPTION1_5'];
+	$CONSUMPTION2_5 = $data2['BUNKER_FUEL']['CONSUMPTION2_5'];
+	$CONSUMPTION1_6 = $data2['BUNKER_FUEL']['CONSUMPTION1_6'];
+	$CONSUMPTION2_6 = $data2['BUNKER_FUEL']['CONSUMPTION2_6'];
+	$CONSUMPTION1_7 = $data2['BUNKER_FUEL']['CONSUMPTION1_7'];
+	$CONSUMPTION2_7 = $data2['BUNKER_FUEL']['CONSUMPTION2_7'];
+	$CONSUMPTION_TEXT1_1 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_1'];
+	$CONSUMPTION_TEXT2_1 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_1'];
+	$CONSUMPTION_TEXT1_2 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_2'];
+	$CONSUMPTION_TEXT2_2 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_2'];
+	$CONSUMPTION_TEXT1_3 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_3'];
+	$CONSUMPTION_TEXT2_3 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_3'];
+	$CONSUMPTION_TEXT1_4 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_4'];
+	$CONSUMPTION_TEXT2_4 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_4'];
+	$CONSUMPTION_TEXT1_5 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_5'];
+	$CONSUMPTION_TEXT2_5 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_5'];
+	$CONSUMPTION_TEXT1_6 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_6'];
+	$CONSUMPTION_TEXT2_6 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_6'];
+	$CONSUMPTION_TEXT1_7 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT1_7'];
+	$CONSUMPTION_TEXT2_7 = $data2['BUNKER_FUEL']['CONSUMPTION_TEXT2_7'];
+	//END OF BUNKER FUEL
+	
+	if($SPEED1_1 || $SPEED2_1 || $SPEED1_2 || $SPEED2_2 || $SPEED1_3 || $SPEED2_3 || $SPEED1_4 || $SPEED2_4 || $SPEED1_5 || $SPEED2_5 || $SPEED1_6 || $SPEED2_6 || $SPEED1_7 || $SPEED2_7 || $SPEED_TEXT1_1 || $SPEED_TEXT2_1 || $SPEED_TEXT1_2 || $SPEED_TEXT2_2 || $SPEED_TEXT1_3 || $SPEED_TEXT2_3 || $SPEED_TEXT1_4 || $SPEED_TEXT2_4 || $SPEED_TEXT1_5 || $SPEED_TEXT2_5 || $SPEED_TEXT1_6 || $SPEED_TEXT2_6 || $SPEED_TEXT1_7 || $SPEED_TEXT2_7 || $CONSUMPTION1_1 || $CONSUMPTION2_1 || $CONSUMPTION1_2 || $CONSUMPTION2_2 || $CONSUMPTION1_3 || $CONSUMPTION2_3 || $CONSUMPTION1_4 || $CONSUMPTION2_4 || $CONSUMPTION1_5 || $CONSUMPTION2_5 || $CONSUMPTION1_6 || $CONSUMPTION2_6 || $CONSUMPTION1_7 || $CONSUMPTION2_7 || $CONSUMPTION_TEXT1_1 || $CONSUMPTION_TEXT2_1 || $CONSUMPTION_TEXT1_2 || $CONSUMPTION_TEXT2_2 || $CONSUMPTION_TEXT1_3 || $CONSUMPTION_TEXT2_3 || $CONSUMPTION_TEXT1_4 || $CONSUMPTION_TEXT2_4 || $CONSUMPTION_TEXT1_5 || $CONSUMPTION_TEXT2_5 || $CONSUMPTION_TEXT1_6 || $CONSUMPTION_TEXT2_6 || $CONSUMPTION_TEXT1_7 || $CONSUMPTION_TEXT2_7){
+		$display4 = 'block';
+	}else{
+		$display4 = 'none';
+	}
+}else{
+	$display1 = 'none';
+	$display2 = 'none';
+	$display3 = 'none';
+	$display4 = 'none';
+}
+?>
+
 <form method="post" id="voyageestimatorform" name="voyageestimatorform" enctype="multipart/form-data">
 <table width="1200" border="0" cellspacing="0" cellpadding="0">
   <tr style="position:fixed;">
 	<td bgcolor="#CCCCCC">
+		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		  <tr bgcolor="cddee5">
+			<td><div class="dp"><input type="button" id="btn_new_id" name="btn_new" value="NEW SCENARIO" class="btn_1" onClick="newScenario();" style="cursor:pointer;" /> &nbsp;&nbsp; <input type="button" id="btn_save_id" name="btn_save" value="SAVE SCENARIO" class="btn_1" onClick="saveScenario();" style="cursor:pointer;" /></div></td>
+		  </tr>
+		  
+			<?php
+			$sql = "SELECT * FROM `_user_tabs` WHERE `uid`='".$user['uid']."' AND `page`='voyageestimator' ORDER BY `dateadded` DESC";
+			$r = dbQuery($sql, $link);
+			
+			$t = count($r);
+			
+			if(trim($t)){
+				echo '<tr>';
+				echo '<td>';
+				echo '<div class="dp">';
+				
+				for($i=0; $i<$t; $i++){
+					$tabdata = unserialize($r[$i]['tabdata']);
+				
+					if($r[$i]['tabname']){
+						if(isset($_GET['tabid'])){
+							if($_GET['tabid']==$r[$i]['id']){
+								echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
+							}else{
+								echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div onclick="location.href=\'s-bis.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
+							}
+						}else{
+							if($i==0){
+								if(isset($_GET['new_search'])){
+									if($_GET['new_search']==3){
+										echo '<div style="float:left; width:auto; height:auto; background-color:#666; color:#FFF; padding:5px 10px; border:1px solid #000;">';
+										echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+										echo '<div onclick="location.href=\'s-bis.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+										echo '</div>';
+									}
+								}else{
+									echo '<div style="float:left; width:auto; height:auto; background-color:#CCC; color:#666; padding:5px 10px; border:1px solid #FFF;">';
+									echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+									echo '<div style="float:left; width:auto; height:auto;">'.$r[$i]['tabname'].'</div>';
+									echo '</div>';
+								}
+							}else{
+								echo '<div style="float:left; width:auto; height:auto; background-color:#666; padding:5px 10px; border:1px solid #000;">';
+								echo '<div style="float:left; width:15px; height:auto;"><img src="images/close.png" width="14" height="14" border="0" alt="Delete this scenario" title="Delete this scenario" style="cursor:pointer;" onclick="deleteScenario(\''.$r[$i]['id'].'\');" /></div>';
+								echo '<div onclick="location.href=\'s-bis.php?new_search=3&tabid='.$r[$i]['id'].'\'" class="clickable" style="float:left; width:auto; height:auto; color:#FFF;">'.$r[$i]['tabname'].'</div>';
+								echo '</div>';
+							}
+						}
+					}
+				}
+				
+				echo '</div>';
+				echo '</td>';
+				echo '</tr>';
+			}
+			?>
+		  
+		</table>
+		
+		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div>&nbsp;</div>
+		
 		<!-- TOTALS -->
 		<table width="1200" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #333333;">
 		  <tr bgcolor="cddee5">
@@ -2242,10 +2547,10 @@ select{
 			<td width="172"><div class="dp"><b>Broker Commission</b></div></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
-			<td><div class="dp"><input type='text' class='number' id='freight_rate1_id' name="freight_rate1" style="width:100px; border:1px solid #FF0000;" /></div></td>
+			<td><div class="dp"><input type='text' class='number' id='freight_rate1_id' name="freight_rate1" value="<?php echo $freight_rate1; ?>" style="width:100px; border:1px solid #FF0000;" /></div></td>
 			<td><div class="dp" id='div_gross_freight1_id'>&nbsp;</div></td>
-			<td><div class="dp"><input type='text' class='number' id='broker_comm1_id' name="broker_comm1" style="width:100px;" value="1.25" /></div></td>
-			<td><div class="dp"><input type='text' class='number' id='add_comm1_id' name='add_comm1' style="width:100px;" value="2.50" /></div></td>
+			<td><div class="dp"><input type='text' class='number' id='broker_comm1_id' name="broker_comm1" value="<?php echo $broker_comm1; ?>" style="width:100px;" /></div></td>
+			<td><div class="dp"><input type='text' class='number' id='add_comm1_id' name='add_comm1' value="<?php echo $add_comm1; ?>" style="width:100px;" /></div></td>
 			<td style="border-left:1px solid #000000; border-bottom:1px solid #000000; border-right:1px solid #000000;"><div class="dp" id="div_income1_id">&nbsp;</div></td>
 			<td style="border-left:1px solid #002060; border-bottom:1px solid #002060; border-right:1px solid #002060;"><div class="dp" id="div_tce1_id">&nbsp;</div></td>
 			<td><div class="dp" id="div_broker_comm1_id">&nbsp;</div></td>
@@ -2268,10 +2573,10 @@ select{
 		  <tr bgcolor="f5f5f5">
 			<td><div class="dp" id="div_freight_rate2_id">&nbsp;</div></td>
 			<td><div class="dp" id="div_gross_freight2_id">&nbsp;</div></td>
-			<td><div class="dp"><input type='text' class='number' id='broker_comm2_id' name="broker_comm2" style="width:100px;" value="1.25" /></div></td>
-			<td><div class="dp"><input type='text' class='number' id='add_comm2_id' name='add_comm2' style="width:100px;" value="2.50" /></div></td>
+			<td><div class="dp"><input type='text' class='number' id='broker_comm2_id' name="broker_comm2" value="<?php echo $broker_comm2; ?>" style="width:100px;" /></div></td>
+			<td><div class="dp"><input type='text' class='number' id='add_comm2_id' name='add_comm2' value="<?php echo $add_comm2; ?>" style="width:100px;" /></div></td>
 			<td><div class="dp" id="div_income2_id">&nbsp;</div></td>
-			<td><div class="dp"><input type='text' class='number' id='tce2_id' name='tce2' style="width:100px;" /></div></td>
+			<td><div class="dp"><input type='text' class='number' id='tce2_id' name='tce2' value="<?php echo $tce2; ?>" style="width:100px;" /></div></td>
 			<td><div class="dp" id="div_broker_comm2_id">&nbsp;</div></td>
 		  </tr>
 		</table>
@@ -2280,7 +2585,7 @@ select{
   </tr>
   <tr>
   	<td>
-		<div style="height:180px; border-bottom:3px dotted #fff;">&nbsp;</div>
+		<div style="height:280px; border-bottom:3px dotted #fff;">&nbsp;</div>
 		<div>&nbsp;</div>
 		<!-- CHOOSE VESSEL BY DWT TYPE OR VESSEL NAME / IMO# -->
 		<table width="1200" border="0" cellspacing="0" cellpadding="0">
@@ -2289,10 +2594,20 @@ select{
 					<div class="div_all">
 						<div class="div_title"><b>Vessel by:</b></div>
 						<div class="div_content">
+							<input type="hidden" id="tabid" name="tabid" value="<?php echo $tabid; ?>" />
 							<select id="vessel_by_id" name="vessel_by" style="width:300px;" onchange="getVesselBy(this.value);" class="req">
 								<option value="0">- Select Vessel By -</option>
-								<option value="1">DWT Type</option>
-								<option value="2">Vessel Name / IMO # / DWT</option>
+								
+								<?php if($vessel_by==1){ ?>
+									<option value="1" selected="selected">DWT Type</option>
+									<option value="2">Vessel Name / IMO # / DWT</option>
+								<?php }else if($vessel_by==2){ ?>
+									<option value="1">DWT Type</option>
+									<option value="2" selected="selected">Vessel Name / IMO # / DWT</option>
+								<?php }else{ ?>
+									<option value="1">DWT Type</option>
+									<option value="2">Vessel Name / IMO # / DWT</option>
+								<?php } ?>
 							</select>
 						</div>
 					</div>
@@ -2300,104 +2615,120 @@ select{
 			</tr>
 			<tr bgcolor="d6d6d6">
 				<td>
-					<div class="div_all" style="display:none;" id="vessel_by_1">
+					<div class="div_all" style="display:<?php echo $display1; ?>;" id="vessel_by_1">
 						<div class="div_title"><b>DWT Type:</b></div>
 						<div class="div_content">
+							<?php
+							$dwt_typearr = array(
+										1=>array(1=>"7208728 - Mini Bulker", 2=>"(0-9,999) Mini Bulker"), 
+										2=>array(1=>"9177791 - Handysize", 2=>"(10,000-39,999) Handysize"), 
+										3=>array(1=>"9547805 - Handymax / Supramax", 2=>"(40,000-59,999) Handymax / Supramax"), 
+										4=>array(1=>"9111577 - Panamax", 2=>"(60,000-99,999) Panamax"), 
+										5=>array(1=>"9587386 - Capesize", 2=>"(100,000-219,999) Capesize"), 
+										6=>array(1=>"9565065 - Very Large Ore Carrier", 2=>"(220,000+) Very Large Ore Carrier")
+									);
+									
+							$dwt_typet = count($dwt_typearr);
+							?>
 							<select id="dwt_type_id" name="dwt_type" style="width:300px;" class="req" onchange="getDwtType(this.value);">
 								<option value="0">- Select DWT Type -</option>
-								<option value="7208728">(0-9,999) Mini Bulker</option>
-								<option value="9177791">(10,000-39,999) Handysize</option>
-								<option value="9547805">(40,000-59,999) Handymax / Supramax</option>
-								<option value="9111577">(60,000-99,999) Panamax</option>
-								<option value="9587386">(100,000-219,999) Capesize</option>
-								<option value="9565065">(220,000+) Very Large Ore Carrier</option>
+								
+								<?php
+								for($dwt_typei=1; $dwt_typei<=$dwt_typet; $dwt_typei++){
+									if($dwt_typearr[$dwt_typei][1]==$dwt_type){
+										echo '<option value="'.$dwt_typearr[$dwt_typei][1].'" selected="selected">'.$dwt_typearr[$dwt_typei][2].'</option>';
+									}else{
+										echo '<option value="'.$dwt_typearr[$dwt_typei][1].'">'.$dwt_typearr[$dwt_typei][2].'</option>';
+									}
+								}
+								?>
 							</select>
 						</div>
 					</div>
-					<div class="div_all" style="display:none;" id="vessel_by_2">
+					<div class="div_all" style="display:<?php echo $display2; ?>;" id="vessel_by_2">
 						<div class="div_title"><b>Vessel Name / IMO # / DWT:</b></div>
-						<div class="div_content"><input type="text" id="vessel_name_or_imo_id" name="vessel_name_or_imo" style="width:295px;" value="<?php echo $vessel_name_or_imo; ?>" class="req" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div>
+						<div class="div_content"><input type="text" id="vessel_name_or_imo_id" name="vessel_name_or_imo" value="<?php echo $vessel_name_or_imo; ?>" style="width:295px;" class="req" /> &nbsp; <span id='shipdetailshref' style="color:#F00;"></span></div>
 					</div>
 				</td>
 			</tr>
 		</table>
-		<div id="ship_info" style="display:none;">
+		<div id="ship_info" style="display:<?php echo $display3; ?>;">
 			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="f5f5f5">
 				<td width="140" valign="top"><div style="padding:3px;"><b>IMO</b> #</div></td>
-				<td width="160" valign="top"><div style="padding:3px;" id="ship_imo">&nbsp;</div></td>
+				<td width="160" valign="top"><div style="padding:3px;" id="ship_imo">&nbsp;<?php echo $ship_imo; ?></div></td>
 				<td width="140" valign="top"><div style="padding:3px;"><b>LOA</b></div></td>
-				<td width="160" valign="top"><div style="padding:3px;" id="ship_loa">&nbsp;</div></td>
+				<td width="160" valign="top"><div style="padding:3px;" id="ship_loa">&nbsp;<?php echo $ship_loa; ?></div></td>
 				<td width="140" valign="top"><div style="padding:3px;"><b>Grain</b></div></td>
-				<td width="160" valign="top"><div style="padding:3px;" id="ship_grain">&nbsp;</div></td>
+				<td width="160" valign="top"><div style="padding:3px;" id="ship_grain">&nbsp;<?php echo $ship_grain; ?></div></td>
 				<td width="140" valign="top"><div style="padding:3px;"><b>Class Notation</b></div></td>
-				<td width="160" valign="top"><div style="padding:3px;" id="ship_class_notation">&nbsp;</div></td>
+				<td width="160" valign="top"><div style="padding:3px;" id="ship_class_notation">&nbsp;<?php echo $ship_class_notation; ?></div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td valign="top"><div style="padding:3px;"><b>Summer DWT</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_summer_dwt">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_summer_dwt">&nbsp;<?php echo $ship_dwt; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Draught</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_draught">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_draught">&nbsp;<?php echo $ship_draught; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Lifting Equipment</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_lifting_equipment">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_lifting_equipment">&nbsp;<?php echo $ship_lifting_equipment; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Fuel Oil</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_fuel_oil">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_fuel_oil">&nbsp;<?php echo $ship_fuel_oil; ?></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td valign="top"><div style="padding:3px;"><b>Gross Tonnage</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_gross_tonnage">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_gross_tonnage">&nbsp;<?php echo $ship_gross_tonnage; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Net Tonnage</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_net_tonnage">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_net_tonnage">&nbsp;<?php echo $ship_net_tonnage; ?></div></td>
 				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Speed</b></div></td>
-				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_speed">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_speed">&nbsp;<?php echo $ship_speed; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Cargo Handling</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_cargo_handling">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_cargo_handling">&nbsp;<?php echo $ship_cargo_handling; ?></div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td valign="top"><div style="padding:3px;"><b>Fuel</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_fuel">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_fuel">&nbsp;<?php echo $ship_fuel; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Built Year</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_built_year">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_built_year">&nbsp;<?php echo $ship_built_year; ?></div></td>
 				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Speed AIS</b></div></td>
-				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_speed_ais">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_speed_ais">&nbsp;<?php echo $ship_speed_ais; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Breadth</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_breadth">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_breadth">&nbsp;<?php echo $ship_breadth; ?></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td valign="top"><div style="padding:3px;"><b>Decks Number</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_decks_number">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_decks_number">&nbsp;<?php echo $ship_decks_number; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Fuel Consumption</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_fuel_consumption">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_fuel_consumption">&nbsp;<?php echo $ship_fuel_consumption; ?></div></td>
 				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>Movement Status</b></div></td>
-				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_NavigationalStatus">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_NavigationalStatus">&nbsp;<?php echo $ship_NavigationalStatus; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Bale</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_bale">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_bale">&nbsp;<?php echo $ship_bale; ?></div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td valign="top"><div style="padding:3px;"><b>Cranes</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_cranes">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_cranes">&nbsp;<?php echo $ship_cranes; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Bulkheads</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_bulkheads">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_bulkheads">&nbsp;<?php echo $ship_bulkheads; ?></div></td>
 				<td valign="top"><div style="padding:3px; color:#FF0000;"><b>AIS Date Updated</b></div></td>
-				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_aisdateupdated">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px; color:#FF0000;" id="ship_aisdateupdated">&nbsp;<?php echo $ship_aisdateupdated; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Fuel Type</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_fuel_type">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_fuel_type">&nbsp;<?php echo $ship_fuel_type; ?></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td valign="top"><div style="padding:3px;"><b>Manager Owner</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_manager_owner">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_manager_owner">&nbsp;<?php echo $ship_manager_owner; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Manager Owner Email</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_manager_owner_email">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_manager_owner_email">&nbsp;<?php echo $ship_manager_owner_email; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Class Society</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_class_society">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_class_society">&nbsp;<?php echo $ship_class_society; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Largest Hatch</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_largest_hatch">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_largest_hatch">&nbsp;<?php echo $ship_largest_hatch; ?></div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td valign="top"><div style="padding:3px;"><b>Holds</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_holds">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_holds">&nbsp;<?php echo $ship_holds; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>Flag</b></div></td>
-				<td valign="top"><div style="padding:3px;" id="ship_flag">&nbsp;</div></td>
+				<td valign="top"><div style="padding:3px;" id="ship_flag">&nbsp;<?php echo $flag; ?></div></td>
 				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
 				<td valign="top"><div style="padding:3px;">&nbsp;</div></td>
 				<td valign="top"><div style="padding:3px;"><b>&nbsp;</b></div></td>
@@ -2406,7 +2737,7 @@ select{
 			</table>
 		</div>
 		<div>&nbsp;</div>
-		<div id="bunker_fuel_info" style="display:none;">
+		<div id="bunker_fuel_info" style="display:<?php echo $display4; ?>;">
 			<table width="1200" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="d6d6d6">
 				<td width="104"><div style="padding:3px;"><b>Bunker Fuel Type</b></div></td>
@@ -2421,80 +2752,80 @@ select{
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div style="padding:3px;">IFO 380</div></td>
-				<td><div style="padding:3px;" id="SPEED1_1">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT1_1">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION1_1">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_1">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED2_1">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT2_1">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION2_1">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_1">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED1_1">&nbsp;<?php echo $SPEED1_1; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_1">&nbsp;<?php echo $SPEED_TEXT1_1; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_1">&nbsp;<?php echo $CONSUMPTION1_1; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_1">&nbsp;<?php echo $CONSUMPTION_TEXT1_1; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED2_1">&nbsp;<?php echo $SPEED2_1; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_1">&nbsp;<?php echo $SPEED_TEXT2_1; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_1">&nbsp;<?php echo $CONSUMPTION2_1; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_1">&nbsp;<?php echo $CONSUMPTION_TEXT2_1; ?></div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td><div style="padding:3px;">IFO 180</div></td>
-				<td><div style="padding:3px;" id="SPEED1_2">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT1_2">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION1_2">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_2">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED2_2">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT2_2">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION2_2">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_2">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED1_2">&nbsp;<?php echo $SPEED1_2; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_2">&nbsp;<?php echo $SPEED_TEXT1_2; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_2">&nbsp;<?php echo $CONSUMPTION1_2; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_2">&nbsp;<?php echo $CONSUMPTION_TEXT1_2; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED2_2">&nbsp;<?php echo $SPEED2_2; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_2">&nbsp;<?php echo $SPEED_TEXT2_2; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_2">&nbsp;<?php echo $CONSUMPTION2_2; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_2">&nbsp;<?php echo $CONSUMPTION_TEXT2_2; ?></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div style="padding:3px;">LS IFO 380 1%</div></td>
-				<td><div style="padding:3px;" id="SPEED1_3">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT1_3">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION1_3">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_3">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED2_3">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT2_3">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION2_3">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_3">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED1_3">&nbsp;<?php echo $SPEED1_3; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_3">&nbsp;<?php echo $SPEED_TEXT1_3; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_3">&nbsp;<?php echo $CONSUMPTION1_3; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_3">&nbsp;<?php echo $CONSUMPTION_TEXT1_3; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED2_3">&nbsp;<?php echo $SPEED2_3; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_3">&nbsp;<?php echo $SPEED_TEXT2_3; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_3">&nbsp;<?php echo $CONSUMPTION2_3; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_3">&nbsp;<?php echo $CONSUMPTION_TEXT2_3; ?></div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td><div style="padding:3px;">LS IFO 180 1%</div></td>
-				<td><div style="padding:3px;" id="SPEED1_4">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT1_4">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION1_4">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_4">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED2_4">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT2_4">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION2_4">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_4">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED1_4">&nbsp;<?php echo $SPEED1_4; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_4">&nbsp;<?php echo $SPEED_TEXT1_4; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_4">&nbsp;<?php echo $CONSUMPTION1_4; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_4">&nbsp;<?php echo $CONSUMPTION_TEXT1_4; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED2_4">&nbsp;<?php echo $SPEED2_4; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_4">&nbsp;<?php echo $SPEED_TEXT2_4; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_4">&nbsp;<?php echo $CONSUMPTION2_4; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_4">&nbsp;<?php echo $CONSUMPTION_TEXT2_4; ?></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div style="padding:3px;">MDO</div></td>
-				<td><div style="padding:3px;" id="SPEED1_5">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT1_5">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION1_5">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_5">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED2_5">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT2_5">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION2_5">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_5">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED1_5">&nbsp;<?php echo $SPEED1_5; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_5">&nbsp;<?php echo $SPEED_TEXT1_5; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_5">&nbsp;<?php echo $CONSUMPTION1_5; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_5">&nbsp;<?php echo $CONSUMPTION_TEXT1_5; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED2_5">&nbsp;<?php echo $SPEED2_5; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_5">&nbsp;<?php echo $SPEED_TEXT2_5; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_5">&nbsp;<?php echo $CONSUMPTION2_5; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_5">&nbsp;<?php echo $CONSUMPTION_TEXT2_5; ?></div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td><div style="padding:3px;">MGO</div></td>
-				<td><div style="padding:3px;" id="SPEED1_6">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT1_6">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION1_6">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_6">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED2_6">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT2_6">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION2_6">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_6">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED1_6">&nbsp;<?php echo $SPEED1_6; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_6">&nbsp;<?php echo $SPEED_TEXT1_6; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_6">&nbsp;<?php echo $CONSUMPTION1_6; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_6">&nbsp;<?php echo $CONSUMPTION_TEXT1_6; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED2_6">&nbsp;<?php echo $SPEED2_6; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_6">&nbsp;<?php echo $SPEED_TEXT2_6; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_6">&nbsp;<?php echo $CONSUMPTION2_6; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_6">&nbsp;<?php echo $CONSUMPTION_TEXT2_6; ?></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div style="padding:3px;">LS MGO 1%</div></td>
-				<td><div style="padding:3px;" id="SPEED1_7">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT1_7">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION1_7">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_7">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED2_7">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="SPEED_TEXT2_7">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION2_7">&nbsp;</div></td>
-				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_7">&nbsp;</div></td>
+				<td><div style="padding:3px;" id="SPEED1_7">&nbsp;<?php echo $SPEED1_7; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT1_7">&nbsp;<?php echo $SPEED_TEXT1_7; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION1_7">&nbsp;<?php echo $CONSUMPTION1_7; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT1_7">&nbsp;<?php echo $CONSUMPTION_TEXT1_7; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED2_7">&nbsp;<?php echo $SPEED2_7; ?></div></td>
+				<td><div style="padding:3px;" id="SPEED_TEXT2_7">&nbsp;<?php echo $SPEED_TEXT2_7; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION2_7">&nbsp;<?php echo $CONSUMPTION2_7; ?></div></td>
+				<td><div style="padding:3px;" id="CONSUMPTION_TEXT2_7">&nbsp;<?php echo $CONSUMPTION_TEXT2_7; ?></div></td>
 			  </tr>
 			</table>
 		</div>
@@ -2535,18 +2866,27 @@ select{
 					<div class="dp" id="div_voyage_type1_id">
 						<select id="voyage_type1_id" name="voyage_type1" style="width:110px;" class="req voyage_type" onchange="addSequenceCargo();">
 							<option value="">- Select Type -</option>
-							<option value="Ballast">Ballast</option>
-							<option value="Loading">Loading</option>
+							
+							<?php if($voyage_type1=="Ballast"){ ?>
+								<option value="Ballast" selected="selected">Ballast</option>
+								<option value="Loading">Loading</option>
+							<?php }else if($voyage_type1=="Loading"){ ?>
+								<option value="Ballast">Ballast</option>
+								<option value="Loading" selected="selected">Loading</option>
+							<?php }else{ ?>
+								<option value="Ballast">Ballast</option>
+								<option value="Loading">Loading</option>
+							<?php } ?>
 						</select>
 					</div>
 				</td>
-				<td><div class="dp" id="div_port_from1_id"><input type="text" id="port_from1_id" name="port_from1" style="width:150px;" class="req port_from" /></div></td>
-				<td><div class="dp" id="div_date_from1_id"><input type="text" id="date_from1_id" name="date_from1" style="width:150px;" class="req date" readonly="readonly" /></div></td>
-				<td><div class="dp" id="div_port_to1_id"><input type="text" id="port_to1_id" name="port_to1" style="width:150px;" class="req port_to" /></div></td>
+				<td><div class="dp" id="div_port_from1_id"><input type="text" id="port_from1_id" name="port_from1" value="<?php echo $port_from1; ?>" style="width:150px;" class="req port_from" /></div></td>
+				<td><div class="dp" id="div_date_from1_id"><input type="text" id="date_from1_id" name="date_from1" value="<?php echo $date_from1; ?>" style="width:150px;" class="req date" readonly="readonly" /></div></td>
+				<td><div class="dp" id="div_port_to1_id"><input type="text" id="port_to1_id" name="port_to1" value="<?php echo $port_to1; ?>" style="width:150px;" class="req port_to" /></div></td>
 				<td><div class="dp" id="div_date_to1_id">&nbsp;</div></td>
-				<td><div class="dp" id="div_speed1_id"><input type="text" id="speed1_id" name="speed1" style="width:40px;" class="speed number" /></div></td>
+				<td><div class="dp" id="div_speed1_id"><input type="text" id="speed1_id" name="speed1" value="<?php echo $speed1; ?>" style="width:40px;" class="speed number" /></div></td>
 				<td><div class="dp" id="div_distance_miles1_id">&nbsp;</div></td>
-				<td><div class="dp" id="div_input_percent1_id"><input type="text" id="input_percent1_id" name="input_percent1" style="width:40px;" class="number" onkeyup="computeDistanceMiles1(this.value);" /></div></td>
+				<td><div class="dp" id="div_input_percent1_id"><input type="text" id="input_percent1_id" name="input_percent1" value="<?php echo $input_percent1; ?>" style="width:40px;" class="number" onkeyup="computeDistanceMiles1(this.value);" /></div></td>
 				<td><div class="dp" id="div_sea_margin1_id"></div></td>
 			</tr>
 		</table>
@@ -2638,22 +2978,22 @@ select{
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>IFO 380</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo1_id" name="ifo1" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo1_id" name="ifo1" value="<?php echo $ifo1; ?>" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo1_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp"><b>IFO 180</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo2_id" name="ifo2" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo2_id" name="ifo2" value="<?php echo $ifo2; ?>" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo2_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>LS IFO 380 1%</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo3_id" name="ifo3" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo3_id" name="ifo3" value="<?php echo $ifo3; ?>" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo3_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp"><b>LS IFO 180 1%</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo4_id" name="ifo4" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo4_id" name="ifo4" value="<?php echo $ifo4; ?>" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo4_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				</table>
@@ -2668,17 +3008,17 @@ select{
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>MDO</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo1_id" name="mdo1" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo1_id" name="mdo1" value="<?php echo $mdo1; ?>" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo1_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp"><b>MGO</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo2_id" name="mdo2" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo2_id" name="mdo2" value="<?php echo $mdo2; ?>" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo2_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>LS MGO 1%</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo3_id" name="mdo3" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo3_id" name="mdo3" value="<?php echo $mdo3; ?>" class="number" style="width:150px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo3_id" style="color:#FF0000; font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
@@ -2714,50 +3054,50 @@ select{
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>IFO/Ballast</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo_ballast_id" name="ifo_ballast" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo_ballast_id" name="ifo_ballast" value="<?php echo $ifo_ballast; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo_ballast_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_ifo_ballast_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp" style="color:#00b050;"><b>IFO/Loading</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo_loading_id" name="ifo_loading" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo_loading_id" name="ifo_loading" value="<?php echo $ifo_loading; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo_loading_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_ifo_loading_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>IFO/Bunker Stop</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo_bunker_stop_id" name="ifo_bunker_stop" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo_bunker_stop_id" name="ifo_bunker_stop" value="<?php echo $ifo_bunker_stop; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo_bunker_stop_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_ifo_bunker_stop_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp" style="color:#00b050;"><b>IFO/Laden</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo_laden_id" name="ifo_laden" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo_laden_id" name="ifo_laden" value="<?php echo $ifo_laden; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo_laden_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_ifo_laden_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>IFO/Discharging</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo_discharging_id" name="ifo_discharging" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo_discharging_id" name="ifo_discharging" value="<?php echo $ifo_discharging; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo_discharging_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_ifo_discharging_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp" style="color:#00b050;"><b>IFO/Repositioning</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo_repositioning_id" name="ifo_repositioning" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo_repositioning_id" name="ifo_repositioning" value="<?php echo $ifo_repositioning; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo_repositioning_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_ifo_repositioning_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>IFO/Port</b></div></td>
-					<td><div class="dp"><input type="text" id="ifo_port_id" name="ifo_port" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="ifo_port_id" name="ifo_port" value="<?php echo $ifo_port; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo_port_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_ifo_port_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp"><b>IFO/Reserve</b></div></td>
 					<td><div class="dp">&nbsp;</div></td>
-					<td><div class="dp" id="div_ifo_ifo_reserve_id"><input type="text" id="ifo_reserve_id" name="ifo_reserve" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_ifo_ifo_reserve_id"><input type="text" id="ifo_reserve_id" name="ifo_reserve" value="<?php echo $ifo_reserve; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_ifo_reserve_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
@@ -2777,50 +3117,50 @@ select{
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>MDO/Ballast</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo_ballast_id" name="mdo_ballast" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo_ballast_id" name="mdo_ballast" value="<?php echo $mdo_ballast; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo_ballast_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_mdo_ballast_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp" style="color:#00b050;"><b>MDO/Loading</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo_loading_id" name="mdo_loading" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo_loading_id" name="mdo_loading" value="<?php echo $mdo_loading; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo_loading_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_mdo_loading_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>MDO/Bunker Stop</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo_bunker_stop_id" name="mdo_bunker_stop" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo_bunker_stop_id" name="mdo_bunker_stop" value="<?php echo $mdo_bunker_stop; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo_bunker_stop_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_mdo_bunker_stop_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp" style="color:#00b050;"><b>MDO/Laden</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo_laden_id" name="mdo_laden" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo_laden_id" name="mdo_laden" value="<?php echo $mdo_laden; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo_laden_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_mdo_laden_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>MDO/Discharging</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo_discharging_id" name="mdo_discharging" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo_discharging_id" name="mdo_discharging" value="<?php echo $mdo_discharging; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo_discharging_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_mdo_discharging_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp" style="color:#00b050;"><b>MDO/Repositioning</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo_repositioning_id" name="mdo_repositioning" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo_repositioning_id" name="mdo_repositioning" value="<?php echo $mdo_repositioning; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo_repositioning_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_mdo_repositioning_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>MDO/Port</b></div></td>
-					<td><div class="dp"><input type="text" id="mdo_port_id" name="mdo_port" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp"><input type="text" id="mdo_port_id" name="mdo_port" value="<?php echo $mdo_port; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo_port_consumption">&nbsp;</div></td>
 					<td><div class="dp" id="div_mdo_port_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp"><b>MDO/Reserve</b></div></td>
 					<td><div class="dp">&nbsp;</div></td>
-					<td><div class="dp" id="div_mdo_mdo_reserve_id"><input type="text" id="mdo_reserve_id" name="mdo_reserve" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+					<td><div class="dp" id="div_mdo_mdo_reserve_id"><input type="text" id="mdo_reserve_id" name="mdo_reserve" value="<?php echo $mdo_reserve; ?>" class="number" style="width:120px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 					<td><div class="dp" id="div_mdo_reserve_expense">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
@@ -2873,11 +3213,11 @@ select{
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td colspan="2"><div class="dp"><b>FW (MT)</b></div></td>
-					<td><div class="dp"><input type="text" id="dwcc_fw1_id" name="dwcc_fw1" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="dwcc_fw1_id" name="dwcc_fw1" value="<?php echo $dwcc_fw1; ?>" class="number" style="width:150px;" /></div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td colspan="2"><div class="dp"><b>Constant (MT)</b></div></td>
-					<td><div class="dp"><input type="text" id="dwcc_constant1_id" name="dwcc_constant1" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="dwcc_constant1_id" name="dwcc_constant1" value="<?php echo $dwcc_constant1; ?>" class="number" style="width:150px;" /></div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td colspan="2"><div class="dp"><b>Used DW (MT)</b></div></td>
@@ -2917,7 +3257,11 @@ select{
 							<select id='canal_list_id' name="canal_list" style="width:200px;">
 								<?php
 								for($canali=1; $canali<=$canalt; $canali++){
-									echo '<option value="'.$canalarr[$canali].'">'.$canalarr[$canali].'</option>';
+									if($canalarr[$canali]==$canal){
+										echo '<option value="'.$canalarr[$canali].'" selected="selected">'.$canalarr[$canali].'</option>';
+									}else{
+										echo '<option value="'.$canalarr[$canali].'">'.$canalarr[$canali].'</option>';
+									}
 								}
 								?>
 							</select>
@@ -2926,23 +3270,23 @@ select{
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td width="199"><div class="dp"><b>Booking Fee ($)</b></div></td>
-					<td width="198"><div class="dp"><input type="text" id="cbook1_id" name="cbook1" class="number" style="width:150px;" /></div></td>
-					<td width="198"><div class="dp"><input type="text" id="cbook2_id" name="cbook2" class="number" style="width:150px;" /></div></td>
+					<td width="198"><div class="dp"><input type="text" id="cbook1_id" name="cbook1" value="<?php echo $cbook1; ?>" class="number" style="width:150px;" /></div></td>
+					<td width="198"><div class="dp"><input type="text" id="cbook2_id" name="cbook2" value="<?php echo $cbook2; ?>" class="number" style="width:150px;" /></div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>Tugs ($)</b></div></td>
-					<td><div class="dp"><input type="text" id="ctug1_id" name="ctug1" class="number" style="width:150px;" /></div></td>
-					<td><div class="dp"><input type="text" id="ctug2_id" name="ctug2" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="ctug1_id" name="ctug1" value="<?php echo $ctug1; ?>" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="ctug2_id" name="ctug2" value="<?php echo $ctug2; ?>" class="number" style="width:150px;" /></div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp"><b>Line Handlers ($)</b></div></td>
-					<td><div class="dp"><input type="text" id="cline1_id" name="cline1" class="number" style="width:150px;" /></div></td>
-					<td><div class="dp"><input type="text" id="cline2_id" name="cline2" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="cline1_id" name="cline1" value="<?php echo $cline1; ?>" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="cline2_id" name="cline2" value="<?php echo $cline2; ?>" class="number" style="width:150px;" /></div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>Miscellaneous ($)</b></div></td>
-					<td><div class="dp"><input type="text" id="cmisc1_id" name="cmisc1" class="number" style="width:150px;" /></div></td>
-					<td><div class="dp"><input type="text" id="cmisc2_id" name="cmisc2" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="cmisc1_id" name="cmisc1" value="<?php echo $cmisc1; ?>" class="number" style="width:150px;" /></div></td>
+					<td><div class="dp"><input type="text" id="cmisc2_id" name="cmisc2" value="<?php echo $cmisc2; ?>" class="number" style="width:150px;" /></div></td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
 					<td><div class="dp"><b>Total ($)</b></div></td>
@@ -3019,12 +3363,12 @@ select{
 			<td><div class="dp" id='div_bunker_total_id'>&nbsp;</div></td>
 			<td><div class="dp" id='div_port_total_id'>&nbsp;</div></td>
 			<td><div class="dp" id='div_canal_total_id'>&nbsp;</div></td>
-			<td><div class="dp" id='div_add_insurance_id'><input type="text" id="add_insurance_id" name="add_insurance" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-			<td><div class="dp" id='div_ilohc_id'><input type="text" id="ilohc_id" name="ilohc" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-			<td><div class="dp" id='div_ilow_id'><input type="text" id="ilow_id" name="ilow" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-			<td><div class="dp" id='div_cve_id'><input type="text" id="cve_id" name="cve" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-			<td><div class="dp" id='div_ballast_bonus_id'><input type="text" id="ballast_bonus_id" name="ballast_bonus" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
-			<td><div class="dp" id='div_miscellaneous_id'><input type="text" id="miscellaneous_id" name="miscellaneous" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_add_insurance_id'><input type="text" id="add_insurance_id" name="add_insurance" value="<?php echo $add_insurance; ?>" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_ilohc_id'><input type="text" id="ilohc_id" name="ilohc" value="<?php echo $ilohc; ?>" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_ilow_id'><input type="text" id="ilow_id" name="ilow" value="<?php echo $ilow; ?>" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_cve_id'><input type="text" id="cve_id" name="cve" value="<?php echo $cve; ?>" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_ballast_bonus_id'><input type="text" id="ballast_bonus_id" name="ballast_bonus" value="<?php echo $ballast_bonus; ?>" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
+			<td><div class="dp" id='div_miscellaneous_id'><input type="text" id="miscellaneous_id" name="miscellaneous" value="<?php echo $miscellaneous; ?>" class="number" style="width:100px;" onkeyup="calculateBunkerConsumption();" /></div></td>
 		  </tr>
 		  <tr>
 			<td colspan="9"><div class="dp" id='div_total_voyage_disbursment_id'>&nbsp;</div></td>
@@ -3051,3 +3395,9 @@ select{
   </tr>
 </table>
 </form>
+<script type="text/javascript">
+$(document).ready(function(){
+	getDwtType(jQuery("#dwt_type_id").val());
+	thread();
+});
+</script>

@@ -1604,6 +1604,9 @@ function addSequence(){
 			jQuery('#cargo_legs_id tr:last').after(nextRowCargoLegs);
 			//END OF CARGO LEGS
 			
+			var seqCount = uNum(getValue(jQuery('#seq_count_id'))) + 1;
+			jQuery('#seq_count_id').val(seqCount);
+			
 			$(function(){
 				$("#port_to"+nextRowCount+"_id").autocomplete({
 					source: function(req, add){
@@ -2019,6 +2022,9 @@ function voyageDisbursement(){
 function deleteSequence(num){
 	jQuery(".voyage_legs_row"+num).remove();
 	jQuery(".cargo_legs_row"+num).remove();
+	
+	var seqCount = uNum(getValue(jQuery('#seq_count_id'))) - 1;
+	jQuery('#seq_count_id').val(seqCount);
 }
 //END OF DELETE SEQUENCE
 
@@ -2188,6 +2194,20 @@ function deleteScenario(tabid){
 	}
 }
 //END OF DELETE SCENARIO
+
+function mailItVe(){
+	var data = jQuery("#voyageestimatorform").serialize();
+
+	jQuery("#misciframe")[0].src="misc/email_ve.php?"+data;
+	jQuery("#miscdialog").dialog("open");
+}
+
+function printItVe(){
+	var data = jQuery("#voyageestimatorform").serialize();
+
+	jQuery("#misciframe")[0].src="misc/print_ve.php?"+data;
+	jQuery("#miscdialog").dialog("open");
+}
 //END OF OTHER FUNCTIONS
 </script>
 
@@ -2212,7 +2232,7 @@ select{
 
 .div_all{
 	float:left;
-	width:1194px;
+	width:1294px;
 	height:auto;
 	padding:3px;
 }
@@ -2225,7 +2245,7 @@ select{
 
 .div_content{
 	float:left;
-	width:1059px;
+	width:1159px;
 	height:auto;
 }
 
@@ -2280,7 +2300,7 @@ if(!isset($_GET['new_search']) || isset($_GET['tabid'])){
 		$r = dbQuery($sql, $link);
 	}
 	
-	if(trim($r)){
+	if(trim($r[0]['id'])){
 		$tabid = $r[0]['id'];
 		$tabname = $r[0]['tabname'];
 		$tabdata = unserialize($r[0]['tabdata']);
@@ -2305,6 +2325,10 @@ if(!trim($broker_comm2)){
 
 if(!trim($add_comm2)){
 	$add_comm2 = "2.50";
+}
+
+if(!trim($seq_count)){
+	$seq_count = 1;
 }
 
 if($vessel_by==1){
@@ -2461,12 +2485,23 @@ if($vessel_by==1){
 ?>
 
 <form method="post" id="voyageestimatorform" name="voyageestimatorform" enctype="multipart/form-data">
-<table width="1200" border="0" cellspacing="0" cellpadding="0">
+<table width="1300" border="0" cellspacing="0" cellpadding="0">
   <tr style="position:fixed;">
 	<td bgcolor="#CCCCCC">
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
-			<td><div class="dp"><input type="button" id="btn_new_id" name="btn_new" value="NEW SCENARIO" class="btn_1" onClick="newScenario();" style="cursor:pointer;" /> &nbsp;&nbsp; <input type="button" id="btn_save_id" name="btn_save" value="SAVE SCENARIO" class="btn_1" onClick="saveScenario();" style="cursor:pointer;" /></div></td>
+			<td>
+				<div class="dp">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td width="110"><input type="button" id="btn_new_id" name="btn_new" value="NEW SCENARIO" class="btn_1" onClick="newScenario();" style="cursor:pointer;" /></td>
+							<td width="120"><input type="button" id="btn_save_id" name="btn_save" value="SAVE SCENARIO" class="btn_1" onClick="saveScenario();" style="cursor:pointer;" /></td>
+							<td width="40"><a class='clickable' onclick="printItVe();"><img src='images/print.jpg'></a></td>
+							<td><a class='clickable' onclick="mailItVe();"><img src='images/email_small.jpg'></a></td>
+						</tr>
+					</table>
+				</div>
+			</td>
 		  </tr>
 		  
 			<?php
@@ -2533,16 +2568,16 @@ if($vessel_by==1){
 		<div>&nbsp;</div>
 		
 		<!-- TOTALS -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #333333;">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #333333;">
 		  <tr bgcolor="cddee5">
 			<td colspan="7"><div class="dp"><b>FREIGHT RATE CALCULATION</b></div></td>
 		  </tr>
 		  <tr>
-			<td width="171"><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">Freight Rate ($/MT)</span></div></td>
-			<td width="171"><div class="dp"><b>Gross Freight ($)</b></div></td>
-			<td width="171"><div class="dp"><b>Brok. Comm ($)</b></div></td>
-			<td width="171"><div class="dp"><b>Add. Comm ($)</b></div></td>
-			<td width="172" style="border-left:1px solid #000000; border-top:1px solid #000000; border-right:1px solid #000000;"><div class="dp"><b>Income ($)</b></div></td>
+			<td width="191"><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">Freight Rate ($/MT)</span></div></td>
+			<td width="191"><div class="dp"><b>Gross Freight ($)</b></div></td>
+			<td width="191"><div class="dp"><b>Brok. Comm ($)</b></div></td>
+			<td width="191"><div class="dp"><b>Add. Comm ($)</b></div></td>
+			<td width="192" style="border-left:1px solid #000000; border-top:1px solid #000000; border-right:1px solid #000000;"><div class="dp"><b>Income ($)</b></div></td>
 			<td width="172" style="border-left:1px solid #002060; border-top:1px solid #002060; border-right:1px solid #002060;"><div class="dp"><b>TCE ($/day)</b></div></td>
 			<td width="172"><div class="dp"><b>Broker Commission</b></div></td>
 		  </tr>
@@ -2562,13 +2597,13 @@ if($vessel_by==1){
 			<td colspan="7"><div class="dp"><b>TCE CALCULATION</b></div></td>
 		  </tr>
 		  <tr>
-			<td width="171"><div class="dp"><b>Freight Rate ($/MT)</b></div></td>
-			<td width="171"><div class="dp"><b>Gross Freight ($)</b></div></td>
-			<td width="171"><div class="dp"><b>Brok. Comm ($)</b></div></td>
-			<td width="171"><div class="dp"><b>Add. Comm ($)</b></div></td>
-			<td width="172"><div class="dp"><b>Income ($)</b></div></td>
-			<td width="172"><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">TCE ($/day)</span></div></td>
-			<td width="172"><div class="dp"><b>Broker Commission</b></div></td>
+			<td><div class="dp"><b>Freight Rate ($/MT)</b></div></td>
+			<td><div class="dp"><b>Gross Freight ($)</b></div></td>
+			<td><div class="dp"><b>Brok. Comm ($)</b></div></td>
+			<td><div class="dp"><b>Add. Comm ($)</b></div></td>
+			<td><div class="dp"><b>Income ($)</b></div></td>
+			<td><div class="dp"><span style="font-size:14px; color:#0066FF; font-weight:bold;">TCE ($/day)</span></div></td>
+			<td><div class="dp"><b>Broker Commission</b></div></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td><div class="dp" id="div_freight_rate2_id">&nbsp;</div></td>
@@ -2588,13 +2623,14 @@ if($vessel_by==1){
 		<div style="height:280px; border-bottom:3px dotted #fff;">&nbsp;</div>
 		<div>&nbsp;</div>
 		<!-- CHOOSE VESSEL BY DWT TYPE OR VESSEL NAME / IMO# -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 			<tr bgcolor="cddee5">
 				<td>
 					<div class="div_all">
 						<div class="div_title"><b>Vessel by:</b></div>
 						<div class="div_content">
 							<input type="hidden" id="tabid" name="tabid" value="<?php echo $tabid; ?>" />
+							<input type="hidden" id="seq_count_id" name="seq_count" value="<?php echo $seq_count; ?>" />
 							<select id="vessel_by_id" name="vessel_by" style="width:300px;" onchange="getVesselBy(this.value);" class="req">
 								<option value="0">- Select Vessel By -</option>
 								
@@ -2653,16 +2689,16 @@ if($vessel_by==1){
 			</tr>
 		</table>
 		<div id="ship_info" style="display:<?php echo $display3; ?>;">
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
+			<table width="1300" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="f5f5f5">
 				<td width="140" valign="top"><div style="padding:3px;"><b>IMO</b> #</div></td>
-				<td width="160" valign="top"><div style="padding:3px;" id="ship_imo">&nbsp;<?php echo $ship_imo; ?></div></td>
+				<td width="185" valign="top"><div style="padding:3px;" id="ship_imo">&nbsp;<?php echo $ship_imo; ?></div></td>
 				<td width="140" valign="top"><div style="padding:3px;"><b>LOA</b></div></td>
-				<td width="160" valign="top"><div style="padding:3px;" id="ship_loa">&nbsp;<?php echo $ship_loa; ?></div></td>
+				<td width="185" valign="top"><div style="padding:3px;" id="ship_loa">&nbsp;<?php echo $ship_loa; ?></div></td>
 				<td width="140" valign="top"><div style="padding:3px;"><b>Grain</b></div></td>
-				<td width="160" valign="top"><div style="padding:3px;" id="ship_grain">&nbsp;<?php echo $ship_grain; ?></div></td>
+				<td width="185" valign="top"><div style="padding:3px;" id="ship_grain">&nbsp;<?php echo $ship_grain; ?></div></td>
 				<td width="140" valign="top"><div style="padding:3px;"><b>Class Notation</b></div></td>
-				<td width="160" valign="top"><div style="padding:3px;" id="ship_class_notation">&nbsp;<?php echo $ship_class_notation; ?></div></td>
+				<td width="185" valign="top"><div style="padding:3px;" id="ship_class_notation">&nbsp;<?php echo $ship_class_notation; ?></div></td>
 			  </tr>
 			  <tr bgcolor="e9e9e9">
 				<td valign="top"><div style="padding:3px;"><b>Summer DWT</b></div></td>
@@ -2738,17 +2774,17 @@ if($vessel_by==1){
 		</div>
 		<div>&nbsp;</div>
 		<div id="bunker_fuel_info" style="display:<?php echo $display4; ?>;">
-			<table width="1200" border="0" cellspacing="0" cellpadding="0">
+			<table width="1300" border="0" cellspacing="0" cellpadding="0">
 			  <tr bgcolor="d6d6d6">
-				<td width="104"><div style="padding:3px;"><b>Bunker Fuel Type</b></div></td>
-				<td width="137"><div style="padding:3px;"><b>Speed 1</b></div></td>
-				<td width="137"><div style="padding:3px;"><b>Info</b></div></td>
-				<td width="137"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
-				<td width="137"><div style="padding:3px;"><b>Info</b></div></td>
-				<td width="137"><div style="padding:3px;"><b>Speed 2</b></div></td>
-				<td width="137"><div style="padding:3px;"><b>Info</b></div></td>
-				<td width="137"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
-				<td width="137"><div style="padding:3px;"><b>Info</b></div></td>
+				<td width="124"><div style="padding:3px;"><b>Bunker Fuel Type</b></div></td>
+				<td width="147"><div style="padding:3px;"><b>Speed 1</b></div></td>
+				<td width="147"><div style="padding:3px;"><b>Info</b></div></td>
+				<td width="147"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
+				<td width="147"><div style="padding:3px;"><b>Info</b></div></td>
+				<td width="147"><div style="padding:3px;"><b>Speed 2</b></div></td>
+				<td width="147"><div style="padding:3px;"><b>Info</b></div></td>
+				<td width="147"><div style="padding:3px;"><b>Consumption MT/Day</b></div></td>
+				<td width="147"><div style="padding:3px;"><b>Info</b></div></td>
 			  </tr>
 			  <tr bgcolor="f5f5f5">
 				<td><div style="padding:3px;">IFO 380</div></td>
@@ -2835,11 +2871,11 @@ if($vessel_by==1){
 		<!-- CHOOSE VESSEL BY DWT TYPE OR VESSEL NAME / IMO# -->
 		
 		<!-- VOYAGE LEGS -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0" id="voyage_legs_id">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0" id="voyage_legs_id">
 			<tr bgcolor="cddee5">
 				<td colspan="10">
 					<div class="div_all">
-						<table width="1194" border="0" cellspacing="0" cellpadding="0">
+						<table width="1294" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="100"><b>VOYAGE LEGS</b></td>
 								<td width="25" align="center"><a style="cursor:pointer;" onclick="addSequence();"><img src="images/plus.png" border="0" /></a></td>
@@ -2855,10 +2891,10 @@ if($vessel_by==1){
 				<td width="200"><div class="dp"><b>Date</b></div></td>
 				<td width="200"><div class="dp"><b>Port</b></div></td>
 				<td width="200"><div class="dp"><b>Date</b></div></td>
-				<td width="167"><div class="dp"><b>Speed (knts)</b></div></td>
-				<td width="167"><div class="dp"><b>Distance (miles)</b></div></td>
-				<td width="167"><div class="dp"><b>Input %</b></div></td>
-				<td width="169"><div class="dp"><b>% Sea Margin</b></div></td>
+				<td width="192"><div class="dp"><b>Speed (knts)</b></div></td>
+				<td width="192"><div class="dp"><b>Distance (miles)</b></div></td>
+				<td width="192"><div class="dp"><b>Input %</b></div></td>
+				<td width="194"><div class="dp"><b>% Sea Margin</b></div></td>
 			</tr>
 			<tr bgcolor="f5f5f5" id="voyage_legs_row" class="voyage_legs_row1">
 				<td><div class="dp">&nbsp;</div></td>
@@ -2889,6 +2925,51 @@ if($vessel_by==1){
 				<td><div class="dp" id="div_input_percent1_id"><input type="text" id="input_percent1_id" name="input_percent1" value="<?php echo $input_percent1; ?>" style="width:40px;" class="number" onkeyup="computeDistanceMiles1(this.value);" /></div></td>
 				<td><div class="dp" id="div_sea_margin1_id"></div></td>
 			</tr>
+			
+			<?php
+			if($seq_count>1){
+				for($seq=2; $seq<$seq_count; $seq++){
+					if($seq%2==0){ $bgColor = "e9e9e9"; }
+					else{ $bgColor = "f5f5f5"; }
+					
+					$port_to = 'port_to'.$seq;
+					$speed = 'speed'.$seq;
+					$input_percent = 'input_percent'.$seq;
+					?>
+					<tr bgcolor="<?php echo $bgColor; ?>" id="voyage_legs_row" class="voyage_legs_row<?php echo $seq; ?>">
+						<td><div class="dp">&nbsp;</div></td>
+						<td>
+							<div class="dp" id="div_voyage_type<?php echo $seq; ?>_id">
+								<select id="voyage_type<?php echo $seq; ?>_id" name="voyage_type<?php echo $seq; ?>" style="width:110px;" class="req voyage_type" onchange="addSequenceCargo();">
+									<option value="">- Select Type -</option>
+									
+									<?php if($voyage_type1=="Ballast"){ ?>
+										<option value="Ballast" selected="selected">Ballast</option>
+										<option value="Loading">Loading</option>
+									<?php }else if($voyage_type1=="Loading"){ ?>
+										<option value="Ballast">Ballast</option>
+										<option value="Loading" selected="selected">Loading</option>
+									<?php }else{ ?>
+										<option value="Ballast">Ballast</option>
+										<option value="Loading">Loading</option>
+									<?php } ?>
+								</select>
+							</div>
+						</td>
+						<td><div class="dp" id="div_port_from<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_date_from<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_port_to<?php echo $seq; ?>_id"><input type="text" id="port_to<?php echo $seq; ?>_id" name="port_to<?php echo $seq; ?>" value="<?php echo $$port_to; ?>" style="width:150px;" class="req port_to" /></div></td>
+						<td><div class="dp" id="div_date_to<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_speed<?php echo $seq; ?>_id"><input type="text" id="speed<?php echo $seq; ?>_id" name="speed<?php echo $seq; ?>" value="<?php echo $$speed; ?>" style="width:40px;" class="speed number" /></div></td>
+						<td><div class="dp" id="div_distance_miles<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_input_percent<?php echo $seq; ?>_id"><input type="text" id="input_percent<?php echo $seq; ?>_id" name="input_percent<?php echo $seq; ?>" value="<?php echo $$input_percent; ?>" style="width:40px;" class="number" onkeyup="computeDistanceMiles(this.value, <?php echo $seq; ?>);" /></div></td>
+						<td><div class="dp" id="div_sea_margin<?php echo $seq; ?>_id"></div></td>
+					</tr>
+					<?php
+				}
+			}
+			?>
+			
 		</table>
 		
 		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
@@ -2896,7 +2977,7 @@ if($vessel_by==1){
 		<!-- END OF VOYAGE LEGS -->
 		
 		<!-- CARGO LEGS -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0" id="cargo_legs_id">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0" id="cargo_legs_id">
 			<tr bgcolor="cddee5">
 				<td colspan="6"><div class="dp"><b>CARGO LEGS</b></div></td>
 				<td colspan="2"><div class="dp"><b>* Option to Load & Bunker concurrently</b></div></td>
@@ -2910,13 +2991,13 @@ if($vessel_by==1){
 				<td width="205"><div class="dp"><b>Quantity (MT)</b></div></td>
 				<td width="80"><div class="dp"><b>Volume (M3)</b></div></td>
 				<td width="205"><div class="dp"><b>L/D Rate (MT/day)</b></div></td>
-				<td width="30"><div class="dp"><b>Load Days</b></div></td>
+				<td width="50"><div class="dp"><b>Load Days</b></div></td>
 				<td width="90"><div class="dp"><b>Working Days TERMS</b></div></td>
-				<td width="60"><div class="dp"><b>Working Aditional Days TERMS</b></div></td>
-				<td width="60"><div class="dp"><b>Turn/Idle/Extra Days</b></div></td>
+				<td width="80"><div class="dp"><b>Working Aditional Days TERMS</b></div></td>
+				<td width="80"><div class="dp"><b>Turn/Idle/Extra Days</b></div></td>
 				<td width="30"><div class="dp"><b>Voyage Days</b></div></td>
-				<td width="60"><div class="dp"><b>Canal Days</b></div></td>
-				<td width="60"><div class="dp"><b>Weather/Extra Days</b></div></td>
+				<td width="80"><div class="dp"><b>Canal Days</b></div></td>
+				<td width="80"><div class="dp"><b>Weather/Extra Days</b></div></td>
 			</tr>
 			<tr bgcolor="f5f5f5" id="cargo_legs_row" class="cargo_legs_row1">
 				<td><div class="dp" id="div_cargo_legs_type1_id" style="font-weight:bold;">&nbsp;</div></td>
@@ -2933,6 +3014,33 @@ if($vessel_by==1){
 				<td><div class="dp" id="div_canal1_id">&nbsp;</div></td>
 				<td><div class="dp" id="div_weather_extra1_id">&nbsp;</div></td>
 			</tr>
+			
+			<?php
+			if($seq_count>1){
+				for($seq=2; $seq<$seq_count; $seq++){
+					if($seq%2==0){ $bgColor = "e9e9e9"; }
+					else{ $bgColor = "f5f5f5"; }
+					?>
+					<tr bgcolor="<?php echo $bgColor; ?>" id="cargo_legs_row" class="cargo_legs_row<?php echo $seq; ?>">
+						<td><div class="dp" id="div_cargo_legs_type<?php echo $seq; ?>_id" style="font-weight:bold;">&nbsp;</div></td>
+						<td><div class="dp" id="div_cargo<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_sf<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_cargo_quantity<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_cargo_volume<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_ld_rate<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp load_days" id="div_load_days<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_wdt<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_wadt<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_tie_days<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp voyage_days" id="div_voyage_days<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_canal<?php echo $seq; ?>_id">&nbsp;</div></td>
+						<td><div class="dp" id="div_weather_extra<?php echo $seq; ?>_id">&nbsp;</div></td>
+					</tr>
+					<?php
+				}
+			}
+			?>
+			
 		</table>
 		
 		<div style="border-bottom:3px dotted #fff;">&nbsp;</div>
@@ -2940,14 +3048,14 @@ if($vessel_by==1){
 		<!-- END OF CARGO LEGS -->
 		
 		<!-- VOYAGE TIME -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
 			<td colspan="3"><div class="dp"><b>VOYAGE TIME</b></div></td>
 		  </tr>
 		  <tr>
-			<td width="400"><div class="dp"><b>PORT DAYS</b></div></td>
-			<td width="400"><div class="dp"><b>SEA DAYS</b></div></td>
-			<td width="400"><div class="dp"><b>TOTAL VOYAGE DAYS</b></div></td>
+			<td width="433"><div class="dp"><b>PORT DAYS</b></div></td>
+			<td width="433"><div class="dp"><b>SEA DAYS</b></div></td>
+			<td width="434"><div class="dp"><b>TOTAL VOYAGE DAYS</b></div></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td><div class="dp" id='voyage_port_days'>&nbsp;</div></td>
@@ -2961,20 +3069,20 @@ if($vessel_by==1){
 		<!-- END OF VOYAGE TIME -->
 		
 		<!-- BUNKER PRICING -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
 			<td><div class="dp"><b>BUNKER PRICING - Data from Bunkerworld</b> <span id="bunker_price_dateupdated" style="color:#FF0000;">&nbsp;</span></div></td>
 		  </tr>
 		</table>
 		
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td valign="top">
-				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				<table width="645" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="d6d6d6">
-					<td width="198"><div class="dp"><b>Type IFO</b></div></td>
-					<td width="199"><div class="dp"><b>Price Input ($)</b></div></td>
-					<td width="198"><div class="dp"><b>Price Available ($)</b></div></td>
+					<td width="215"><div class="dp"><b>Type IFO</b></div></td>
+					<td width="215"><div class="dp"><b>Price Input ($)</b></div></td>
+					<td width="215"><div class="dp"><b>Price Available ($)</b></div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>IFO 380</b></div></td>
@@ -3000,11 +3108,11 @@ if($vessel_by==1){
 			</td>
 			<td width="10"></td>
 			<td valign="top">
-				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				<table width="645" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="d6d6d6">
-					<td width="198"><div class="dp"><b>Type MDO</b></div></td>
-					<td width="199"><div class="dp"><b>Price Input ($)</b></div></td>
-					<td width="198"><div class="dp"><b>Price Available ($)</b></div></td>
+					<td width="215"><div class="dp"><b>Type MDO</b></div></td>
+					<td width="215"><div class="dp"><b>Price Input ($)</b></div></td>
+					<td width="215"><div class="dp"><b>Price Available ($)</b></div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>MDO</b></div></td>
@@ -3036,21 +3144,21 @@ if($vessel_by==1){
 		<!-- END OF BUNKER PRICING -->
 		
 		<!-- BUNKER CONSUMPTIONS -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
 			<td><div class="dp"><b>BUNKER CONSUMPTIONS</b></div></td>
 		  </tr>
 		</table>
 		
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td valign="top">
-				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				<table width="645" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="d6d6d6">
-					<td width="151"><div class="dp"><b>Voyage Type</b></div></td>
-					<td width="148"><div class="dp"><b>Consumption (MT/day)</b></div></td>
-					<td width="148"><div class="dp"><b>Total Consumption (MT)</b></div></td>
-					<td width="148"><div class="dp"><b>Voyage Expense ($)</b></div></td>
+					<td width="161"><div class="dp"><b>Voyage Type</b></div></td>
+					<td width="161"><div class="dp"><b>Consumption (MT/day)</b></div></td>
+					<td width="161"><div class="dp"><b>Total Consumption (MT)</b></div></td>
+					<td width="162"><div class="dp"><b>Voyage Expense ($)</b></div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>IFO/Ballast</b></div></td>
@@ -3108,12 +3216,12 @@ if($vessel_by==1){
 			</td>
 			<td width="10"></td>
 			<td valign="top">
-				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				<table width="645" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="d6d6d6">
-					<td width="151"><div class="dp"><b>Voyage Type</b></div></td>
-					<td width="148"><div class="dp"><b>Consumption (MT/day)</b></div></td>
-					<td width="148"><div class="dp"><b>Total Consumption (MT)</b></div></td>
-					<td width="148"><div class="dp"><b>Voyage Expense ($)</b></div></td>
+					<td width="161"><div class="dp"><b>Voyage Type</b></div></td>
+					<td width="161"><div class="dp"><b>Consumption (MT/day)</b></div></td>
+					<td width="161"><div class="dp"><b>Total Consumption (MT)</b></div></td>
+					<td width="162"><div class="dp"><b>Voyage Expense ($)</b></div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp" style="color:#ff0000;"><b>MDO/Ballast</b></div></td>
@@ -3177,21 +3285,21 @@ if($vessel_by==1){
 		<!-- END OF BUNKER CONSUMPTIONS -->
 		
 		<!-- DWCC AND CANAL -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
-			<td width="595" bgcolor="cddee5"><div class="dp"><b>DWCC</b></div></td>
+			<td width="645" bgcolor="cddee5"><div class="dp"><b>DWCC</b></div></td>
 			<td width="10">&nbsp;</td>
-			<td width="595" bgcolor="cddee5"><div class="dp"><b>CANAL</b></div></td>
+			<td width="645" bgcolor="cddee5"><div class="dp"><b>CANAL</b></div></td>
 		  </tr>
 		</table>
 		
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td valign="top">
-				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				<table width="645" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="d6d6d6">
-					<td width="297" colspan="2"><div class="dp"><b>DW (MT)</b></div></td>
-					<td width="298"><div class="dp" id="div_dwt_id" style="font-weight:bold;">&nbsp;</div></td>
+					<td width="322" colspan="2"><div class="dp"><b>DW (MT)</b></div></td>
+					<td width="323"><div class="dp" id="div_dwt_id" style="font-weight:bold;">&nbsp;</div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td rowspan="2"><div class="dp"><b>Consumption (MT)</b></div></td>
@@ -3231,7 +3339,7 @@ if($vessel_by==1){
 			</td>
 			<td width="10"></td>
 			<td valign="top">
-				<table width="595" border="0" cellspacing="0" cellpadding="0">
+				<table width="645" border="0" cellspacing="0" cellpadding="0">
 				  <tr bgcolor="d6d6d6">
 					<td><div class="dp"><b>Canal</b></div></td>
 					<td colspan="2">
@@ -3269,9 +3377,9 @@ if($vessel_by==1){
 					</td>
 				  </tr>
 				  <tr bgcolor="e9e9e9">
-					<td width="199"><div class="dp"><b>Booking Fee ($)</b></div></td>
-					<td width="198"><div class="dp"><input type="text" id="cbook1_id" name="cbook1" value="<?php echo $cbook1; ?>" class="number" style="width:150px;" /></div></td>
-					<td width="198"><div class="dp"><input type="text" id="cbook2_id" name="cbook2" value="<?php echo $cbook2; ?>" class="number" style="width:150px;" /></div></td>
+					<td width="215"><div class="dp"><b>Booking Fee ($)</b></div></td>
+					<td width="215"><div class="dp"><input type="text" id="cbook1_id" name="cbook1" value="<?php echo $cbook1; ?>" class="number" style="width:150px;" /></div></td>
+					<td width="215"><div class="dp"><input type="text" id="cbook2_id" name="cbook2" value="<?php echo $cbook2; ?>" class="number" style="width:150px;" /></div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>Tugs ($)</b></div></td>
@@ -3303,23 +3411,23 @@ if($vessel_by==1){
 		<!-- END OF DWCC AND CANAL -->
 		
 		<!-- PORTS -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
-			<td width="1200" bgcolor="cddee5"><div class="dp"><b>PORT(S)</b></div></td>
+			<td width="1300" bgcolor="cddee5"><div class="dp"><b>PORT(S)</b></div></td>
 		  </tr>
 		</table>
 		
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td valign="top">
-				<table width="1200" border="0" cellspacing="0" cellpadding="0" id="row_ports_id">
+				<table width="1300" border="0" cellspacing="0" cellpadding="0" id="row_ports_id">
 				  <tr id="row_ports" class="row_ports0" bgcolor="d6d6d6">
-					<td width="200"><div class="dp"><b>Dem ($/day)</b> <span style="font-size:10px;">Pro Rated</span></div></td>
-					<td width="200"><div class="dp"><b>Term</b></div></td>
-					<td width="200"><div class="dp"><b>Des ($/day)</b></div></td>
-					<td width="200"><div class="dp"><b>Liner Terms</b></div></td>
-					<td width="200"><div class="dp"><b>Port</b></div></td>
-					<td width="200"><div class="dp"><b>DA Quick Input ($)</b></div></td>
+					<td width="216"><div class="dp"><b>Dem ($/day)</b> <span style="font-size:10px;">Pro Rated</span></div></td>
+					<td width="216"><div class="dp"><b>Term</b></div></td>
+					<td width="217"><div class="dp"><b>Des ($/day)</b></div></td>
+					<td width="217"><div class="dp"><b>Liner Terms</b></div></td>
+					<td width="217"><div class="dp"><b>Port</b></div></td>
+					<td width="217"><div class="dp"><b>DA Quick Input ($)</b></div></td>
 				  </tr>
 				  <tr bgcolor="f5f5f5">
 					<td><div class="dp"><b>Demurrage ($)</b></div></td>
@@ -3343,21 +3451,21 @@ if($vessel_by==1){
 		<!-- END OF PORTS -->
 		
 		<!-- VOYAGE DISBURSMENT -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr bgcolor="cddee5">
 			<td colspan="4"><div class="dp"><b>VOYAGE DISBURSMENTS</b></div></td>
 			<td colspan="5"><div class="dp"><b>VOYAGE</b></div></td>
 		  </tr>
 		  <tr>
-			<td width="133"><div class="dp"><b>Bunker ($)</b></div></td>
-			<td width="133"><div class="dp"><b>Port ($)</b></div></td>
-			<td width="133"><div class="dp"><b>Canal($)</b></div></td>
-			<td width="133"><div class="dp"><b>Add. Insurance ($)</b></div></td>
-			<td width="133"><div class="dp"><b>ILOHC</b></div></td>
-			<td width="133"><div class="dp"><b>ILOW</b></div></td>
-			<td width="134"><div class="dp"><b>CVE</b></div></td>
-			<td width="134"><div class="dp"><b>Ballast Bonus</b></div></td>
-			<td width="134"><div class="dp"><b>Miscellaneous</b></div></td>
+			<td width="144"><div class="dp"><b>Bunker ($)</b></div></td>
+			<td width="144"><div class="dp"><b>Port ($)</b></div></td>
+			<td width="144"><div class="dp"><b>Canal($)</b></div></td>
+			<td width="144"><div class="dp"><b>Add. Insurance ($)</b></div></td>
+			<td width="144"><div class="dp"><b>ILOHC</b></div></td>
+			<td width="145"><div class="dp"><b>ILOW</b></div></td>
+			<td width="145"><div class="dp"><b>CVE</b></div></td>
+			<td width="145"><div class="dp"><b>Ballast Bonus</b></div></td>
+			<td width="145"><div class="dp"><b>Miscellaneous</b></div></td>
 		  </tr>
 		  <tr bgcolor="f5f5f5">
 			<td><div class="dp" id='div_bunker_total_id'>&nbsp;</div></td>
@@ -3380,12 +3488,12 @@ if($vessel_by==1){
 		<!-- END OF VOYAGE DISBURSMENT -->
 		
 		<!-- AIS MAP -->
-		<table width="1200" border="0" cellspacing="0" cellpadding="0">
+		<table width="1300" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
-			<td width="1200" bgcolor="cddee5"><div class="dp"><b>MAP - Data from AIS</b></div></td>
+			<td width="1300" bgcolor="cddee5"><div class="dp"><b>MAP - Data from AIS</b></div></td>
 		  </tr>
 		  <tr bgcolor="#000000">
-			<td><iframe src='http://www.openstreetmap.org/export/embed.html?bbox=10.4,22,81.8,61.4&amp;layer=mapnik' id="map_iframeve" width='1200' height='400' frameborder="0"></iframe></td>
+			<td><iframe src='http://www.openstreetmap.org/export/embed.html?bbox=10.4,22,81.8,61.4&amp;layer=mapnik' id="map_iframeve" width='1300' height='400' frameborder="0"></iframe></td>
 		  </tr>
 		</table>
 		
